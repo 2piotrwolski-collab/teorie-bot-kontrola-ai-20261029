@@ -1,0 +1,20 @@
+{
+  "diagnostic_only": true,
+  "code_sha256": "db6ca46ad7c29303ba14ef6f2dda6a67a5b67f8b1fd8393a289a60c7ee01d5f8",
+  "timing": [
+    {
+      "kind": "quotes",
+      "http_status": 200,
+      "send_offset_seconds": 0.149461,
+      "receipt_offset_seconds": 0.274314
+    },
+    {
+      "kind": "bars",
+      "http_status": 200,
+      "send_offset_seconds": 0.150877,
+      "receipt_offset_seconds": 0.274044
+    }
+  ],
+  "capture_late": false,
+  "not_a_close_measurement": true
+}

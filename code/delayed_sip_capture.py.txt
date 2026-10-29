@@ -1,0 +1,82 @@
+#!/usr/bin/env python3
+"""Free delayed historical quote reads; never request live SIP or trading APIs."""
+import argparse
+import datetime as dt
+import gzip
+import hashlib
+import json
+from pathlib import Path
+import time
+import requests
+from iex_capture import ROOT, SYMBOLS, UTC, credentials, utcnow
+from close_probe import at
+
+
+def capture(session, diagnostic=False):
+    target = at(session, '15:45:00').astimezone(UTC)
+    # The declared route waits until16:15NY, well beyond the latest15-minute limit.
+    if utcnow() < target + dt.timedelta(minutes=30):
+        raise ValueError('Too early for the declared free delayed-SIP route')
+    folder = (ROOT/'research_round11/delayed_sip_diagnostic' if diagnostic else
+              ROOT/'research_round4'/session)
+    folder.mkdir(parents=True, exist_ok=True)
+    path = folder/'sip_historical_rest_capture.json'
+    if path.exists():
+        return {'status': 'already_saved', 'file': str(path)}
+    headers = credentials()
+    connection = requests.Session()
+    connection.trust_env = False
+    rows = []
+    for symbol in (('SPY',) if diagnostic else SYMBOLS):
+        query = {'symbols': symbol, 'feed': 'sip', 'currency': 'USD', 'sort': 'desc',
+                 'limit': 1, 'start': (target-dt.timedelta(minutes=1)).isoformat(),
+                 'end': target.isoformat()}
+        sent, start, raw = utcnow(), time.monotonic(), b''
+        row = {'transport': 'http_rest', 'method': 'GET',
+               'url': 'https://data.alpaca.markets/v2/stocks/quotes', 'query': query,
+               'feed': 'sip', 'currency': 'USD', 'symbol': symbol,
+               'requested_at_utc': sent.isoformat(), 'isError': True}
+        try:
+            with connection.get(row['url'], params=query, headers=headers,
+                                timeout=(2, 4), allow_redirects=False) as response:
+                raw = response.content
+                row.update(http_status=response.status_code, response_headers=dict(response.headers))
+            if len(raw) > 2_000_000:
+                raise ValueError('Response too large')
+            row['body'] = json.loads(raw)
+            row['isError'] = not (row['http_status'] == 200 and isinstance(row['body'].get('quotes'), dict))
+        except Exception as exc:
+            row.update(error_type=type(exc).__name__, error=str(exc))
+        row.update(received_at_utc=utcnow().isoformat(), duration_seconds=time.monotonic()-start,
+                   raw_sha256=hashlib.sha256(raw).hexdigest())
+        name = f'SIP_{symbol}_{sent:%H%M%S%f}.json.gz'
+        with (folder/name).open('xb') as handle:
+            handle.write(gzip.compress(raw, mtime=0))
+        row['raw_file'] = name
+        rows.append(row)
+    result = {'session': session, 'diagnostic_only': diagnostic, 'feed': 'sip',
+              'historical_only': True, 'not_live_access_proof': True, 'requests': rows}
+    with path.open('x') as handle:
+        json.dump(result, handle, ensure_ascii=False, indent=2)
+    # Private canonical data copies are picked up by the existing Drive archiver.
+    archive = ROOT/'data/delayed_sip'/session
+    archive.mkdir(parents=True, exist_ok=True)
+    for row in rows:
+        source = folder/row['raw_file']
+        dest = archive/source.name
+        with dest.open('xb') as handle:
+            handle.write(source.read_bytes())
+    receipt = archive/('receipt_'+hashlib.sha256(path.read_bytes()).hexdigest()+'.json')
+    if not receipt.exists():
+        with receipt.open('xb') as handle:
+            handle.write(path.read_bytes())
+    return {'file': str(path), 'http_statuses': [r.get('http_status') for r in rows],
+            'errors': sum(r['isError'] for r in rows)}
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--session', required=True)
+    parser.add_argument('--diagnostic', action='store_true')
+    args = parser.parse_args()
+    print(json.dumps(capture(args.session, args.diagnostic)))

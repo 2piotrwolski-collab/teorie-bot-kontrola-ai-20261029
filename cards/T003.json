@@ -1,5 +1,5 @@
 {
-  "snapshot_at_utc": "2026-10-29T18:43:35.427389+00:00",
+  "snapshot_at_utc": "2026-10-29T20:15:15.296437+00:00",
   "scope": "Research snapshot. No full original-theory verification; no live orders.",
   "card": {
     "id": "T003",
@@ -11,15 +11,16 @@
       "Dzisiejszy pomiar ETF-ów nie usuwa braków tej teorii. Zachowano wymagania źródłowe i dotychczasowy konkretny plan zdobycia danych/reguł.",
       "Pobrano156942rzeczywiste rekordy z publicznego pliku10sekund MES. Sprawdzono format, daty i OHLC; nie ma duplikatów ani przyszłych świec w pobranym pliku.",
       "Próbka nie ma contractID,OI,bidask i55sesji rozgrzewki; nie daje pełnego testu System2. Wieloletnie CSV z samymi marks również nie odtwarzają zakresów high/low i TrueRange.",
-      "Darmowy backtest w chmurze QuantConnect jest realną ścieżką do współczesnych kontraktów z OHLCV/OI/expiry. Sprawdzono dokumentację, nie wykonano jeszcze zapytania na koncie.",
+      "Etap historyczny: Darmowy backtest w chmurze QuantConnect jest realną ścieżką do współczesnych kontraktów z OHLCV/OI/expiry. Sprawdzono dokumentację, nie wykonano jeszcze zapytania na koncie.",
       "Dalsze samodzielne pobrania bez konta dały trzy historie konkretnych kontraktówGC, w tym wygasłyGCZ25. Są dzienne; nie dostarczają pełnego intraday/roll i wykonania do testu.",
       "Publiczne próbkiLEAN pobrano z cenami, contractID, bidask iOI. Dzienne pliki mają maksymalnie5sesji na kontrakt, więc nie wolno zrobić z nich55dni rozgrzewki przez sumowanie różnych kontraktów.",
       "Przygotowano source-constrained rdzeń standard2N/55–20/0.5N/max4units i9testów. Sprawdzono gapfill, różne stopy po dokładaniu przez lukę, całe kontrakty i margin; to komponentkampanii, nie cały portfelTurtle.",
-      "Dopiero po niepełnym wyniku pobrań bez konta przygotowano darmowyQCaudit. Potrzebne zalogowanieFree, potem faktyczny odczyt kontraktów; nie zakup.",
-      "Turtle: istniejąca próba cdab25dae0a3ea8ada1f18fa0fb08c11 Completed; 0 duplikatów. Kod z wyniku zgodny AST z wysłanym i zamrożonym kodem.",
+      "Etap historyczny: Dopiero po niepełnym wyniku pobrań bez konta przygotowano darmowyQCaudit. Potrzebne zalogowanieFree, potem faktyczny odczyt kontraktów; nie zakup.",
+      "Turtle: istniejąca próba cdab25dae0a3ea8ada1f18fa0fb08c11 Completed; nie powtarzano uruchomienia. To nie kontrola duplikatów danych. Kod z wyniku zgodny AST z wysłanym i zamrożonym kodem.",
       "GC 02–12.01.2024: 4 kontrakty, 18 990 świec transakcji, 24 540 świec kwotowań, 24 niepoprawne/niepełne kwotowania.",
       "Dla jednego kontraktu: 100 świec dziennych 10.08–29.12.2023, 0 naruszeń sprawdzonego warunku 0<low≤close≤high; ceny open nie sprawdzano. Pierwsze obserwowane OI wszystkich 4 kontraktów wynoszą 0; to nie dowód poprawnego wyboru kontraktu według OI.",
-      "Niezależny przegląd Claude wskazał kontrole wymagane przed pełnym backtestem: kroczące kanały55/20, pełny kalendarz sesji i kotwica inicjalizacjiN. To uwagi do przygotowanego komponentu, nie nowy wynik strategii. Pełna opinia oraz ocena zarzutów są zapisane; brak pełnego adaptera pozostaje jawny."
+      "Niezależny przegląd Claude wskazał kontrole wymagane przed pełnym backtestem: kroczące kanały55/20, pełny kalendarz sesji i kotwica inicjalizacjiN. To uwagi do przygotowanego komponentu, nie nowy wynik strategii. Pełna opinia oraz ocena zarzutów są zapisane; brak pełnego adaptera pozostaje jawny.",
+      "Kontrola uwag Claude: archiwum v1 potwierdza 132 operacje, czyli 66 pełnych transakcji, w tym 2 zamknięcia końcowe. 9 testów Turtle i 7 Lehmanna to 16 łącznie. Liczby wariantów gotówkowych A/B i audyt remisów pozostają do niezależnego przeliczenia; brak zmiany werdyktu Turtle."
     ],
     "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
     "overall_status": "source_gap_still_blocks_original_test",
@@ -32,7 +33,7 @@
           "FullSystem2 source core is specified, includingN formula,integerUnits,pyramiding,2N stops,20day exits,limits and account sizing.",
           "Independent source review found eight mechanical choices not fixed by text.",
           "Gap-stop counterexample prevents an erroneous common newest−2N stop.",
-          "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+          "9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS; nie są wynikami rynkowymi.",
           "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
           "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
           "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
@@ -114,7 +115,7 @@
           "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
           "Round5: Free plan advertises backtesting across asset classes; one backtest-node limit.",
           "Round5: Distinguishes cloud use from local data licensing; most price data free in cloud.",
-          "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+          "9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS; nie są wynikami rynkowymi.",
           "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
           "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
           "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
@@ -242,7 +243,7 @@
           "Round5: Downloaded and parsed156,942bars,2026-10-01..10-28UTC; zero duplicate timestamps/invalidOHLC/futurebars in checked file.",
           "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
           "Round5: Free plan advertises backtesting across asset classes; one backtest-node limit.",
-          "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+          "9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS; nie są wynikami rynkowymi.",
           "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
           "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
           "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
@@ -353,7 +354,7 @@
         "criteria_met": [
           "Dollar-per-point risk,integer contracts,unit/group/directional limits and notional drawdown adjustment are recovered.",
           "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
-          "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+          "9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS; nie są wynikami rynkowymi.",
           "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
           "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
           "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
@@ -685,7 +686,8 @@
     "free_source_review_id": "FREE_SOURCE_GAP_REVIEW_20261029_V2",
     "qc_preparation_id": "QC_T003_T010_PREPARATION_20261029_V1",
     "qc_cloud_review_id": "QC_AUTHENTICATED_EDITOR_BLOCKER_20261029_V1",
-    "qc_data_review_id": "QC_DATA_CONTROLS_20261029_V5"
+    "qc_data_review_id": "QC_DATA_CONTROLS_20261029_V5",
+    "claude_triage_sha256": "a46f6855cb47d35142f93d75643741c36df918eb63348dac921de593dd5a4bbb"
   },
   "source_qualification": {
     "id": "T003",

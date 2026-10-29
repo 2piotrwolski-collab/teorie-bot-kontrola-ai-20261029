@@ -1,5 +1,5 @@
 {
-  "snapshot_at_utc": "2026-10-29T18:43:35.427389+00:00",
+  "snapshot_at_utc": "2026-10-29T20:15:15.296437+00:00",
   "purpose": "Niezależna kontrola logiki badań. Statyczna kopia do odczytu.",
   "status": "0 potwierdzonych strategii; wyniki wstępne, nie dowód wykonalnej alfy.",
   "historical_warning": "90 dawnych uproszczonych prób SPY pozostaje audytem błędnego dopasowania; nie są testami oryginalnych teorii.",
@@ -12,7 +12,8 @@
         "Wykonano nowy miesięczny SMA10 z pięcioma częściami po 20%, wykonaniem na następnym otwarciu i kosztami także przejść przez BIL. Wyniki porównano z tym samym koszykiem i oddzielnie ze SPY.",
         "W latach 2024–28.10.2026 wariant przy 5 bps uzyskał +28,06%, koszyk +44,30%, SPY +68,71%. Historyczna ochrona ryzyka jest oddzielona od obecnego celu przewagi procentowej.",
         "Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.",
-        "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii."
+        "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.",
+        "Automat pomiaru IEX: 29.10 wysłanie 46,512 s po celu i dwa błędy konektora. Naprawa: bezpośredni darmowy REST, lokalny timer macOS, rozgrzewka połączenia i zapis rzeczywistych czasów. Następny pomiar: 30.10 o 20:45 Warszawa, gdy Mac jest włączony. Stan: scheduled."
       ],
       "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem.",
       "overall_status": "strategie_kosztowe_provisional",
@@ -171,6 +172,39 @@
         "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf"
       ],
       "observations": [
+        {
+          "id": "CAPTURE_OPS_c6ea7eb23d32_T001",
+          "title": "Naprawa automatu pomiaru IEX · 29.10.2026",
+          "summary": "Usterka pomiaru, bez nowego testu skuteczności lub zmiany teorii.",
+          "columns": [
+            "Kontrola",
+            "Wynik"
+          ],
+          "rows": [
+            [
+              "29.10, IEX przez konektor",
+              "Spóźnienie 46,512 s; dwa błędy, brak terminowego kwotowania"
+            ],
+            [
+              "Bezpośredni REST, diagnostyka",
+              "HTTP200: kwotowania i świece wszystkich 5 ETF-ów"
+            ],
+            [
+              "Próbny timer macOS",
+              "Wysłanie po 0,045 s; odpowiedzi po 0,18 s. Osobny test diagnostyczny, nie odczyt zamknięcia"
+            ],
+            [
+              "30.10, cel 20:45 Warszawa",
+              "scheduled"
+            ]
+          ],
+          "limitations": [
+            "IEX jest pojedynczym rynkiem; nie NBBO ani dowód fillu.",
+            "Dane historyczne nie zastępują brakującego pomiaru na żywo.",
+            "Mac musi być włączony. Model nie uczestniczy w krytycznej ścieżce odczytu."
+          ],
+          "evidence_report": "AUTOMAT_POMIARU.json"
+        },
         {
           "id": "QUOTE_PREFLIGHT_20261028_T001",
           "title": "Rzeczywiste kwotowania przed zamknięciem · 28.10.2026",
@@ -442,6 +476,7 @@
       "source_update_artifact": "research_round2/source_updates_T001_T004.json",
       "source_update_sha256": "2953f6d2229cc4cc35f01b17b0ed374572ae1805eabdeaa991755a222392c6e2",
       "observation_ids": [
+        "CAPTURE_OPS_c6ea7eb23d32_T001",
         "QUOTE_PREFLIGHT_20261028_T001",
         "ARRIVAL_20261029_T001",
         "MODERN_EXECUTION_NET_R2_T001"
@@ -452,7 +487,8 @@
         "Brakuje zatwierdzonego zamiennika gotówki 90-dniowych bonów i kontroli wykonania oraz danych. Wyniku nowego wariantu jeszcze nie liczono."
       ],
       "strategy_result_file": "NET_STRATEGIE/T001.json",
-      "execution_evidence_file": "WYKONANIE_DZISIAJ/T001.json"
+      "execution_evidence_file": "WYKONANIE_DZISIAJ/T001.json",
+      "capture_operations_sha256": "c6ea7eb23d32709c82bfd55a4747aa60bbb4d8de89a321c172e80bd9bc305c04"
     },
     {
       "id": "T002",
@@ -851,15 +887,16 @@
         "Dzisiejszy pomiar ETF-ów nie usuwa braków tej teorii. Zachowano wymagania źródłowe i dotychczasowy konkretny plan zdobycia danych/reguł.",
         "Pobrano156942rzeczywiste rekordy z publicznego pliku10sekund MES. Sprawdzono format, daty i OHLC; nie ma duplikatów ani przyszłych świec w pobranym pliku.",
         "Próbka nie ma contractID,OI,bidask i55sesji rozgrzewki; nie daje pełnego testu System2. Wieloletnie CSV z samymi marks również nie odtwarzają zakresów high/low i TrueRange.",
-        "Darmowy backtest w chmurze QuantConnect jest realną ścieżką do współczesnych kontraktów z OHLCV/OI/expiry. Sprawdzono dokumentację, nie wykonano jeszcze zapytania na koncie.",
+        "Etap historyczny: Darmowy backtest w chmurze QuantConnect jest realną ścieżką do współczesnych kontraktów z OHLCV/OI/expiry. Sprawdzono dokumentację, nie wykonano jeszcze zapytania na koncie.",
         "Dalsze samodzielne pobrania bez konta dały trzy historie konkretnych kontraktówGC, w tym wygasłyGCZ25. Są dzienne; nie dostarczają pełnego intraday/roll i wykonania do testu.",
         "Publiczne próbkiLEAN pobrano z cenami, contractID, bidask iOI. Dzienne pliki mają maksymalnie5sesji na kontrakt, więc nie wolno zrobić z nich55dni rozgrzewki przez sumowanie różnych kontraktów.",
         "Przygotowano source-constrained rdzeń standard2N/55–20/0.5N/max4units i9testów. Sprawdzono gapfill, różne stopy po dokładaniu przez lukę, całe kontrakty i margin; to komponentkampanii, nie cały portfelTurtle.",
-        "Dopiero po niepełnym wyniku pobrań bez konta przygotowano darmowyQCaudit. Potrzebne zalogowanieFree, potem faktyczny odczyt kontraktów; nie zakup.",
-        "Turtle: istniejąca próba cdab25dae0a3ea8ada1f18fa0fb08c11 Completed; 0 duplikatów. Kod z wyniku zgodny AST z wysłanym i zamrożonym kodem.",
+        "Etap historyczny: Dopiero po niepełnym wyniku pobrań bez konta przygotowano darmowyQCaudit. Potrzebne zalogowanieFree, potem faktyczny odczyt kontraktów; nie zakup.",
+        "Turtle: istniejąca próba cdab25dae0a3ea8ada1f18fa0fb08c11 Completed; nie powtarzano uruchomienia. To nie kontrola duplikatów danych. Kod z wyniku zgodny AST z wysłanym i zamrożonym kodem.",
         "GC 02–12.01.2024: 4 kontrakty, 18 990 świec transakcji, 24 540 świec kwotowań, 24 niepoprawne/niepełne kwotowania.",
         "Dla jednego kontraktu: 100 świec dziennych 10.08–29.12.2023, 0 naruszeń sprawdzonego warunku 0<low≤close≤high; ceny open nie sprawdzano. Pierwsze obserwowane OI wszystkich 4 kontraktów wynoszą 0; to nie dowód poprawnego wyboru kontraktu według OI.",
-        "Niezależny przegląd Claude wskazał kontrole wymagane przed pełnym backtestem: kroczące kanały55/20, pełny kalendarz sesji i kotwica inicjalizacjiN. To uwagi do przygotowanego komponentu, nie nowy wynik strategii. Pełna opinia oraz ocena zarzutów są zapisane; brak pełnego adaptera pozostaje jawny."
+        "Niezależny przegląd Claude wskazał kontrole wymagane przed pełnym backtestem: kroczące kanały55/20, pełny kalendarz sesji i kotwica inicjalizacjiN. To uwagi do przygotowanego komponentu, nie nowy wynik strategii. Pełna opinia oraz ocena zarzutów są zapisane; brak pełnego adaptera pozostaje jawny.",
+        "Kontrola uwag Claude: archiwum v1 potwierdza 132 operacje, czyli 66 pełnych transakcji, w tym 2 zamknięcia końcowe. 9 testów Turtle i 7 Lehmanna to 16 łącznie. Liczby wariantów gotówkowych A/B i audyt remisów pozostają do niezależnego przeliczenia; brak zmiany werdyktu Turtle."
       ],
       "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
       "overall_status": "source_gap_still_blocks_original_test",
@@ -872,7 +909,7 @@
             "FullSystem2 source core is specified, includingN formula,integerUnits,pyramiding,2N stops,20day exits,limits and account sizing.",
             "Independent source review found eight mechanical choices not fixed by text.",
             "Gap-stop counterexample prevents an erroneous common newest−2N stop.",
-            "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+            "9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS; nie są wynikami rynkowymi.",
             "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
             "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
             "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
@@ -954,7 +991,7 @@
             "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
             "Round5: Free plan advertises backtesting across asset classes; one backtest-node limit.",
             "Round5: Distinguishes cloud use from local data licensing; most price data free in cloud.",
-            "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+            "9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS; nie są wynikami rynkowymi.",
             "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
             "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
             "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
@@ -1082,7 +1119,7 @@
             "Round5: Downloaded and parsed156,942bars,2026-10-01..10-28UTC; zero duplicate timestamps/invalidOHLC/futurebars in checked file.",
             "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
             "Round5: Free plan advertises backtesting across asset classes; one backtest-node limit.",
-            "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+            "9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS; nie są wynikami rynkowymi.",
             "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
             "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
             "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
@@ -1193,7 +1230,7 @@
           "criteria_met": [
             "Dollar-per-point risk,integer contracts,unit/group/directional limits and notional drawdown adjustment are recovered.",
             "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
-            "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+            "9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS; nie są wynikami rynkowymi.",
             "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
             "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
             "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
@@ -1525,7 +1562,8 @@
       "free_source_review_id": "FREE_SOURCE_GAP_REVIEW_20261029_V2",
       "qc_preparation_id": "QC_T003_T010_PREPARATION_20261029_V1",
       "qc_cloud_review_id": "QC_AUTHENTICATED_EDITOR_BLOCKER_20261029_V1",
-      "qc_data_review_id": "QC_DATA_CONTROLS_20261029_V5"
+      "qc_data_review_id": "QC_DATA_CONTROLS_20261029_V5",
+      "claude_triage_sha256": "a46f6855cb47d35142f93d75643741c36df918eb63348dac921de593dd5a4bbb"
     },
     {
       "id": "T004",
@@ -1535,7 +1573,8 @@
         "Oddzielono wariant następnego otwarcia od estymacji sygnału o 15:40 i wykonania o 15:45. Obie wersje mają koszty i zachowane wszystkie próby.",
         "Próba 42 sesji dla IWM jest dodatnia, lecz obejmuje tylko dwa wejścia. FXI nie wygenerował wejścia; jego wynik pochodzi z BIL. Nie nadaje się to do potwierdzenia przewagi.",
         "Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla IWM, FXI, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.",
-        "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii."
+        "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.",
+        "Automat pomiaru IEX: 29.10 wysłanie 46,512 s po celu i dwa błędy konektora. Naprawa: bezpośredni darmowy REST, lokalny timer macOS, rozgrzewka połączenia i zapis rzeczywistych czasów. Następny pomiar: 30.10 o 20:45 Warszawa, gdy Mac jest włączony. Stan: scheduled."
       ],
       "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje pięciominutowe i weryfikować bid/ask, czas zlecenia oraz dostępność instrumentu. Wymagany większy niezależny zbiór i partner review; nie wybierać zwycięzcy z dwóch transakcji.",
       "verified_market": "Zwykłe ETF-y akcyjne z pierwotnego opisu Connorsa z 2009 r.; reguła 5/70 jest odrębna od wariantu 2×ETF.",
@@ -1701,6 +1740,39 @@
         "https://tradingmarkets.com/recent/how_to_properly_test_your_strategies-639264"
       ],
       "observations": [
+        {
+          "id": "CAPTURE_OPS_c6ea7eb23d32_T004",
+          "title": "Naprawa automatu pomiaru IEX · 29.10.2026",
+          "summary": "Usterka pomiaru, bez nowego testu skuteczności lub zmiany teorii.",
+          "columns": [
+            "Kontrola",
+            "Wynik"
+          ],
+          "rows": [
+            [
+              "29.10, IEX przez konektor",
+              "Spóźnienie 46,512 s; dwa błędy, brak terminowego kwotowania"
+            ],
+            [
+              "Bezpośredni REST, diagnostyka",
+              "HTTP200: kwotowania i świece wszystkich 5 ETF-ów"
+            ],
+            [
+              "Próbny timer macOS",
+              "Wysłanie po 0,045 s; odpowiedzi po 0,18 s. Osobny test diagnostyczny, nie odczyt zamknięcia"
+            ],
+            [
+              "30.10, cel 20:45 Warszawa",
+              "scheduled"
+            ]
+          ],
+          "limitations": [
+            "IEX jest pojedynczym rynkiem; nie NBBO ani dowód fillu.",
+            "Dane historyczne nie zastępują brakującego pomiaru na żywo.",
+            "Mac musi być włączony. Model nie uczestniczy w krytycznej ścieżce odczytu."
+          ],
+          "evidence_report": "AUTOMAT_POMIARU.json"
+        },
         {
           "id": "QUOTE_PREFLIGHT_20261028_T004",
           "title": "Rzeczywiste kwotowania przed zamknięciem · 28.10.2026",
@@ -2056,6 +2128,7 @@
       "source_update_artifact": "research_round2/source_updates_T001_T004.json",
       "source_update_sha256": "2953f6d2229cc4cc35f01b17b0ed374572ae1805eabdeaa991755a222392c6e2",
       "observation_ids": [
+        "CAPTURE_OPS_c6ea7eb23d32_T004",
         "QUOTE_PREFLIGHT_20261028_T004",
         "ARRIVAL_20261029_T004",
         "MODERN_EXECUTION_NET_R2_T004",
@@ -2067,7 +2140,8 @@
         "Przygotowano osobną specyfikację. Wzór i inicjalizacja RSI, dobór ETF-ów, korekty cen oraz wykonalność sygnału na finalnym close wymagają kontroli przed testem."
       ],
       "strategy_result_file": "NET_STRATEGIE/T004.json",
-      "execution_evidence_file": "WYKONANIE_DZISIAJ/T004.json"
+      "execution_evidence_file": "WYKONANIE_DZISIAJ/T004.json",
+      "capture_operations_sha256": "c6ea7eb23d32709c82bfd55a4747aa60bbb4d8de89a321c172e80bd9bc305c04"
     },
     {
       "id": "T005",
@@ -2078,7 +2152,8 @@
         "W osobnej próbie 15:40→15:45 z 42 sesji IWM i QQQ mają dodatnie wyniki, ale odpowiednio tylko jedno i dwa wejścia. SPY nie wygenerował wejścia. Wszystkie koszty i przypadki zerowej aktywności zapisano.",
         "Yahoo wskazuje CSI jako dostawcę części historycznych danych USA. Publiczny interfejs Yahoo nie jest niezależnym potwierdzeniem danych CSI autora; zgodność oryginalnej próby, korekt i vintage nadal wymaga kontroli.",
         "Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, IWM, QQQ, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.",
-        "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii."
+        "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.",
+        "Automat pomiaru IEX: 29.10 wysłanie 46,512 s po celu i dwa błędy konektora. Naprawa: bezpośredni darmowy REST, lokalny timer macOS, rozgrzewka połączenia i zapis rzeczywistych czasów. Następny pomiar: 30.10 o 20:45 Warszawa, gdy Mac jest włączony. Stan: scheduled."
       ],
       "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania.",
       "overall_status": "strategie_kosztowe_provisional",
@@ -2221,6 +2296,39 @@
         "https://www.vaneck.com/us/en/blogs/emerging-markets-equity/rsx-rsxj-liquidation-faq/"
       ],
       "observations": [
+        {
+          "id": "CAPTURE_OPS_c6ea7eb23d32_T005",
+          "title": "Naprawa automatu pomiaru IEX · 29.10.2026",
+          "summary": "Usterka pomiaru, bez nowego testu skuteczności lub zmiany teorii.",
+          "columns": [
+            "Kontrola",
+            "Wynik"
+          ],
+          "rows": [
+            [
+              "29.10, IEX przez konektor",
+              "Spóźnienie 46,512 s; dwa błędy, brak terminowego kwotowania"
+            ],
+            [
+              "Bezpośredni REST, diagnostyka",
+              "HTTP200: kwotowania i świece wszystkich 5 ETF-ów"
+            ],
+            [
+              "Próbny timer macOS",
+              "Wysłanie po 0,045 s; odpowiedzi po 0,18 s. Osobny test diagnostyczny, nie odczyt zamknięcia"
+            ],
+            [
+              "30.10, cel 20:45 Warszawa",
+              "scheduled"
+            ]
+          ],
+          "limitations": [
+            "IEX jest pojedynczym rynkiem; nie NBBO ani dowód fillu.",
+            "Dane historyczne nie zastępują brakującego pomiaru na żywo.",
+            "Mac musi być włączony. Model nie uczestniczy w krytycznej ścieżce odczytu."
+          ],
+          "evidence_report": "AUTOMAT_POMIARU.json"
+        },
         {
           "id": "QUOTE_PREFLIGHT_20261028_T005",
           "title": "Rzeczywiste kwotowania przed zamknięciem · 28.10.2026",
@@ -3084,6 +3192,7 @@
       "source_update_artifact": "research_round2/source_updates_T005.json",
       "source_update_sha256": "328f201e497420b68b9563a941325ae216de25f81d45137ed086bc65d59ff5fd",
       "observation_ids": [
+        "CAPTURE_OPS_c6ea7eb23d32_T005",
         "QUOTE_PREFLIGHT_20261028_T005",
         "ARRIVAL_20261029_T005",
         "MODERN_EXECUTION_NET_R2_T005",
@@ -3100,7 +3209,8 @@
       "strategy_result_file": "NET_STRATEGIE/T005.json",
       "verified_claim": "Autor bada następny jednodniowy close-to-close po IBS. Na stronie 4 opisuje dzienną strategię long przy IBS≤0,2 i short przy IBS≥0,8. Wysoki wolumen jest ważny w źródłowej grupie USA. Nowe long-only warianty wykonania nie są pełnym odtworzeniem tej strategii.",
       "verified_correction": "Dla strategii źródłowej trzeba odtworzyć dzienne long/short, wykonanie i borrow. Nasze long-only open→open oraz estymacja15:40→fillproxy15:45 są osobnymi wariantami. Zachowano źródłowy horyzont jednej sesji, bez arbitralnego trzymania10dni.",
-      "execution_evidence_file": "WYKONANIE_DZISIAJ/T005.json"
+      "execution_evidence_file": "WYKONANIE_DZISIAJ/T005.json",
+      "capture_operations_sha256": "c6ea7eb23d32709c82bfd55a4747aa60bbb4d8de89a321c172e80bd9bc305c04"
     },
     {
       "id": "T006",
@@ -3356,7 +3466,8 @@
         "Wykonano wariant SPY open→open dla pozycji −1/+1/+2/+3 z BIL i kosztami. Jest to implementacja ETF z innymi nocami granicznymi niż źródłowe close→close.",
         "W latach 2024–28.10.2026 wariant przy 5 bps uzyskał +10,47% wobec +68,71% pełnego SPY. Nie rozstrzyga to oryginalnej statystycznej obserwacji szerokiego rynku.",
         "Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.",
-        "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii."
+        "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.",
+        "Automat pomiaru IEX: 29.10 wysłanie 46,512 s po celu i dwa błędy konektora. Naprawa: bezpośredni darmowy REST, lokalny timer macOS, rozgrzewka połączenia i zapis rzeczywistych czasów. Następny pomiar: 30.10 o 20:45 Warszawa, gdy Mac jest włączony. Stan: scheduled."
       ],
       "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Zweryfikować wykonalne zlecenia na granicach okna oraz dostępny instrument UE; nie przesuwać okna do najlepszego miesiąca. Źródłowy CRSP/EW i pełne kontrolki pozostają otwarte.",
       "overall_status": "strategie_kosztowe_provisional",
@@ -3469,6 +3580,39 @@
         "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip"
       ],
       "observations": [
+        {
+          "id": "CAPTURE_OPS_c6ea7eb23d32_T007",
+          "title": "Naprawa automatu pomiaru IEX · 29.10.2026",
+          "summary": "Usterka pomiaru, bez nowego testu skuteczności lub zmiany teorii.",
+          "columns": [
+            "Kontrola",
+            "Wynik"
+          ],
+          "rows": [
+            [
+              "29.10, IEX przez konektor",
+              "Spóźnienie 46,512 s; dwa błędy, brak terminowego kwotowania"
+            ],
+            [
+              "Bezpośredni REST, diagnostyka",
+              "HTTP200: kwotowania i świece wszystkich 5 ETF-ów"
+            ],
+            [
+              "Próbny timer macOS",
+              "Wysłanie po 0,045 s; odpowiedzi po 0,18 s. Osobny test diagnostyczny, nie odczyt zamknięcia"
+            ],
+            [
+              "30.10, cel 20:45 Warszawa",
+              "scheduled"
+            ]
+          ],
+          "limitations": [
+            "IEX jest pojedynczym rynkiem; nie NBBO ani dowód fillu.",
+            "Dane historyczne nie zastępują brakującego pomiaru na żywo.",
+            "Mac musi być włączony. Model nie uczestniczy w krytycznej ścieżce odczytu."
+          ],
+          "evidence_report": "AUTOMAT_POMIARU.json"
+        },
         {
           "id": "QUOTE_PREFLIGHT_20261028_T007",
           "title": "Rzeczywiste kwotowania przed zamknięciem · 28.10.2026",
@@ -3693,6 +3837,7 @@
       "source_update_artifact": "research_round2/source_updates_T006_T008.json",
       "source_update_sha256": "408fb7981d414b0e45e82666f44a6585e9957bdc622fc446c706d2b6a8f612fb",
       "observation_ids": [
+        "CAPTURE_OPS_c6ea7eb23d32_T007",
         "QUOTE_PREFLIGHT_20261028_T007",
         "ARRIVAL_20261029_T007",
         "MODERN_EXECUTION_NET_R2_T007",
@@ -3705,7 +3850,8 @@
         "Badanie wykonano: różnica średniego zwrotu TOM minus źródłowe OtherDays wynosi 14,91 bps dziennie w dostępnej historii do 2005 r. i 1,70 bps w latach 2006–2026; późniejszy przedział obejmuje zero. Niezależna kontrola SQL potwierdziła wszystkie liczności i średnie."
       ],
       "strategy_result_file": "NET_STRATEGIE/T007.json",
-      "execution_evidence_file": "WYKONANIE_DZISIAJ/T007.json"
+      "execution_evidence_file": "WYKONANIE_DZISIAJ/T007.json",
+      "capture_operations_sha256": "c6ea7eb23d32709c82bfd55a4747aa60bbb4d8de89a321c172e80bd9bc305c04"
     },
     {
       "id": "T008",
@@ -3939,7 +4085,8 @@
         "Kalibracja i limit 1 dały w najnowszym okresie około 97,6% średniej ekspozycji. Ta wersja zachowuje się więc blisko SPY i nie testuje całego źródłowego efektu przy dźwigni. c nie będzie dopasowywane po wyniku.",
         "Dodatkowo pobrano cztery darmowe archiwa: French 5 Factors i Momentum w częstotliwości dziennej i miesięcznej. Sprawdzono daty i unikalność; nie liczono jeszcze nowych kontrastów tych czynników.",
         "Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.",
-        "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii."
+        "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.",
+        "Automat pomiaru IEX: 29.10 wysłanie 46,512 s po celu i dwa błędy konektora. Naprawa: bezpośredni darmowy REST, lokalny timer macOS, rozgrzewka połączenia i zapis rzeczywistych czasów. Następny pomiar: 30.10 o 20:45 Warszawa, gdy Mac jest włączony. Stan: scheduled."
       ],
       "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki.",
       "verified_correction": "Dla źródłowego pytania statystycznego należy skalować miesięczny excess return odwrotnością RV z poprzedniego miesiąca i porównywać go z tym samym nieskalowanym czynnikiem. Pełnopróbkowe c jest jawną normalizacją ex post publikacji. Osobny wariant wykonywalnego bota wymaga przyczynowego sizingu, limitu dźwigni, dochodu gotówki i kosztów; nie należy przypisywać mu obecnej alfy brutto.",
@@ -4104,6 +4251,39 @@
         "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html"
       ],
       "observations": [
+        {
+          "id": "CAPTURE_OPS_c6ea7eb23d32_T009",
+          "title": "Naprawa automatu pomiaru IEX · 29.10.2026",
+          "summary": "Usterka pomiaru, bez nowego testu skuteczności lub zmiany teorii.",
+          "columns": [
+            "Kontrola",
+            "Wynik"
+          ],
+          "rows": [
+            [
+              "29.10, IEX przez konektor",
+              "Spóźnienie 46,512 s; dwa błędy, brak terminowego kwotowania"
+            ],
+            [
+              "Bezpośredni REST, diagnostyka",
+              "HTTP200: kwotowania i świece wszystkich 5 ETF-ów"
+            ],
+            [
+              "Próbny timer macOS",
+              "Wysłanie po 0,045 s; odpowiedzi po 0,18 s. Osobny test diagnostyczny, nie odczyt zamknięcia"
+            ],
+            [
+              "30.10, cel 20:45 Warszawa",
+              "scheduled"
+            ]
+          ],
+          "limitations": [
+            "IEX jest pojedynczym rynkiem; nie NBBO ani dowód fillu.",
+            "Dane historyczne nie zastępują brakującego pomiaru na żywo.",
+            "Mac musi być włączony. Model nie uczestniczy w krytycznej ścieżce odczytu."
+          ],
+          "evidence_report": "AUTOMAT_POMIARU.json"
+        },
         {
           "id": "QUOTE_PREFLIGHT_20261028_T009",
           "title": "Rzeczywiste kwotowania przed zamknięciem · 28.10.2026",
@@ -4344,6 +4524,7 @@
       "source_update_artifact": "research_round2/source_updates_T009.json",
       "source_update_sha256": "58eb7cb791b5fa5fc21cb6d6e3a23055236967741b9f10dae1ab22f11ce841ca",
       "observation_ids": [
+        "CAPTURE_OPS_c6ea7eb23d32_T009",
         "QUOTE_PREFLIGHT_20261028_T009",
         "ARRIVAL_20261029_T009",
         "MODERN_EXECUTION_NET_R2_T009",
@@ -4355,7 +4536,8 @@
         "Normalizacja ryzyka c jest pełnopróbkowa, zgodnie z pytaniem statystycznym publikacji. Nie jest przyczynową wielkością pozycji bota, a wynik nie jest zyskiem netto."
       ],
       "strategy_result_file": "NET_STRATEGIE/T009.json",
-      "execution_evidence_file": "WYKONANIE_DZISIAJ/T009.json"
+      "execution_evidence_file": "WYKONANIE_DZISIAJ/T009.json",
+      "capture_operations_sha256": "c6ea7eb23d32709c82bfd55a4747aa60bbb4d8de89a321c172e80bd9bc305c04"
     },
     {
       "id": "T010",

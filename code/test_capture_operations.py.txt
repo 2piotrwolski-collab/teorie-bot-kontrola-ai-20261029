@@ -1,0 +1,36 @@
+import copy
+import datetime as dt
+import unittest
+from capture_operations_review import merge
+from close_evidence_v2 import failure_aware_iex
+
+
+class OperationsCases(unittest.TestCase):
+    def test_transport_error_is_not_a_successful_empty_capture(self):
+        target = dt.datetime.fromisoformat('2026-10-29T19:45:00+00:00')
+        request = {'tool': 'latest_quote', 'requested_at_utc': '2026-10-29T19:45:46+00:00',
+                   'received_at_utc': '2026-10-29T19:46:07+00:00',
+                   'response': {'isError': True, 'content': [{'type': 'text', 'text': 'timeout'}]}}
+        result = failure_aware_iex({'requests': [request]}, {'status': 'single_venue_live_measurement', 'rows': [], 'errors': []}, target)
+        self.assertEqual(result['status'], 'capture_failed')
+        self.assertTrue(result['capture_late'])
+        self.assertEqual(len(result['rows']), 5)
+        self.assertFalse(any(row['live_gate_pass'] for row in result['rows']))
+
+    def test_overlay_is_idempotent_and_preserves_current_science(self):
+        progress = {'items': [{'id': 'T004', 'findings': ['fresh scientific finding'],
+                               'observations': [{'id': 'FRESH_CLOSE', 'summary': 'fresh close data'}],
+                               'gap_updates': [{'gap_id': 'x', 'status': 'partial'}]},
+                              {'id': 'T003', 'findings': ['Turtle source result'], 'observations': []}]}
+        original = copy.deepcopy(progress)
+        review = {'next_status': 'scheduled'}
+        result = merge(progress, review)
+        self.assertEqual(progress, original)
+        self.assertEqual(result, merge(result, review))
+        self.assertEqual(result['items'][1], original['items'][1])
+        self.assertEqual(result['items'][0]['gap_updates'], original['items'][0]['gap_updates'])
+        self.assertIn(original['items'][0]['observations'][0], result['items'][0]['observations'])
+
+
+if __name__ == '__main__':
+    unittest.main()

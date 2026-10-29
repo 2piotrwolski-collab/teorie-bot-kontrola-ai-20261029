@@ -1,5 +1,5 @@
 {
-  "snapshot_at_utc": "2026-10-29T18:43:35.427389+00:00",
+  "snapshot_at_utc": "2026-10-29T20:15:15.296437+00:00",
   "scope": "Research snapshot. No full original-theory verification; no live orders.",
   "card": {
     "id": "T005",
@@ -10,7 +10,8 @@
       "W osobnej próbie 15:40→15:45 z 42 sesji IWM i QQQ mają dodatnie wyniki, ale odpowiednio tylko jedno i dwa wejścia. SPY nie wygenerował wejścia. Wszystkie koszty i przypadki zerowej aktywności zapisano.",
       "Yahoo wskazuje CSI jako dostawcę części historycznych danych USA. Publiczny interfejs Yahoo nie jest niezależnym potwierdzeniem danych CSI autora; zgodność oryginalnej próby, korekt i vintage nadal wymaga kontroli.",
       "Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, IWM, QQQ, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.",
-      "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii."
+      "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.",
+      "Automat pomiaru IEX: 29.10 wysłanie 46,512 s po celu i dwa błędy konektora. Naprawa: bezpośredni darmowy REST, lokalny timer macOS, rozgrzewka połączenia i zapis rzeczywistych czasów. Następny pomiar: 30.10 o 20:45 Warszawa, gdy Mac jest włączony. Stan: scheduled."
     ],
     "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania.",
     "overall_status": "strategie_kosztowe_provisional",
@@ -153,6 +154,39 @@
       "https://www.vaneck.com/us/en/blogs/emerging-markets-equity/rsx-rsxj-liquidation-faq/"
     ],
     "observations": [
+      {
+        "id": "CAPTURE_OPS_c6ea7eb23d32_T005",
+        "title": "Naprawa automatu pomiaru IEX · 29.10.2026",
+        "summary": "Usterka pomiaru, bez nowego testu skuteczności lub zmiany teorii.",
+        "columns": [
+          "Kontrola",
+          "Wynik"
+        ],
+        "rows": [
+          [
+            "29.10, IEX przez konektor",
+            "Spóźnienie 46,512 s; dwa błędy, brak terminowego kwotowania"
+          ],
+          [
+            "Bezpośredni REST, diagnostyka",
+            "HTTP200: kwotowania i świece wszystkich 5 ETF-ów"
+          ],
+          [
+            "Próbny timer macOS",
+            "Wysłanie po 0,045 s; odpowiedzi po 0,18 s. Osobny test diagnostyczny, nie odczyt zamknięcia"
+          ],
+          [
+            "30.10, cel 20:45 Warszawa",
+            "scheduled"
+          ]
+        ],
+        "limitations": [
+          "IEX jest pojedynczym rynkiem; nie NBBO ani dowód fillu.",
+          "Dane historyczne nie zastępują brakującego pomiaru na żywo.",
+          "Mac musi być włączony. Model nie uczestniczy w krytycznej ścieżce odczytu."
+        ],
+        "evidence_report": "AUTOMAT_POMIARU.json"
+      },
       {
         "id": "QUOTE_PREFLIGHT_20261028_T005",
         "title": "Rzeczywiste kwotowania przed zamknięciem · 28.10.2026",
@@ -1016,6 +1050,7 @@
     "source_update_artifact": "research_round2/source_updates_T005.json",
     "source_update_sha256": "328f201e497420b68b9563a941325ae216de25f81d45137ed086bc65d59ff5fd",
     "observation_ids": [
+      "CAPTURE_OPS_c6ea7eb23d32_T005",
       "QUOTE_PREFLIGHT_20261028_T005",
       "ARRIVAL_20261029_T005",
       "MODERN_EXECUTION_NET_R2_T005",
@@ -1032,7 +1067,8 @@
     "strategy_result_file": "NET_STRATEGIE/T005.json",
     "verified_claim": "Autor bada następny jednodniowy close-to-close po IBS. Na stronie 4 opisuje dzienną strategię long przy IBS≤0,2 i short przy IBS≥0,8. Wysoki wolumen jest ważny w źródłowej grupie USA. Nowe long-only warianty wykonania nie są pełnym odtworzeniem tej strategii.",
     "verified_correction": "Dla strategii źródłowej trzeba odtworzyć dzienne long/short, wykonanie i borrow. Nasze long-only open→open oraz estymacja15:40→fillproxy15:45 są osobnymi wariantami. Zachowano źródłowy horyzont jednej sesji, bez arbitralnego trzymania10dni.",
-    "execution_evidence_file": "WYKONANIE_DZISIAJ/T005.json"
+    "execution_evidence_file": "WYKONANIE_DZISIAJ/T005.json",
+    "capture_operations_sha256": "c6ea7eb23d32709c82bfd55a4747aa60bbb4d8de89a321c172e80bd9bc305c04"
   },
   "source_qualification": {
     "id": "T005",

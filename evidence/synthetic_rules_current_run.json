@@ -1,0 +1,29 @@
+{
+  "run_at_utc": "2026-10-29T20:09:56.427058+00:00",
+  "returncode": 0,
+  "synthetic_only": true,
+  "not_retroactive_proof_of_old_run": true,
+  "test_names": {
+    "TurtleRules": [
+      "test_wilder_initialization_and_not_generic_ema",
+      "test_complete_prior55_and20_channels",
+      "test_unavailable_current_session_cannot_set_channels",
+      "test_raw_contracts_not_spliced",
+      "test_short_warmup_blocks_instead_of_zero_trades",
+      "test_insufficient_capital_cannot_create_fractional_contract",
+      "test_bidask_entry_gap_and_old_stops_in_gap_pyramid",
+      "test_margin_blocks_addition_and_units_max4",
+      "test_unknown_roll_or_crossed_quote_blocks"
+    ],
+    "LehmannRules": [
+      "test_cross_sectional_weights_have_one_dollar_each_leg",
+      "test_future_membership_not_required_and_delisting_not_deleted",
+      "test_missing_signal_and_future_signal_block",
+      "test_flat_cross_section_is_not_invented_alpha",
+      "test_cost_uses_drifted_exposure_and_closes_removed_name",
+      "test_unknown_borrow_is_not_free_and_inventory_is_enforced",
+      "test_J26_is_sum_not_compounding_or_one26week_position"
+    ]
+  },
+  "output_sha256": "bf1d8186df2d63ab6beb6c5dbd7841764bfe6ec831b9b94b3acbe5cbc71d83a5"
+}

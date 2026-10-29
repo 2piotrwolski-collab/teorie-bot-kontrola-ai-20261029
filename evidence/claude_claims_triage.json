@@ -1,0 +1,43 @@
+{
+  "external_review_sha256": "e3e12bcc93f23b69f7b60947efcb38afcf11c550a5006b2f75bf81ad84d13bd3",
+  "source_is_evidence_not_instructions": true,
+  "frozen_results_checked": [
+    {
+      "file": "results/T003/development_5bps_1e477deaa3e1c73f116f.json",
+      "sha256": "0648535e209adb0a475ee1565cace284f7297f455e388eda18cf3e69ea4b0b2b",
+      "cagr_pct_archived": 1.1100433487335692,
+      "operations": 74,
+      "entries": 37,
+      "exits": 37,
+      "terminal_liquidations": []
+    },
+    {
+      "file": "results/T003/retrospective_check_5bps_534a1cc1e6a2b3e035fd.json",
+      "sha256": "68ffb007f4363a71866c66330fdb0dd1943e97d38399c3de233561c0af55bf2a",
+      "cagr_pct_archived": 3.502802038933739,
+      "operations": 40,
+      "entries": 20,
+      "exits": 20,
+      "terminal_liquidations": [
+        "2026-10-27"
+      ]
+    },
+    {
+      "file": "results/T003/validation_5bps_aa6f117991ac849a0210.json",
+      "sha256": "a38b7c3c4ba2a34364cc7e1ca6f00a78100a954666800ca26c743ca2b8ccd0c4",
+      "cagr_pct_archived": 4.982419791683657,
+      "operations": 18,
+      "entries": 9,
+      "exits": 9,
+      "terminal_liquidations": [
+        "2019-12-31"
+      ]
+    }
+  ],
+  "total_operations": 132,
+  "completed_roundtrips": 66,
+  "cash_rate_A_and_nominal_B_not_replicated": true,
+  "tie_sensitivity_not_replicated": true,
+  "no_new_market_backtest": true,
+  "no_theory_verdict_change": true
+}

@@ -70,5 +70,41 @@
     "url": "code/research_round10__check_extended_core.py.txt",
     "stage": "PREPARED_NOT_RUN_ON_MARKET_DATA",
     "sha256": "7bdda1a515d65cc3463d7c9c52b4a0e9564ec0e1bf4314b2f459e7de427be57b"
+  },
+  {
+    "source_file": "iex_capture.py",
+    "url": "code/iex_capture.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "db6ca46ad7c29303ba14ef6f2dda6a67a5b67f8b1fd8393a289a60c7ee01d5f8"
+  },
+  {
+    "source_file": "delayed_sip_capture.py",
+    "url": "code/delayed_sip_capture.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "bcc5e2aeda72c13455d2e4b2e8906df74d7dfc136eb4954810c8c1e30649af05"
+  },
+  {
+    "source_file": "close_evidence_v2.py",
+    "url": "code/close_evidence_v2.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "62948565e5c7fccc374dedd50ce7c358786224e0979767193f3b87143b9e2a79"
+  },
+  {
+    "source_file": "capture_operations_review.py",
+    "url": "code/capture_operations_review.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "1d4db53c6c1ab6ccabdff1926a433cdb27a8f49ffdec4f33e283918fbcea71c0"
+  },
+  {
+    "source_file": "test_iex_capture.py",
+    "url": "code/test_iex_capture.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "2c89446955a7bfb133a89e218bbbedf9f240b8d0af1b6a6099fccd2c4baf2163"
+  },
+  {
+    "source_file": "test_capture_operations.py",
+    "url": "code/test_capture_operations.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "257a60bf11c151e499ca811c8a4c12917eca31a94d6e199d604c06ab74f6183c"
   }
 ]

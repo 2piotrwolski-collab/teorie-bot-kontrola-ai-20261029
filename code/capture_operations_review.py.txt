@@ -1,0 +1,110 @@
+"""Keep operational capture evidence on ETF cards without changing theory verdicts."""
+import copy
+import gzip
+import hashlib
+import json
+import re
+from pathlib import Path
+from data_io import atomic_json
+from iex_capture import assess, parse
+
+IDS = {'T001', 'T004', 'T005', 'T007', 'T009'}
+
+
+def build(root):
+    meta = json.loads((root/'results/capture_operations_fix.json').read_text())
+    plan = json.loads((root/'config/iex_close_capture_20261030_v2.json').read_text())
+    folder = root/'data/iex_captures'/plan['id']
+    completed = folder/'capture.json'
+    review = {'id': 'CAPTURE_OPS_V2', 'incident': meta,
+              'next_target_utc': plan['target_at_utc'], 'next_status': 'scheduled',
+              'next_target_warsaw': '2026-10-30 20:45', 'actual_orders': 0,
+              'new_strategy_results': 0, 'verdict_changed': False}
+    triage = root/'research_round11/claude_claims_triage.json'
+    if triage.exists():
+        review['claude_triage_sha256'] = hashlib.sha256(triage.read_bytes()).hexdigest()
+    if completed.exists():
+        value = json.loads(completed.read_text())
+        try:
+            if value['code_sha256'] != plan['code_sha256'] or value.get('diagnostic_only'):
+                raise ValueError('Code identity/diagnostic mismatch')
+            for record in value['requests']:
+                path = folder/record['raw_file']
+                if path.resolve().parent != folder.resolve() or path.is_symlink():
+                    raise ValueError('Invalid raw path')
+                raw = gzip.decompress(path.read_bytes())
+                if hashlib.sha256(raw).hexdigest() != record['raw_sha256']:
+                    raise ValueError('Raw hash mismatch')
+                if 'body' in record and json.loads(raw) != record['body']:
+                    raise ValueError('Body mismatch')
+            review.update(next_status=value['status'],
+                          next_assessment=assess(value['requests'], parse(value['target_at_utc'])),
+                          capture_sha256=hashlib.sha256(completed.read_bytes()).hexdigest())
+        except (KeyError, ValueError, OSError) as exc:
+            review.update(next_status='invalid_evidence', error=str(exc))
+    return review
+
+
+def merge(progress, review):
+    out = copy.deepcopy(progress)
+    fingerprint = hashlib.sha256(json.dumps(review, sort_keys=True).encode()).hexdigest()
+    for item in out['items']:
+        if item['id'] == 'T003' and review.get('claude_triage_sha256'):
+            if item.get('claude_triage_sha256') == review['claude_triage_sha256']:
+                continue
+            item['claude_triage_sha256'] = review['claude_triage_sha256']
+            def clarify(text):
+                text = re.sub(r'16\s*syntetycznych kontroli głównych\s*reguł\s*PASS',
+                              '9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS', text)
+                text = text.replace('Completed; 0 duplikatów.',
+                                    'Completed; nie powtarzano uruchomienia. To nie kontrola duplikatów danych.')
+                if not text.startswith('Etap historyczny:') and any(s in text for s in (
+                        'Sprawdzono dokumentację, nie wykonano jeszcze zapytania', 'Potrzebne zalogowanie')):
+                    text = 'Etap historyczny: '+text
+                return text
+            item['findings'] = [clarify(s) for s in item['findings']]
+            item['findings'].append('Kontrola uwag Claude: archiwum v1 potwierdza 132 operacje, czyli 66 pełnych transakcji, w tym 2 zamknięcia końcowe. 9 testów Turtle i 7 Lehmanna to 16 łącznie. Liczby wariantów gotówkowych A/B i audyt remisów pozostają do niezależnego przeliczenia; brak zmiany werdyktu Turtle.')
+            for gap in item.get('gap_updates', []):
+                for field in ('criteria_met', 'criteria_unmet'):
+                    gap[field] = [clarify(s) for s in gap.get(field, [])]
+            continue
+        if item['id'] not in IDS or item.get('capture_operations_sha256') == fingerprint:
+            continue
+        item['capture_operations_sha256'] = fingerprint
+        item['findings'] = [s for s in item['findings'] if not s.startswith('Automat pomiaru IEX:')]
+        item['findings'].append('Automat pomiaru IEX: 29.10 wysłanie 46,512 s po celu i dwa błędy konektora. Naprawa: bezpośredni darmowy REST, lokalny timer macOS, rozgrzewka połączenia i zapis rzeczywistych czasów. Następny pomiar: 30.10 o 20:45 Warszawa, gdy Mac jest włączony. Stan: '+review['next_status']+'.')
+        item['observations'] = [o for o in item.get('observations', []) if not o['id'].startswith('CAPTURE_OPS_')]
+        item['observations'].insert(0, {
+            'id': 'CAPTURE_OPS_'+fingerprint[:12]+'_'+item['id'],
+            'title': 'Naprawa automatu pomiaru IEX · 29.10.2026',
+            'summary': 'Usterka pomiaru, bez nowego testu skuteczności lub zmiany teorii.',
+            'columns': ['Kontrola', 'Wynik'],
+            'rows': [['29.10, IEX przez konektor', 'Spóźnienie 46,512 s; dwa błędy, brak terminowego kwotowania'],
+                     ['Bezpośredni REST, diagnostyka', 'HTTP200: kwotowania i świece wszystkich 5 ETF-ów'],
+                     ['Próbny timer macOS', 'Wysłanie po 0,045 s; odpowiedzi po 0,18 s. Osobny test diagnostyczny, nie odczyt zamknięcia'],
+                     ['30.10, cel 20:45 Warszawa', review['next_status']]],
+            'limitations': ['IEX jest pojedynczym rynkiem; nie NBBO ani dowód fillu.',
+                            'Dane historyczne nie zastępują brakującego pomiaru na żywo.',
+                            'Mac musi być włączony. Model nie uczestniczy w krytycznej ścieżce odczytu.'],
+            'evidence_report': 'AUTOMAT_POMIARU.json'})
+        item['observation_ids'] = [o['id'] for o in item['observations']]
+    return out
+
+
+def refresh(root, db):
+    root = Path(root)
+    path = root/'results/capture_operations_fix.json'
+    progress_path = root/'results/research_progress_round4.json'
+    if not path.exists() or not progress_path.exists():
+        return
+    review = build(root)
+    old = json.loads(progress_path.read_text())
+    progress = merge(old, review)
+    if progress != old:
+        atomic_json(progress_path, progress)
+        before = {item['id']: item for item in old['items']}
+        for item in progress['items']:
+            if item != before[item['id']]:
+                db.research_update(item['id'], item, 'results/capture_operations_review.json')
+    atomic_json(root/'results/capture_operations_review.json', review)
+    atomic_json(root/'reports/AUTOMAT_POMIARU.json', review)

@@ -1,0 +1,99 @@
+"""Timing, missingness and credential-boundary checks; no network or market PnL."""
+import datetime as dt
+import json
+import os
+from pathlib import Path
+import tempfile
+import unittest
+from unittest.mock import patch
+import iex_capture as cap
+
+T = cap.parse('2026-10-30T19:45:00Z')
+
+
+def record(delay=0, phase='target', error=False):
+    timestamp = T + dt.timedelta(seconds=delay)
+    return {'kind': 'quotes', 'phase': phase, 'attempt': 0,
+            'requested_at_utc': timestamp.isoformat(),
+            'received_at_utc': (timestamp+dt.timedelta(seconds=.3)).isoformat(),
+            'clock_jump_seconds': 0, 'isError': error,
+            'body': {'quotes': {s: {'bp': 99, 'ap': 100, 'bs': 2, 'as': 3,
+                                   't': timestamp.isoformat()} for s in cap.SYMBOLS}}}
+
+
+class TimingCases(unittest.TestCase):
+    def test_valid_live_quote_received_inside_window(self):
+        self.assertEqual(len(cap.assess([record()], T)['fresh_on_time_symbols']), 5)
+
+    def test_late_fresh_quote_still_fails_window(self):
+        result = cap.assess([record(31)], T)
+        self.assertTrue(result['capture_late'])
+        self.assertFalse(result['fresh_on_time_symbols'])
+
+    def test_old_preflight_never_becomes_target_evidence(self):
+        result = cap.assess([record(phase='preflight')], T)
+        self.assertFalse(result['rows'])
+        self.assertFalse(result['fresh_on_time_symbols'])
+
+    def test_future_stale_one_sided_and_clock_jump_quotes_fail(self):
+        q = record()['body']['quotes']['SPY']
+        for variant, received, jump in [({**q, 'ap': 0}, T, 0),
+                                        ({**q, 'bs': 0}, T, 0),
+                                        (q, T-dt.timedelta(seconds=1), 0),
+                                        (q, T+dt.timedelta(seconds=3), 0),
+                                        (q, T, 3)]:
+            self.assertFalse(cap.quote_quality(variant, received, T, jump)['live_gate_pass'])
+
+    def test_malformed_and_failed_responses_retain_errors_and_missing_rows(self):
+        r = record(error=True)
+        r['body'] = ['malformed']
+        result = cap.assess([r], T)
+        self.assertEqual(len(result['errors']), 1)
+        self.assertEqual(len(result['rows']), 5)
+        self.assertFalse(result['fresh_on_time_symbols'])
+
+    def test_forming_minute_bar_is_rejected(self):
+        r = record()
+        r['kind'] = 'bars'
+        r['body'] = {'bars': {'SPY': {'t': T.isoformat(), 'o': 99, 'h': 101,
+                                     'l': 98, 'c': 100, 'v': 10}}}
+        row = cap.assess([r], T)['bar_rows'][0]
+        self.assertFalse(row['valid_completed_bar'])
+
+    def test_clock_jump_aborts_wait(self):
+        with patch.object(cap, 'utcnow', return_value=T+dt.timedelta(seconds=5)), patch.object(cap.time, 'monotonic', return_value=1):
+            with self.assertRaisesRegex(RuntimeError, 'Clock jump'):
+                cap.wait_until(T+dt.timedelta(seconds=10), (T, 0))
+
+    def test_ny_target_accounts_for_dst(self):
+        self.assertEqual(cap.parse('2026-10-30T15:45:00-04:00').astimezone(cap.UTC).hour, 19)
+        from zoneinfo import ZoneInfo
+        after = dt.datetime(2026, 11, 2, 15, 45, tzinfo=ZoneInfo('America/New_York'))
+        self.assertEqual(after.astimezone(cap.UTC).hour, 20)
+
+    def test_credentials_reject_shared_file_and_symlink(self):
+        with tempfile.TemporaryDirectory() as folder:
+            p = Path(folder)/'credentials'
+            p.write_text('APCA_API_KEY_ID=PKsynthetic\nAPCA_API_SECRET_KEY=synthetic-only\n')
+            p.chmod(0o644)
+            with self.assertRaises(ValueError): cap.credentials(p)
+            p.chmod(0o600)
+            self.assertEqual(set(cap.credentials(p)), {'APCA-API-KEY-ID', 'APCA-API-SECRET-KEY'})
+            link = Path(folder)/'link'
+            link.symlink_to(p)
+            with self.assertRaises(ValueError): cap.credentials(link)
+
+    def test_duplicate_completion_makes_no_network_call(self):
+        with tempfile.TemporaryDirectory() as folder, patch.object(cap, 'ROOT', Path(folder)):
+            dest = Path(folder)/'data/iex_captures/DUPLICATE'
+            dest.mkdir(parents=True)
+            (dest/'capture.json').write_text('{}')
+            plan = {'id': 'DUPLICATE', 'session': '2026-10-30',
+                    'target_at_utc': T.isoformat(), 'feed': 'iex', 'currency': 'USD',
+                    'symbols': list(cap.SYMBOLS)}
+            with patch.object(cap, 'Reader', side_effect=AssertionError('network must not run')):
+                self.assertEqual(cap.run(plan)['status'], 'already_captured')
+
+
+if __name__ == '__main__':
+    unittest.main()

@@ -1,0 +1,22 @@
+{
+  "id": "CAPTURE_REPAIR_20261029_V2",
+  "observed_heartbeat_at_utc": "2026-10-29T19:44:21.366Z",
+  "target_at_utc": "2026-10-29T19:45:00Z",
+  "requested_at_utc": "2026-10-29T19:45:46.512Z",
+  "request_late_seconds": 46.512,
+  "remaining_budget_at_heartbeat_seconds": 38.634,
+  "agent_processing_before_request_seconds": 85.146,
+  "connector_errors": [
+    "timeout after about20seconds, both calls",
+    "later diagnostic internal MCP error"
+  ],
+  "failure_boundary": "Connector/transport; precise upstream root cause not established",
+  "direct_REST_diagnostic": "HTTP200, quotes and bars for all5symbols, approx0.46seconds",
+  "local_launchd_diagnostic": "send offsets0.044621/0.048484seconds; receipt0.181440/0.179236seconds; diagnostic only",
+  "corrective_action": "LocalPython at fixed UTC target, launchd starts5minutes earlier, TLS preflight, freeIEX, finite retries, raw errors/times retained",
+  "credentials_policy": "Only existing paper credentials; protected600file outside project and data archive; values never logged",
+  "no_paid_api": true,
+  "no_model_in_capture_path": true,
+  "no_orders": true,
+  "no_new_strategy_results": true
+}

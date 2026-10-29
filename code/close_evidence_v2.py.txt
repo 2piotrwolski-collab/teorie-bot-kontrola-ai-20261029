@@ -1,0 +1,95 @@
+#!/usr/bin/env python3
+"""Expose capture failures and native REST provenance; frozen v1 stays intact."""
+import argparse
+import datetime as dt
+import json
+from pathlib import Path
+import close_evidence as legacy
+from iex_capture import SYMBOLS, parse
+from close_probe import ROOT, at, sha
+
+
+def failure_aware_iex(value, original, target):
+    result = dict(original)
+    errors = list(result.get('errors', []))
+    requests = value.get('requests', [])
+    for request in requests:
+        response = request.get('response')
+        if request.get('transport_error') or (isinstance(response, dict) and response.get('isError')):
+            errors.append({'tool': request.get('tool'), 'requested_at_utc': request.get('requested_at_utc'),
+                           'received_at_utc': request.get('received_at_utc'),
+                           'error': request.get('transport_error') or response})
+    late = value.get('capture_late', False) or any(
+        parse(request['received_at_utc']) > target+dt.timedelta(seconds=30)
+        for request in requests if request.get('received_at_utc'))
+    result.update(errors=errors, capture_late=bool(late),
+                  requests_failed=len(errors), rows=list(result.get('rows', [])))
+    if not result['rows']:
+        result['status'] = 'capture_failed' if errors else 'no_quotes_in_capture'
+        result['rows'] = [{'symbol': s, 'valid': False, 'live_gate_pass': False,
+                           'errors': ['No quote received; timing/freshness cannot be established']}
+                          for s in SYMBOLS]
+    elif late:
+        result['status'] = 'capture_late'
+    return result
+
+
+def native_historical(session, path):
+    value = json.loads(path.read_text())
+    target = at(session, '15:45:00')
+    quotes, errors = {}, []
+    for request in value.get('requests', []):
+        symbol = request.get('symbol')
+        if request.get('feed') != 'sip' or request.get('currency') != 'USD' or parse(request['requested_at_utc']) < target+dt.timedelta(minutes=30):
+            errors.append({'symbol': symbol, 'error': 'Undeclared feed/currency/timing'})
+            continue
+        if request.get('isError'):
+            errors.append({'symbol': symbol, 'error': request})
+            continue
+        raw = __import__('gzip').decompress((path.parent/request['raw_file']).read_bytes())
+        if sha(raw) != request['raw_sha256'] or json.loads(raw) != request['body']:
+            raise ValueError('Native SIP body/hash mismatch')
+        for q in request['body'].get('quotes', {}).get(symbol, []):
+            timestamp = parse(q['t'])
+            if target-dt.timedelta(minutes=1) <= timestamp <= target:
+                quotes[symbol] = {'symbol': symbol, 'timestamp': q['t'],
+                                  'bid_price': q['bp'], 'ask_price': q['ap'],
+                                  'bid_size': q['bs'], 'ask_size': q['as']}
+                break
+    return {'status': 'historical_snapshot_only', 'transport': 'direct_http_rest', 'feed': 'sip',
+            'target_ny': target.isoformat(), 'receipt': str(path.relative_to(ROOT)),
+            'receipt_sha256': sha(path.read_bytes()), 'errors': errors,
+            'rows': [legacy.assess_quote(quotes[s], target) if s in quotes else
+                     {'symbol': s, 'valid': False, 'errors': ['No historical quote received']}
+                     for s in SYMBOLS]}
+
+
+def analyze(session, prepare=False):
+    result = legacy.analyze(session, prepare)
+    result['analysis_revision'] = 'CAPTURE_ERRORS_AND_NATIVE_REST_V2'
+    if session != '2026-10-28':
+        path = ROOT/'research_round4'/session/'iex_live_capture.json'
+        if path.exists():
+            result['live_iex'] = failure_aware_iex(json.loads(path.read_text()), result['live_iex'], at(session, '15:45:00'))
+        native = ROOT/'research_round4'/session/'sip_historical_rest_capture.json'
+        if native.exists() and not prepare:
+            result['historical_sip'] = native_historical(session, native)
+        if result['live_iex'].get('status') in ('capture_failed', 'capture_late'):
+            result['limitations'] = result['limitations'] + [
+                '29.10: odczyt IEX wysłano 46,512 s po celu; dwa błędy konektora, brak terminowych kwotowań. Historyczny SIP tego nie zastępuje.']
+    return result
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--session', choices=['2026-10-28', '2026-10-29'], required=True)
+    parser.add_argument('--prepare', action='store_true')
+    parser.add_argument('--publish', action='store_true')
+    args = parser.parse_args()
+    result = analyze(args.session, args.prepare)
+    if args.publish:
+        # Scope is the single process's rendering context; no frozen source edit.
+        legacy.LIMITS = result['limitations']
+        legacy.publish(result)
+    else:
+        print(json.dumps(result, ensure_ascii=False, indent=2))

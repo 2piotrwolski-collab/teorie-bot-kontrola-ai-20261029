@@ -1,4 +1,4 @@
-Snapshot: 2026-10-29T18:43:35.427389+00:00
+Snapshot: 2026-10-29T20:15:15.296437+00:00
 T003 · Archiwalny v1: Zmienione reguły / adaptacja
 
 Turtle System 2: kompletny system wybicia
@@ -55,7 +55,7 @@ Pobrano156942rzeczywiste rekordy z publicznego pliku10sekund MES. Sprawdzono for
 
 Próbka nie ma contractID,OI,bidask i55sesji rozgrzewki; nie daje pełnego testu System2. Wieloletnie CSV z samymi marks również nie odtwarzają zakresów high/low i TrueRange.
 
-Darmowy backtest w chmurze QuantConnect jest realną ścieżką do współczesnych kontraktów z OHLCV/OI/expiry. Sprawdzono dokumentację, nie wykonano jeszcze zapytania na koncie.
+Etap historyczny: Darmowy backtest w chmurze QuantConnect jest realną ścieżką do współczesnych kontraktów z OHLCV/OI/expiry. Sprawdzono dokumentację, nie wykonano jeszcze zapytania na koncie.
 
 Dalsze samodzielne pobrania bez konta dały trzy historie konkretnych kontraktówGC, w tym wygasłyGCZ25. Są dzienne; nie dostarczają pełnego intraday/roll i wykonania do testu.
 
@@ -63,15 +63,17 @@ Publiczne próbkiLEAN pobrano z cenami, contractID, bidask iOI. Dzienne pliki ma
 
 Przygotowano source-constrained rdzeń standard2N/55–20/0.5N/max4units i9testów. Sprawdzono gapfill, różne stopy po dokładaniu przez lukę, całe kontrakty i margin; to komponentkampanii, nie cały portfelTurtle.
 
-Dopiero po niepełnym wyniku pobrań bez konta przygotowano darmowyQCaudit. Potrzebne zalogowanieFree, potem faktyczny odczyt kontraktów; nie zakup.
+Etap historyczny: Dopiero po niepełnym wyniku pobrań bez konta przygotowano darmowyQCaudit. Potrzebne zalogowanieFree, potem faktyczny odczyt kontraktów; nie zakup.
 
-Turtle: istniejąca próba cdab25dae0a3ea8ada1f18fa0fb08c11 Completed; 0 duplikatów. Kod z wyniku zgodny AST z wysłanym i zamrożonym kodem.
+Turtle: istniejąca próba cdab25dae0a3ea8ada1f18fa0fb08c11 Completed; nie powtarzano uruchomienia. To nie kontrola duplikatów danych. Kod z wyniku zgodny AST z wysłanym i zamrożonym kodem.
 
 GC 02–12.01.2024: 4 kontrakty, 18 990 świec transakcji, 24 540 świec kwotowań, 24 niepoprawne/niepełne kwotowania.
 
 Dla jednego kontraktu: 100 świec dziennych 10.08–29.12.2023, 0 naruszeń sprawdzonego warunku 0<low≤close≤high; ceny open nie sprawdzano. Pierwsze obserwowane OI wszystkich 4 kontraktów wynoszą 0; to nie dowód poprawnego wyboru kontraktu według OI.
 
 Niezależny przegląd Claude wskazał kontrole wymagane przed pełnym backtestem: kroczące kanały55/20, pełny kalendarz sesji i kotwica inicjalizacjiN. To uwagi do przygotowanego komponentu, nie nowy wynik strategii. Pełna opinia oraz ocena zarzutów są zapisane; brak pełnego adaptera pozostaje jawny.
+
+Kontrola uwag Claude: archiwum v1 potwierdza 132 operacje, czyli 66 pełnych transakcji, w tym 2 zamknięcia końcowe. 9 testów Turtle i 7 Lehmanna to 16 łącznie. Liczby wariantów gotówkowych A/B i audyt remisów pozostają do niezależnego przeliczenia; brak zmiany werdyktu Turtle.
 T003-R1 · Częściowo uzupełniony
 Potwierdzone elementy i pozostałe warunki podano poniżej.
 
@@ -83,7 +85,7 @@ Independent source review found eight mechanical choices not fixed by text.
 
 Gap-stop counterexample prevents an erroneous common newest−2N stop.
 
-16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.
+9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS; nie są wynikami rynkowymi.
 
 Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.
 
@@ -161,7 +163,7 @@ Round5: Free plan advertises backtesting across asset classes; one backtest-node
 
 Round5: Distinguishes cloud use from local data licensing; most price data free in cloud.
 
-16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.
+9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS; nie są wynikami rynkowymi.
 
 Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.
 
@@ -265,7 +267,7 @@ Round5: Provider describes contract prices,OHLCV,open interest and expiry from M
 
 Round5: Free plan advertises backtesting across asset classes; one backtest-node limit.
 
-16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.
+9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS; nie są wynikami rynkowymi.
 
 Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.
 
@@ -351,7 +353,7 @@ Dollar-per-point risk,integer contracts,unit/group/directional limits and notion
 
 Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.
 
-16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.
+9 syntetycznych testów Turtle i 7 Lehmanna (16 łącznie) PASS; nie są wynikami rynkowymi.
 
 Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.
 

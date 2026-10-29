@@ -1,0 +1,276 @@
+#!/usr/bin/env python3
+"""Timed free IEX data capture. Fixed GET data routes; no model/broker/order calls."""
+import argparse
+import concurrent.futures
+import datetime as dt
+import fcntl
+import gzip
+import hashlib
+import json
+import math
+import os
+from pathlib import Path
+import stat
+import time
+from zoneinfo import ZoneInfo
+import requests
+
+ROOT = Path(__file__).resolve().parent
+UTC = dt.timezone.utc
+SYMBOLS = ('SPY', 'IWM', 'QQQ', 'FXI', 'BIL')
+ROUTES = {'quotes': '/v2/stocks/quotes/latest', 'bars': '/v2/stocks/bars/latest'}
+CREDENTIALS = Path.home() / '.config/teorie-bot/marketdata.env'
+
+
+def utcnow():
+    return dt.datetime.now(UTC)
+
+
+def parse(value):
+    result = dt.datetime.fromisoformat(value.replace('Z', '+00:00'))
+    if result.tzinfo is None:
+        raise ValueError('Timezone required')
+    return result
+
+
+def atomic(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + '.tmp')
+    with temporary.open('w') as handle:
+        json.dump(value, handle, ensure_ascii=False, indent=2)
+        handle.write('\n')
+        handle.flush()
+        os.fsync(handle.fileno())
+    temporary.replace(path)
+
+
+def credentials(path=CREDENTIALS):
+    info = path.lstat()
+    if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or info.st_mode & 0o077:
+        raise ValueError('Credentials must be an owner-only regular file')
+    values = {}
+    for line in path.read_text().splitlines():
+        if '=' in line and not line.lstrip().startswith('#'):
+            key, value = line.split('=', 1)
+            values[key.strip()] = value.strip().strip('"').strip("'")
+    key, secret = values.get('APCA_API_KEY_ID', ''), values.get('APCA_API_SECRET_KEY', '')
+    if not key.startswith('PK') or not secret:
+        raise ValueError('Existing paper credentials required; no live credentials accepted')
+    return {'APCA-API-KEY-ID': key, 'APCA-API-SECRET-KEY': secret}
+
+
+class Reader:
+    def __init__(self, headers):
+        self.headers = headers
+        self.sessions = {kind: requests.Session() for kind in ROUTES}
+        for session in self.sessions.values():
+            session.trust_env = False
+
+    def fetch(self, kind, folder, phase, attempt):
+        if kind not in ROUTES:
+            raise ValueError('Only fixed read-only data routes are supported')
+        url = 'https://data.alpaca.markets' + ROUTES[kind]
+        query = {'symbols': ','.join(SYMBOLS), 'feed': 'iex', 'currency': 'USD'}
+        sent, start = utcnow(), time.monotonic()
+        raw = bytearray()
+        record = {'transport': 'http_rest', 'method': 'GET', 'url': url, 'query': query,
+                  'feed': 'iex', 'currency': 'USD', 'symbols': list(SYMBOLS),
+                  'kind': kind, 'phase': phase, 'attempt': attempt,
+                  'requested_at_utc': sent.isoformat(), 'isError': True}
+        try:
+            with self.sessions[kind].get(url, params=query, headers=self.headers,
+                                        timeout=(2, 3), allow_redirects=False, stream=True) as response:
+                record['http_status'] = response.status_code
+                record['response_headers'] = dict(response.headers)
+                for chunk in response.iter_content(65536):
+                    raw.extend(chunk)
+                    if len(raw) > 2_000_000 or time.monotonic() - start > 6:
+                        raise ValueError('Response size/time bound exceeded')
+            record['body'] = json.loads(raw)
+            record['isError'] = not (record['http_status'] == 200 and
+                                    isinstance(record['body'].get(kind), dict))
+        except Exception as exc:
+            # Request objects/headers and credential values are never serialized.
+            record['error_type'] = type(exc).__name__
+            record['error'] = str(exc)
+        received = utcnow()
+        elapsed = time.monotonic() - start
+        record.update(received_at_utc=received.isoformat(), duration_seconds=elapsed,
+                      clock_jump_seconds=(received-sent).total_seconds()-elapsed,
+                      raw_bytes=len(raw), raw_sha256=hashlib.sha256(raw).hexdigest())
+        name = f'{phase}_{attempt}_{kind}_{sent:%H%M%S%f}'
+        folder.mkdir(parents=True, exist_ok=True)
+        raw_path = folder / (name + '.json.gz')
+        with raw_path.open('xb') as handle:
+            handle.write(gzip.compress(raw, mtime=0))
+        record['raw_file'] = raw_path.name
+        with (folder / (name + '.receipt.json')).open('x') as handle:
+            json.dump(record, handle, ensure_ascii=False, indent=2)
+        return record
+
+    def pair(self, folder, phase, attempt):
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+            futures = [pool.submit(self.fetch, kind, folder, phase, attempt) for kind in ROUTES]
+            return [future.result() for future in futures]
+
+
+def transport_ok(records):
+    return len(records) == 2 and all(not r.get('isError', True) for r in records)
+
+
+def quote_quality(quote, received, target, clock_jump=0):
+    out = {'valid': False, 'fresh_at_receive': False, 'inside_target_window': False,
+           'live_gate_pass': False, 'errors': []}
+    try:
+        bid, ask, bs, az = [float(quote[k]) for k in ('bp', 'ap', 'bs', 'as')]
+        if not all(math.isfinite(x) for x in (bid, ask, bs, az)) or min(bid, ask, bs, az) <= 0 or ask < bid:
+            raise ValueError('Invalid/one-sided/crossed quote')
+        age = (received - parse(quote['t'])).total_seconds()
+        if age < 0:
+            raise ValueError('Future quote timestamp')
+        inside = 0 <= (received-target).total_seconds() <= 30
+        fresh = age <= 2
+        out.update(valid=True, bid=bid, ask=ask, bid_size=bs, ask_size=az,
+                   timestamp=quote['t'], age_at_receive_seconds=age,
+                   fresh_at_receive=fresh, inside_target_window=inside,
+                   live_gate_pass=fresh and inside and abs(clock_jump) <= 2)
+    except (KeyError, TypeError, ValueError, OverflowError) as exc:
+        out['errors'].append(str(exc))
+    return out
+
+
+def assess(records, target):
+    rows, bars = [], []
+    for record in records:
+        if record.get('phase') != 'target':
+            continue
+        received = parse(record['received_at_utc'])
+        response_body = record.get('body')
+        response_body = response_body if isinstance(response_body, dict) else {}
+        if record.get('kind') == 'bars':
+            source = response_body.get('bars', {})
+            source = source if isinstance(source, dict) else {}
+            for symbol in SYMBOLS:
+                row = {'symbol': symbol, 'valid_completed_bar': False}
+                try:
+                    bar = source[symbol]
+                    o, h, lo, c, v = [float(bar[k]) for k in ('o', 'h', 'l', 'c', 'v')]
+                    if not all(math.isfinite(x) for x in (o, h, lo, c, v)) or min(o, h, lo, c) <= 0 or not lo <= min(o, c) <= max(o, c) <= h or v < 0:
+                        raise ValueError('Invalid OHLCV')
+                    end = parse(bar['t']) + dt.timedelta(minutes=1)
+                    if end > parse(record['requested_at_utc']):
+                        raise ValueError('Bar not closed at request time')
+                    row.update(valid_completed_bar=True, timestamp=bar['t'],
+                               age_since_bar_end_seconds=(received-end).total_seconds())
+                except (KeyError, TypeError, ValueError, OverflowError) as exc:
+                    row['error'] = str(exc)
+                bars.append(row)
+            continue
+        if record.get('kind') != 'quotes':
+            continue
+        body = response_body.get('quotes', {})
+        body = body if isinstance(body, dict) else {}
+        for symbol in SYMBOLS:
+            row = quote_quality(body.get(symbol, {}), received, target,
+                                record.get('clock_jump_seconds', 999))
+            rows.append({'symbol': symbol, 'attempt': record['attempt'], **row})
+    late = any(parse(r['requested_at_utc']) > target + dt.timedelta(seconds=30) or
+               parse(r['received_at_utc']) > target + dt.timedelta(seconds=30) for r in records)
+    errors = [{'kind': r['kind'], 'attempt': r['attempt'], 'http_status': r.get('http_status'),
+               'error': r.get('error', r.get('body'))} for r in records if r.get('isError')]
+    return {'capture_late': late, 'rows': rows, 'bar_rows': bars, 'errors': errors,
+            'fresh_on_time_symbols': sorted({r['symbol'] for r in rows if r['live_gate_pass']}),
+            'single_venue_not_NBBO': True, 'actual_orders': 0, 'new_strategy_pnl': False}
+
+
+def wait_until(target, anchor):
+    wall, mono = anchor
+    while True:
+        current = utcnow()
+        jump = (current-wall).total_seconds() - (time.monotonic()-mono)
+        if abs(jump) > 2:
+            raise RuntimeError('Clock jump/suspend detected; no on-time claim is allowed')
+        left = (target-current).total_seconds()
+        if left <= 0:
+            return
+        time.sleep(min(left, .25))
+
+
+def run(plan):
+    target = parse(plan['target_at_utc'])
+    code_sha = hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
+    if plan.get('code_sha256') and plan['code_sha256'] != code_sha:
+        raise ValueError('Code differs from the frozen capture plan')
+    if plan['feed'] != 'iex' or plan['currency'] != 'USD' or tuple(plan['symbols']) != SYMBOLS:
+        raise ValueError('Only the frozen free IEX/USD symbol set is allowed')
+    if target.astimezone(ZoneInfo('America/New_York')).date().isoformat() != plan['session']:
+        raise ValueError('Session and NY target day differ')
+    if not plan.get('diagnostic_only') and target.astimezone(ZoneInfo('America/New_York')).strftime('%H:%M:%S') != '15:45:00':
+        raise ValueError('Production target is fixed at 15:45 NY')
+    folder = ROOT / 'data' / 'iex_captures' / plan['id']
+    folder.mkdir(parents=True, exist_ok=True)
+    with (folder / '.lock').open('a') as lock:
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return {'status': 'already_running'}
+        if (folder / 'capture.json').exists():
+            return {'status': 'already_captured'}
+        anchor = (utcnow(), time.monotonic())
+        left = (target-anchor[0]).total_seconds()
+        if left > 600:
+            return {'status': 'not_yet_due', 'seconds_remaining': left}
+        output = {'protocol': plan['id'], 'session': plan['session'], 'target_at_utc': target.isoformat(),
+                  'code_sha256': code_sha, 'plan': plan,
+                  'diagnostic_only': plan.get('diagnostic_only', False), 'started_at_utc': anchor[0].isoformat(),
+                  'no_models': True, 'no_paid_api': True, 'no_orders': True,
+                  'preflight': [], 'requests': [], 'status': 'starting', 'pid': os.getpid()}
+        try:
+            if left < -30:
+                raise RuntimeError('Started after capture deadline; historical reconstruction forbidden')
+            reader = Reader(credentials())
+            if left > 8:
+                output['preflight'] += reader.pair(folder, 'preflight', 0)
+                output['preflight_transport_ok'] = transport_ok(output['preflight'])
+                output['status'] = 'armed' if output['preflight_transport_ok'] else 'preflight_failed'
+                atomic(folder / 'state.json', output)
+                # A second connection check warms TLS shortly before the target.
+                if (target-utcnow()).total_seconds() > 20:
+                    wait_until(target-dt.timedelta(seconds=20), anchor)
+                    output['preflight'] += reader.pair(folder, 'preflight', 1)
+                    atomic(folder / 'state.json', output)
+            for attempt, offset in enumerate((0, 5, 10)):
+                wait_until(target+dt.timedelta(seconds=offset), anchor)
+                if utcnow() > target+dt.timedelta(seconds=20):
+                    break
+                rows = reader.pair(folder, 'target', attempt)
+                output['requests'] += rows
+                atomic(folder / 'state.json', output)
+                if transport_ok(rows) or any(r.get('http_status') in (401, 403) for r in rows):
+                    break
+                # Respect a server rate-limit response instead of retrying inside it.
+                if any(r.get('http_status') == 429 for r in rows):
+                    break
+            output['assessment'] = assess(output['requests'], target)
+            output['status'] = 'captured' if any(not r.get('isError', True) for r in output['requests']) else 'failed'
+        except Exception as exc:
+            output.update(status='failed', error_type=type(exc).__name__, error=str(exc))
+            output['assessment'] = assess(output['requests'], target)
+            if utcnow() > target+dt.timedelta(seconds=30):
+                output['assessment']['capture_late'] = True
+        output['finished_at_utc'] = utcnow().isoformat()
+        # Exclusive completion file + flock prevent duplicate requests after restart.
+        with (folder / 'capture.json').open('x') as handle:
+            json.dump(output, handle, ensure_ascii=False, indent=2)
+        atomic(folder / 'state.json', output)
+        if not output['diagnostic_only']:
+            atomic(ROOT / 'results/iex_capture_latest.json', output)
+        return {'status': output['status'], 'file': str(folder/'capture.json'),
+                'assessment': output['assessment'], 'error_type': output.get('error_type')}
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--plan', type=Path, required=True)
+    args = parser.parse_args()
+    print(json.dumps(run(json.loads(args.plan.read_text())), ensure_ascii=False))

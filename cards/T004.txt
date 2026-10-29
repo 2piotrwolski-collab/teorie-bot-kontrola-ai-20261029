@@ -1,4 +1,4 @@
-Snapshot: 2026-10-29T18:43:35.427389+00:00
+Snapshot: 2026-10-29T20:15:15.296437+00:00
 T004 · Archiwalny v1: Zmienione reguły / adaptacja
 
 RSI(2) Connorsa: cofnięcie w trendzie
@@ -52,6 +52,8 @@ Próba 42 sesji dla IWM jest dodatnia, lecz obejmuje tylko dwa wejścia. FXI nie
 Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla IWM, FXI, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.
 
 Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.
+
+Automat pomiaru IEX: 29.10 wysłanie 46,512 s po celu i dwa błędy konektora. Naprawa: bezpośredni darmowy REST, lokalny timer macOS, rozgrzewka połączenia i zapis rzeczywistych czasów. Następny pomiar: 30.10 o 20:45 Warszawa, gdy Mac jest włączony. Stan: scheduled.
 T004-S1 · Częściowo uzupełniony
 Potwierdzone elementy i pozostałe warunki podano poniżej.
 
@@ -120,6 +122,28 @@ Historical auction deadline and intraday quotes/fills were not acquired.
 Round3boundedsourcecheck (https://www.interactivebrokers.com/en/pricing/commissions-stocks.php) · Frozen execution/costvariants; currenttariff and costassumptions separated.
 
 Następny krok: Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje pięciominutowe i weryfikować bid/ask, czas zlecenia oraz dostępność instrumentu. Wymagany większy niezależny zbiór i partner review; nie wybierać zwycięzcy z dwóch transakcji.
+
+Naprawa automatu pomiaru IEX · 29.10.2026
+
+Usterka pomiaru, bez nowego testu skuteczności lub zmiany teorii.
+
+KontrolaWynik
+
+29.10, IEX przez konektorSpóźnienie 46,512 s; dwa błędy, brak terminowego kwotowania
+
+Bezpośredni REST, diagnostykaHTTP200: kwotowania i świece wszystkich 5 ETF-ów
+
+Próbny timer macOSWysłanie po 0,045 s; odpowiedzi po 0,18 s. Osobny test diagnostyczny, nie odczyt zamknięcia
+
+30.10, cel 20:45 Warszawascheduled
+
+IEX jest pojedynczym rynkiem; nie NBBO ani dowód fillu.
+
+Dane historyczne nie zastępują brakującego pomiaru na żywo.
+
+Mac musi być włączony. Model nie uczestniczy w krytycznej ścieżce odczytu.
+
+Dane wyniku i ograniczenia
 
 Rzeczywiste kwotowania przed zamknięciem · 28.10.2026
 
