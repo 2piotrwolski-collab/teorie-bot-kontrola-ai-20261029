@@ -1,0 +1,11 @@
+{
+  "plan_sha256": "fcb0e3d6f334be468b75281e50febb3594efc7b3a3097333ec53017e65078c9b",
+  "code_sha256": {
+    "T003_TURTLE_DATA/main.py": "437df335e23dcea42d12c7be5a6b83322c0501ad497b7c5d7342fbec4b1cad6d",
+    "T010_LEHMANN_DATA/main.py": "59afda1689ba3fd66097721c251a6c7d87666b1b49f699deda11156852bbe1d8",
+    "research_kernels.py": "045d5708c20cb28b979c0b46133dda85b0085320e6a77fcda9e53959d2ec2027",
+    "test_rules.py": "54a56f159a23c89c1efdc2235f13f692c3b069c8bfd83ee3bc9128ceaf007bf2"
+  },
+  "at_utc": "2026-10-29T13:26:50.765052+00:00",
+  "purpose": "Preparation and planneddataaudits; not permission to claim fullbacktestready"
+}

@@ -1,0 +1,233 @@
+from AlgorithmImports import *
+from datetime import datetime,timedelta
+import math,hashlib,json,statistics
+"""Fixed near-close strategy logic and RAW virtual accounting, no data or order API."""
+import hashlib,json,statistics
+
+def wilder2(closes):
+    if len(closes)<3:raise ValueError('RSI warmup')
+    changes=[b-a for a,b in zip(closes,closes[1:])]
+    gain=sum(max(x,0) for x in changes[:2])/2
+    loss=sum(max(-x,0) for x in changes[:2])/2
+    for x in changes[2:]:gain=(gain+max(x,0))/2;loss=(loss+max(-x,0))/2
+    return 50. if gain==loss==0 else 100. if loss==0 else 100-100/(1+gain/loss)
+
+def cutler3(closes):
+    if len(closes)<4:raise ValueError('Cutler warmup')
+    c=[b-a for a,b in zip(closes[-4:],closes[-3:])];g=sum(max(x,0) for x in c);l=sum(max(-x,0) for x in c)
+    return 50. if g==l==0 else 100. if l==0 else 100*g/(g+l)
+
+def feature(history,volumes,minute_prefix):
+    if len(history)<500 or len(volumes)<500:raise ValueError('500 daily warmup')
+    p=minute_prefix['last'];c=history+[p];width=minute_prefix['high']-minute_prefix['low']
+    return {'rsi2':wilder2(c),'sma200':statistics.fmean(c[-200:]),'cutler3':cutler3(c),
+        'price':p,'ibs':(p-minute_prefix['low'])/width if width>0 else None,
+        'highvol':minute_prefix['volume']>statistics.median(volumes[-500:])}
+
+def target(kind,f,actual_risk,latent):
+    if kind=='buy':return True
+    if kind=='connors':return f['rsi2']<=70 if actual_risk else f['price']>f['sma200'] and f['rsi2']<5
+    if kind=='ibs_component':return f['ibs'] is not None and f['ibs']<=.2 and f['highvol']
+    if kind=='rsi3_base':return latent
+    if kind=='rsi3_filter':return latent and f['ibs'] is not None and f['ibs']<=.5
+    raise ValueError(kind)
+
+def fee(notional,quote_price,sell,spread_bps):
+    if abs(notional)<1e-9:return 0.
+    shares=abs(notional)/quote_price
+    commission=min(.01*abs(notional),max(1.,.005*shares))
+    return commission+abs(notional)*(spread_bps/10000+(0.0001 if sell else 0))
+
+def rebalance(q,cash,weights,prices,quotes,bps,day,reason):
+    if any(w<0 for w in weights.values()) or abs(sum(weights.values())-1)>1e-9:raise ValueError('Unlevered fully allocated weights required')
+    symbols=list(prices);old={s:q.get(s,0)*prices[s] for s in symbols};before=cash+sum(old.values())
+    def cost(nav):return sum(fee(weights.get(s,0)*nav-old[s],quotes[s],weights.get(s,0)*nav<old[s],bps) for s in symbols)
+    lo,hi=0.,before
+    for _ in range(70):
+        mid=(lo+hi)/2
+        if mid+cost(mid)>before:hi=mid
+        else:lo=mid
+    after=(lo+hi)/2;trades=[]
+    for s in symbols:
+        delta=weights.get(s,0)*after-old[s]
+        if abs(delta)>1e-8:trades.append({'date':day,'symbol':s,'signed_notional':delta,'cost':fee(delta,quotes[s],delta<0,bps),'quote_price':quotes[s],'adjusted_price':prices[s],'reason':reason})
+    holdings={s:weights.get(s,0)*after/prices[s] for s in symbols};remaining=before-sum(holdings[s]*prices[s] for s in symbols)-sum(t['cost'] for t in trades)
+    if remaining < -1e-6:raise ValueError('Unfunded trade')
+    return holdings,max(0.,remaining),trades
+
+class Book:
+    def __init__(self,code,asset,kind,bps):
+        self.code=code;self.asset=asset;self.kind=kind;self.bps=bps;self.q={};self.cash=10000.
+        self.cost=0.;self.orders=0;self.entries=0;self.closed=0;self.days=0;self.riskdays=0
+        self.missed=0;self.missingmarks=0;self.peak=10000.;self.dd=0.;self.value=10000.
+        self.turnover=0.;self.annual={};self.sha=hashlib.sha256();self.terminal_ok=False
+    def corporate(self,symbol,distribution=0.,split_factor=None):
+        quantity=self.q.get(symbol,0)
+        if split_factor is not None:
+            if split_factor<=0:raise ValueError('Invalid split')
+            self.q[symbol]=quantity/split_factor
+        else:self.cash+=quantity*distribution
+    def risk(self):return self.asset!='BIL' and self.q.get(self.asset,0)>1e-9
+    def rebalance(self,desired,prices,day,terminal=False):
+        old=self.risk();dest=self.asset if desired else 'BIL'
+        required={s for s,q in self.q.items() if q>1e-9}
+        if not terminal:required.add(dest)
+        if not all(s in prices and prices[s]>0 for s in required):self.missed+=1;return False
+        p={s:prices[s] for s in required}
+        if terminal:
+            trades=[]
+            for s,q in self.q.items():
+                if q<=1e-9:continue
+                n=q*p[s];f=fee(n,p[s],True,self.bps);self.cash+=n-f
+                trades.append({'date':day,'symbol':s,'signed_notional':-n,'cost':f})
+            self.q={};self.terminal_ok=True
+        else:
+            self.q,self.cash,trades=rebalance(self.q,self.cash,{s:float(s==dest) for s in p},p,p,self.bps,day,self.kind)
+        for t in trades:
+            self.cost+=t['cost'];self.orders+=1;self.turnover+=abs(t['signed_notional'])
+            self.sha.update((json.dumps(t,sort_keys=True,separators=(',',':'))+'\n').encode())
+        if not old and self.risk():self.entries+=1
+        if old and not self.risk():self.closed+=1
+        return True
+    def mark(self,prices,day):
+        if any(s not in prices for s,q in self.q.items() if q>1e-9):self.missingmarks+=1;return
+        self.value=self.cash+sum(q*prices[s] for s,q in self.q.items() if q>1e-9)
+        if self.value<=0:raise ValueError('Insolvent book')
+        self.peak=max(self.peak,self.value);self.dd=min(self.dd,self.value/self.peak-1)
+        self.days+=1;self.riskdays+=int(self.risk());self.annual[day[:4]]=self.value
+    def result(self):
+        years={};previous=10000.
+        for y,value in sorted(self.annual.items()):years[y]=round((value/previous-1)*100,3);previous=value
+        return {'v':self.code,'b':self.bps,'r':round((self.value/10000-1)*100,4),'dd':round(self.dd*100,4),
+            'n':self.entries,'closed':self.closed,'orders':self.orders,'fees':round(self.cost,3),
+            'riskdays':self.riskdays,'days':self.days,'miss':self.missed,'missingmarks':self.missingmarks,
+            'turnover':round(self.turnover/10000,3),'end_ok':self.terminal_ok,'ledger':self.sha.hexdigest(),
+            **({'annual':years} if self.bps==5 else {})}
+
+
+class ExtendedNearCloseStudy(QCAlgorithm):
+    def initialize(self):
+        if self.live_mode:raise ValueError('Historical research only; no real orders')
+        self.study=self.get_parameter('study') or 'probe'
+        if self.study not in ['probe','connors','ibs']:raise ValueError('Unfrozen study')
+        start,end=((2008,7,1),(2008,8,1)) if self.study=='probe' else ((2008,1,2),(2026,10,28))
+        self.set_start_date(*start);self.set_end_date(*end);self.set_cash(10000)
+        self.settings.daily_precise_end_time=True
+        self.last_day=datetime(*end).date().isoformat()
+        self.names=['IWM','FXI','SPY','BIL'] if self.study=='connors' else ['SPY','IWM','QQQ','BIL']
+        if self.study=='probe':self.names=['SPY','IWM','QQQ','FXI','BIL']
+        self.syms={n:self.add_equity(n,Resolution.MINUTE,fill_forward=False,
+            extended_market_hours=False,data_normalization_mode=DataNormalizationMode.RAW).symbol for n in self.names}
+        self.features_assets=[n for n in self.names if n!='BIL' and (self.study!='connors' or n in ['IWM','FXI'])]
+        self.history_closes={};self.history_volume={};self.history_last={};self.reset_needed=set(self.features_assets)
+        self.latent={n:False for n in self.features_assets};self.books=[];self.current_day=None
+        specs=[]
+        if self.study=='connors':specs=[('CI','IWM','connors'),('CF','FXI','connors')]
+        elif self.study=='ibs':
+            for n in self.features_assets:
+                specs.extend([('V'+n,n,'ibs_component'),('R'+n,n,'rsi3_base'),('F'+n,n,'rsi3_filter')])
+        if self.study!='probe':specs += [('B'+n,n,'buy') for n in self.names]
+        for code,n,kind in specs:
+            for bps in [5,20]:self.books.append(Book(code,n,kind,bps))
+        self.diag={'days':0,'early':0,'bad_prefix':{n:0 for n in self.features_assets},
+                   'split_events':0,'dividend_events':0,'history_reset':0,'history_append':0,
+                   'history_count_min':500,'minute_bars':0,'day_sample':[]}
+        self.last_prices={};self.last_price_time={};self.seen=set();self.history_meta=[]
+        self.expected=[];day=datetime(*start);endday=datetime(*end)
+        hours=self.securities[self.syms['SPY']].exchange.hours
+        while day<=endday:
+            if hours.is_date_open(day,False):self.expected.append(day.date().isoformat())
+            day+=timedelta(days=1)
+
+    def daily_history(self,n,today):
+        reset=n in self.reset_needed or n not in self.history_closes
+        bars=list(self.history[TradeBar](self.syms[n],500 if reset else 1,Resolution.DAILY,
+            fill_forward=False,data_normalization_mode=DataNormalizationMode.SCALED_RAW))
+        if not bars:raise ValueError('Empty prior daily history '+n)
+        if bars[-1].end_time>=today.replace(hour=9,minute=30,second=0,microsecond=0):
+            raise ValueError('History includes decision-day/future daily bar')
+        if any(b.close<=0 or b.volume<0 or not math.isfinite(float(b.close)) for b in bars):raise ValueError('Invalid daily input')
+        if reset:
+            if len(bars)<500:raise ValueError('500 daily history unavailable '+n)
+            self.history_closes[n]=[float(b.close) for b in bars]
+            self.history_volume[n]=[float(b.volume) for b in bars]
+            self.diag['history_reset']+=1;self.reset_needed.discard(n)
+            if len(self.history_meta)<4:self.history_meta.append([n,len(bars),str(bars[0].end_time),str(bars[-1].end_time)])
+        elif bars[-1].end_time>self.history_last[n]:
+            self.history_closes[n]=(self.history_closes[n]+[float(bars[-1].close)])[-500:]
+            self.history_volume[n]=(self.history_volume[n]+[float(bars[-1].volume)])[-500:]
+            self.diag['history_append']+=1
+        self.history_last[n]=bars[-1].end_time
+
+    def begin_day(self,now):
+        self.current_day=now.date().isoformat();self.seen.add(self.current_day);self.diag['days']+=1
+        self.close_at=self.securities[self.syms['SPY']].exchange.hours.get_next_market_close(now,False)
+        self.signal_at=self.close_at-timedelta(minutes=20);self.fill_at=self.close_at-timedelta(minutes=15)
+        self.day_open=now.replace(hour=9,minute=30,second=0,microsecond=0)
+        self.prefix={n:{'count':0,'high':-math.inf,'low':math.inf,'last':None,'volume':0.,'last_end':None} for n in self.features_assets}
+        self.daily_features={};self.processed_fill=False
+        if self.close_at.hour<16:self.diag['early']+=1
+        for n in self.features_assets:self.daily_history(n,now)
+
+    def on_data(self,data):
+        reverse={s:n for n,s in self.syms.items()}
+        for s,event in data.splits.items():
+            if s in reverse and event.type==SplitType.SPLIT_OCCURRED:
+                n=reverse[s];self.diag['split_events']+=1
+                for book in self.books:book.corporate(n,split_factor=float(event.split_factor))
+                if n in self.features_assets:self.reset_needed.add(n)
+        for s,event in data.dividends.items():
+            if s in reverse:
+                n=reverse[s];self.diag['dividend_events']+=1
+                for book in self.books:book.corporate(n,distribution=float(event.distribution))
+                if n in self.features_assets:self.reset_needed.add(n)
+        if not data.bars:return
+        bars={n:data.bars[s] for n,s in self.syms.items() if s in data.bars}
+        regular=[b for b in bars.values() if b.time.hour>=9 and (b.time.hour>9 or b.time.minute>=30)]
+        if not regular:return
+        now=self.time
+        if now.date().isoformat()!=self.current_day:self.begin_day(now)
+        for n,b in bars.items():
+            if b.end_time-b.time!=timedelta(minutes=1):raise ValueError('Unexpected minute bar span')
+            if not 0<float(b.low)<=min(float(b.open),float(b.close))<=max(float(b.open),float(b.close))<=float(b.high):raise ValueError('Bad minute OHLC')
+            self.diag['minute_bars']+=1;self.last_prices[n]=float(b.close);self.last_price_time[n]=b.end_time
+            if n in self.prefix and self.day_open<=b.time and b.end_time<=self.signal_at:
+                p=self.prefix[n];p['count']+=1;p['high']=max(p['high'],float(b.high));p['low']=min(p['low'],float(b.low));p['last']=float(b.close);p['volume']+=float(b.volume);p['last_end']=b.end_time
+        if now==self.signal_at:
+            count=int((self.signal_at-self.day_open).total_seconds()/60)
+            for n,p in self.prefix.items():
+                if p['count']!=count or p['last_end']!=self.signal_at:self.diag['bad_prefix'][n]+=1;continue
+                f=feature(self.history_closes[n],self.history_volume[n],p);self.daily_features[n]=f
+                self.latent[n]=f['cutler3']<=40 if self.latent[n] else f['cutler3']<10
+            if len(self.diag['day_sample'])<3:self.diag['day_sample'].append([self.current_day,count,[self.prefix[n]['count'] for n in self.features_assets],len(self.daily_features)])
+        if now==self.fill_at+timedelta(minutes=1) and not self.processed_fill:
+            self.processed_fill=True
+            prices={n:float(b.open) for n,b in bars.items() if b.time==self.fill_at}
+            for book in self.books:
+                terminal=self.current_day==self.last_day
+                if terminal:book.rebalance(False,prices,self.current_day,terminal=True)
+                elif book.kind=='buy':
+                    if not any(q>1e-9 for q in book.q.values()):book.rebalance(True,prices,self.current_day)
+                elif book.asset in self.daily_features:
+                    want=target(book.kind,self.daily_features[book.asset],book.risk(),self.latent[book.asset])
+                    if want!=book.risk() or not any(q>1e-9 for q in book.q.values()):book.rebalance(want,prices,self.current_day)
+                else:book.missed+=1
+                # Only exact target-minute prices count as a verified NAV mark.
+                book.mark(prices,self.current_day)
+
+    def on_end_of_algorithm(self):
+        rows=[]
+        for book in self.books:
+            x=book.result();annual=x.get('annual')
+            rows.append([x[k] for k in ['v','b','r','dd','n','closed','orders','fees','riskdays','days','miss','missingmarks','turnover','end_ok','ledger']]+[annual])
+        row_sha=hashlib.sha256(json.dumps(rows,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+        header={'id':'CONNORS_IBS_LONGHIST_20261029_V1','case':self.study,'from':str(self.start_date.date()),'to':self.last_day,
+            'expected_days':len(self.expected),'missing_whole_days':len(set(self.expected)-self.seen),
+            'diag':self.diag,'prior_history':self.history_meta,'rows':len(rows),'row_sha':row_sha,
+            'columns':['variant','bps','return_pct','dd_pct','entries','closed','orders','fees_USD','riskdays','marked_days','missed_decisions','missingmarks','turnover_initial','terminal_ok','ledger_SHA256','annual5bps'],
+            'mode':'MODEL_COST_SCREEN_NOT_SOURCE_NUMERICAL_REPLICATION_NOT_OOS_NOT_PAPER','real_orders':0}
+        messages=['R10_HEADER '+json.dumps(header,separators=(',',':'))]
+        messages+=['R10_ROW '+json.dumps(row,separators=(',',':'),sort_keys=True) for row in rows]
+        messages+=['R10_END '+json.dumps({'case':self.study,'rows':len(rows),'row_sha':row_sha},separators=(',',':'))]
+        if any(len(m)>2000 for m in messages) or sum(len(m.encode()) for m in messages)>9000:raise ValueError('Output budget exceeded; never publish truncated audit')
+        for message in messages:self.debug(message)

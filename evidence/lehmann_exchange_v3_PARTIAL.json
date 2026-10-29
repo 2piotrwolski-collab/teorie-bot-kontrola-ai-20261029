@@ -1,0 +1,332 @@
+{
+  "status": "TRUNCATED_LOG_PARTIAL_FIELDS_ONLY",
+  "run_id": "60b8a41db6815d2002889320fce44a1e",
+  "complete_audit_json": false,
+  "truncation": "RESEARCH_AUDIT_JSON line is exactly8192characters incltimestamp; not parseable as completeJSON. Retain only individually complete fields and daily objects.",
+  "complete_top_level_fields": {
+    "bar_count": 80,
+    "borrow_checks": [],
+    "case": "panel_2021",
+    "delistings": [],
+    "full_PIT_panel_acquired": false,
+    "orders_allowed": false,
+    "protocol": "T010_QC_DATA_AUDIT_EXCHANGE_V3",
+    "remaining_gates": [
+      "whole eligible cross-section, not8sample symbols",
+      "asof exchange/shareclass completeness incl missing fundamental rows",
+      "terminal totalreturns incl OTC/recovery",
+      "known-at-time borrow coverage and default semantics",
+      "four-day signal timing, turnover, restricted short proceeds, funding/fees"
+    ],
+    "runtime_status": "AUDIT_FINISHED_NOT_A_STRATEGY_RESULT",
+    "sample_history": [
+      {
+        "count": 10,
+        "first_end": "2020-12-17 16:00:00",
+        "last_end": "2020-12-31 16:00:00",
+        "normalization": "as subscribed; not yet reconciled to source totalreturn",
+        "sid": "A RPTMYV3VC57P"
+      },
+      {
+        "count": 10,
+        "first_end": "2020-12-17 16:00:00",
+        "last_end": "2020-12-31 16:00:00",
+        "normalization": "as subscribed; not yet reconciled to source totalreturn",
+        "sid": "AA WF7IHVI76I5H"
+      },
+      {
+        "count": 10,
+        "first_end": "2020-12-17 16:00:00",
+        "last_end": "2020-12-31 16:00:00",
+        "normalization": "as subscribed; not yet reconciled to source totalreturn",
+        "sid": "AAP SA48O8J43YAT"
+      },
+      {
+        "count": 10,
+        "first_end": "2020-12-17 16:00:00",
+        "last_end": "2020-12-31 16:00:00",
+        "normalization": "as subscribed; not yet reconciled to source totalreturn",
+        "sid": "AAT UT927RDJ1T2D"
+      },
+      {
+        "count": 10,
+        "first_end": "2020-12-17 16:00:00",
+        "last_end": "2020-12-31 16:00:00",
+        "normalization": "as subscribed; not yet reconciled to source totalreturn",
+        "sid": "ABBV VCY032R250MD"
+      },
+      {
+        "count": 10,
+        "first_end": "2020-12-17 16:00:00",
+        "last_end": "2020-12-31 16:00:00",
+        "normalization": "as subscribed; not yet reconciled to source totalreturn",
+        "sid": "AAS R735QTJ8XC9X"
+      },
+      {
+        "count": 10,
+        "first_end": "2020-12-17 16:00:00",
+        "last_end": "2020-12-31 16:00:00",
+        "normalization": "as subscribed; not yet reconciled to source totalreturn",
+        "sid": "ABCB R735QTJ8XC9X"
+      },
+      {
+        "count": 10,
+        "first_end": "2020-12-17 16:00:00",
+        "last_end": "2020-12-31 16:00:00",
+        "normalization": "as subscribed; not yet reconciled to source totalreturn",
+        "sid": "AAN XIT9T96LYYJP"
+      }
+    ],
+    "schema_errors": 42641,
+    "schema_trace": [
+      {
+        "pascal": {
+          "exchange": "NYSE",
+          "reference_type": "<class 'QuantConnect.Data.Fundamental.SecurityReference'>",
+          "security_type": "ST00000001"
+        },
+        "python_type": "<class 'QuantConnect.Data.Fundamental.Fundamental'>",
+        "snake": {
+          "exchange": "NYSE",
+          "reference_type": "<class 'QuantConnect.Data.Fundamental.SecurityReference'>",
+          "security_type": "ST00000001"
+        },
+        "time": "2021-01-04 00:00:00"
+      },
+      {
+        "pascal": {
+          "exchange": "None",
+          "reference_type": "<class 'QuantConnect.Data.Fundamental.SecurityReference'>",
+          "security_type": "None"
+        },
+        "python_type": "<class 'QuantConnect.Data.Fundamental.Fundamental'>",
+        "snake": {
+          "exchange": "None",
+          "reference_type": "<class 'QuantConnect.Data.Fundamental.SecurityReference'>",
+          "security_type": "None"
+        },
+        "time": "2021-01-04 00:00:00"
+      },
+      {
+        "pascal": {
+          "exchange": "NYSE",
+          "reference_type": "<class 'QuantConnect.Data.Fundamental.SecurityReference'>",
+          "security_type": "ST00000001"
+        },
+        "python_type": "<class 'QuantConnect.Data.Fundamental.Fundamental'>",
+        "snake": {
+          "exchange": "NYSE",
+          "reference_type": "<class 'QuantConnect.Data.Fundamental.SecurityReference'>",
+          "security_type": "ST00000001"
+        },
+        "time": "2021-01-04 00:00:00"
+      }
+    ],
+    "strategy_return_calculated": false,
+    "symbol_changes": [],
+    "terminal_recovery_verified": false
+  },
+  "complete_universe_days": [
+    {
+      "all_eligible_sid_hash": "8c0d5c5a823bf5cee4f9e551c6bdbef3985d831c4a21c3b8f45b97953961431f",
+      "asof_end_times": [
+        "2021-01-01 00:00:00"
+      ],
+      "eligible_count": 1689,
+      "exchange_classification_still_requires_source_review": true,
+      "exchange_value_counts": {
+        "AMEX": 198,
+        "ARCA": 3,
+        "BATS": 2,
+        "NAS": 2336,
+        "NYSE": 1720,
+        "None": 4256,
+        "OTCM": 408
+      },
+      "input_count": 8923,
+      "mapping_scope": "NYSE and legacy NYS verified; legacy ASE retained; modern AMEX code not yet verified",
+      "sample_sids": [
+        "A RPTMYV3VC57P",
+        "AA WF7IHVI76I5H",
+        "AAN XIT9T96LYYJP",
+        "AAP SA48O8J43YAT",
+        "AAS R735QTJ8XC9X",
+        "AAT UT927RDJ1T2D",
+        "ABBV VCY032R250MD",
+        "ABCB R735QTJ8XC9X"
+      ],
+      "security_type_counts": {
+        "None": 4256,
+        "ST00000001": 4626,
+        "ST00000002": 32,
+        "ST00000008": 3,
+        "ST00000009": 4,
+        "ST000000B1": 2
+      },
+      "time": "2021-01-04 00:00:00",
+      "unknown_exchange_or_type": 4256
+    },
+    {
+      "all_eligible_sid_hash": "daf67a4a64e1eafefa82555152fbd657b50726edbbca989025767b60c8da9d2e",
+      "asof_end_times": [
+        "2021-01-05 00:00:00"
+      ],
+      "eligible_count": 1690,
+      "exchange_classification_still_requires_source_review": true,
+      "exchange_value_counts": {
+        "AMEX": 196,
+        "ARCA": 4,
+        "BATS": 2,
+        "NAS": 2331,
+        "NYSE": 1721,
+        "None": 4254,
+        "OTCM": 408
+      },
+      "input_count": 8916,
+      "mapping_scope": "NYSE and legacy NYS verified; legacy ASE retained; modern AMEX code not yet verified",
+      "sample_sids": [
+        "A RPTMYV3VC57P",
+        "AA WF7IHVI76I5H",
+        "AAN XIT9T96LYYJP",
+        "AAP SA48O8J43YAT",
+        "AAS R735QTJ8XC9X",
+        "AAT UT927RDJ1T2D",
+        "ABBV VCY032R250MD",
+        "ABCB R735QTJ8XC9X"
+      ],
+      "security_type_counts": {
+        "None": 4254,
+        "ST00000001": 4621,
+        "ST00000002": 32,
+        "ST00000008": 3,
+        "ST00000009": 4,
+        "ST000000B1": 2
+      },
+      "time": "2021-01-05 00:00:00",
+      "unknown_exchange_or_type": 4254
+    },
+    {
+      "all_eligible_sid_hash": "3751af3b95cfc2a25dc6d5afd4cd458b058e1dd7e7f7863ad60a8b13c5b41715",
+      "asof_end_times": [
+        "2021-01-06 00:00:00"
+      ],
+      "eligible_count": 1690,
+      "exchange_classification_still_requires_source_review": true,
+      "exchange_value_counts": {
+        "AMEX": 197,
+        "ARCA": 4,
+        "BATS": 2,
+        "NAS": 2335,
+        "NYSE": 1721,
+        "None": 4259,
+        "OTCM": 408
+      },
+      "input_count": 8926,
+      "mapping_scope": "NYSE and legacy NYS verified; legacy ASE retained; modern AMEX code not yet verified",
+      "sample_sids": [
+        "A RPTMYV3VC57P",
+        "AA WF7IHVI76I5H",
+        "AAN XIT9T96LYYJP",
+        "AAP SA48O8J43YAT",
+        "AAS R735QTJ8XC9X",
+        "AAT UT927RDJ1T2D",
+        "ABBV VCY032R250MD",
+        "ABCB R735QTJ8XC9X"
+      ],
+      "security_type_counts": {
+        "None": 4259,
+        "ST00000001": 4626,
+        "ST00000002": 32,
+        "ST00000008": 3,
+        "ST00000009": 4,
+        "ST000000B1": 2
+      },
+      "time": "2021-01-06 00:00:00",
+      "unknown_exchange_or_type": 4259
+    },
+    {
+      "all_eligible_sid_hash": "b883eb832164c71f349461a1e9000d68ef7710826043b434559d2f0ed27dba50",
+      "asof_end_times": [
+        "2021-01-07 00:00:00"
+      ],
+      "eligible_count": 1690,
+      "exchange_classification_still_requires_source_review": true,
+      "exchange_value_counts": {
+        "AMEX": 196,
+        "ARCA": 3,
+        "BATS": 2,
+        "NAS": 2339,
+        "NYSE": 1721,
+        "None": 4259,
+        "OTCM": 408
+      },
+      "input_count": 8928,
+      "mapping_scope": "NYSE and legacy NYS verified; legacy ASE retained; modern AMEX code not yet verified",
+      "sample_sids": [
+        "A RPTMYV3VC57P",
+        "AA WF7IHVI76I5H",
+        "AAN XIT9T96LYYJP",
+        "AAP SA48O8J43YAT",
+        "AAS R735QTJ8XC9X",
+        "AAT UT927RDJ1T2D",
+        "ABBV VCY032R250MD",
+        "ABCB R735QTJ8XC9X"
+      ],
+      "security_type_counts": {
+        "None": 4259,
+        "ST00000001": 4628,
+        "ST00000002": 32,
+        "ST00000008": 3,
+        "ST00000009": 4,
+        "ST000000B1": 2
+      },
+      "time": "2021-01-07 00:00:00",
+      "unknown_exchange_or_type": 4259
+    },
+    {
+      "all_eligible_sid_hash": "5ac20a171a1730079cea4e58f55e684afcee3880cb9a0e9dec4fba27fd4bc2e6",
+      "asof_end_times": [
+        "2021-01-08 00:00:00"
+      ],
+      "eligible_count": 1691,
+      "exchange_classification_still_requires_source_review": true,
+      "exchange_value_counts": {
+        "AMEX": 196,
+        "ARCA": 2,
+        "BATS": 2,
+        "NAS": 2340,
+        "NYSE": 1722,
+        "None": 4252,
+        "OTCM": 407
+      },
+      "input_count": 8921,
+      "mapping_scope": "NYSE and legacy NYS verified; legacy ASE retained; modern AMEX code not yet verified",
+      "sample_sids": [
+        "A RPTMYV3VC57P",
+        "AA WF7IHVI76I5H",
+        "AAN XIT9T96LYYJP",
+        "AAP SA48O8J43YAT",
+        "AAS R735QTJ8XC9X",
+        "AAT UT927RDJ1T2D",
+        "ABBV VCY032R250MD",
+        "ABCB R735QTJ8XC9X"
+      ],
+      "security_type_counts": {
+        "None": 4252,
+        "ST00000001": 4628,
+        "ST00000002": 32,
+        "ST00000008": 3,
+        "ST00000009": 4,
+        "ST000000B1": 2
+      },
+      "time": "2021-01-08 00:00:00",
+      "unknown_exchange_or_type": 4252
+    }
+  ],
+  "unread_tail": {
+    "field": "universe_days",
+    "error": "JSONDecodeError",
+    "position": 3393
+  },
+  "not_a_strategy_result": true
+}

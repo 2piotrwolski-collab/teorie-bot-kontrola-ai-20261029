@@ -1,0 +1,1395 @@
+{
+  "snapshot_at_utc": "2026-10-29T18:43:35.427389+00:00",
+  "scope": "Research snapshot. No full original-theory verification; no live orders.",
+  "card": {
+    "id": "T005",
+    "round": 4,
+    "findings": [
+      "Ponowny odczyt strony 4 potwierdził, że źródłowa Table 5 opisuje dzienne long przy IBS≤0,2 i short przy IBS≥0,8. Trzymanie long aż do przeciwnego sygnału nie jest tą strategią.",
+      "Przetestowano osobny long-only wariant jednodniowy na źródłowej grupie USA, z wysokim wolumenem i wykonaniem open→open; pominięcie short oraz przesunięcie czasu są jawne.",
+      "W osobnej próbie 15:40→15:45 z 42 sesji IWM i QQQ mają dodatnie wyniki, ale odpowiednio tylko jedno i dwa wejścia. SPY nie wygenerował wejścia. Wszystkie koszty i przypadki zerowej aktywności zapisano.",
+      "Yahoo wskazuje CSI jako dostawcę części historycznych danych USA. Publiczny interfejs Yahoo nie jest niezależnym potwierdzeniem danych CSI autora; zgodność oryginalnej próby, korekt i vintage nadal wymaga kontroli.",
+      "Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, IWM, QQQ, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.",
+      "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii."
+    ],
+    "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania.",
+    "overall_status": "strategie_kosztowe_provisional",
+    "gap_updates": [
+      {
+        "gap_id": "T005-R1",
+        "status": "partial",
+        "status_reason": "Źródłowy horyzont następnej sesjiC2C i ekstremaIBS≤0.2/≥0.8 zostały odtworzone w US3. Rozszerzany jest zakres źródłowego uniwersum; nie wymyślamy10dniowego wyjścia.",
+        "criteria_met": [
+          "Jednodniowy target bez portfela i arbitralnej reguły wyjścia.",
+          "SPY/IWM/QQQ to jawna grupa autoraTable11.",
+          "Zachowano wynikUS3 w6okresach oraz niezależną kontrolęSQL.",
+          "Wykonano źródłową obserwację32z33ETF oraz obie zadeklarowane konwencje mediany wolumenu; wszystkie wyniki zapisane, bez selekcji po efekcie."
+        ],
+        "criteria_unmet": [
+          "Odtworzenie wszystkich5bucketów i wszystkich podziałów publikacji.",
+          "Dokładna konwencja CSIadjustment."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "results/ibs_source_protocol.json",
+            "url": "https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf",
+            "locator": "Table1,2,11; PDFp2–5",
+            "what_verified": "Rynki, daty, target, jawna grupaUS3."
+          },
+          {
+            "evidence_path": "results/observations/IBS_OBSERVATION_US3_V1.json",
+            "locator": "ScopedUS3observation",
+            "what_verified": "Wynik zapisany oddzielnie od starej adaptacji.",
+            "url": ""
+          }
+        ],
+        "next_action": "Rozszerzyć późniejszą kontrolę wyłącznie w osobnym planie i zbadać źródłowe5bucketów; nie mieszać mechanizmu z wykonaniem zlecenia.",
+        "round3_context_next_action": "Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania."
+      },
+      {
+        "gap_id": "T005-D1",
+        "status": "partial",
+        "status_reason": "Pozyskano komplet historii źródłowego okresu dla32z33ETF u darmowego dostawcyYahoo; CSI nie pozyskano. RSX pozostał w rejestrze jako brak, nie został podmieniony.",
+        "criteria_met": [
+          "Dokładna lista33 i daty startuTable2, end2013-12-05.",
+          "32 pobrane serie bez invalidOHLC i bez brakujących source-sessiondates względemSPYdiagnostic.",
+          "GXG→COLO to potwierdzona przez giełdę zmiana tickera tego samegoETF, nie inny instrument.",
+          "Wolumen0 jest liczony i jawnie oznaczany; nie utożsamiamy go z potwierdzonym CSIvolume.",
+          "Niezależny reviewPASS; jawnyRSXmissing i21ETFzUNVALIDATED_VOLUME zachowane w wyniku."
+        ],
+        "criteria_unmet": [
+          "Darmowa kompletna dziennaOHLC/volume/adjustedhistoryRSX2007–2013.",
+          "OryginalneCSI, niezależny kalendarz i vendor-adjustment.",
+          "Weryfikacja dni zerowego wolumenu na niezależnym źródle.",
+          "ILF ma3049bar/3048adjacentpairs względem źródłowych3047observations; dokładnyCSIvendoralignment nieustalony.",
+          "Niezależność upstreamdanych: Yahoo wskazujeCSI; publiczny interfejs nie oznacza innego niezależnego dostawcy ani oryginalnego autorowskiego datasetu."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "data/ibs_source_universe/quality.json",
+            "locator": "32 downloaded /1failed; sourceTable2starts",
+            "what_verified": "Faktyczne zakresy, hashe, braki, liczby zerowego wolumenu.",
+            "url": ""
+          },
+          {
+            "url": "https://www.miaxglobal.com/alert/2025/06/20/miax-exchange-group-options-markets-corporate-action-alert-global-x-msci-1",
+            "evidence_path": "sources/round2/GXG_COLO_identity.json",
+            "locator": "June20,2025 exchange corporate action",
+            "what_verified": "GXG symbol changes toCOLO effective2025-06-23; odzyskano historię pod nowym symbolem."
+          },
+          {
+            "url": "https://www.vaneck.com/us/en/blogs/emerging-markets-equity/rsx-rsxj-liquidation-faq/",
+            "locator": "RSX delisting2023 afterhalt2022",
+            "what_verified": "Historyczna tożsamość i brak bieżącego obrotu; sam dokument nie dostarcza OHLC.",
+            "evidence_path": ""
+          },
+          {
+            "evidence_path": "sources/round2/ibs_missing_symbols_receipts.json",
+            "locator": "Stooq attempts404",
+            "what_verified": "Drugie źródło nie dostarczyło serii; brak globalnego twierdzenia o niedostępności.",
+            "url": ""
+          },
+          {
+            "url": "https://help.yahoo.com/kb/SLN2310.html",
+            "evidence_path": "sources/round3/yahoo_provider_help_receipt.json",
+            "locator": "Round3boundedsourcecheck",
+            "what_verified": "Yahoo documents CSI as upstreamUS historicalprovider; publicYahoointerface is not independentvendorconfirmation nor originalpaperdataset."
+          }
+        ],
+        "next_action": "Pozyskać darmowe archiwumRSX2007–2013 oraz niezależne potwierdzenie zero-volume i konwencjiadjustment. Nie usuwać różnicyNILF do dopasowania źródła.",
+        "round3_context_next_action": "Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania."
+      },
+      {
+        "gap_id": "T005-R2",
+        "status": "open",
+        "status_reason": "Sprzeczność10vs20dni volatility i brak jawnej source-mapdeveloped/emerging nie zostały rozwiązane; nie zgadujemy podziału.",
+        "criteria_met": [
+          "Sprzeczność udokumentowano.",
+          "US3vsother30 jest źródłowo jawny, ale to inny podział."
+        ],
+        "criteria_unmet": [
+          "Authorclarification lub supplementarycode vol10vs20.",
+          "Jawna mapaticker→developed/emerging dla historycznej próby."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "results/ibs_source_protocol.json",
+            "locator": "regime_definitions.volatility",
+            "what_verified": "Nie rozstrzygnięto publikacyjnej sprzeczności.",
+            "url": ""
+          }
+        ],
+        "next_action": "Sprawdzić archiwa strony autora i supplementarycode; pozostałe obserwacje oznaczyć jako nieobejmujące tych podziałów.",
+        "round3_context_next_action": "Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania."
+      },
+      {
+        "gap_id": "T005-E1",
+        "status": "partial",
+        "status_reason": "Wykonano i zapisano jawny wariant po modelowanych kosztach; rzeczywiste fille, pełne koszty osobiste i wierna egzekucja źródła pozostają niepotwierdzone.",
+        "criteria_met": [
+          "Nie raportujemyCAGR ani rachunku z obserwacji.",
+          "Osobny zamrożony plan, ledger, model aktualnej taryfy i scenariusze spreadu/poślizgu, kontrole przyczynowości i rachunków.",
+          "Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/T005.json"
+        ],
+        "criteria_unmet": [
+          "Time-stamped executablequotes, final-close signalcutoff, realspreads/commissions.",
+          "Bid/ask, partial fills, rozliczenie i kolejność sprzedaży/zakupu, realny poślizg, podatki, FX oraz KID/uprawnienia UE. Brak paper forward i partner consensus."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "config/ibs_observation_plan.json",
+            "locator": "Noorders/positions/netprofit",
+            "what_verified": "Naukowy target oddzielony od wykonywalnej strategii.",
+            "url": ""
+          }
+        ],
+        "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania.",
+        "round3_context_next_action": "Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania."
+      }
+    ],
+    "source_urls_verified": [
+      "https://www.miaxglobal.com/alert/2025/06/20/miax-exchange-group-options-markets-corporate-action-alert-global-x-msci-1",
+      "https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf",
+      "https://www.vaneck.com/us/en/blogs/emerging-markets-equity/rsx-rsxj-liquidation-faq/"
+    ],
+    "observations": [
+      {
+        "id": "QUOTE_PREFLIGHT_20261028_T005",
+        "title": "Rzeczywiste kwotowania przed zamknięciem · 28.10.2026",
+        "summary": "Historyczne SIP o 15:45 NY: zmierzony spread; osobno model kosztu zakupu i natychmiastowej sprzedaży dla budżetu 10 000 USD, bez ruchu rynku.",
+        "columns": [
+          "ETF",
+          "Spread bps",
+          "Połowa spreadu bps",
+          "Model kosztu pełnego obrotu USD"
+        ],
+        "rows": [
+          [
+            "SPY",
+            0.389,
+            0.1945,
+            3.2855
+          ],
+          [
+            "IWM",
+            0.3564,
+            0.1782,
+            3.3319
+          ],
+          [
+            "QQQ",
+            0.5526,
+            0.2763,
+            3.461
+          ],
+          [
+            "BIL",
+            1.0909,
+            0.5455,
+            4.0891
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_20261028.json"
+      },
+      {
+        "id": "ARRIVAL_20261029_T005",
+        "title": "Dzisiejsza kontrola wykonania · 29.10.2026",
+        "summary": "Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.",
+        "columns": [
+          "Zakres",
+          "Stan"
+        ],
+        "rows": [
+          [
+            "SPY",
+            "oczekuje"
+          ],
+          [
+            "IWM",
+            "oczekuje"
+          ],
+          [
+            "QQQ",
+            "oczekuje"
+          ],
+          [
+            "BIL",
+            "oczekuje"
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_DZISIAJ/T005.json"
+      },
+      {
+        "id": "MODERN_EXECUTION_NET_R2_T005",
+        "title": "Warianty strategii po modelowanych kosztach transakcyjnych",
+        "summary": "Decyzja na zamknięciu → najwcześniej następne otwarcie. Wynik w USD po modelowanej prowizji IBKR Pro Fixed USA, spreadzie/poślizgu i założonej rezerwie 1 bps przy sprzedaży, przed podatkiem i FX. Skala 10 000 USD służy policzeniu minimalnych prowizji; nie jest założeniem o kapitale użytkownika. BIL jest kupowany/sprzedawany z kosztami. 0/5/20 bps oznacza dodatkowy scenariusz spreadu i poślizgu na stronę; prowizje są zawsze naliczane.",
+        "columns": [
+          "Wersja wykonania",
+          "Okres",
+          "Dodatkowe bps/stronę",
+          "Zwrot (%)",
+          "SPY (%)",
+          "Własny benchmark (%)",
+          "Max DD (%)",
+          "Koszty USD",
+          "Śr. ekspozycja ryzykowna (%)"
+        ],
+        "rows": [
+          [
+            "T005_SPY_IBS_LOW_HIVOL_OPEN",
+            "2010–28.10.2026",
+            5,
+            "-3.80",
+            "822.10",
+            "822.10",
+            "-35.95",
+            "8747.70",
+            "10.56"
+          ],
+          [
+            "T005_SPY_IBS_LOW_HIVOL_OPEN",
+            "2010–2019",
+            5,
+            "-9.96",
+            "249.41",
+            "249.41",
+            "-19.29",
+            "5061.29",
+            "9.74"
+          ],
+          [
+            "T005_SPY_IBS_LOW_HIVOL_OPEN",
+            "2020–2023",
+            5,
+            "-10.05",
+            "56.25",
+            "56.25",
+            "-23.94",
+            "2798.95",
+            "14.81"
+          ],
+          [
+            "T005_SPY_IBS_LOW_HIVOL_OPEN",
+            "2024–28.10.2026",
+            0,
+            "31.98",
+            "68.88",
+            "68.88",
+            "-4.02",
+            "306.98",
+            "7.48"
+          ],
+          [
+            "T005_SPY_IBS_LOW_HIVOL_OPEN",
+            "2024–28.10.2026",
+            5,
+            "19.68",
+            "68.71",
+            "68.71",
+            "-4.21",
+            "1373.87",
+            "7.48"
+          ],
+          [
+            "T005_SPY_IBS_LOW_HIVOL_OPEN",
+            "2024–28.10.2026",
+            20,
+            "-10.78",
+            "68.20",
+            "68.20",
+            "-13.19",
+            "3990.55",
+            "7.48"
+          ],
+          [
+            "T005_IWM_IBS_LOW_HIVOL_OPEN",
+            "2010–28.10.2026",
+            5,
+            "-23.50",
+            "822.10",
+            "455.67",
+            "-41.68",
+            "9543.75",
+            "11.18"
+          ],
+          [
+            "T005_IWM_IBS_LOW_HIVOL_OPEN",
+            "2010–2019",
+            5,
+            "-6.78",
+            "249.41",
+            "201.39",
+            "-21.09",
+            "5580.21",
+            "9.70"
+          ],
+          [
+            "T005_IWM_IBS_LOW_HIVOL_OPEN",
+            "2020–2023",
+            5,
+            "-15.45",
+            "56.25",
+            "26.73",
+            "-22.66",
+            "2703.11",
+            "14.21"
+          ],
+          [
+            "T005_IWM_IBS_LOW_HIVOL_OPEN",
+            "2024–28.10.2026",
+            0,
+            "13.30",
+            "68.88",
+            "45.27",
+            "-14.29",
+            "426.45",
+            "12.13"
+          ],
+          [
+            "T005_IWM_IBS_LOW_HIVOL_OPEN",
+            "2024–28.10.2026",
+            5,
+            "-1.91",
+            "68.71",
+            "45.13",
+            "-17.35",
+            "1741.29",
+            "12.13"
+          ],
+          [
+            "T005_IWM_IBS_LOW_HIVOL_OPEN",
+            "2024–28.10.2026",
+            20,
+            "-36.43",
+            "68.20",
+            "44.69",
+            "-38.58",
+            "4705.48",
+            "12.13"
+          ],
+          [
+            "T005_QQQ_IBS_LOW_HIVOL_OPEN",
+            "2010–28.10.2026",
+            5,
+            "49.80",
+            "822.10",
+            "1706.10",
+            "-21.07",
+            "9578.97",
+            "9.74"
+          ],
+          [
+            "T005_QQQ_IBS_LOW_HIVOL_OPEN",
+            "2010–2019",
+            5,
+            "1.25",
+            "249.41",
+            "408.90",
+            "-21.07",
+            "4153.16",
+            "7.87"
+          ],
+          [
+            "T005_QQQ_IBS_LOW_HIVOL_OPEN",
+            "2020–2023",
+            5,
+            "16.75",
+            "56.25",
+            "95.54",
+            "-13.16",
+            "3562.07",
+            "15.11"
+          ],
+          [
+            "T005_QQQ_IBS_LOW_HIVOL_OPEN",
+            "2024–28.10.2026",
+            0,
+            "41.09",
+            "68.88",
+            "81.34",
+            "-7.29",
+            "357.91",
+            "8.74"
+          ],
+          [
+            "T005_QQQ_IBS_LOW_HIVOL_OPEN",
+            "2024–28.10.2026",
+            5,
+            "25.87",
+            "68.71",
+            "81.15",
+            "-7.84",
+            "1591.03",
+            "8.74"
+          ],
+          [
+            "T005_QQQ_IBS_LOW_HIVOL_OPEN",
+            "2024–28.10.2026",
+            20,
+            "-10.66",
+            "68.20",
+            "80.61",
+            "-15.76",
+            "4508.59",
+            "8.74"
+          ]
+        ],
+        "evidence_report": "NET_STRATEGIE/T005.json",
+        "limitations": [
+          "To jawne warianty wykonania, nie pełne reprodukcje publikacji. Szczegółowa macierz zgodności, wszystkie scenariusze, NAV, roczne wyniki i transakcje są zachowane.",
+          "Żaden z ośmiu wariantów dziennych nie spełnił bramki przewagi nad SPY w obu okresach 2020–2023 oraz 2024–2026 przy 5 i 20 bps. To wynik tych portfeli; nie obalenie teorii lub rzadkiego modułu wejścia.",
+          "Dla Fabera własny benchmark to ten sam koszyk pięciu ETF-ów, dla pozostałych — ten sam bazowy ETF. Ochrona ryzyka i cel pobicia pełnego SPY są oddzielnymi pytaniami.",
+          "Cena otwarcia OHLC, jednoczesne wykonanie koszyka, kolejność sprzedaży/zakupu i pełne fille pozostają przybliżeniami. Faktyczny spread, poślizg, rozliczenie, podatki, FX i dostępność ETF/KID dla inwestora UE nie zostały potwierdzone.",
+          "Wszystkie okresy są retrospektywne i częściowo nakładają się. Brak nietkniętego OOS, paper forward i konsensusu z Claude’em. Kontrola rachunkowa inną implementacją: PASS dla 168 ścieżek."
+        ]
+      },
+      {
+        "id": "NEARCLOSE_1540_SIGNAL_1545_PROXY_R1_T005",
+        "title": "Próba wykonania przed zamknięciem: 42 sesje, 31.08–28.10.2026",
+        "summary": "Sygnał korzysta wyłącznie ze świec kończących się do 15:40 czasu Nowego Jorku. Zakładamy ich dostępność przed 15:45; cena wykonania jest przybliżona otwarciem świecy 15:45. Dzięki temu zachowujemy większą część ruchu nocnego. Dane pięciominutowe pozyskano bezpłatnie; nie są to rzeczywiste bid/ask ani fille brokera. Warianty i koszty zamrożono przed wynikiem tej próby.",
+        "columns": [
+          "Wariant",
+          "Dodatkowe bps/stronę",
+          "Zwrot (%)",
+          "SPY (%)",
+          "Bazowy ETF (%)",
+          "Wejścia ryzykowne",
+          "Symulowane operacje",
+          "Koszty USD",
+          "Operacje >1% wol. 5 min"
+        ],
+        "rows": [
+          [
+            "T005_SPY_IBS_LOW_HIVOL_NEARCLOSE",
+            0,
+            "0.56",
+            "0.78",
+            "0.78",
+            0,
+            2,
+            "3.01",
+            0
+          ],
+          [
+            "T005_SPY_IBS_LOW_HIVOL_NEARCLOSE",
+            5,
+            "0.46",
+            "0.68",
+            "0.68",
+            0,
+            2,
+            "13.03",
+            0
+          ],
+          [
+            "T005_SPY_IBS_LOW_HIVOL_NEARCLOSE",
+            20,
+            "0.16",
+            "0.38",
+            "0.38",
+            0,
+            2,
+            "43.04",
+            0
+          ],
+          [
+            "T005_IWM_IBS_LOW_HIVOL_NEARCLOSE",
+            0,
+            "2.10",
+            "0.78",
+            "-4.29",
+            1,
+            6,
+            "9.05",
+            0
+          ],
+          [
+            "T005_IWM_IBS_LOW_HIVOL_NEARCLOSE",
+            5,
+            "1.80",
+            "0.68",
+            "-4.39",
+            1,
+            6,
+            "39.34",
+            0
+          ],
+          [
+            "T005_IWM_IBS_LOW_HIVOL_NEARCLOSE",
+            20,
+            "0.89",
+            "0.38",
+            "-4.67",
+            1,
+            6,
+            "129.69",
+            0
+          ],
+          [
+            "T005_QQQ_IBS_LOW_HIVOL_NEARCLOSE",
+            0,
+            "2.41",
+            "0.78",
+            "1.16",
+            2,
+            10,
+            "15.10",
+            0
+          ],
+          [
+            "T005_QQQ_IBS_LOW_HIVOL_NEARCLOSE",
+            5,
+            "1.90",
+            "0.68",
+            "1.06",
+            2,
+            10,
+            "65.80",
+            0
+          ],
+          [
+            "T005_QQQ_IBS_LOW_HIVOL_NEARCLOSE",
+            20,
+            "0.38",
+            "0.38",
+            "0.76",
+            2,
+            10,
+            "216.38",
+            0
+          ]
+        ],
+        "evidence_report": "NET_STRATEGIE/T005.json",
+        "limitations": [
+          "Tylko 42 sesje i 0–2 wejścia na wariant. Nie wolno z tego wyprowadzać prawdopodobieństwa zysku, stabilnej przewagi ani wybierać zwycięzcy.",
+          "Przy zerowej liczbie wejść wynik pochodzi wyłącznie z BIL, nie z przetestowanego sygnału.",
+          "Czas świecy nie dowodzi czasu udostępnienia danych. Dostępność bezpłatnego strumienia przed zleceniem nie została zmierzona; 15:40→15:45 jest założeniem wymagającym sprawdzenia w bieżącej sesji.",
+          "IBS używa częściowego dziennego high/low/wolumenu do 15:40, a nie przyszłych finalnych wartości. To nadal zmiana względem źródłowego finalnego close i strategii long/short.",
+          "CAGR nie został wyliczony dla tej krótkiej próby. Drawdown w plikach jest próbkowany o 15:45, nie pełnym ryzykiem intraday.",
+          "30 ścieżek uzgodniono inną implementacją z oryginalnymi plikami; 378 kontroli IBS potwierdza granicę informacji. To kontrola rachunków, nie niezależna walidacja przez partnera."
+        ]
+      },
+      {
+        "id": "IBS_SOURCE_UNIVERSE32_OF33_DESCRIPTIVE_V1",
+        "title": "Wynik: IBS w 32 z 33 źródłowych ETF-ów",
+        "summary": "Te same progi IBS ≤0,2 oraz ≥0,8, następny jednodniowy zwrot adjusted close-to-close. Każdy ETF ma zakres dat z Table 2. Nie połączono rynków w jeden wynik ani nie policzono zależnych ETF-ów jako niezależnych głosów. Wszystkie 33 pozycje pozostają w tabeli.",
+        "columns": [
+          "ETF",
+          "Okres źródłowy",
+          "N niski/wysoki IBS",
+          "Średni zwrot: niski IBS (bps)",
+          "Wysoki IBS (bps)",
+          "Różnica (bps)",
+          "Wykluczone płaskie świece",
+          "Wolumen"
+        ],
+        "rows": [
+          [
+            "ECH",
+            "2007-11-20–2013-12-05",
+            "352 / 419",
+            "16.91",
+            "17.56",
+            "-0.66",
+            0,
+            "QA Yahoo bez zer; nie CSI"
+          ],
+          [
+            "EEM",
+            "2003-04-15–2013-12-05",
+            "576 / 810",
+            "42.71",
+            "-0.84",
+            "43.55",
+            1,
+            "QA Yahoo bez zer; nie CSI"
+          ],
+          [
+            "EFA",
+            "2001-08-27–2013-12-05",
+            "582 / 926",
+            "27.14",
+            "-10.23",
+            "37.36",
+            0,
+            "QA Yahoo bez zer; nie CSI"
+          ],
+          [
+            "EPHE",
+            "2010-09-29–2013-12-05",
+            "148 / 231",
+            "28.80",
+            "-3.76",
+            "32.56",
+            0,
+            "QA Yahoo bez zer; nie CSI"
+          ],
+          [
+            "EPI",
+            "2008-02-26–2013-12-05",
+            "275 / 392",
+            "39.53",
+            "-31.85",
+            "71.38",
+            0,
+            "QA Yahoo bez zer; nie CSI"
+          ],
+          [
+            "EPP",
+            "2001-10-26–2013-12-05",
+            "609 / 966",
+            "24.76",
+            "-7.12",
+            "31.88",
+            25,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWA",
+            "1996-04-01–2013-12-05",
+            "992 / 1459",
+            "50.51",
+            "-29.31",
+            "79.82",
+            180,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWC",
+            "1996-04-01–2013-12-05",
+            "1010 / 1272",
+            "20.38",
+            "-5.20",
+            "25.58",
+            422,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWD",
+            "1996-04-01–2013-12-05",
+            "998 / 1437",
+            "37.89",
+            "-16.51",
+            "54.40",
+            473,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWG",
+            "1996-04-01–2013-12-05",
+            "919 / 1379",
+            "29.10",
+            "-12.11",
+            "41.21",
+            100,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWH",
+            "1996-04-01–2013-12-05",
+            "881 / 1108",
+            "52.90",
+            "-34.64",
+            "87.54",
+            50,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWI",
+            "1996-04-01–2013-12-05",
+            "1105 / 1441",
+            "35.14",
+            "-22.24",
+            "57.38",
+            159,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWJ",
+            "1996-04-01–2013-12-05",
+            "822 / 1202",
+            "45.01",
+            "-30.11",
+            "75.12",
+            11,
+            "QA Yahoo bez zer; nie CSI"
+          ],
+          [
+            "EWL",
+            "1996-04-01–2013-12-05",
+            "1003 / 1437",
+            "50.12",
+            "-25.85",
+            "75.97",
+            266,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWM",
+            "1996-04-01–2013-12-05",
+            "1025 / 1244",
+            "31.37",
+            "-32.70",
+            "64.07",
+            58,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWO",
+            "1996-04-01–2013-12-05",
+            "935 / 1286",
+            "33.46",
+            "-17.41",
+            "50.87",
+            780,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWP",
+            "1996-04-01–2013-12-05",
+            "1038 / 1447",
+            "34.85",
+            "-20.11",
+            "54.96",
+            376,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWQ",
+            "1996-04-01–2013-12-05",
+            "1072 / 1414",
+            "26.84",
+            "-10.87",
+            "37.70",
+            159,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWS",
+            "1996-04-01–2013-12-05",
+            "944 / 1135",
+            "51.90",
+            "-38.27",
+            "90.17",
+            56,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWT",
+            "2000-06-23–2013-12-05",
+            "674 / 867",
+            "48.20",
+            "-36.66",
+            "84.86",
+            42,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWU",
+            "1996-04-01–2013-12-05",
+            "851 / 1372",
+            "34.75",
+            "-20.92",
+            "55.68",
+            168,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWY",
+            "2000-05-12–2013-12-05",
+            "742 / 906",
+            "46.19",
+            "-19.65",
+            "65.84",
+            27,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EWZ",
+            "2000-07-14–2013-12-05",
+            "703 / 920",
+            "15.78",
+            "5.66",
+            "10.12",
+            99,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "EZA",
+            "2003-05-28–2013-12-05",
+            "544 / 859",
+            "48.31",
+            "-9.46",
+            "57.77",
+            24,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "FXI",
+            "2004-10-12–2013-12-05",
+            "426 / 601",
+            "54.22",
+            "-15.49",
+            "69.72",
+            0,
+            "QA Yahoo bez zer; nie CSI"
+          ],
+          [
+            "GXG",
+            "2009-02-09–2013-12-05",
+            "274 / 332",
+            "6.78",
+            "13.69",
+            "-6.91",
+            37,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "IDX",
+            "2009-01-20–2013-12-05",
+            "258 / 363",
+            "27.86",
+            "11.50",
+            "16.36",
+            10,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "ILF",
+            "2001-10-26–2013-12-05",
+            "695 / 1020",
+            "15.71",
+            "16.77",
+            "-1.05",
+            114,
+            "NIEZWERYFIKOWANY — zera/braki"
+          ],
+          [
+            "IWM",
+            "2000-05-26–2013-12-05",
+            "757 / 1026",
+            "25.08",
+            "-0.20",
+            "25.28",
+            0,
+            "QA Yahoo bez zer; nie CSI"
+          ],
+          [
+            "QQQ",
+            "1999-03-10–2013-12-05",
+            "796 / 1001",
+            "25.29",
+            "-7.58",
+            "32.87",
+            0,
+            "QA Yahoo bez zer; nie CSI"
+          ],
+          [
+            "RSX",
+            "2007-05-07–2013-12-05",
+            "brak",
+            "brak",
+            "brak",
+            "brak",
+            "brak",
+            "brak danych, bez zamiennika"
+          ],
+          [
+            "SPY",
+            "1993-01-29–2013-12-05",
+            "1080 / 1500",
+            "17.22",
+            "-2.16",
+            "19.38",
+            0,
+            "QA Yahoo bez zer; nie CSI"
+          ],
+          [
+            "THD",
+            "2008-04-01–2013-12-05",
+            "281 / 419",
+            "51.51",
+            "-10.14",
+            "61.65",
+            0,
+            "QA Yahoo bez zer; nie CSI"
+          ]
+        ],
+        "evidence_report": "IBS_UNIWERSUM_OBSERWACJA.json",
+        "limitations": [
+          "RSX: brak szeregu. GXG: tożsamość COLO potwierdzona zmianą tickera, zachowano źródłową nazwę.",
+          "Bezpłatne dane Yahoo zastępują CSI; brak ścisłej reprodukcji liczb autora. ILF ma dodatkową parę sesji względem liczności publikacji — nie usuwano dat dla dopasowania wyniku.",
+          "Są to średnie opisowe bez przedziałów i testów istotności dla tego rozszerzenia. Nie dowodzą alfy ani zysku bota po kosztach.",
+          "Dwadzieścia jeden ETF-ów ma niezweryfikowany wolumen z historycznymi zerami. Ich cenowe obserwacje pozostają, lecz wyniki grup wolumenowych nie potwierdzają źródłowego twierdzenia o wolumenie.",
+          "Niejednoznaczny podział zmienności 10/20 dni i developed/emerging pozostaje poza zakresem."
+        ]
+      },
+      {
+        "id": "IBS_SOURCE_UNIVERSE32_OF33_DESCRIPTIVE_V1",
+        "title": "IBS: źródłowa grupa USA i podział według wolumenu",
+        "summary": "SPY/IWM/QQQ to wskazana przez autora grupa USA. Główna konwencja: dzisiejszy wolumen większy od mediany poprzednich 500 sesji. Druga, zapisana przed wynikiem, włącza dzisiejszą sesję do okna 500. Remisy należą do pozostałych dni.",
+        "columns": [
+          "ETF",
+          "Konwencja mediany",
+          "High-volume: N niski/wysoki IBS",
+          "Różnica IBS w high-volume (bps)",
+          "Pozostałe: N niski/wysoki IBS",
+          "Różnica IBS w pozostałych (bps)",
+          "Brak rozgrzewki/klasyfikacji"
+        ],
+        "rows": [
+          [
+            "IWM",
+            "prior500_strict",
+            "455 / 575",
+            "39.44",
+            "149 / 290",
+            "-3.70",
+            500
+          ],
+          [
+            "IWM",
+            "inclusive500_strict",
+            "455 / 576",
+            "39.56",
+            "149 / 289",
+            "-4.04",
+            499
+          ],
+          [
+            "QQQ",
+            "prior500_strict",
+            "416 / 383",
+            "48.03",
+            "246 / 460",
+            "7.14",
+            500
+          ],
+          [
+            "QQQ",
+            "inclusive500_strict",
+            "416 / 383",
+            "49.14",
+            "246 / 461",
+            "7.16",
+            499
+          ],
+          [
+            "SPY",
+            "prior500_strict",
+            "775 / 885",
+            "24.44",
+            "200 / 474",
+            "9.10",
+            500
+          ],
+          [
+            "SPY",
+            "inclusive500_strict",
+            "775 / 885",
+            "24.78",
+            "200 / 474",
+            "7.78",
+            499
+          ]
+        ],
+        "evidence_report": "IBS_UNIWERSUM_OBSERWACJA.json",
+        "limitations": [
+          "Porównania opisowe, bez rodzinnej istotności i bez wyniku rachunku. Wszystkie warianty pozostałych ETF-ów zapisano w pliku wyniku wraz z flagami jakości.",
+          "Brak CSI i nieustalonej źródłowej konwencji mediany nie został ukryty. Nie wybieramy lepszego okna po wyniku."
+        ]
+      }
+    ],
+    "source_detail": null,
+    "source_update_artifact": "research_round2/source_updates_T005.json",
+    "source_update_sha256": "328f201e497420b68b9563a941325ae216de25f81d45137ed086bc65d59ff5fd",
+    "observation_ids": [
+      "QUOTE_PREFLIGHT_20261028_T005",
+      "ARRIVAL_20261029_T005",
+      "MODERN_EXECUTION_NET_R2_T005",
+      "NEARCLOSE_1540_SIGNAL_1545_PROXY_R1_T005",
+      "IBS_SOURCE_UNIVERSE32_OF33_DESCRIPTIVE_V1",
+      "IBS_SOURCE_UNIVERSE32_OF33_DESCRIPTIVE_V1"
+    ],
+    "previous_findings_round2": [
+      "Rozszerzono pozyskanie danych z 3 do 32 z 33 ETF-ów źródłowego uniwersum. Każdy ma zachowaną datę startu z Table 2.",
+      "Historię GXG odzyskano pod nowym symbolem COLO po potwierdzeniu zmiany przez giełdę. RSX pozostaje jawnym brakującym instrumentem.",
+      "Yahoo stanowi bezpłatne przybliżenie danych CSI. Sprawdzono OHLC, braki sesji i historyczne zera wolumenu; zera wymagają oddzielnej ostrożności w interpretacji podziału wolumenowego.",
+      "Wykonano i zapisano obserwację 32 dostępnych ETF-ów oraz oba wcześniej ustalone podziały wolumenu. W źródłowej grupie USA różnica po niskim i wysokim IBS jest opisowo większa przy wysokim wolumenie: SPY 24,44 bps, IWM 39,44 bps, QQQ 48,03 bps. To nie zysk netto ani test rodzinnej istotności."
+    ],
+    "strategy_result_file": "NET_STRATEGIE/T005.json",
+    "verified_claim": "Autor bada następny jednodniowy close-to-close po IBS. Na stronie 4 opisuje dzienną strategię long przy IBS≤0,2 i short przy IBS≥0,8. Wysoki wolumen jest ważny w źródłowej grupie USA. Nowe long-only warianty wykonania nie są pełnym odtworzeniem tej strategii.",
+    "verified_correction": "Dla strategii źródłowej trzeba odtworzyć dzienne long/short, wykonanie i borrow. Nasze long-only open→open oraz estymacja15:40→fillproxy15:45 są osobnymi wariantami. Zachowano źródłowy horyzont jednej sesji, bez arbitralnego trzymania10dni.",
+    "execution_evidence_file": "WYKONANIE_DZISIAJ/T005.json"
+  },
+  "source_qualification": {
+    "id": "T005",
+    "intended_market": "ETF-y akcyjne notowane w USA, szczególnie equity-index ETF. Nie zakładamy transferu do wszystkich lokalnych rynków.",
+    "segment": "Dzienny IBS bucket; źródło pokazuje różnice m.in. według wolumenu, zakresu, zmienności i dnia tygodnia.",
+    "regime": "Źródło bada bull/bear według własnego200-sesyjnego zwrotu oraz high/low volatility/volume. Kwalifikator ma być dostępny ex ante; opisowej mediany pełnej próby nie używać jako rzekomej regułyPIT. Ważna sprzeczność źródła: tekst używa20 dni zmienności, aTable6 10dni i mediany całejpróby. Dokładne odtworzenie tego podziału wymaga wyjaśnienia.",
+    "horizon": "Główny efekt: następny jednodniowy close-to-close. Odrębny source-defined wariant: IBS jako filtr swing RSI3.",
+    "universe": [
+      "ECH",
+      "EEM",
+      "EFA",
+      "EPHE",
+      "EPI",
+      "EPP",
+      "EWA",
+      "EWC",
+      "EWD",
+      "EWG",
+      "EWH",
+      "EWI",
+      "EWJ",
+      "EWL",
+      "EWM",
+      "EWO",
+      "EWP",
+      "EWQ",
+      "EWS",
+      "EWT",
+      "EWU",
+      "EWY",
+      "EWZ",
+      "EZA",
+      "FXI",
+      "GXG",
+      "IDX",
+      "ILF",
+      "IWM",
+      "QQQ",
+      "RSX",
+      "SPY",
+      "THD"
+    ],
+    "original_objective": "Warunkowa różnica następnych zwrotów pomiędzy bucketamiIBS oraz poprawa określonej strategiiRSI przez filtrIBS.",
+    "correct_benchmark": "Średni następny zwrot danegoETF i przeciwne buckety w tej samej próbie; dla wariantuRSI porównanie identycznegoRSI z filtrem i bez. SPY jest oddzielną bramką projektu.",
+    "falsification_question": "Czy niskiIBS prognozuje wyższy następny close-to-close w podanym segmencie oraz czy source-defined filtr poprawia tę samą bazową strategię?",
+    "missing_data": [
+      "Dokładne close/overnight/intraday zwroty i egzekucja przy zamknięciu.",
+      "Źródłowe filtry i ich definicjePIT dla wariantu transakcyjnego.",
+      "Wyjaśnienie20-vs10-dniowej zmienności w źródle; jawna mapa developed/developing; kompletna historia33ETF wraz zRSX."
+    ],
+    "ready_for_valid_test": false,
+    "readiness_reason": "Holding do10dni w v1 nie testuje pierwotnego jednodniowego efektu. Najpierw potrzeba właściwej jednostki obserwacji i okna.",
+    "qualification_status": "requires_horizon_redesign",
+    "source_fit": "adaptation",
+    "exact_mismatch": "Pierwotny główny efekt dotyczy następnego jednodniowego close-to-close po wartości IBS; dodatkowa strategia filtruje Cutler RSI3 regułą IBS<=0.5. Pilot kupuje dopiero następny open i trzyma do IBS>0.8 lub maksymalnie 10 sesji. Zmienia zarówno badany interwał zwrotu, jak i holding oraz pomija warstwę RSI w strategii z artykułu.",
+    "correction_needed": "Najpierw nowy, osobny test rozkładu następnych close-to-close zwrotów według bucketów IBS z dekompozycją overnight i intraday. Dopiero potem przyczynowy, wykonalny wariant transakcyjny; nie utożsamiać utraty efektu po next-open z fałszem oryginalnej obserwacji.",
+    "source_url": "https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf",
+    "applies_to_theory_version": 1,
+    "source_sample_end": "2013-12-05",
+    "source_provider": "CSI",
+    "source_domestic_subset": [
+      "SPY",
+      "IWM",
+      "QQQ"
+    ],
+    "source_protocol": "results/ibs_source_protocol.json"
+  },
+  "acquisition_plan": {
+    "id": "T005",
+    "gaps": [
+      {
+        "gap_id": "T005-R1",
+        "missing_item": "Źródłowyjednodniowytarget i buckety zamiastholdingdo10dni.",
+        "category": "rule",
+        "why_needed": "V1 testujeinnąścieżkę; pierwotnaobserwacja to następnyclose-to-close.",
+        "acquisition_steps": [
+          "Użyćresults/ibs_source_protocol.json i33tickerówTable1.",
+          "Zamrozićlow<=.2/high>=.8 lub jawne5bucketzkonwencjągranic.",
+          "OddzielićtestefektuodoryginalnegowariantuCutlerRSI3+IBS<=.5 i od naszejv1strategii."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Pagonidis — pierwotnyIBSPDF",
+            "url": "https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf",
+            "access_verified": true,
+            "what_available": "PobranyPDF z33tickerami,datami,CSI,bucketami i tabelamireżimów.",
+            "does_not_supply": "SurowychCSI; brak jawnej mapydeveloped/developing; sprzeczność20vs10dni dla zmienności."
+          }
+        ],
+        "free_feasibility": "available_free",
+        "verification_acceptance": [
+          "Target jestclose_(t+1)/close_t-1 i przypisany do sygnałut.",
+          "Flatbars,błędneOHLC i granicebucketów jawne,countswykluczeńwidoczne.",
+          "Brakpozycji10dni w teścieefektu."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Tylkooznaczona własnastrategiav1; nie jejporażkajakoobalenieIBS.",
+        "next_action": "Rozszerzyć późniejszą kontrolę wyłącznie w osobnym planie i zbadać źródłowe5bucketów; nie mieszać mechanizmu z wykonaniem zlecenia.",
+        "progress": {
+          "gap_id": "T005-R1",
+          "status": "partial",
+          "status_reason": "Źródłowy horyzont następnej sesjiC2C i ekstremaIBS≤0.2/≥0.8 zostały odtworzone w US3. Rozszerzany jest zakres źródłowego uniwersum; nie wymyślamy10dniowego wyjścia.",
+          "criteria_met": [
+            "Jednodniowy target bez portfela i arbitralnej reguły wyjścia.",
+            "SPY/IWM/QQQ to jawna grupa autoraTable11.",
+            "Zachowano wynikUS3 w6okresach oraz niezależną kontrolęSQL.",
+            "Wykonano źródłową obserwację32z33ETF oraz obie zadeklarowane konwencje mediany wolumenu; wszystkie wyniki zapisane, bez selekcji po efekcie."
+          ],
+          "criteria_unmet": [
+            "Odtworzenie wszystkich5bucketów i wszystkich podziałów publikacji.",
+            "Dokładna konwencja CSIadjustment."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "results/ibs_source_protocol.json",
+              "url": "https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf",
+              "locator": "Table1,2,11; PDFp2–5",
+              "what_verified": "Rynki, daty, target, jawna grupaUS3."
+            },
+            {
+              "evidence_path": "results/observations/IBS_OBSERVATION_US3_V1.json",
+              "locator": "ScopedUS3observation",
+              "what_verified": "Wynik zapisany oddzielnie od starej adaptacji.",
+              "url": ""
+            }
+          ],
+          "next_action": "Rozszerzyć późniejszą kontrolę wyłącznie w osobnym planie i zbadać źródłowe5bucketów; nie mieszać mechanizmu z wykonaniem zlecenia.",
+          "round3_context_next_action": "Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania."
+        },
+        "initial_next_action": "Przygotowaćnowyplanstatystyczny efektu zjednostkąETF/signalday."
+      },
+      {
+        "gap_id": "T005-D1",
+        "missing_item": "33źródłoweETF zCSI, datami i obsługą niedostępnychserii.",
+        "category": "data",
+        "why_needed": "Próbaautora ma33ETFodróżnychstartówdo2013-12-05;3USbenchmarki to tylkojawny podzbiór.",
+        "acquisition_steps": [
+          "SprawdzićlegalnieposiadanąhistorięCSI i dostępnośćkażdegotickera.",
+          "Dla freeproxy zbadaćYahoo oddzielniedlaSPY/IWM/QQQ; zachowaćrawsnapshot iDQ.",
+          "Nie usuwaćcichoRSX/pozostałychniedostępnychETF; nie nazywaćpodzbiorupełnąreprodukcją."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Pagonidis — pierwotnyIBSPDF",
+            "url": "https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf",
+            "access_verified": true,
+            "what_available": "PobranyPDF z33tickerami,datami,CSI,bucketami i tabelamireżimów.",
+            "does_not_supply": "SurowychCSI; brak jawnej mapydeveloped/developing; sprzeczność20vs10dni dla zmienności."
+          },
+          {
+            "name": "Yahoo — publiczna próbkaSPY chart",
+            "url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1=946684800&period2=1793145600&interval=1d&events=div%2Csplits&includeAdjustedClose=true",
+            "access_verified": true,
+            "what_available": "Potwierdzony publiczny odczyt dziennychOHLC,adjusted-close i zdarzeń dlaSPY; możliwa bezpłatna baza ograniczonej adaptacji.",
+            "does_not_supply": "Nie potwierdzono tym kompletu innychsymboli, źródłowychCSI/GFD, bid/ask ani gwarancji trwałego dostępu."
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Źródłowyend to5grudnia2013, nie12maja.",
+          "Lista33 i zakreskażdegoETF porównane zTable2.",
+          "Adjustment,volume,brakisedelisting są sprawdzone; różniceCSI/Yahoojawne."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Ograniczonydemonstracyjnytestefektu na z góry wskazanymUSsubsetSPY/IWM/QQQ, bez wniosków dla pełnych33ETF.",
+        "next_action": "Pozyskać darmowe archiwumRSX2007–2013 oraz niezależne potwierdzenie zero-volume i konwencjiadjustment. Nie usuwać różnicyNILF do dopasowania źródła.",
+        "progress": {
+          "gap_id": "T005-D1",
+          "status": "partial",
+          "status_reason": "Pozyskano komplet historii źródłowego okresu dla32z33ETF u darmowego dostawcyYahoo; CSI nie pozyskano. RSX pozostał w rejestrze jako brak, nie został podmieniony.",
+          "criteria_met": [
+            "Dokładna lista33 i daty startuTable2, end2013-12-05.",
+            "32 pobrane serie bez invalidOHLC i bez brakujących source-sessiondates względemSPYdiagnostic.",
+            "GXG→COLO to potwierdzona przez giełdę zmiana tickera tego samegoETF, nie inny instrument.",
+            "Wolumen0 jest liczony i jawnie oznaczany; nie utożsamiamy go z potwierdzonym CSIvolume.",
+            "Niezależny reviewPASS; jawnyRSXmissing i21ETFzUNVALIDATED_VOLUME zachowane w wyniku."
+          ],
+          "criteria_unmet": [
+            "Darmowa kompletna dziennaOHLC/volume/adjustedhistoryRSX2007–2013.",
+            "OryginalneCSI, niezależny kalendarz i vendor-adjustment.",
+            "Weryfikacja dni zerowego wolumenu na niezależnym źródle.",
+            "ILF ma3049bar/3048adjacentpairs względem źródłowych3047observations; dokładnyCSIvendoralignment nieustalony.",
+            "Niezależność upstreamdanych: Yahoo wskazujeCSI; publiczny interfejs nie oznacza innego niezależnego dostawcy ani oryginalnego autorowskiego datasetu."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "data/ibs_source_universe/quality.json",
+              "locator": "32 downloaded /1failed; sourceTable2starts",
+              "what_verified": "Faktyczne zakresy, hashe, braki, liczby zerowego wolumenu.",
+              "url": ""
+            },
+            {
+              "url": "https://www.miaxglobal.com/alert/2025/06/20/miax-exchange-group-options-markets-corporate-action-alert-global-x-msci-1",
+              "evidence_path": "sources/round2/GXG_COLO_identity.json",
+              "locator": "June20,2025 exchange corporate action",
+              "what_verified": "GXG symbol changes toCOLO effective2025-06-23; odzyskano historię pod nowym symbolem."
+            },
+            {
+              "url": "https://www.vaneck.com/us/en/blogs/emerging-markets-equity/rsx-rsxj-liquidation-faq/",
+              "locator": "RSX delisting2023 afterhalt2022",
+              "what_verified": "Historyczna tożsamość i brak bieżącego obrotu; sam dokument nie dostarcza OHLC.",
+              "evidence_path": ""
+            },
+            {
+              "evidence_path": "sources/round2/ibs_missing_symbols_receipts.json",
+              "locator": "Stooq attempts404",
+              "what_verified": "Drugie źródło nie dostarczyło serii; brak globalnego twierdzenia o niedostępności.",
+              "url": ""
+            },
+            {
+              "url": "https://help.yahoo.com/kb/SLN2310.html",
+              "evidence_path": "sources/round3/yahoo_provider_help_receipt.json",
+              "locator": "Round3boundedsourcecheck",
+              "what_verified": "Yahoo documents CSI as upstreamUS historicalprovider; publicYahoointerface is not independentvendorconfirmation nor originalpaperdataset."
+            }
+          ],
+          "next_action": "Pozyskać darmowe archiwumRSX2007–2013 oraz niezależne potwierdzenie zero-volume i konwencjiadjustment. Nie usuwać różnicyNILF do dopasowania źródła.",
+          "round3_context_next_action": "Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania."
+        },
+        "initial_next_action": "Utworzyćper-tickeravailabilitymatrix i zdecydowaćo źródłowo uprawnionym podzbiorze przedwynikiem."
+      },
+      {
+        "gap_id": "T005-R2",
+        "missing_item": "Niejednoznacznośćvol10vs20dni oraz mapydeveloped/developing.",
+        "category": "rule",
+        "why_needed": "Publikacjama sprzecznetekst/table i niejawny countrymap; nie wolno udawaćPITexactsplit.",
+        "acquisition_steps": [
+          "Zachowaćodwołania:tekstPDFs.5 mówi20dni;Table6s.14 mówi10dni/samplemedian.",
+          "Sprawdzićpubliczneerratum/kodautora w jednymograniczonymprzeglądzie.",
+          "Jeślibraak, wyłączyćtenpodziałzprimarytestu; ewentualne10/20variants zamrozićjako sensitivity zrejestremprób.",
+          "UżywaćjawnychUSsubset3 i bullreturn200>=0; mapydeveloped/emerging nie zgadywać."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Pagonidis — pierwotnyIBSPDF",
+            "url": "https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf",
+            "access_verified": true,
+            "what_available": "PobranyPDF z33tickerami,datami,CSI,bucketami i tabelamireżimów.",
+            "does_not_supply": "SurowychCSI; brak jawnej mapydeveloped/developing; sprzeczność20vs10dni dla zmienności."
+          }
+        ],
+        "free_feasibility": "unresolved",
+        "verification_acceptance": [
+          "Oryginalnafullsamplemedian nie jestopisana jakoPITtradingsignal.",
+          "Każdyreżim ma definicję znanąprzedtargetem.",
+          "Nie wybiera siękorzystniejszego reżimupo wynikach."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Coreeffect tylko w jawnieodtworzonychsegmentach; nierozstrzygnięteregimes pozostająrequiresclarification.",
+        "next_action": "Sprawdzić archiwa strony autora i supplementarycode; pozostałe obserwacje oznaczyć jako nieobejmujące tych podziałów.",
+        "initial_next_action": "Dokończyćkrótkisprawdzeniepublicznych materiałówautora; przybraku zapisaćwyłączenie zprimary.",
+        "progress": {
+          "gap_id": "T005-R2",
+          "status": "open",
+          "status_reason": "Sprzeczność10vs20dni volatility i brak jawnej source-mapdeveloped/emerging nie zostały rozwiązane; nie zgadujemy podziału.",
+          "criteria_met": [
+            "Sprzeczność udokumentowano.",
+            "US3vsother30 jest źródłowo jawny, ale to inny podział."
+          ],
+          "criteria_unmet": [
+            "Authorclarification lub supplementarycode vol10vs20.",
+            "Jawna mapaticker→developed/emerging dla historycznej próby."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "results/ibs_source_protocol.json",
+              "locator": "regime_definitions.volatility",
+              "what_verified": "Nie rozstrzygnięto publikacyjnej sprzeczności.",
+              "url": ""
+            }
+          ],
+          "next_action": "Sprawdzić archiwa strony autora i supplementarycode; pozostałe obserwacje oznaczyć jako nieobejmujące tych podziałów.",
+          "round3_context_next_action": "Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania."
+        }
+      },
+      {
+        "gap_id": "T005-E1",
+        "missing_item": "Wykonalnośćhandlu po sygnaleIBS oraz faktycznekoszty.",
+        "category": "execution",
+        "why_needed": "Dodatni conditionalclose-to-close niejestwykonywalnymzyskiem; poznanieclose następuje przednext-open lecz po hipotetycznymfillclose.",
+        "acquisition_steps": [
+          "Najpierwwykonaćtylkoprawidłowyteststatystyczny zodpowiedniąniepewnością.",
+          "Potemdopiero nowawersjatransakcyjna zczasemdecyzji,pomiaramispread iopóźnienia.",
+          "Przybrakubid/ask korzystaćzuczciwegocostscenario lubprospektywnegopaper, bezpłatnychzakupówdanych."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Pagonidis — pierwotnyIBSPDF",
+            "url": "https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf",
+            "access_verified": true,
+            "what_available": "PobranyPDF z33tickerami,datami,CSI,bucketami i tabelamireżimów.",
+            "does_not_supply": "SurowychCSI; brak jawnej mapydeveloped/developing; sprzeczność20vs10dni dla zmienności."
+          },
+          {
+            "name": "NYSE — trading information",
+            "url": "https://www.nyse.com/trade/trading-information",
+            "access_verified": true,
+            "what_available": "Publiczne zasady aukcji, sesji i odnośniki do kalendarza.",
+            "does_not_supply": "Historycznychbid/ask,filli i pełnego archiwum reguł aukcji dla całej próby."
+          },
+          {
+            "name": "Yahoo — publiczna próbkaSPY chart",
+            "url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1=946684800&period2=1793145600&interval=1d&events=div%2Csplits&includeAdjustedClose=true",
+            "access_verified": true,
+            "what_available": "Potwierdzony publiczny odczyt dziennychOHLC,adjusted-close i zdarzeń dlaSPY; możliwa bezpłatna baza ograniczonej adaptacji.",
+            "does_not_supply": "Nie potwierdzono tym kompletu innychsymboli, źródłowychCSI/GFD, bid/ask ani gwarancji trwałego dostępu."
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Raportefektunie zawierawerdyktu oalpha netto.",
+          "Nieprzemyconosamecloseexecution zfinalnymclose.",
+          "Transakcyjnyplanmazapiskosztów ibenchmark wedługregułprojektu."
+        ],
+        "blocking_original_test": false,
+        "fallback_if_unavailable": "Zachowaćwniosekstatystyczny ograniczony dosygnału; statusnettrade niepotwierdzony.",
+        "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania.",
+        "blocking_trading_validation": true,
+        "initial_next_action": "Przygotowaćosobnyexecutionfeasibilitypacket po teścieefektu.",
+        "progress": {
+          "gap_id": "T005-E1",
+          "status": "partial",
+          "status_reason": "Wykonano i zapisano jawny wariant po modelowanych kosztach; rzeczywiste fille, pełne koszty osobiste i wierna egzekucja źródła pozostają niepotwierdzone.",
+          "criteria_met": [
+            "Nie raportujemyCAGR ani rachunku z obserwacji.",
+            "Osobny zamrożony plan, ledger, model aktualnej taryfy i scenariusze spreadu/poślizgu, kontrole przyczynowości i rachunków.",
+            "Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/T005.json"
+          ],
+          "criteria_unmet": [
+            "Time-stamped executablequotes, final-close signalcutoff, realspreads/commissions.",
+            "Bid/ask, partial fills, rozliczenie i kolejność sprzedaży/zakupu, realny poślizg, podatki, FX oraz KID/uprawnienia UE. Brak paper forward i partner consensus."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "config/ibs_observation_plan.json",
+              "locator": "Noorders/positions/netprofit",
+              "what_verified": "Naukowy target oddzielony od wykonywalnej strategii.",
+              "url": ""
+            }
+          ],
+          "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania.",
+          "round3_context_next_action": "Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania."
+        }
+      }
+    ],
+    "scoped_observation": {
+      "status": "completed_for_US3_only",
+      "evidence": "results/observations/IBS_OBSERVATION_US3_V1.json",
+      "point_estimate_verification": "results/observations/IBS_SQL_spotcheck.json",
+      "does_not_resolve": [
+        "CSI exact numerical reproduction",
+        "other30 ETF",
+        "volume interaction",
+        "volatility10vs20 ambiguity",
+        "executable net return"
+      ]
+    }
+  },
+  "quantconnect_data_review": null
+}

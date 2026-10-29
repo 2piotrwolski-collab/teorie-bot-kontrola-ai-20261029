@@ -1,0 +1,792 @@
+{
+  "snapshot_at_utc": "2026-10-29T18:43:35.427389+00:00",
+  "scope": "Research snapshot. No full original-theory verification; no live orders.",
+  "card": {
+    "id": "T001",
+    "round": 4,
+    "findings": [
+      "Pozyskano i sprawdzono SPY/EFA/IEF/IYR/GSG oraz BIL do 28.10.2026. Emitent potwierdza, że BIL obejmuje bony 1–3 miesiące; nie jest dokładnym źródłowym indeksem 90-dniowym.",
+      "Wykonano nowy miesięczny SMA10 z pięcioma częściami po 20%, wykonaniem na następnym otwarciu i kosztami także przejść przez BIL. Wyniki porównano z tym samym koszykiem i oddzielnie ze SPY.",
+      "W latach 2024–28.10.2026 wariant przy 5 bps uzyskał +28,06%, koszyk +44,30%, SPY +68,71%. Historyczna ochrona ryzyka jest oddzielona od obecnego celu przewagi procentowej.",
+      "Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.",
+      "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii."
+    ],
+    "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem.",
+    "overall_status": "strategie_kosztowe_provisional",
+    "gap_updates": [
+      {
+        "gap_id": "T001-R1",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "Full PDF source rules, independent sleeves, monthly total-return signal and five-class benchmark have locators.",
+          "Author-listed ETF menu is recovered; a complete separately labelled ETF proposal is specified."
+        ],
+        "criteria_unmet": [
+          "Original five-index data and cash conventions still unavailable; proposed ETF cash/execution choice and independent preregistration review are not complete.",
+          "Exact equality edge case and benchmark table rebalance convention are not fully specified by source; our conventions are labelled."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/faber.pdf",
+            "url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+            "sha256": "f2dabb6d31b18901cb64a0f57cea86f32f514570dcb5840fbeaa4877f24bdd3f",
+            "locator": "PDF pages 15, 21–22, 29–30, 55, 58; displayed page number = PDF page",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/T001_author_endowowment.html",
+            "url": "https://mebfaber.com/2007/08/22/endowowment/",
+            "sha256": "77d903f3511176958d31135e302fee34cb28efa9c2b2c5ae0af4c4cf43b62a06",
+            "locator": "EndoWOWment, 2007-08-22; paragraph Representative ETFs; leverage and annual-rebalance paragraph immediately above",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/T001_author_timing_model.html",
+            "url": "https://mebfaber.com/timing-model/",
+            "sha256": "a9eae8099cc606146ac599425b8284b444c0be5f5e00dc6523370dc2b5d9aa6a",
+            "locator": "FAQ 1, 4, 15–19",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          }
+        ],
+        "next_action": "Review and freeze new ETF specification, cash proxy and execution. Do not run frozen daily SPY v1 as Faber replication.",
+        "round3_context_next_action": "Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem."
+      },
+      {
+        "gap_id": "T001-D1",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "The exact five original indices and total-return requirement are established.",
+          "A lawful source-supported modern ETF route exists without pretending to own GFD."
+        ],
+        "criteria_unmet": [
+          "Original licensed GFD histories have not been acquired.",
+          "No new ETF price history or QA was performed in this source round."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/faber.pdf",
+            "url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+            "sha256": "f2dabb6d31b18901cb64a0f57cea86f32f514570dcb5840fbeaa4877f24bdd3f",
+            "locator": "PDF pages 15, 21–22, 29–30, 55, 58; displayed page number = PDF page",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/T001_author_endowowment.html",
+            "url": "https://mebfaber.com/2007/08/22/endowowment/",
+            "sha256": "77d903f3511176958d31135e302fee34cb28efa9c2b2c5ae0af4c4cf43b62a06",
+            "locator": "EndoWOWment, 2007-08-22; paragraph Representative ETFs; leverage and annual-rebalance paragraph immediately above",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/T001_author_timing_model.html",
+            "url": "https://mebfaber.com/timing-model/",
+            "sha256": "a9eae8099cc606146ac599425b8284b444c0be5f5e00dc6523370dc2b5d9aa6a",
+            "locator": "FAQ 1, 4, 15–19",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          }
+        ],
+        "next_action": "For original reproduction use legally held GFD or equivalent verifiable exact series; for a new ETF study acquire and QA SPY/EFA/IEF/IYR/GSG and clearly label index-tracking differences.",
+        "round3_context_next_action": "Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem."
+      },
+      {
+        "gap_id": "T001-D2",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "90-day Treasury-bill return requirement and distinction from annual yield are explicit.",
+          "Existing French RF is recognized as a one-month approximation, not90-day original."
+        ],
+        "criteria_unmet": [
+          "Exact90-day realized cash return series and source timing/day count remain absent.",
+          "BIL is a candidate implementation proxy requiring issuer/data checks and predeclaration."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/faber.pdf",
+            "url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+            "sha256": "f2dabb6d31b18901cb64a0f57cea86f32f514570dcb5840fbeaa4877f24bdd3f",
+            "locator": "PDF pages 15, 21–22, 29–30, 55, 58; displayed page number = PDF page",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "url": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-bloomberg-1-3-month-t-bill-etf-bil",
+            "evidence_path": "sources/round3/bil_issuer.html",
+            "locator": "Round3boundedsourcecheck",
+            "what_verified": "BILissuer:1–3monthT-bills, not exactGFD90daycash."
+          }
+        ],
+        "next_action": "Choose a labelled free cash proxy before modern ETF testing, or retain blocker for exact original cash reproduction.",
+        "round3_context_next_action": "Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem."
+      },
+      {
+        "gap_id": "T001-E1",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "Source same-close assumption, monthly observation and exclusion of trading costs established.",
+          "Hypothetical-close and causal-next-open versions are explicitly separate.",
+          "Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/T001.json"
+        ],
+        "criteria_unmet": [
+          "Actual month-end auction estimates/fills and original costs are not recoverable from daily close bars.",
+          "Chosen execution variant and common strategy/benchmark cost model are not frozen."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/faber.pdf",
+            "url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+            "sha256": "f2dabb6d31b18901cb64a0f57cea86f32f514570dcb5840fbeaa4877f24bdd3f",
+            "locator": "PDF pages 15, 21–22, 29–30, 55, 58; displayed page number = PDF page",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/T001_author_timing_model.html",
+            "url": "https://mebfaber.com/timing-model/",
+            "sha256": "a9eae8099cc606146ac599425b8284b444c0be5f5e00dc6523370dc2b5d9aa6a",
+            "locator": "FAQ 1, 4, 15–19",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          }
+        ],
+        "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem.",
+        "round3_context_next_action": "Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem."
+      }
+    ],
+    "source_urls_verified": [
+      "https://mebfaber.com/2007/08/22/endowowment/",
+      "https://mebfaber.com/timing-model/",
+      "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf"
+    ],
+    "observations": [
+      {
+        "id": "QUOTE_PREFLIGHT_20261028_T001",
+        "title": "Rzeczywiste kwotowania przed zamknięciem · 28.10.2026",
+        "summary": "Historyczne SIP o 15:45 NY: zmierzony spread; osobno model kosztu zakupu i natychmiastowej sprzedaży dla budżetu 10 000 USD, bez ruchu rynku.",
+        "columns": [
+          "ETF",
+          "Spread bps",
+          "Połowa spreadu bps",
+          "Model kosztu pełnego obrotu USD"
+        ],
+        "rows": [
+          [
+            "SPY",
+            0.389,
+            0.1945,
+            3.2855
+          ],
+          [
+            "BIL",
+            1.0909,
+            0.5455,
+            4.0891
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L.",
+          "To nie jest pełny koszyk pięciu ETF-ów Fabera; zmierzono tylko kontekst SPY i BIL."
+        ],
+        "evidence_report": "WYKONANIE_20261028.json"
+      },
+      {
+        "id": "ARRIVAL_20261029_T001",
+        "title": "Dzisiejsza kontrola wykonania · 29.10.2026",
+        "summary": "Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.",
+        "columns": [
+          "Zakres",
+          "Stan"
+        ],
+        "rows": [
+          [
+            "SPY",
+            "oczekuje"
+          ],
+          [
+            "BIL",
+            "oczekuje"
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_DZISIAJ/T001.json"
+      },
+      {
+        "id": "MODERN_EXECUTION_NET_R2_T001",
+        "title": "Warianty strategii po modelowanych kosztach transakcyjnych",
+        "summary": "Decyzja na zamknięciu → najwcześniej następne otwarcie. Wynik w USD po modelowanej prowizji IBKR Pro Fixed USA, spreadzie/poślizgu i założonej rezerwie 1 bps przy sprzedaży, przed podatkiem i FX. Skala 10 000 USD służy policzeniu minimalnych prowizji; nie jest założeniem o kapitale użytkownika. BIL jest kupowany/sprzedawany z kosztami. 0/5/20 bps oznacza dodatkowy scenariusz spreadu i poślizgu na stronę; prowizje są zawsze naliczane.",
+        "columns": [
+          "Wersja wykonania",
+          "Okres",
+          "Dodatkowe bps/stronę",
+          "Zwrot (%)",
+          "SPY (%)",
+          "Własny benchmark (%)",
+          "Max DD (%)",
+          "Koszty USD",
+          "Śr. ekspozycja ryzykowna (%)"
+        ],
+        "rows": [
+          [
+            "T001_ETF5_OPEN",
+            "2010–28.10.2026",
+            5,
+            "86.69",
+            "822.10",
+            "215.87",
+            "-15.51",
+            "1051.88",
+            "68.49"
+          ],
+          [
+            "T001_ETF5_OPEN",
+            "2010–2019",
+            5,
+            "16.95",
+            "249.41",
+            "76.66",
+            "-15.51",
+            "558.26",
+            "69.35"
+          ],
+          [
+            "T001_ETF5_OPEN",
+            "2020–2023",
+            5,
+            "23.76",
+            "56.25",
+            "23.11",
+            "-9.38",
+            "255.00",
+            "56.07"
+          ],
+          [
+            "T001_ETF5_OPEN",
+            "2024–28.10.2026",
+            0,
+            "28.89",
+            "68.88",
+            "44.46",
+            "-8.74",
+            "122.65",
+            "83.07"
+          ],
+          [
+            "T001_ETF5_OPEN",
+            "2024–28.10.2026",
+            5,
+            "28.06",
+            "68.71",
+            "44.30",
+            "-8.78",
+            "194.62",
+            "83.07"
+          ],
+          [
+            "T001_ETF5_OPEN",
+            "2024–28.10.2026",
+            20,
+            "25.60",
+            "68.20",
+            "43.84",
+            "-8.89",
+            "407.70",
+            "83.07"
+          ]
+        ],
+        "evidence_report": "NET_STRATEGIE/T001.json",
+        "limitations": [
+          "To jawne warianty wykonania, nie pełne reprodukcje publikacji. Szczegółowa macierz zgodności, wszystkie scenariusze, NAV, roczne wyniki i transakcje są zachowane.",
+          "Żaden z ośmiu wariantów dziennych nie spełnił bramki przewagi nad SPY w obu okresach 2020–2023 oraz 2024–2026 przy 5 i 20 bps. To wynik tych portfeli; nie obalenie teorii lub rzadkiego modułu wejścia.",
+          "Dla Fabera własny benchmark to ten sam koszyk pięciu ETF-ów, dla pozostałych — ten sam bazowy ETF. Ochrona ryzyka i cel pobicia pełnego SPY są oddzielnymi pytaniami.",
+          "Cena otwarcia OHLC, jednoczesne wykonanie koszyka, kolejność sprzedaży/zakupu i pełne fille pozostają przybliżeniami. Faktyczny spread, poślizg, rozliczenie, podatki, FX i dostępność ETF/KID dla inwestora UE nie zostały potwierdzone.",
+          "Wszystkie okresy są retrospektywne i częściowo nakładają się. Brak nietkniętego OOS, paper forward i konsensusu z Claude’em. Kontrola rachunkowa inną implementacją: PASS dla 168 ścieżek."
+        ]
+      }
+    ],
+    "source_detail": {
+      "variant_id": "FABER_AUTHOR_ETF5_MONTHLY10_SOURCE_ALIGNED_V1_DRAFT",
+      "classification": "New source-aligned ETF implementation; not reproduction of historical GFD index results and not the leveraged yearly-rebalanced EndoWOWment illustration.",
+      "original_claim": "A simple monthly trend filter across diversified asset classes may improve risk-adjusted results and reduce large drawdowns. Net absolute SPY outperformance is a separate project objective.",
+      "source_rules": [
+        {
+          "rule": "Month-end only; compare that month-end total-return level with arithmetic mean of latest 10 month-end total-return levels, including current month.",
+          "locator": "Faber PDF21–22; PDF15 says total return; FAQ19 expressly requires adjusted Yahoo numbers."
+        },
+        {
+          "rule": "For each sleeve buy/hold if level>SMA10, sell to cash if level<SMA10; ignore intra-month crossovers.",
+          "locator": "PDF21–22"
+        },
+        {
+          "rule": "Five independent 20% sleeves: US stocks, foreign developed stocks, US government bonds, REITs, commodities. An inactive sleeve keeps its own 20% in cash; do not redistribute it into active assets.",
+          "locator": "PDF15 and29"
+        },
+        {
+          "rule": "Rebalance the timing model monthly. Paper assumes execution at signal-day close, 90-day T-bill cash returns, and excludes tax, commissions and slippage.",
+          "locator": "PDF22 and55"
+        },
+        {
+          "rule": "Primary benchmark is equal-weight buy-and-hold of the same five classes; author recommends annual B&H rebalance for tax-exempt accounts.",
+          "locator": "PDF29–30 and55; benchmark table historical rebalance convention should not be asserted more precisely than source permits."
+        }
+      ],
+      "author_etf_menu": {
+        "US_stocks": [
+          "VTI",
+          "SPY"
+        ],
+        "foreign_stocks": [
+          "EFA",
+          "EEM"
+        ],
+        "bonds": [
+          "IEF",
+          "AGG"
+        ],
+        "REITs": [
+          "IYR",
+          "RWX"
+        ],
+        "commodities": [
+          "DBC",
+          "GSG"
+        ]
+      },
+      "proposed_etfs": [
+        {
+          "ticker": "SPY",
+          "source_class": "US stocks / S&P 500",
+          "weight": 0.2,
+          "selection": "Author-listed choice matching the paper equity index closely."
+        },
+        {
+          "ticker": "EFA",
+          "source_class": "Foreign developed / MSCI EAFE",
+          "weight": 0.2,
+          "selection": "Author-listed developed-market choice; EEM would change this segment."
+        },
+        {
+          "ticker": "IEF",
+          "source_class": "US government bonds",
+          "weight": 0.2,
+          "selection": "Author-listed intermediate Treasury choice; not the exact GFD 10-year total-return index."
+        },
+        {
+          "ticker": "IYR",
+          "source_class": "US REITs",
+          "weight": 0.2,
+          "selection": "Author-listed choice; not the exact historical NAREIT index. VNQ is not silently substituted."
+        },
+        {
+          "ticker": "GSG",
+          "source_class": "Broad commodities",
+          "weight": 0.2,
+          "selection": "Author-listed GSCI-linked choice; not the exact GFD/GSCI return series. DBC is an alternative author mentions, not an interchangeable index."
+        }
+      ],
+      "our_predeclared_conventions": [
+        "This proposal selects one fund from each author-listed menu; the author did not prescribe one unique ETF basket in the PDF.",
+        "Adjusted total-return level used both for signal and close-to-close return; preserve adjustment factors and distribution events. No raw-close signal silently mixed with total-return performance.",
+        "At exact equality hold previous sleeve state; start cash until 10 valid month-end observations. These edge cases are our explicit implementation choices.",
+        "Timing sleeves reset to 20% monthly. Proposed main passive comparator is same funds, 20% each, rebalanced at December month-end; monthly passive rebalancing is one declared diagnostic comparator, not an optimized choice.",
+        "Proposed fixed full-calendar study starts 2010-01-01 with history through 2009-12-31 for initialization, and ends at the latest fully closed month available on 2026-10-28, 2026-09-30. Diagnostic segments 2010–2015, 2016–2019, 2020–2026-09. None is declared untouched out-of-sample.",
+        "No leverage, shorting, rotation into strongest assets, parameter search or selecting an ETF by subsequent performance.",
+        "Use a separate new version, preserving frozen T001 daily SPY v1 and its prior outcome."
+      ],
+      "cash_decision": {
+        "original_requirement": "Realized total return representing 90-day T-bills; a quoted 3-month yield is not itself a return.",
+        "original_free_status": "Not acquired; original GFD series is not in the public paper.",
+        "candidate_etf_implementation": "BIL could represent a traded 1–3 month T-bill sleeve, after issuer/data checks. This is a new cash proxy with fees and price risk, not author-prescribed 90-day GFD cash.",
+        "alternative_free_rf": "Ken French daily/monthly RF is a one-month T-bill return proxy, already downloaded; it must not be relabelled exact 90-day return.",
+        "required_decision": "Select and label a single cash convention before any ETF result. Exact index replication remains blocked if only a proxy is available."
+      },
+      "execution_variants": [
+        {
+          "name": "source_close_observation",
+          "definition": "Signal uses final month-end adjusted close and position begins at that same close for next-month return. Explicitly hypothetical final-close convention; gross, not an executable proof."
+        },
+        {
+          "name": "causal_next_open_adaptation",
+          "definition": "Signal after final month-end close; trade at next session open, with cash and gaps bookkept and costs declared. Different execution version, not a repair disguised as source replication."
+        }
+      ],
+      "before_test_acceptance": [
+        "Freeze cash convention and execution version.",
+        "Validate all five funds and chosen cash history: inception, distributions/splits, month-end coverage, stale prices, adjustment factors and calendar.",
+        "Independently review source-to-spec mapping and save its hash.",
+        "Report five-class benchmark, risk and exposure alongside optional project SPY comparator; never use SPY underperformance alone to reject the source claim."
+      ],
+      "ready_for_original_index_replication": false,
+      "ready_for_etf_spec_review": true,
+      "ready_for_execution_without_further_checks": false
+    },
+    "source_update_artifact": "research_round2/source_updates_T001_T004.json",
+    "source_update_sha256": "2953f6d2229cc4cc35f01b17b0ed374572ae1805eabdeaa991755a222392c6e2",
+    "observation_ids": [
+      "QUOTE_PREFLIGHT_20261028_T001",
+      "ARRIVAL_20261029_T001",
+      "MODERN_EXECUTION_NET_R2_T001"
+    ],
+    "previous_findings_round2": [
+      "Potwierdzono miesięczny sygnał SMA z 10 miesięcy na danych total return, pięć klas aktywów i niezależne części portfela po 20%.",
+      "Odnaleziono wskazaną przez autora listę ETF-ów. Projekt wariantu SPY/EFA/IEF/IYR/GSG jest jawnie implementacją ETF, a nie reprodukcją historycznych indeksów GFD.",
+      "Brakuje zatwierdzonego zamiennika gotówki 90-dniowych bonów i kontroli wykonania oraz danych. Wyniku nowego wariantu jeszcze nie liczono."
+    ],
+    "strategy_result_file": "NET_STRATEGIE/T001.json",
+    "execution_evidence_file": "WYKONANIE_DZISIAJ/T001.json"
+  },
+  "source_qualification": {
+    "id": "T001",
+    "intended_market": "Płynne klasy aktywów globalnych: amerykańskie akcje, rozwinięte akcje zagraniczne, obligacje skarbowe USA, surowce i REIT.",
+    "segment": "S&P 500, MSCI EAFE, obligacje skarbowe USA 10Y, GSCI, NAREIT; każdy segment jako osobna 20% część portfela.",
+    "regime": "Pełny cykl rynku; dynamiczne pozostawanie w aktywie lub T-bills według lagowanego trendu. To strategia obejmująca hossę i bessę, a nie gwarancja pokonania SPY w każdej hossie.",
+    "horizon": "Sygnał i rebalance raz na miesiąc; lookback 10 miesięcznych zamknięć; ocena wieloletniego profilu zwrot/ryzyko.",
+    "universe": [
+      "S&P 500 total return",
+      "MSCI EAFE total return",
+      "US 10Y government bond total return",
+      "GSCI total return",
+      "NAREIT total return"
+    ],
+    "original_objective": "Poprawa relacji zysku do ryzyka i ograniczenie dużych obsunięć przez prosty filtr trendu, testowany na pojedynczych klasach i ich portfelu.",
+    "correct_benchmark": "Pierwotny benchmark portfelowy: pasywne, równo ważone 20% tych samych pięciu klas, z porównywalnym rebalancingiem i total return. Dla pojedynczego sleeve jego własne buy-and-hold. SPY jest odrębną bramką celu projektu, nie jedynym testem prawdziwości artykułu.",
+    "falsification_question": "Czy miesięczna SMA10 z dochodem T-bills poprawia źródłowo zdefiniowany profil ryzyka i wyniku wobec tego samego pasywnego koszyka, w z góry ustalonym okresie?",
+    "missing_data": [
+      "Zgodne total-return indeksy, szczególnie historyczne GSCI i NAREIT.",
+      "Historyczny dochód 90-dniowych T-bills i jawne cash timing.",
+      "Dokładnie określony sposób miesięcznego rebalancingu oraz wykonalna cena po poznaniu sygnału."
+    ],
+    "ready_for_valid_test": false,
+    "readiness_reason": "Karta v1 daily SMA200/SPY/cash0 nie odpowiada źródłowemu testowi. Możliwa oddzielna, poprawnie nazwana demonstracja ETF po zamrożeniu nowej specyfikacji i kontroli danych.",
+    "qualification_status": "requires_redesign_and_data_alignment",
+    "source_fit": "adaptation",
+    "exact_mismatch": "Faber definiuje SMA z 10 miesięcznych obserwacji, aktualizację raz na koniec miesiąca, wykonanie na zamknięciu i odsetki z 90-dniowych Treasury bills podczas pozostawania w gotówce. Karta używa SMA200 dziennie, codziennych decyzji, następnego otwarcia i gotówki bez odsetek. Źródło bada również S&P 500 oddzielnie, więc samo użycie SPY nie jest główną wadą. Zmieniono jednak obrót, dochód gotówki i cel ryzyko/zwrot.",
+    "correction_needed": "Nowa wersja: miesięczna SMA10 na total return, jawny miesięczny rebalance i dostępny w danej chwili dochód T-bills. Oddzielić odtworzenie wyników autora od wykonalnego testu next-open i od bramki alfy projektu; raportować CAGR, ryzyko i drawdown.",
+    "source_url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+    "applies_to_theory_version": 1
+  },
+  "acquisition_plan": {
+    "id": "T001",
+    "gaps": [
+      {
+        "gap_id": "T001-R1",
+        "missing_item": "Nowa karta źródłowego SMA10monthly i właściwego pięcioklasowego benchmarku; v1 testuje daily200/SPY.",
+        "category": "rule",
+        "why_needed": "Bez niej badamy inną częstotliwość, obrót i pytanie.",
+        "acquisition_steps": [
+          "Przepisać source-rule miesiąc/10monthlyclose/20% każda klasa z lokalnegoPDF.",
+          "Rozdzielić benchmark5klas od dodatkowegoSPYcelu projektu.",
+          "Zamrozićnowąwersję przedwynikami, zachowaćv1."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Faber — autorska publikacja i reguły",
+            "url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+            "access_verified": true,
+            "what_available": "Zarchiwizowany pierwotnyPDF: pięć klas, SMA10monthly,20% niezależne sleeves,90dayTbillcash, opis benchmarku.",
+            "does_not_supply": "Surowych licencjonowanych historiiGFD ani rzeczywistychfilli."
+          }
+        ],
+        "free_feasibility": "available_free",
+        "verification_acceptance": [
+          "Każda reguła ma numerstrony.",
+          "Cashinactive20% pozostaje wcash, bez koncentracji w aktywnychsleeves.",
+          "Hashplanu i niezależnyreviewprzedrun."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Możliwa jawnaETFadaptacja z nowymID/wersją, bez deklaracji odtworzeniaFabera.",
+        "next_action": "Review and freeze new ETF specification, cash proxy and execution. Do not run frozen daily SPY v1 as Faber replication.",
+        "initial_next_action": "Przygotować nowąspecyfikację miesięczną z pięcioma sleeve i dwiema oddzielnymi ocenami: source oraz celSPY.",
+        "progress": {
+          "gap_id": "T001-R1",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "Full PDF source rules, independent sleeves, monthly total-return signal and five-class benchmark have locators.",
+            "Author-listed ETF menu is recovered; a complete separately labelled ETF proposal is specified."
+          ],
+          "criteria_unmet": [
+            "Original five-index data and cash conventions still unavailable; proposed ETF cash/execution choice and independent preregistration review are not complete.",
+            "Exact equality edge case and benchmark table rebalance convention are not fully specified by source; our conventions are labelled."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/faber.pdf",
+              "url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+              "sha256": "f2dabb6d31b18901cb64a0f57cea86f32f514570dcb5840fbeaa4877f24bdd3f",
+              "locator": "PDF pages 15, 21–22, 29–30, 55, 58; displayed page number = PDF page",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/T001_author_endowowment.html",
+              "url": "https://mebfaber.com/2007/08/22/endowowment/",
+              "sha256": "77d903f3511176958d31135e302fee34cb28efa9c2b2c5ae0af4c4cf43b62a06",
+              "locator": "EndoWOWment, 2007-08-22; paragraph Representative ETFs; leverage and annual-rebalance paragraph immediately above",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/T001_author_timing_model.html",
+              "url": "https://mebfaber.com/timing-model/",
+              "sha256": "a9eae8099cc606146ac599425b8284b444c0be5f5e00dc6523370dc2b5d9aa6a",
+              "locator": "FAQ 1, 4, 15–19",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            }
+          ],
+          "next_action": "Review and freeze new ETF specification, cash proxy and execution. Do not run frozen daily SPY v1 as Faber replication.",
+          "round3_context_next_action": "Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem."
+        }
+      },
+      {
+        "gap_id": "T001-D1",
+        "missing_item": "Źródłowe totalreturn pięciu indeksów, szczególnieGSCI,NAREIT i10Ygovernmentbonds.",
+        "category": "data",
+        "why_needed": "ETF-y śledzą inneindeksy lub mają koszty; nie pozwalają odtworzyć dawnychliczbGFD.",
+        "acquisition_steps": [
+          "Sprawdzić istniejące legalnieposiadane archiwaGFD/indeksów bez nowychzakupów.",
+          "Zestawić każdą serię z indeksem, okresem i rewizją źródła.",
+          "Jeśli brak uprawnień, zapisać braki i zaprojektować odrębną krótsząadaptacjęETF."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Faber — autorska publikacja i reguły",
+            "url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+            "access_verified": true,
+            "what_available": "Zarchiwizowany pierwotnyPDF: pięć klas, SMA10monthly,20% niezależne sleeves,90dayTbillcash, opis benchmarku.",
+            "does_not_supply": "Surowych licencjonowanych historiiGFD ani rzeczywistychfilli."
+          },
+          {
+            "name": "Faber — autorskie FAQ o danych",
+            "url": "https://mebfaber.com/2013/06/14/qtaa-update-conclustions-and-faqs/",
+            "access_verified": true,
+            "what_available": "Publiczny tekst potwierdzaGFD i zakaz udostępniania tych danych przez autora.",
+            "does_not_supply": "Bezpłatnego kompletu oryginalnych indeksów."
+          },
+          {
+            "name": "Yahoo — publiczna próbkaSPY chart",
+            "url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1=946684800&period2=1793145600&interval=1d&events=div%2Csplits&includeAdjustedClose=true",
+            "access_verified": true,
+            "what_available": "Potwierdzony publiczny odczyt dziennychOHLC,adjusted-close i zdarzeń dlaSPY; możliwa bezpłatna baza ograniczonej adaptacji.",
+            "does_not_supply": "Nie potwierdzono tym kompletu innychsymboli, źródłowychCSI/GFD, bid/ask ani gwarancji trwałego dostępu."
+          }
+        ],
+        "free_feasibility": "not_free_original",
+        "verification_acceptance": [
+          "Totalreturn obejmuje dywidendy/dochód.",
+          "Indeksy i daty zgodne; brak backfilluETF do lat sprzedpowstania.",
+          "Jawne rozbieżności vs źródło i kontrolajakości."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "SPY/EFA/IEF/VNQ/DBC mogą służyć proxyadaptacji, ale nie obaleniuoryginału; DBCnieGSCI, IEFnieexact10Y, VNQniehistorycznyNAREIT.",
+        "next_action": "For original reproduction use legally held GFD or equivalent verifiable exact series; for a new ETF study acquire and QA SPY/EFA/IEF/IYR/GSG and clearly label index-tracking differences.",
+        "initial_next_action": "Zrobić lokalny inventory istniejących indeksów; przy braku zablokować strictreproduction.",
+        "progress": {
+          "gap_id": "T001-D1",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "The exact five original indices and total-return requirement are established.",
+            "A lawful source-supported modern ETF route exists without pretending to own GFD."
+          ],
+          "criteria_unmet": [
+            "Original licensed GFD histories have not been acquired.",
+            "No new ETF price history or QA was performed in this source round."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/faber.pdf",
+              "url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+              "sha256": "f2dabb6d31b18901cb64a0f57cea86f32f514570dcb5840fbeaa4877f24bdd3f",
+              "locator": "PDF pages 15, 21–22, 29–30, 55, 58; displayed page number = PDF page",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/T001_author_endowowment.html",
+              "url": "https://mebfaber.com/2007/08/22/endowowment/",
+              "sha256": "77d903f3511176958d31135e302fee34cb28efa9c2b2c5ae0af4c4cf43b62a06",
+              "locator": "EndoWOWment, 2007-08-22; paragraph Representative ETFs; leverage and annual-rebalance paragraph immediately above",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/T001_author_timing_model.html",
+              "url": "https://mebfaber.com/timing-model/",
+              "sha256": "a9eae8099cc606146ac599425b8284b444c0be5f5e00dc6523370dc2b5d9aa6a",
+              "locator": "FAQ 1, 4, 15–19",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            }
+          ],
+          "next_action": "For original reproduction use legally held GFD or equivalent verifiable exact series; for a new ETF study acquire and QA SPY/EFA/IEF/IYR/GSG and clearly label index-tracking differences.",
+          "round3_context_next_action": "Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem."
+        }
+      },
+      {
+        "gap_id": "T001-D2",
+        "missing_item": "Poprawny zwrotcash90dayTbill zamiastcash0 albo wstawionej rentowności.",
+        "category": "data",
+        "why_needed": "Czas poza aktywami wpływa na wynik; yield nie jest gotowymholdingperiodreturn.",
+        "acquisition_steps": [
+          "Sprawdzić, czy źródłowa seriabills jest w posiadanycharchiwach.",
+          "Zweryfikować freeRF zKenFrench jako1mproxy, aDTB3 jakoyield wymagającą konwersji.",
+          "Wybraćjawnie osobnyproxywariantnpBILtotalreturn; niepodmieniać źródła wfreeze."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Faber — autorska publikacja i reguły",
+            "url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+            "access_verified": true,
+            "what_available": "Zarchiwizowany pierwotnyPDF: pięć klas, SMA10monthly,20% niezależne sleeves,90dayTbillcash, opis benchmarku.",
+            "does_not_supply": "Surowych licencjonowanych historiiGFD ani rzeczywistychfilli."
+          },
+          {
+            "name": "KenFrench — FF3dailyCSV",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip",
+            "access_verified": true,
+            "what_available": "PobranyZIP HTTP200, zweryfikowany nagłówek Mkt-RF,SMB,HML,RF.",
+            "does_not_supply": "RF jest1mTbill, nie90daytotalreturn; brak pojedynczych akcji i futures, brak całego zestawu faktorówMoreira."
+          },
+          {
+            "name": "FRED — DTB3",
+            "url": "https://fred.stlouisfed.org/series/DTB3",
+            "access_verified": true,
+            "what_available": "Publiczna dzienna stopa dyskontowa3mTbill.",
+            "does_not_supply": "To kwotowana rentowność w%p.a., a nie dzienny/miesięczny holding-period return. Nie wolno bez modelu wstawićjej jako zwrotu."
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Wskazane tenor,daycount, jednostki i data dostępności.",
+          "Żaden yield w%p.a. nie jest traktowany bezprzeliczenia jako dziennystopazwrotu.",
+          "Proxy nieoznaczona jako oryginalne90dbills."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Użyć1mRF/BIL wyłącznie w jawnie nazwanejadaptacji; brakcash0 w rzekomejreprodukcji.",
+        "next_action": "Choose a labelled free cash proxy before modern ETF testing, or retain blocker for exact original cash reproduction.",
+        "initial_next_action": "Ustalić dokumentację dostępną dlaoryginalnego cashreturn i oznaczyćalternatywyproxy.",
+        "progress": {
+          "gap_id": "T001-D2",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "90-day Treasury-bill return requirement and distinction from annual yield are explicit.",
+            "Existing French RF is recognized as a one-month approximation, not90-day original."
+          ],
+          "criteria_unmet": [
+            "Exact90-day realized cash return series and source timing/day count remain absent.",
+            "BIL is a candidate implementation proxy requiring issuer/data checks and predeclaration."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/faber.pdf",
+              "url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+              "sha256": "f2dabb6d31b18901cb64a0f57cea86f32f514570dcb5840fbeaa4877f24bdd3f",
+              "locator": "PDF pages 15, 21–22, 29–30, 55, 58; displayed page number = PDF page",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "url": "https://www.ssga.com/us/en/intermediary/etfs/state-street-spdr-bloomberg-1-3-month-t-bill-etf-bil",
+              "evidence_path": "sources/round3/bil_issuer.html",
+              "locator": "Round3boundedsourcecheck",
+              "what_verified": "BILissuer:1–3monthT-bills, not exactGFD90daycash."
+            }
+          ],
+          "next_action": "Choose a labelled free cash proxy before modern ETF testing, or retain blocker for exact original cash reproduction.",
+          "round3_context_next_action": "Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem."
+        }
+      },
+      {
+        "gap_id": "T001-E1",
+        "missing_item": "Wykonalny moment decyzji i kosztów obok hipotetycznego monthendclose autora.",
+        "category": "execution",
+        "why_needed": "Finalnyclose nie jestznany przedaukcją; hipotetycznywynik nie dowodzifillu.",
+        "acquisition_steps": [
+          "Odtworzyć sourceconvention jako osobny opisowywariant.",
+          "Dla wykonaniazaprojektować lagowanądecyzję/next-open z historycznymkalendarzem.",
+          "Prowadzićkosztowescenariusze jako założenia, a rzeczywistepomiary zdobywać wpaper bezpłatnie."
+        ],
+        "candidate_sources": [
+          {
+            "name": "NYSE — trading information",
+            "url": "https://www.nyse.com/trade/trading-information",
+            "access_verified": true,
+            "what_available": "Publiczne zasady aukcji, sesji i odnośniki do kalendarza.",
+            "does_not_supply": "Historycznychbid/ask,filli i pełnego archiwum reguł aukcji dla całej próby."
+          },
+          {
+            "name": "Faber — autorska publikacja i reguły",
+            "url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+            "access_verified": true,
+            "what_available": "Zarchiwizowany pierwotnyPDF: pięć klas, SMA10monthly,20% niezależne sleeves,90dayTbillcash, opis benchmarku.",
+            "does_not_supply": "Surowych licencjonowanych historiiGFD ani rzeczywistychfilli."
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Nie ma sygnału po finalnymclose i fillu po tym samymclose jako rzeczywistejtransakcji.",
+          "Ceny/kalendarz/koszty jawne dla obu benchmarków."
+        ],
+        "blocking_original_test": false,
+        "fallback_if_unavailable": "Pozostawić wynik jako hipotetyczny/monthlyproxy; bez statusu tradingalphawygrana.",
+        "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem.",
+        "blocking_trading_validation": true,
+        "initial_next_action": "Rozdzielić replikacjęarytmetyki od wykonania i oznaczyćmissingexecution.",
+        "progress": {
+          "gap_id": "T001-E1",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "Source same-close assumption, monthly observation and exclusion of trading costs established.",
+            "Hypothetical-close and causal-next-open versions are explicitly separate.",
+            "Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/T001.json"
+          ],
+          "criteria_unmet": [
+            "Actual month-end auction estimates/fills and original costs are not recoverable from daily close bars.",
+            "Chosen execution variant and common strategy/benchmark cost model are not frozen."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/faber.pdf",
+              "url": "https://mebfaber.com/wp-content/uploads/2016/05/SSRN-id962461.pdf",
+              "sha256": "f2dabb6d31b18901cb64a0f57cea86f32f514570dcb5840fbeaa4877f24bdd3f",
+              "locator": "PDF pages 15, 21–22, 29–30, 55, 58; displayed page number = PDF page",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/T001_author_timing_model.html",
+              "url": "https://mebfaber.com/timing-model/",
+              "sha256": "a9eae8099cc606146ac599425b8284b444c0be5f5e00dc6523370dc2b5d9aa6a",
+              "locator": "FAQ 1, 4, 15–19",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            }
+          ],
+          "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem.",
+          "round3_context_next_action": "Sprawdzić rzeczywiste spready i wykonanie koszyka oraz wariant dostępny w UE; nie stroić SMA lub składu pod obejrzany wynik. Oryginalne indeksy GFD pozostają odrębnym brakiem."
+        }
+      }
+    ]
+  },
+  "quantconnect_data_review": null
+}

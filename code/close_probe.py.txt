@@ -1,0 +1,135 @@
+#!/usr/bin/env python3
+"""Bounded public-data arrival measurement. No strategy, account or order API."""
+import argparse, concurrent.futures, datetime as dt, fcntl, gzip, hashlib, json
+import math, time, urllib.parse, urllib.request
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+ROOT = Path(__file__).resolve().parent
+UTC = dt.timezone.utc
+NY = ZoneInfo('America/New_York')
+SYMBOLS = ('SPY', 'IWM', 'QQQ', 'FXI', 'BIL')
+SESSION = '2026-10-29'
+SLOTS = ('15:35:05','15:39:55','15:40:05','15:41:05','15:42:05',
+         '15:43:05','15:44:05','15:45:05','15:46:05','15:50:05',
+         '15:55:05','16:00:30','16:05:30')
+
+def now(): return dt.datetime.now(UTC)
+def at(session, hhmmss):
+    return dt.datetime.fromisoformat(session+'T'+hhmmss).replace(tzinfo=NY)
+def stamp(value): return dt.datetime.fromisoformat(value.replace('Z','+00:00'))
+def sha(data): return hashlib.sha256(data).hexdigest()
+def save_json(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix+'.tmp')
+    tmp.write_text(json.dumps(value, ensure_ascii=False, indent=2)+'\n')
+    tmp.replace(path)
+
+def evaluate_response(body, requested_at, received_at, session, clock_jump_seconds=0):
+    """Only fully closed bars at REQUEST time; crossing a boundary cannot help."""
+    request, received = stamp(requested_at), stamp(received_at)
+    if request.tzinfo is None or received.tzinfo is None:
+        raise ValueError('Timezone required')
+    out = {'complete_prefix':False, 'available_before_1545':False,
+           'clock_jump_seconds':clock_jump_seconds, 'errors':[], 'bars':[]}
+    try:
+        result = body['chart']['result'][0]
+        ts = result['timestamp']; q = result['indicators']['quote'][0]
+        if len(ts) != len(set(ts)): raise ValueError('Duplicate bar timestamps')
+        if ts != sorted(ts): raise ValueError('Unsorted bar timestamps')
+        expected = [int(at(session,'09:30:00').timestamp())+300*i for i in range(74)]
+        accepted = {}
+        for i, epoch in enumerate(ts):
+            # A response may contain the currently forming bar. Preserve raw; exclude it.
+            if epoch+300 > request.timestamp(): continue
+            if epoch not in expected: continue
+            vals = {k:q[k][i] for k in ('open','high','low','close','volume')}
+            valid = all(isinstance(v,(int,float)) and math.isfinite(v) for v in vals.values())
+            valid = valid and min(vals[k] for k in ('open','high','low','close')) > 0
+            valid = valid and vals['low'] <= min(vals['open'],vals['close']) <= max(vals['open'],vals['close']) <= vals['high'] and vals['volume'] >= 0
+            if not valid:
+                out['errors'].append('Invalid OHLCV at '+str(epoch)); continue
+            accepted[epoch] = vals
+        out['bars'] = [{'timestamp':t,**accepted[t]} for t in sorted(accepted)]
+        out['missing_prefix_bars'] = [t for t in expected if t not in accepted]
+        out['complete_prefix'] = len(accepted) == 74 and not out['errors']
+        same_day = request.astimezone(NY).date().isoformat() == session == received.astimezone(NY).date().isoformat()
+        chronology = received >= request and abs(clock_jump_seconds) <= 2
+        out['available_before_1545'] = out['complete_prefix'] and same_day and chronology and received < at(session,'15:45:00')
+        out['received_after_prefix_end_seconds'] = (received-at(session,'15:40:00')).total_seconds()
+    except (KeyError,TypeError,ValueError,IndexError) as exc:
+        out['errors'].append(type(exc).__name__+': '+str(exc))
+    return out
+
+def capture(symbol, session, slot, folder, diagnostic=False):
+    sent = now(); mono = time.monotonic()
+    params = {'period1':int(at(session,'09:30:00').timestamp()),
+              'period2':int(sent.timestamp()), 'interval':'5m', 'includePrePost':'false'}
+    url = 'https://query1.finance.yahoo.com/v8/finance/chart/'+symbol+'?'+urllib.parse.urlencode(params)
+    receipt = {'symbol':symbol, 'session':session, 'slot_ny':slot,
+               'diagnostic_only':diagnostic, 'requested_at_utc':sent.isoformat(),
+               'url':url, 'status':'error', 'paid_api_calls':0, 'model_calls':0}
+    raw = b''
+    try:
+        req = urllib.request.Request(url, headers={'User-Agent':'Mozilla/5.0 StrategyResearchReadOnly/1.0'})
+        with urllib.request.urlopen(req, timeout=12) as response:
+            raw = response.read(2_000_001)
+            receipt.update(http_status=response.status, http_date=response.headers.get('Date'),
+                           http_age=response.headers.get('Age'))
+        if len(raw)>2_000_000: raise ValueError('Response size limit exceeded')
+        body = json.loads(raw)
+        receipt['status'] = 'ok'
+    except Exception as exc:
+        receipt['error'] = type(exc).__name__+': '+str(exc)
+        body = None
+    received = now(); elapsed = time.monotonic()-mono
+    receipt.update(received_at_utc=received.isoformat(), duration_seconds=elapsed,
+                   clock_jump_seconds=(received-sent).total_seconds()-elapsed,
+                   raw_sha256=sha(raw), raw_bytes=len(raw))
+    prefix = symbol+'_'+slot.replace(':','')+'_'+sent.strftime('%H%M%S%f')
+    folder.mkdir(parents=True, exist_ok=True)
+    raw_path = folder/(prefix+'.json.gz')
+    with raw_path.open('xb') as handle: handle.write(gzip.compress(raw,mtime=0))
+    receipt['raw_file'] = raw_path.name
+    if body is not None:
+        receipt['assessment'] = evaluate_response(body, sent.isoformat(), received.isoformat(), session, receipt['clock_jump_seconds'])
+    save_json(folder/(prefix+'.receipt.json'),receipt)
+    return {'symbol':symbol,'status':receipt['status'],
+            'available_before_1545':receipt.get('assessment',{}).get('available_before_1545',False),
+            'error':receipt.get('error')}
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--session',default=SESSION,choices=[SESSION])
+    ap.add_argument('--diagnostic',action='store_true')
+    args = ap.parse_args()
+    base = ROOT/'research_round4'/args.session
+    base.mkdir(parents=True, exist_ok=True)
+    if args.diagnostic:
+        # Connection check only, never evidence of timely arrival during the planned slot.
+        print(json.dumps(capture('SPY',args.session,'DIAGNOSTIC',base/'diagnostic',True)))
+        return
+    if now().astimezone(NY).date().isoformat() != args.session:
+        raise SystemExit('Wrong date: refusing reconstruction or annual rerun')
+    with (base/'probe.lock').open('a') as handle:
+        try: fcntl.flock(handle,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        except BlockingIOError: raise SystemExit('Probe already running')
+        outcomes=[]
+        for slot in SLOTS:
+            target=at(args.session,slot)
+            # A late start never substitutes historical bars for an on-time capture.
+            remaining=(target-now()).total_seconds()
+            if remaining < -20:
+                outcomes.append({'slot':slot,'status':'missed_window'});continue
+            while remaining > 0:
+                time.sleep(min(remaining,30)); remaining=(target-now()).total_seconds()
+            if now()>target+dt.timedelta(seconds=20):
+                outcomes.append({'slot':slot,'status':'missed_window_after_sleep'});continue
+            # Bound request count, concurrency, timeout and body size; no retries.
+            with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+                rows=list(pool.map(lambda s:capture(s,args.session,slot,base/'yahoo'),SYMBOLS))
+            outcomes.append({'slot':slot,'status':'captured','results':rows})
+            save_json(base/'probe_run.json',{'session':args.session,'protocol':'CLOSE_EXECUTION_READONLY_20261029_V1','outcomes':outcomes,'finished':False})
+        save_json(base/'probe_run.json',{'session':args.session,'outcomes':outcomes,'finished':True,'ended_at_utc':now().isoformat()})
+
+if __name__=='__main__': main()

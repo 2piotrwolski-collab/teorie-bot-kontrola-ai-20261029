@@ -1,0 +1,74 @@
+[
+  {
+    "source_file": "nearclose_net.py",
+    "url": "code/nearclose_net.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "0456e5052f54f48b67ac7a5b194f3cacacaad7b69a0a0caee54924e4396a91dc"
+  },
+  {
+    "source_file": "net_engine.py",
+    "url": "code/net_engine.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "a5d192ae939980bd8364d36967486b660e3a284daed50bca04bc09fac84e6481"
+  },
+  {
+    "source_file": "qc_audit_log.py",
+    "url": "code/qc_audit_log.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "f048e6a84a3eba72e0bd6436aa1c5227b595a3f24bb0c2fb803260beff9bfdd3"
+  },
+  {
+    "source_file": "close_probe.py",
+    "url": "code/close_probe.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "928716a3edf69e9227795177645e003b570f34d8668d83c991690e88eb85aaf8"
+  },
+  {
+    "source_file": "close_evidence.py",
+    "url": "code/close_evidence.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "33a0c92a35089c443f124a78c0fb5cfc41bc8678039969d68a69df90a3a2b254"
+  },
+  {
+    "source_file": "quantconnect_tests/research_kernels.py",
+    "url": "code/quantconnect_tests__research_kernels.py.txt",
+    "stage": "SYNTHETIC_COMPONENT_NOT_FULL_BACKTEST",
+    "sha256": "045d5708c20cb28b979c0b46133dda85b0085320e6a77fcda9e53959d2ec2027"
+  },
+  {
+    "source_file": "quantconnect_tests/test_rules.py",
+    "url": "code/quantconnect_tests__test_rules.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "54a56f159a23c89c1efdc2235f13f692c3b069c8bfd83ee3bc9128ceaf007bf2"
+  },
+  {
+    "source_file": "quantconnect_tests/T003_TURTLE_DATA/main.py",
+    "url": "code/quantconnect_tests__T003_TURTLE_DATA__main.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "437df335e23dcea42d12c7be5a6b83322c0501ad497b7c5d7342fbec4b1cad6d"
+  },
+  {
+    "source_file": "quantconnect_tests/T010_LEHMANN_DATA/main.py",
+    "url": "code/quantconnect_tests__T010_LEHMANN_DATA__main.py.txt",
+    "stage": "ORIGINAL_DATA_AUDIT_BEFORE_EXCHANGE_FIX",
+    "sha256": "59afda1689ba3fd66097721c251a6c7d87666b1b49f699deda11156852bbe1d8"
+  },
+  {
+    "source_file": "research_round9/T010_EXCHANGE_V3.py",
+    "url": "code/research_round9__T010_EXCHANGE_V3.py.txt",
+    "stage": "LATEST_TECHNICAL_RUN_PARTIAL_OUTPUT",
+    "sha256": "01a14a7d23a005ac8cdba2c495fc84a2bcdc9596ab1b154eb6cdc7d8840c7262"
+  },
+  {
+    "source_file": "research_round10/QC_EXTENDED_MAIN.py",
+    "url": "code/research_round10__QC_EXTENDED_MAIN.py.txt",
+    "stage": "PREPARED_NOT_RUN_ON_MARKET_DATA",
+    "sha256": "1955e45ca9b35d429276d80d1eb5cdc996d11305796f48807ccc207089cd47ab"
+  },
+  {
+    "source_file": "research_round10/check_extended_core.py",
+    "url": "code/research_round10__check_extended_core.py.txt",
+    "stage": "PREPARED_NOT_RUN_ON_MARKET_DATA",
+    "sha256": "7bdda1a515d65cc3463d7c9c52b4a0e9564ec0e1bf4314b2f459e7de427be57b"
+  }
+]

@@ -1,0 +1,78 @@
+"""Short recent near-close execution feasibility screen; same shared cost engine."""
+import datetime as dt,json,statistics
+from pathlib import Path
+from engine import _wilder_rsi
+from net_engine import rebalance,fee
+from registry import digest
+from data_io import atomic_json
+ROOT=Path(__file__).resolve().parent
+
+def prefix_features(bars):
+    # Bar15:35 ends15:40; none of the15:40/15:45/...future bars inform signal.
+    known=[b for h,b in sorted(bars.items()) if '09:30'<=h<='15:35']
+    if len(known)!=74:raise ValueError('Full pre-signal coverage required')
+    return {'price':known[-1]['close'],'high':max(b['high'] for b in known),'low':min(b['low'] for b in known),'volume':sum(b['volume'] for b in known)}
+
+def replay(spec,days,daily,intra,cost):
+    symbol=spec['assets'][0];symbols=[symbol]+(['BIL'] if symbol!='BIL' else [])
+    daily_by={s:{r['date']:r for r in daily[s]} for s in symbols};q={s:0. for s in symbols};cash=10000.;state=False;ledger=[];nav=[];signals=[];capacity=[]
+    for index,day in enumerate(days):
+        price={};quotes={}
+        for s in symbols:
+            bar=daily_by[s][day];factor=bar['adj_close']/bar['close'];quotes[s]=intra[s][day]['15:45']['open'];price[s]=quotes[s]*factor
+        old=state
+        if spec['key']=='buyhold':state=True;features=None
+        else:
+            features=prefix_features(intra[symbol][day]);prior=[r for r in daily[symbol] if r['date']<day]
+            if spec['key']=='ibs':
+                if len(prior)<500:raise ValueError('500dayvolume warmup missing')
+                width=features['high']-features['low'];ibs=(features['price']-features['low'])/width if width>0 else None
+                median=statistics.median(r['volume'] for r in prior[-500:]);state=ibs is not None and ibs<=.2 and features['volume']>median
+                features.update(ibs=ibs,median_past500_daily_volume=median)
+            elif spec['key']=='connors':
+                factor=daily_by[symbol][day]['adj_close']/daily_by[symbol][day]['close'];closes=[r['adj_close'] for r in prior]+[features['price']*factor]
+                score=_wilder_rsi(closes,2)[-1];sma=statistics.fmean(closes[-200:])
+                state=not(score>70) if state else closes[-1]>sma and score<5
+                features.update(rsi2=score,sma200=sma)
+        signals.append({'date':day,'information_cutoff_NY':'15:40','fill_proxy_NY':'15:45','desired_risk_state':state,'features':features,'not_a_live_order':True})
+        if index<len(days)-1 and (state!=old or index==0):
+            weights={'BIL':1.} if symbol=='BIL' else {symbol:float(state),'BIL':1-float(state)}
+            q,cash,trades=rebalance(q,cash,weights,price,quotes,cost,day,spec['key'])
+            for t in trades:
+                t['signal_time_NY']=day+'T15:40';t['execution_proxy_time_NY']=day+'T15:45'
+                volume=intra[t['symbol']][day]['15:45']['volume'];ratio=abs(t['signed_notional'])/quotes[t['symbol']]/volume if volume else None
+                capacity.append({'date':day,'symbol':t['symbol'],'order_share_of_5min_volume':ratio,'above1pct':ratio is None or ratio>.01})
+            ledger+=trades
+        value=cash+sum(q[s]*price[s] for s in symbols)
+        if index==len(days)-1:
+            for s in symbols:
+                n=q[s]*price[s]
+                if n>1e-8:
+                    f=fee(n,quotes[s],True,cost);cash+=n-f;ledger.append({'date':day,'symbol':s,'signed_notional':-n,'cost':f,'reason':'terminal15:45liquidation'});q[s]=0
+            value=cash
+        nav.append({'date':day,'nav_15_45':value})
+    peak=10000.;mdd=0
+    for x in nav:peak=max(peak,x['nav_15_45']);mdd=min(mdd,x['nav_15_45']/peak-1)
+    return {'metrics':{'total_return_pct':(cash/10000-1)*100,'sampled_drawdown_pct':mdd*100,'orders':len(ledger),'cost_usd':sum(t['cost'] for t in ledger),'risk_entries':sum(t['signed_notional']>0 and t['symbol']!='BIL' for t in ledger),'orders_above1pct_of_5minvolume':sum(c['above1pct'] for c in capacity),'sessions':len(days),'first':days[0],'last':days[-1]},'ledger':ledger,'signals':signals,'nav':nav,'capacity':capacity}
+
+def identity(plan):
+    files=['nearclose_net.py','net_engine.py','engine.py','config/nearclose_net_plan.json','research_round3/intraday_QA.json']
+    files +=[f'data/modern/{s}.json' for s in plan['symbols']]+[f'data/modern/intraday/{s}_sessions.json' for s in plan['symbols']]
+    return {f:digest((ROOT/f).read_bytes()) for f in files}
+
+def main():
+    plan=json.loads((ROOT/'config/nearclose_net_plan.json').read_text());freeze=json.loads((ROOT/'config/nearclose_net_frozen.json').read_text())
+    if identity(plan)!=freeze['identities']:raise ValueError('Frozen identity differs')
+    target=ROOT/'results/nearclose_net_summary.json'
+    if target.exists():raise ValueError('Cannot overwrite prior results')
+    daily={s:json.loads((ROOT/f'data/modern/{s}.json').read_text()) for s in plan['symbols']};intra={s:json.loads((ROOT/f'data/modern/intraday/{s}_sessions.json').read_text()) for s in plan['symbols']}
+    days=sorted(intra['SPY'])
+    if any(sorted(x)!=days for x in intra.values()):raise ValueError('Session coverage differs')
+    records=[]
+    for spec in plan['controls']+plan['strategies']:
+        for bps in plan['cost_bps']:
+            result=replay(spec,days,daily,intra,bps);rid=spec['id']+'_'+str(bps)+'bps';path=ROOT/'results/nearclose_net'/f'{rid}.json'
+            atomic_json(path,{'id':rid,'spec':spec,'spread_slippage_bps':bps,'plan_id':plan['id'],**result});records.append({'variant':spec['id'],'theory':spec.get('theory'),'spread_slippage_bps':bps,'metrics':result['metrics'],'evidence':str(path.relative_to(ROOT))})
+    result={'id':plan['id'],'at_utc':dt.datetime.now(dt.timezone.utc).isoformat(),'records':records,'identities':freeze['identities'],'inference':'No probability, statistical significance, OOS or reliable edge claim from42sessions.','after_modeled_transaction_costs':True,'after_all_personal_costs':False,'live_execution':False,'review_status':'provisional; no Claudeconsensus','trial_count':30,'limitations':plan['limitations']}
+    atomic_json(target,result);print(json.dumps({'study':plan['id'],'saved_runs':len(records),'sessions':len(days)}))
+if __name__=='__main__':main()

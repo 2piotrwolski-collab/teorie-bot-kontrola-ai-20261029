@@ -1,0 +1,243 @@
+#!/usr/bin/env python3
+"""Measured data arrival and quoted costs, deliberately not a trading backtest."""
+import argparse, copy, datetime as dt, gzip, hashlib, json, math
+from pathlib import Path
+from close_probe import ROOT, SYMBOLS, at, now, stamp, sha, save_json, evaluate_response
+
+MAP={'T001':['SPY','BIL'],'T004':['IWM','FXI','BIL'],
+     'T005':['SPY','IWM','QQQ','BIL'],'T007':['SPY','BIL'],'T009':['SPY','BIL']}
+LIMITS=[
+    'Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.',
+    'IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.',
+    'Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.',
+    'Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L.'
+]
+
+def quote_payloads(value):
+    """Unwrap MCP text/structured responses, including retained tool failures."""
+    if isinstance(value,str):
+        try: yield from quote_payloads(json.loads(value))
+        except (ValueError,TypeError): pass
+    elif isinstance(value,list):
+        for part in value: yield from quote_payloads(part)
+    elif isinstance(value,dict):
+        if isinstance(value.get('quotes'),dict): yield value
+        else:
+            for v in value.values(): yield from quote_payloads(v)
+
+def commission(qty, price):
+    # Same IBKR Pro Fixed US model as the frozen execution study, not a receipt.
+    return min(max(qty*.005,1.0),qty*price*.01)
+
+def assess_quote(q, target, received=None, live=False):
+    r={'symbol':q.get('symbol'),'timestamp':q.get('timestamp'),'valid':False,
+       'errors':[],'size_units':'provider units, not verified as shares/lot or executable capacity'}
+    try:
+        bid,ask=float(q['bid_price']),float(q['ask_price'])
+        sizes=[float(q['bid_size']),float(q['ask_size'])]
+        if not all(math.isfinite(v) for v in [bid,ask,*sizes]) or bid<=0 or ask<bid or min(sizes)<=0:
+            raise ValueError('Invalid/one-sided/crossed/nonpositive quote')
+        t=stamp(q['timestamp'])
+        if t.tzinfo is None: raise ValueError('Timezone missing')
+        age=(target-t).total_seconds()
+        if age<0: raise ValueError('Quote after target; cannot backfill earlier decision')
+        if age>60 and not live: raise ValueError('No valid quote in declared pre-target minute')
+        mid=(bid+ask)/2
+        r.update(valid=True,bid=bid,ask=ask,spread_bps=(ask-bid)/mid*10000,
+                 half_spread_bps=(ask-bid)/mid*5000,age_at_target_seconds=age)
+        qty=math.floor(10000/ask)
+        while qty>0 and qty*ask+commission(qty,ask)>10000: qty-=1
+        if qty<=0: raise ValueError('No whole share fits model budget')
+        buyfee,sellfee=commission(qty,ask),commission(qty,bid)
+        spread=qty*(ask-bid); reserve=qty*bid*.0001
+        r['hypothetical_immediate_roundtrip_10000USD']={
+            'whole_shares':qty,'observed_spread_usd':spread,
+            'model_commissions_usd':buyfee+sellfee,'assumed_sell_fee_reserve_usd':reserve,
+            'modeled_total_cost_usd':spread+buyfee+sellfee+reserve,
+            'actual_trade':False,'market_move_assumed_zero':True,'slippage_unknown':True}
+        if live:
+            if received is None: raise ValueError('Actual received time missing')
+            rec=stamp(received)
+            receive_age=(rec-t).total_seconds()
+            r['age_at_receive_seconds']=receive_age
+            r['fresh_at_receive']=0<=receive_age<=2
+            r['inside_target_window']=abs((rec-target).total_seconds())<=30
+            r['live_gate_pass']=r['fresh_at_receive'] and r['inside_target_window']
+    except (KeyError,TypeError,ValueError,OverflowError) as exc:
+        r['valid']=False;r['errors'].append(str(exc))
+    return r
+
+def historical_quotes(session):
+    target=at(session,'15:45:00')
+    if session=='2026-10-28':
+        path=ROOT/'research_round4/preflight/alpaca_responses.json'
+        data=json.loads(path.read_text())
+        payloads=list(quote_payloads(data))
+        record_errors=[]
+    else:
+        path=ROOT/'research_round4'/session/'sip_historical_capture.json'
+        if not path.exists(): return {'status':'missing_capture','rows':[], 'errors':['No historical SIP receipt']}
+        data=json.loads(path.read_text());payloads=[];record_errors=[]
+        for req in data.get('requests',[]):
+            if req.get('feed')!='sip' or not req.get('received_at_utc'):
+                record_errors.append('Missing explicit SIP feed or receipt time');continue
+            # Free historical access only; never accept a claim based on a live SIP request.
+            if stamp(req['received_at_utc']) < target+dt.timedelta(minutes=15):
+                record_errors.append('Historical quote retrieved too early for declared delayed route');continue
+            payloads.extend(quote_payloads(req.get('response')))
+    candidates={s:[] for s in SYMBOLS}
+    for p in payloads:
+        if p.get('request',{}).get('feed')!='sip': continue
+        for symbol,quotes in p['quotes'].items():
+            if symbol not in candidates: continue
+            for q in quotes if isinstance(quotes,list) else [quotes]:
+                try:
+                    if stamp(q['timestamp'])<=target: candidates[symbol].append(q)
+                except (KeyError,TypeError,ValueError): pass
+    rows=[]
+    for s in SYMBOLS:
+        qs=sorted(candidates[s],key=lambda q:stamp(q['timestamp']),reverse=True)
+        rows.append(assess_quote({**qs[0],'symbol':s},target) if qs else
+                    {'symbol':s,'valid':False,'errors':['No quote returned; not proof of absence of liquidity']})
+    return {'status':'historical_snapshot_only','target_ny':target.isoformat(),
+            'feed':'sip','rows':rows,'errors':record_errors,
+            'receipt':str(path.relative_to(ROOT)),'receipt_sha256':sha(path.read_bytes())}
+
+def arrival(session):
+    folder=ROOT/'research_round4'/session/'yahoo'
+    receipts=[];errors=[];first={}
+    for p in sorted(folder.glob('*.receipt.json')):
+        try:
+            r=json.loads(p.read_text())
+            if r.get('diagnostic_only') or r.get('session')!=session: continue
+            raw=gzip.decompress((p.parent/r['raw_file']).read_bytes())
+            if sha(raw)!=r['raw_sha256']: raise ValueError('Raw hash mismatch')
+            if r.get('status')!='ok':
+                errors.append({'receipt':p.name,'error':r.get('error')});continue
+            a=evaluate_response(json.loads(raw),r['requested_at_utc'],r['received_at_utc'],session,r['clock_jump_seconds'])
+            receipts.append({'symbol':r['symbol'],'received_at_utc':r['received_at_utc'],
+                             'complete_prefix':a['complete_prefix'],
+                             'available_before_1545':a['available_before_1545'],
+                             'errors':a['errors'],'receipt':str(p.relative_to(ROOT)),
+                             'receipt_sha256':sha(p.read_bytes()),'raw_sha256':r['raw_sha256']})
+            if a['available_before_1545']:
+                old=first.get(r['symbol'])
+                if old is None or stamp(r['received_at_utc'])<stamp(old): first[r['symbol']]=r['received_at_utc']
+        except (KeyError,OSError,ValueError,TypeError) as exc:
+            errors.append({'receipt':p.name,'error':str(exc)})
+    return {'status':'measured' if receipts else 'no_valid_receipts',
+            'rows':[{'symbol':s,'on_time_complete_prefix':s in first,
+                     'first_complete_received_at_utc':first.get(s)} for s in SYMBOLS],
+            'receipts':receipts,'errors':errors,
+            'meaning':'First received complete 09:30–15:40 NY prefix, upper bound on data publication time; no hindsight backfill'}
+
+def iex_capture(session):
+    p=ROOT/'research_round4'/session/'iex_live_capture.json'
+    if not p.exists():return {'status':'missing_capture','rows':[]}
+    data=json.loads(p.read_text());rows=[];errors=[]
+    target=at(session,'15:45:00')
+    for request in data.get('requests',[]):
+        if request.get('feed')!='iex':errors.append('Missing explicit IEX feed');continue
+        for payload in quote_payloads(request.get('response')):
+            for symbol,q in payload['quotes'].items():
+                if symbol in SYMBOLS and isinstance(q,dict):
+                    # Future relative to 15:45 is kept as outside-window, not priced retrospectively.
+                    receive=request.get('received_at_utc')
+                    assessed=assess_quote({**q,'symbol':symbol},stamp(receive) if receive else target,receive,True)
+                    if receive:assessed['inside_target_window']=abs((stamp(receive)-target).total_seconds())<=30
+                    assessed['live_gate_pass']=bool(assessed.get('valid') and assessed.get('fresh_at_receive') and assessed.get('inside_target_window'))
+                    rows.append(assessed)
+    return {'status':'single_venue_live_measurement','rows':rows,'errors':errors,
+            'receipt':str(p.relative_to(ROOT)),'receipt_sha256':sha(p.read_bytes())}
+
+def analyze(session, prepare=False):
+    if session=='2026-10-28':
+        return {'protocol':'EXPLORATORY_20261028_QUOTE_PREFLIGHT','session':session,
+                'phase':'exploratory_preflight_already_seen','historical_sip':historical_quotes(session),
+                'limitations':LIMITS,'original_theory_verdict_changed':False}
+    if not prepare and now()<at(session,'16:15:00'):
+        raise ValueError('Final measurement analysis is only allowed after the planned capture window')
+    return {'protocol':'CLOSE_EXECUTION_READONLY_20261029_V1','session':session,
+            'phase':'scheduled_pending_capture' if prepare else 'measurement_complete_with_explicit_missingness',
+            'arrival':arrival(session),'live_iex':iex_capture(session),
+            'historical_sip':{'status':'pending','rows':[]} if prepare else historical_quotes(session),
+            'actual_orders':0,'new_strategy_pnl_calculated':False,
+            'limitations':LIMITS,'review_status':'provisional_no_Claude_consensus',
+            'original_theory_verdict_changed':False}
+
+def publish(result):
+    from pilot import lock, report, backup
+    from registry import Registry
+    session=result['session'];outpath=ROOT/'results'/('close_execution_'+session+'.json')
+    # Immutable older measurement revisions stay in the append-only registry and hash-named files.
+    digest=sha(json.dumps(result,sort_keys=True,separators=(',',':')).encode())
+    archive=ROOT/'research_round4'/session/('analysis_'+digest+'.json')
+    if not archive.exists():save_json(archive,result)
+    save_json(outpath,result)
+    with lock():
+        db=Registry(ROOT/'registry.sqlite')
+        progress=copy.deepcopy(json.loads((ROOT/'results/research_progress_round3.json').read_text()))
+        previous=ROOT/'results/close_execution_2026-10-28.json'
+        preflight=json.loads(previous.read_text()) if previous.exists() else None
+        todayfile=ROOT/'results/close_execution_2026-10-29.json'
+        today=json.loads(todayfile.read_text()) if todayfile.exists() else None
+        for item in progress['items']:
+            tid=item['id'];symbols=MAP.get(tid,[]);item['round']=4
+            observations=[];findings=list(item['findings'])
+            if symbols and preflight:
+                qs=[q for q in preflight['historical_sip']['rows'] if q['symbol'] in symbols]
+                observations.append({'id':'QUOTE_PREFLIGHT_20261028_'+tid,
+                    'title':'Rzeczywiste kwotowania przed zamknięciem · 28.10.2026',
+                    'summary':'Historyczne SIP o 15:45 NY: zmierzony spread; osobno model kosztu zakupu i natychmiastowej sprzedaży dla budżetu 10 000 USD, bez ruchu rynku.',
+                    'columns':['ETF','Spread bps','Połowa spreadu bps','Model kosztu pełnego obrotu USD'],
+                    'rows':[[q['symbol'],round(q['spread_bps'],4),round(q['half_spread_bps'],4),round(q['hypothetical_immediate_roundtrip_10000USD']['modeled_total_cost_usd'],4)] if q['valid'] else [q['symbol'],'brak','brak','brak'] for q in qs],
+                    'limitations':LIMITS+(['To nie jest pełny koszyk pięciu ETF-ów Fabera; zmierzono tylko kontekst SPY i BIL.'] if tid=='T001' else []),
+                    'evidence_report':'WYKONANIE_20261028.json'})
+                findings.append('Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla '+', '.join(symbols)+'. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.')
+            if today:
+                pending=today['phase']=='scheduled_pending_capture'
+                ar={r['symbol']:r for r in today['arrival']['rows']}
+                observations.append({'id':'ARRIVAL_20261029_'+tid,
+                    'title':'Dzisiejsza kontrola wykonania · 29.10.2026',
+                    'summary':('Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.' if pending else 'Zakończono pomiar dostarczenia danych i kwotowań. Brak odczytu pozostaje brakiem, bez odtwarzania po fakcie.'),
+                    'columns':['Zakres','Stan'],
+                    'rows':[[s,'oczekuje' if pending else ('pełny prefiks odebrany przed 15:45 NY' if ar.get(s,{}).get('on_time_complete_prefix') else 'brak dowodu odebrania prefiksu na czas')] for s in symbols] if symbols else [['Oryginał','nadal blokowany przez braki reguł lub danych wskazane przy karcie; dzisiejsze ETF-y tego nie zastępują']],
+                    'limitations':LIMITS,'evidence_report':f'WYKONANIE_DZISIAJ/{tid}.json'})
+                findings.append(('Zaplanowano' if pending else 'Zapisano')+' dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.' if symbols else 'Dzisiejszy pomiar ETF-ów nie usuwa braków tej teorii. Zachowano wymagania źródłowe i dotychczasowy konkretny plan zdobycia danych/reguł.')
+            item['observations']=observations+item.get('observations',[])
+            item['findings']=findings;item['execution_evidence_file']=f'WYKONANIE_DZISIAJ/{tid}.json'
+            item['observation_ids']=[o['id'] for o in item['observations']]
+            if symbols:
+                item['next_action']='Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. '+item['next_action']
+                for gap in item['gap_updates']:
+                    if gap['gap_id'].endswith('E1') or '-EXEC-' in gap['gap_id']:
+                        gap['criteria_met'].append('Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/'+tid+'.json')
+                        gap['next_action']=item['next_action']
+            percard={'theory_id':tid,'scope_symbols':symbols,'evidence_hash':digest,
+                     'preflight':preflight if symbols else None,'today':today,
+                     'applicability':'data/quoted-cost check only; not original source reproduction' if symbols else 'ETF capture does not supply missing original theory inputs',
+                     'gap_updates':item['gap_updates'],'next_action':item['next_action']}
+            save_json(ROOT/'reports/WYKONANIE_DZISIAJ'/f'{tid}.json',percard)
+            db.research_update(tid,item,'results/research_progress_round4.json')
+        progress['round']=4;progress['at_utc']=now().isoformat()
+        save_json(ROOT/'results/research_progress_round4.json',progress)
+        acq=json.loads((ROOT/'config/acquisition_plan.json').read_text());by={i['id']:i for i in progress['items']}
+        for card in acq['items']:
+            gaps={g['gap_id']:g for g in by[card['id']]['gap_updates']}
+            for gap in card['gaps']:gap['progress']=gaps[gap['gap_id']];gap['next_action']=gaps[gap['gap_id']]['next_action']
+        save_json(ROOT/'config/acquisition_plan.json',acq)
+        if preflight:save_json(ROOT/'reports/WYKONANIE_20261028.json',preflight)
+        if today:save_json(ROOT/'reports/WYKONANIE_20261029.json',today)
+        report(db);backup(db)
+        print(json.dumps({'published':True,'phase':result['phase'],'evidence_hash':digest,'cards_updated':10,'strategy_trials_added':0,'theory_verdicts_changed':0}))
+
+def main():
+    ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--session',choices=['2026-10-28','2026-10-29'],required=True)
+    ap.add_argument('--prepare',action='store_true')
+    ap.add_argument('--publish',action='store_true')
+    args=ap.parse_args();result=analyze(args.session,args.prepare)
+    if args.publish:publish(result)
+    else:print(json.dumps(result,ensure_ascii=False,indent=2))
+
+if __name__=='__main__':main()

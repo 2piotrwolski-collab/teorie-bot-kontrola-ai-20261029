@@ -1,0 +1,265 @@
+{
+  "id": "QC_DATA_CONTROLS_20261029_V5",
+  "at_utc": "2026-10-29T18:42:47.290064+00:00",
+  "evidence_path": "research_round9/session_journal.json",
+  "computed_original_data_cases": 5,
+  "new_strategy_trials": 0,
+  "new_market_strategy_results": 0,
+  "confirmed_strategies": 0,
+  "paid_changes": 0,
+  "verdict_change": false,
+  "review_status": "provisional_no_Claude_consensus",
+  "cards": [
+    {
+      "id": "T003",
+      "gap_ids": [
+        "T003-R1",
+        "T003-D1",
+        "T003-E1",
+        "T003-E2"
+      ],
+      "project_url": "https://www.quantconnect.com/project/38621926",
+      "summary": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte.",
+      "findings": [
+        "Turtle: istniejąca próba cdab25dae0a3ea8ada1f18fa0fb08c11 Completed; 0 duplikatów. Kod z wyniku zgodny AST z wysłanym i zamrożonym kodem.",
+        "GC 02–12.01.2024: 4 kontrakty, 18 990 świec transakcji, 24 540 świec kwotowań, 24 niepoprawne/niepełne kwotowania.",
+        "Dla jednego kontraktu: 100 świec dziennych 10.08–29.12.2023, 0 naruszeń sprawdzonego warunku 0<low≤close≤high; ceny open nie sprawdzano. Pierwsze obserwowane OI wszystkich 4 kontraktów wynoszą 0; to nie dowód poprawnego wyboru kontraktu według OI.",
+        "Niezależny przegląd Claude wskazał kontrole wymagane przed pełnym backtestem: kroczące kanały55/20, pełny kalendarz sesji i kotwica inicjalizacjiN. To uwagi do przygotowanego komponentu, nie nowy wynik strategii. Pełna opinia oraz ocena zarzutów są zapisane; brak pełnego adaptera pozostaje jawny."
+      ],
+      "scoped_met": [
+        "Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.",
+        "Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu."
+      ],
+      "remaining": [
+        "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+        "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+        "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+        "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+        "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+        "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+        "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne.",
+        "Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli."
+      ],
+      "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+      "rows": [
+        [
+          "Próba",
+          "cdab25dae0a3ea8ada1f18fa0fb08c11 · Completed · bez duplikatu"
+        ],
+        [
+          "Zakres",
+          "GC · 02–12.01.2024 · kontrola danych"
+        ],
+        [
+          "Kontrakty / transakcje / kwotowania",
+          "4 / 18 990 / 24 540 świec"
+        ],
+        [
+          "Historia dzienna",
+          "100 rekordów jednego kontraktu; 0 naruszeń 0<low≤close≤high, open nie sprawdzano"
+        ],
+        [
+          "Wady kwotowań",
+          "24; wymagają sprawdzenia przed symulacją wykonania"
+        ],
+        [
+          "OI / sesje",
+          "Pierwsze OI=0; definicja sesji CME i pełny warmup wszystkich kontraktów niepotwierdzone"
+        ],
+        [
+          "Wynik strategii",
+          "Nie liczono; werdykt bez zmiany"
+        ],
+        [
+          "Przegląd logiki przez Claude",
+          "Opinia zapisana; kontrole kanałów/kalendarza/N do wykonania. Provenance logu i AST uzgodnione. Nie jest to niezależne przeliczeniePnL ani wspólny werdykt."
+        ]
+      ],
+      "replaces_findings": [
+        "Turtle: istniejąca próba cdab25dae0a3ea8ada1f18fa0fb08c11 Completed; 0 duplikatów. Kod z wyniku zgodny AST z wysłanym i zamrożonym kodem.",
+        "GC 02–12.01.2024: 4 kontrakty, 18 990 świec transakcji, 24 540 świec kwotowań, 24 niepoprawne/niepełne kwotowania.",
+        "Dla jednego kontraktu: 100 świec dziennych 10.08–29.12.2023, kontrola OHLC bez błędów. Pierwsze obserwowane OI wszystkich 4 kontraktów wynoszą 0; to nie dowód poprawnego wyboru kontraktu według OI.",
+        "Dla jednego kontraktu: 100 świec dziennych 10.08–29.12.2023, 0 naruszeń sprawdzonego warunku 0<low≤close≤high; ceny open nie sprawdzano. Pierwsze obserwowane OI wszystkich 4 kontraktów wynoszą 0; to nie dowód poprawnego wyboru kontraktu według OI."
+      ],
+      "replaces_remaining": [
+        "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+        "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+        "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+        "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+        "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+        "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+        "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne."
+      ]
+    },
+    {
+      "id": "T010",
+      "gap_ids": [
+        "T010-SOURCE-01",
+        "T010-DATA-02",
+        "T010-DATA-03",
+        "T010-EXEC-04"
+      ],
+      "project_url": "https://www.quantconnect.com/project/38622173",
+      "summary": "Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około 1690 zakwalifikowanych akcji i 80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii.",
+      "findings": [
+        "Odzyskano pełne logi ENE, LEH i GME z istniejących prób, bez ich powtarzania. Wszystkie 5 oryginalnych kontroli razem z Turtle mają pełny zapis.",
+        "Błąd naszego filtra potwierdzony w chmurze: ExchangeId zwraca NYSE, a kod oczekiwał NYS. Obie pisownie właściwości działają; przygotowanej poprawki samych accessorów nie uruchamiano.",
+        "Po rozpoznaniu NYSE: pierwsze 5 kompletnie zapisanych dat wybiera 1689–1691 akcji; 80 barów i 8 historii po 10 rekordów. To ograniczona kontrola dostępu, nie portfel8 akcji ani pełny panel Lehmanna.",
+        "04.01.2021: 8923 wejściowe rekordy, 4256 bez klasyfikacji giełdy/typu; 198 ma kod AMEX, którego V3 jeszcze nie włącza. Nie wolno nazwać tego pełnym NYSE/AMEX ani ukryć braków filtrem has_fundamental_data.",
+        "ENE: 22 bary i0 zdarzeń delisting. Nasze okno kończyło się 20.12.2001, przed zawieszeniem NYSE 15.01.2002 według CRS; był to błędny zakres kontroli delistingu, nie dowód braku danych.",
+        "LEH: 12 barów; WARNING 17.09.2008 z ceną 0.19 i DELISTED 18.09 z ceną 0.14. Komunikat delistingu nie dowodzi końcowej wypłaty ani wyceny OTC.",
+        "GME: 13 odczytów; 9 z ilością, 4 bez ilości z zerową stawką 28–29.01 i1–2.02.2021. Publiczny kod dostawcy potwierdza null/0 jako wartości dla brakującego rekordu. Nie zakładać darmowego ani nieograniczonego short.",
+        "Wyniki otwierają się po odłączeniu podglądu diagnostycznego Chrome i użyciu natywnego GUI. Nie rozstrzygnięto trwałej przyczyny wcześniejszych pustych widoków.",
+        "Ostatni log został ucięty po 8192 znakach wiersza JSON. Zachowano surowy plik i jawny PARTIAL; pełny parser odmawia uznania go za kompletny. Łącznie7 kontroli danych; budżetu nie rozszerzano, zysku strategii nie liczono."
+      ],
+      "scoped_met": [
+        "Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.",
+        "Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.",
+        "Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.",
+        "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.",
+        "Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday."
+      ],
+      "remaining": [
+        "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
+        "Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.",
+        "ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.",
+        "LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.",
+        "Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.",
+        "Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii."
+      ],
+      "next_action": "Na podstawie zachowanych logów przygotować kolejną odrębną kontrolę danych: uzgodnić AMEX/ASE i brakujące klasyfikacje, poprawić oknoENE na styczeń 2002 oraz dzielić audyt na komunikaty poniżej limitu8192 znaków. Najpierw zamrozić nowy ograniczony plan; obecny budżet 7 wykorzystany. Równolegle źródła terminalnych zwrotów i czasu publikacji borrow; dopiero po domknięciu danych pełny test strategii po kosztach.",
+      "rows": [
+        [
+          "Oryginalne kontrole",
+          "4/4 pełne logi odczytane; razem z Turtle 5/5, bez duplikatów"
+        ],
+        [
+          "Błąd filtra",
+          "NYS ≠ NYSE. Potwierdzony błąd naszego kodu, poprawka daje 1689–1691 akcji na 5 kompletnych datach"
+        ],
+        [
+          "Zakres po poprawce",
+          "80 barów próbki; 8 historii po 10 rekordów. Nadal nie pełny panel/strategia"
+        ],
+        [
+          "Klasyfikacja 04.01.2021",
+          "8923 rekordy; 4256 bez pól, 198 AMEX jeszcze poza mapowaniem"
+        ],
+        [
+          "Enron",
+          "22 bary, 0 zdarzeń; błędne okno kończy się przed zawieszeniem wstyczniu 2002"
+        ],
+        [
+          "Lehman Brothers",
+          "WARNING 17.09.2008 / DELISTED18.09.2008; terminalna wypłata niepotwierdzona"
+        ],
+        [
+          "GME short",
+          "9/13 odczytów z ilością; 4 brakujące. Zero stawki przy null nie dowodzi darmowego short"
+        ],
+        [
+          "Jakość zapisu",
+          "JSONV3 ucięty na 8192 znakach; jawnie PARTIAL, parser pełnego audytu odrzuca"
+        ],
+        [
+          "Liczba prób / wynik",
+          "7 kontroli danych łącznie; 0 nowych wyników strategii, 0 kosztów płatnych usług"
+        ]
+      ],
+      "source_urls": [
+        "https://www.quantconnect.com/forum/discussion/21449",
+        "https://www.quantconnect.com/docs/v2/writing-algorithms/universes/equity/morningstar-migration",
+        "https://github.com/QuantConnect/Lean",
+        "https://github.com/QuantConnect/Lean/blob/master/Common/Data/Shortable/LocalDiskShortableProvider.cs",
+        "https://www.everycrsreport.com/files/20021213_RL31364_b2c3e610f1280381e481e4bed1bc82acc43627d5.html"
+      ],
+      "replaces_findings": [
+        "Cztery oryginalne kontrole T010 zakończyły obliczenia, bez zleceń. RunID i okres każdej próby zachowane.",
+        "panel_2021: 10 dat selekcji, 42 641 nieodczytanych klasyfikacji, 0 wybranych akcji i 0 barów. To błąd/brak odczytu pól, nie wynik Lehmanna.",
+        "Przygotowano ograniczoną diagnostykę typu obiektu i pól oraz plan naprawy API; nie została jeszcze uruchomiona. Oryginalny pusty panel zachowany jako nieudana kontrola pokrycia.",
+        "Morningstar przechodzi w październiku2026 na nowy zbiór; pozostano na master18215. Nie przełączano na wycofywany legacy, aby ukryć problem pól. Dokumentacja migracji i kod źródłowy sprawdzone; związek tego problemu z migracją jeszcze nieustalony.",
+        "Edytor kodu dostępny, lecz widoki wyników i logów ponownie zawieszają się. Restart sesji i kart nie dał stabilnego odczytu. Potencjalna niezgodność rozszerzenia z Node pozostaje niepotwierdzoną przyczyną; ustawień bezpieczeństwa ani plików dostawcy nie zmieniano.",
+        "Odzyskano pełne logi ENE, LEH i GME z istniejących prób, bez ich powtarzania. Wszystkie5 oryginalnych kontroli razem z Turtle mają pełny zapis.",
+        "Błąd naszego filtra potwierdzony w chmurze: ExchangeId zwraca NYSE, a kod oczekiwał NYS. Obie pisownie właściwości działają; przygotowanej poprawki samych accessorów nie uruchamiano.",
+        "Po rozpoznaniu NYSE: pierwsze5 kompletnie zapisanych dat wybiera1689–1691 akcji;80 barów i8 historii po10 rekordów. To ograniczona kontrola dostępu, nie portfel8 akcji ani pełny panel Lehmanna.",
+        "04.01.2021:8923 wejściowe rekordy,4256 bez klasyfikacji giełdy/typu;198 ma kod AMEX, którego V3 jeszcze nie włącza. Nie wolno nazwać tego pełnym NYSE/AMEX ani ukryć braków filtrem has_fundamental_data.",
+        "ENE:22 bary i0 zdarzeń delisting. Nasze okno kończyło się20.12.2001, przed zawieszeniem NYSE15.01.2002 według CRS; był to błędny zakres kontroli delistingu, nie dowód braku danych.",
+        "LEH:12 barów; WARNING17.09.2008 zceną0.19 iDELISTED18.09 zceną0.14. Komunikat delistingu nie dowodzi końcowej wypłaty ani wyceny OTC.",
+        "GME:13 odczytów;9 zilością,4 bez ilości zzerową stawką28–29.01 i1–2.02.2021. Publiczny kod dostawcy potwierdza null/0 jako wartości dla brakującego rekordu. Nie zakładać darmowego ani nieograniczonego short.",
+        "Wyniki otwierają się po odłączeniu podglądu diagnostycznego Chrome i użyciu natywnego GUI. Nie rozstrzygnięto trwałej przyczyny wcześniejszych pustych widoków.",
+        "Ostatni log został ucięty po8192 znakach wiersza JSON. Zachowano surowy plik i jawny PARTIAL; pełny parser odmawia uznania go za kompletny. Łącznie7 kontroli danych; budżetu nie rozszerzano, zysku strategii nie liczono."
+      ],
+      "replaces_remaining": [
+        "Wyjaśnić rzeczywisty typ i brakujące pola klasyfikacji; bez zastępowania NYSE/AMEX innym uniwersum.",
+        "Odczytać pełne logi ENE, LEH i GME. Ukończenie obliczeń nie potwierdza terminalnej wyceny, dostępności ani kosztów short.",
+        "Nadal potrzebny pełny panel asof, totalreturns po delistingu/OTC, reguły domyślne i pokrycie borrow oraz adapter finansowania, kosztów i ledger.",
+        "To kontrole danych; żadnego wyniku rentowności i brak potwierdzonej strategii.",
+        "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
+        "Ostatni JSON ucięty na8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.",
+        "ENE wymaga kontroli obejmującej styczeń2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.",
+        "LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.",
+        "Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.",
+        "Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii."
+      ]
+    }
+  ],
+  "artifacts": [
+    "research_round8/T003_audit.json",
+    "research_round8/T003_cdab25dae0a3ea8ada1f18fa0fb08c11_logs.txt",
+    "research_round8/T003_completed.jpg",
+    "research_round8/T003_interpretation.json",
+    "research_round8/T003_run_code.py",
+    "research_round8/T010_ACCESSOR_V2.py",
+    "research_round8/T010_SCHEMA_TRACE_V2.py",
+    "research_round8/T010_panel_2021_audit.json",
+    "research_round8/T010_panel_2021_ui_logs.txt",
+    "research_round8/accessor_amendment.json",
+    "research_round8/session_journal.json",
+    "research_round8/technical_repair_plan.json",
+    "research_round8/T010_controls_partial.json",
+    "research_round8/T010_editor_partial.jpg",
+    "research_round8/KARTA_TURTLE_QC.jpg",
+    "research_round8/KARTA_LEHMANN_QC.jpg",
+    "research_round9/T010_ene_2001_audit.json",
+    "research_round9/T010_leh_2008_audit.json",
+    "research_round9/T010_borrow_2021_audit.json",
+    "research_round9/T010_schema_trace_audit.json",
+    "research_round9/T010_exchange_v3_PARTIAL.json",
+    "research_round9/T010_EXCHANGE_V3.py",
+    "research_round9/exchange_amendment.json",
+    "research_round9/session_journal.json",
+    "research_round9/T010_ene_2001_logs.txt",
+    "research_round9/T010_leh_2008_logs.txt",
+    "research_round9/T010_borrow_2021_logs.txt",
+    "research_round9/T010_schema_trace_logs.txt",
+    "research_round9/T010_exchange_v3_logs.txt",
+    "research_round9/docs/receipts.json",
+    "research_round9/docs/LocalDiskShortableProvider.cs",
+    "research_round9/KARTA_LEHMANN_QC.jpg",
+    "research_round9/verification.json",
+    "results/current_code_manifest.json",
+    "research_round10/CLAUDE_T003_REVIEW.txt",
+    "research_round10/T003_peer_review_assessment.json",
+    "research_round10/T003_review_provenance.json"
+  ],
+  "full_output_cases": 5,
+  "pending_full_output_cases": 0,
+  "state": "ORIGINAL_CONTROLS_READ_SCHEMA_BUG_CONFIRMED_PARTIAL_PANEL",
+  "editor_state": "NATIVE_UI_AND_DOWNLOADS_WORK_AFTER_DIAGNOSTIC_DETACH",
+  "technical_attempts_summary": [
+    "Stopped/reopened only research coding sessions and task-only tabs; no project/result deletion.",
+    "Ordinary/hard refresh and Developer ReloadWebviews/ReloadWindow attempted.",
+    "Existing Turtle result retrieved; four Lehmann controls computed.",
+    "Auxiliary panels still blank after freshcoding session. Settings command unavailable; no security/privacy/compatibility setting altered.",
+    "After cancelling Chrome diagnostic attachment in visible infobar, results webviews populated; native UI downloaded all existing logs. Correlation observed, permanent root cause not established.",
+    "One schema trace and one exchange mapping control; original five runs never duplicated. Audit budget7 exhausted; no eighth run. Last JSON log truncated at8192characters, strict parser rejects it; only complete fields and five complete daily objects reported."
+  ],
+  "technical_reference": "https://code.visualstudio.com/updates/v1_101#_web-environment-detection",
+  "family": "QC_DATA_CONTROLS_20261029_",
+  "revision_reason": "Added external Claude logic review and exact provenance to Turtle card; no new QC run, PnL, or verdict.",
+  "round": 9,
+  "computed_technical_data_cases": 2,
+  "full_technical_output_cases": 1,
+  "partial_technical_output_cases": 1,
+  "total_cloud_data_audit_runs": 7
+}

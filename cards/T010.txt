@@ -1,0 +1,721 @@
+Snapshot: 2026-10-29T18:43:35.427389+00:00
+T010 · Archiwalny v1: Test nieadekwatny do źródła
+
+Lehmann: przekrojowe odwracanie zwrotów akcji
+
+NIEROZSTRZYGNIĘTA — WYNIKI OGRANICZONEGO BADANIA
+
+Rynek / instrumenty
+Przekrój wielu amerykańskich akcji, ze zwycięzcami i przegranymi względem innych akcji.
+
+Segment
+Tygodniowe cross-sectional winners/losers; ranking i wagi są częścią źródłowego mechanizmu.
+
+Reżim i horyzont
+Różne warunki rynku; źródłowy portfel long-short ma inną ekspozycję niż długieSPY. Nie zakłada się z góry jednego reżimu hossy. · Poprzedni tydzień jako formation period i następny tydzień jako holding; szczegóły wag i rebalancingu wymagają źródłowego odtworzenia.
+
+Co rzeczywiście twierdzi źródło
+Lehmann bada tygodniowe odwrócenia zwrotów w przekroju akcji, z portfelami kupującymi niedawnych przegranych i sprzedającymi zwycięzców. Nie bada podanej niżej reguły SPY.
+
+Cel oryginalnego badania
+Sprawdzenie tygodniowej przekrojowej rewersji i zysku portfela kontrariańskiego po kontrolach mikrostruktury/kosztów.
+
+Właściwe porównanie
+Źródłowe portfolio long-short i jego null/control, z modelem ekspozycji i kosztami; SPY tylko oddzielnie dla kapitałowej strategii projektu.
+
+Archiwalny wariant v1: Tygodniowy spadek: odbicie po pięciu sesjach
+
+Dlaczego v1 nie rozstrzyga tej teorii
+
+Źródło buduje portfele kupujące względnych przegranych i sprzedające względnych zwycięzców spośród wielu akcji. Pilot kupuje całe SPY po jego własnym spadku <-3% w5 sesjach i trzyma5 sesji. Nie ma rankingu, przekroju, strony short ani źródłowych wag; próg -3% jest nasz. To inny test ekonomiczny, mimo wspólnego słowa reversal.
+
+Co pozwala ocenić stary wynik
+
+Tylko własną regułę SPY/-3%/hold5. Nie przekrojowe tygodniowe odwrócenia zwrotów ani historyczne wyniki autora.
+
+Jak zaprojektować właściwy test
+
+Dla testu źródła potrzebne są historycznie poprawne uniwersum wielu akcji, wycofane instrumenty, source-defined ranking/wagi i model short/borrow. Jeśli tych danych brak, pozostawić jako nieprzetestowaną pierwotną teorię; nie zastępować jej automatycznie jedną serią SPY.
+
+Pytanie falsyfikujące: Czy relatifnie przegrane akcje odwracają zwroty wobec zwycięzców przy źródłowym portfelu, po kosztach i bezsurvivorship bias?
+
+Brakujące dane: ['Wiele akcji, historia składów i delisting returns.', 'Źródłowe rankingi/wagi oraz short/borrow i płynność.']
+
+Uzupełnianie braków · runda 9
+
+Sprawdzono aktualną dokumentację CRSP i bieżący katalog Nasdaq. Opis płatnej bazy i dzisiejsza lista tickerów nadal nie stanowią darmowego historycznego panelu z delisting returns.
+
+Dodano syntetyczny kontrakt wag: 1 USD long i 1 USD short. Przykład usunięcia przyszłej spółki wycofanej pokazuje, jak filtr przyszłej obecności może ukryć stratę — nie jest to wynik rynkowy.
+
+Bez historycznej populacji, trwałych ID, zwrotów wycofań i danych borrow nie uruchomiono rzekomego testu netto na obecnych spółkach.
+
+Dzisiejszy pomiar ETF-ów nie usuwa braków tej teorii. Zachowano wymagania źródłowe i dotychczasowy konkretny plan zdobycia danych/reguł.
+
+Znaleziono darmową ścieżkę do współczesnego testu w QuantConnectCloud: dostawca opisuje akcje aktywne i wycofane od1998 oraz historyczne mapowania/corporateactions.
+
+To nie dostarcza oryginalnego paneluNYSE/AMEX1962–1986. Sprawdzono publiczne warunki/dokumentację, nie dane na koncie; lokalny bulkdownload pozostaje płatny.
+
+Zdarzenie delistingu nie potwierdza końcowego zwrotu ani rozliczenia po przejściu naOTC. Dane borrow i realne koszty krótkiej sprzedaży nadal są osobnymi brakami.
+
+Dodatkowo potwierdzono darmową ścieżkę chmurową do liczby akcji dostępnych do short oraz fee/rebate od2018; provider opisuje10500papierów. To dokumentacja, nie pobrana jeszcze historia. Dane są sparse: brak rekordu nie może oznaczać zerowej opłaty lub nieograniczonego borrow.
+
+Sprawdzono publiczne daneLEAN bez konta:21wybranych plikówdaily i próbkaWMI nie stanowią historycznego uniwersumNYSE/AMEX. Nie podano wyniku z dobranych dzisiejszych akcji.
+
+Przygotowano i sprawdzono źródłowe wagi przekrojowe1USDlong/1USDshort, brak korzystania z przyszłego istnienia, pozostawienie delistingu, obrót po zmianie wyceny iJ26 jako sumę;7kontroliPASS.
+
+Kontrola borrow odmawia uznania brakującej dostępności lub stawki za darmowyshort. Zdarzenie delistingu i ostatnia cena nie potwierdzają jeszcze terminalnej wypłaty.
+
+GotowyQCprojekt ma4stałe kontrolki: panel2021,ENE2001,LEH2008,GMEborrow2021. Osiem symboli wsondzie służy tylko sprawdzeniu pól; wynik strategii wymaga całego uniwersum.
+
+Odzyskano pełne logi ENE, LEH i GME z istniejących prób, bez ich powtarzania. Wszystkie 5 oryginalnych kontroli razem z Turtle mają pełny zapis.
+
+Po rozpoznaniu NYSE: pierwsze 5 kompletnie zapisanych dat wybiera 1689–1691 akcji; 80 barów i 8 historii po 10 rekordów. To ograniczona kontrola dostępu, nie portfel8 akcji ani pełny panel Lehmanna.
+
+04.01.2021: 8923 wejściowe rekordy, 4256 bez klasyfikacji giełdy/typu; 198 ma kod AMEX, którego V3 jeszcze nie włącza. Nie wolno nazwać tego pełnym NYSE/AMEX ani ukryć braków filtrem has_fundamental_data.
+
+ENE: 22 bary i0 zdarzeń delisting. Nasze okno kończyło się 20.12.2001, przed zawieszeniem NYSE 15.01.2002 według CRS; był to błędny zakres kontroli delistingu, nie dowód braku danych.
+
+LEH: 12 barów; WARNING 17.09.2008 z ceną 0.19 i DELISTED 18.09 z ceną 0.14. Komunikat delistingu nie dowodzi końcowej wypłaty ani wyceny OTC.
+
+GME: 13 odczytów; 9 z ilością, 4 bez ilości z zerową stawką 28–29.01 i1–2.02.2021. Publiczny kod dostawcy potwierdza null/0 jako wartości dla brakującego rekordu. Nie zakładać darmowego ani nieograniczonego short.
+
+Ostatni log został ucięty po 8192 znakach wiersza JSON. Zachowano surowy plik i jawny PARTIAL; pełny parser odmawia uznania go za kompletny. Łącznie7 kontroli danych; budżetu nie rozszerzano, zysku strategii nie liczono.
+
+Błąd naszego filtra potwierdzony w chmurze: ExchangeId zwraca NYSE, a kod oczekiwał NYS. Obie pisownie właściwości działają; przygotowanej poprawki samych accessorów nie uruchamiano.
+
+Wyniki otwierają się po odłączeniu podglądu diagnostycznego Chrome i użyciu natywnego GUI. Nie rozstrzygnięto trwałej przyczyny wcześniejszych pustych widoków.
+T010-SOURCE-01 · Częściowo uzupełniony
+Potwierdzone elementy i pozostałe warunki podano poniżej.
+
+Potwierdzone:
+
+Pełny37-stronicowy NBER2533 pobrany HTTP200 i przeczytane właściwe reguły, nie sam abstrakt.
+
+Sformalizowane k=1/J=26, tygodnie środa–wtorek, algebra wag, osobny źródłowy czterodniowy sygnał, arytmetyczny zysk a nie CAGR.
+
+Rozdzielone literalne future-existence selection z przypisu15 i przyczynowy wariantPIT; źródłowa uwaga o finansowaniu z przypisu16.
+
+16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.
+
+Publicznefixtures oraz ich niewystarczający zakres przejrzano; gotowy plan weryfikacjiENE/LEH/GME i per-shareclass exchangeID.
+
+29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.
+
+Drugi projekt utworzony po przełączeniu pojedynczej darmowej sesji; kod lokalny zachowany.
+
+Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.
+
+Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.
+
+Pełne logi i JSON wszystkich4 oryginalnych sond T010 odczytane; runID,LEAN18215 i hashe plików zachowane.
+
+Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i8historycznych próbek.
+
+Semantyka nullilości i zerowych stawek dla brakującego rekordu potwierdzona wpublicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.
+
+Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.
+
+Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.
+
+Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.
+
+Pozostało:
+
+Dokładna źródłowa vintage i reguły pól CRSP/instrumentów, obsługa świąt/niehandlu i danych brakujących; publikacja nie daje kompletnego kodu.
+
+Przed testem trzeba zamrozić konkretny protokół: literalna reprodukcja obciążona selekcją albo odrębna wersjaPIT, oraz odróżnić idealne close od wykonania.
+
+Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.
+
+KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.
+
+Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.
+
+Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.
+
+Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.
+
+QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.
+
+Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.
+
+ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.
+
+Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.
+
+LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.
+
+Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.
+
+Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii.
+
+[6, 14, 15, 16, 17, 18] (https://www.nber.org/system/files/working_papers/w2533/w2533.pdf) · equations1–4,18–20; footnotes5,15–18,20–21
+
+Round3boundedsourcecheck (https://www.nber.org/system/files/working_papers/w2533/w2533.pdf) · SyntheticPIT/delistingcontract only; no newmarketreturns or strategyperformance.
+
+PreparationV1, no marketstrategyresult (https://www.quantconnect.com/pricing/) · Główne reguły Lehmanna przeszły7kontroli. Gotowy projekt kontroliPIT/delistingu/borrow. Pełny panel i backtest nadal czekają na rzeczywiste dane.
+
+Actual authenticated UI attempt; no verified data result (https://www.quantconnect.com/project/38622173) · Konto Free potwierdzone w Chrome. Projekt 38622173 utworzony; edytor pozostaje na Loading coding environment. Kod Lehmanna gotowy lokalnie, import i cztery kontrole danych jeszcze niewykonane.
+
+Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38622173) · Wykonano 4 zaplanowane kontrole Lehmanna na FREE. Pełny log panel_2021 potwierdza problem klasyfikacji: 42 641 nieodczytanych rekordów, 0 zakwalifikowanych akcji. Trzy pozostałe próby zakończyły obliczenia; pełne logi są jeszcze do odczytu z zawieszających się widoków QC.
+
+Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38622173) · Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około1690 zakwalifikowanych akcji i80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii.
+
+Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38622173) · Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około 1690 zakwalifikowanych akcji i 80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii.
+
+Następny krok: Na podstawie zachowanych logów przygotować kolejną odrębną kontrolę danych: uzgodnić AMEX/ASE i brakujące klasyfikacje, poprawić oknoENE na styczeń 2002 oraz dzielić audyt na komunikaty poniżej limitu8192 znaków. Najpierw zamrozić nowy ograniczony plan; obecny budżet 7 wykorzystany. Równolegle źródła terminalnych zwrotów i czasu publikacji borrow; dopiero po domknięciu danych pełny test strategii po kosztach.
+T010-DATA-02 · Zablokowany dostępnymi danymi
+Potwierdzone elementy i pozostałe warunki podano poniżej.
+
+Potwierdzone:
+
+Publiczny opisCRSP potwierdza aktywne i nieaktywne papiery, permanentIDs oraz NYSE/AMEXhistory; to dokumentacja subskrypcji, nie nabyte uprawnienie.
+
+Sprawdzono faktyczne pliki nasdaqlisted.txt ORAZ otherlisted.txt z datą utworzenia28.10.2026; oba są obecnym katalogiem, także otherlisted nie daje historycznej próby.
+
+Round5: Provider advertises free cloud access to approximately27,500 listed/delisted US securities since1998, plus security-master dependency.
+
+Round5: Cloud listing includes historical ticker mapping, splits, dividends and delisting events.
+
+Round5: Free plan advertises backtesting across asset classes; one backtest-node limit.
+
+Round5: Distinguishes cloud use from local data licensing; most price data free in cloud.
+
+16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.
+
+Publicznefixtures oraz ich niewystarczający zakres przejrzano; gotowy plan weryfikacjiENE/LEH/GME i per-shareclass exchangeID.
+
+29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.
+
+Drugi projekt utworzony po przełączeniu pojedynczej darmowej sesji; kod lokalny zachowany.
+
+Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.
+
+Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.
+
+Pełne logi i JSON wszystkich4 oryginalnych sond T010 odczytane; runID,LEAN18215 i hashe plików zachowane.
+
+Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i8historycznych próbek.
+
+Semantyka nullilości i zerowych stawek dla brakującego rekordu potwierdzona wpublicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.
+
+Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.
+
+Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.
+
+Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.
+
+Pozostało:
+
+Pełny legalny indywidualny panelNYSE/AMEX1962–1986 z permanentIDs i effective/asof membership, także wycofanych akcji.
+
+Nie przedstawiono istniejącego legalnego eksportu lub dostępu instytucjonalnego; HTTP200strony produktu nie jest potwierdzeniem dostępu do danych.
+
+Round5: No1962–1986 data, no OTC, no proof of terminal delisting recovery/borrow. Access verified only to documentation, not a user account or records.
+
+Round5: A delisting event is not automatically the final total-return/payment required by Lehmann. No complete panel acquired.
+
+Round5: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data.
+
+Round5: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified.
+
+Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.
+
+KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.
+
+Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.
+
+Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.
+
+Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.
+
+QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.
+
+Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.
+
+ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.
+
+Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.
+
+LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.
+
+Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.
+
+Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://www.quantconnect.com/data/algoseek-us-equities) · Provider advertises free cloud access to approximately27,500 listed/delisted US securities since1998, plus security-master dependency. LIMIT: No1962–1986 data, no OTC, no proof of terminal delisting recovery/borrow. Access verified only to documentation, not a user account or records.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://www.quantconnect.com/data/quantconnect-us-equity-security-master) · Cloud listing includes historical ticker mapping, splits, dividends and delisting events. LIMIT: A delisting event is not automatically the final total-return/payment required by Lehmann. No complete panel acquired.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://www.quantconnect.com/pricing/) · Free plan advertises backtesting across asset classes; one backtest-node limit. LIMIT: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing) · Distinguishes cloud use from local data licensing; most price data free in cloud. LIMIT: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified.
+
+PreparationV1, no marketstrategyresult (https://www.quantconnect.com/pricing/) · Główne reguły Lehmanna przeszły7kontroli. Gotowy projekt kontroliPIT/delistingu/borrow. Pełny panel i backtest nadal czekają na rzeczywiste dane.
+
+Actual authenticated UI attempt; no verified data result (https://www.quantconnect.com/project/38622173) · Konto Free potwierdzone w Chrome. Projekt 38622173 utworzony; edytor pozostaje na Loading coding environment. Kod Lehmanna gotowy lokalnie, import i cztery kontrole danych jeszcze niewykonane.
+
+Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38622173) · Wykonano 4 zaplanowane kontrole Lehmanna na FREE. Pełny log panel_2021 potwierdza problem klasyfikacji: 42 641 nieodczytanych rekordów, 0 zakwalifikowanych akcji. Trzy pozostałe próby zakończyły obliczenia; pełne logi są jeszcze do odczytu z zawieszających się widoków QC.
+
+Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38622173) · Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około1690 zakwalifikowanych akcji i80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii.
+
+Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38622173) · Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około 1690 zakwalifikowanych akcji i 80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii.
+
+Następny krok: Na podstawie zachowanych logów przygotować kolejną odrębną kontrolę danych: uzgodnić AMEX/ASE i brakujące klasyfikacje, poprawić oknoENE na styczeń 2002 oraz dzielić audyt na komunikaty poniżej limitu8192 znaków. Najpierw zamrozić nowy ograniczony plan; obecny budżet 7 wykorzystany. Równolegle źródła terminalnych zwrotów i czasu publikacji borrow; dopiero po domknięciu danych pełny test strategii po kosztach.
+T010-DATA-03 · Zablokowany dostępnymi danymi
+Potwierdzone elementy i pozostałe warunki podano poniżej.
+
+Potwierdzone:
+
+Źródło potwierdza dzienneCRSP i znaczenie stalequotes/bidask; zapisano jawny kontrakt zwrotów, zdarzeń, braków i delistingów.
+
+Zachowano dowód nieosiągalnego starego przewodnikaWRDS: HTTP404. Wynik wyszukiwania nie jest pobraną dokumentacją ani danymi.
+
+Round5: Provider advertises free cloud access to approximately27,500 listed/delisted US securities since1998, plus security-master dependency.
+
+Round5: Cloud listing includes historical ticker mapping, splits, dividends and delisting events.
+
+Round5: Free plan advertises backtesting across asset classes; one backtest-node limit.
+
+Round5: Distinguishes cloud use from local data licensing; most price data free in cloud.
+
+16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.
+
+Publicznefixtures oraz ich niewystarczający zakres przejrzano; gotowy plan weryfikacjiENE/LEH/GME i per-shareclass exchangeID.
+
+29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.
+
+Drugi projekt utworzony po przełączeniu pojedynczej darmowej sesji; kod lokalny zachowany.
+
+Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.
+
+Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.
+
+Pełne logi i JSON wszystkich4 oryginalnych sond T010 odczytane; runID,LEAN18215 i hashe plików zachowane.
+
+Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i8historycznych próbek.
+
+Semantyka nullilości i zerowych stawek dla brakującego rekordu potwierdzona wpublicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.
+
+Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.
+
+Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.
+
+Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.
+
+Pozostało:
+
+Dzienne totalreturns i zdarzenia wszystkich eligible nazw włącznie z późniejszymi delistingami oraz terminalną wyceną/płatnością.
+
+Zweryfikowana definicja wybranego formatuFIZ/CIZ, aby połączyć właściwe zwroty i nie podwoić delistingu; brak danych nie może stać się zerem.
+
+Round5: No1962–1986 data, no OTC, no proof of terminal delisting recovery/borrow. Access verified only to documentation, not a user account or records.
+
+Round5: A delisting event is not automatically the final total-return/payment required by Lehmann. No complete panel acquired.
+
+Round5: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data.
+
+Round5: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified.
+
+Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.
+
+KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.
+
+Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.
+
+Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.
+
+Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.
+
+QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.
+
+Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.
+
+ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.
+
+Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.
+
+LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.
+
+Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.
+
+Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii.
+
+[14, 16, 17] (https://www.nber.org/system/files/working_papers/w2533/w2533.pdf) · CRSPreturns, weekly returns, measurement corrections
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://www.quantconnect.com/data/algoseek-us-equities) · Provider advertises free cloud access to approximately27,500 listed/delisted US securities since1998, plus security-master dependency. LIMIT: No1962–1986 data, no OTC, no proof of terminal delisting recovery/borrow. Access verified only to documentation, not a user account or records.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://www.quantconnect.com/data/quantconnect-us-equity-security-master) · Cloud listing includes historical ticker mapping, splits, dividends and delisting events. LIMIT: A delisting event is not automatically the final total-return/payment required by Lehmann. No complete panel acquired.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://www.quantconnect.com/pricing/) · Free plan advertises backtesting across asset classes; one backtest-node limit. LIMIT: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing) · Distinguishes cloud use from local data licensing; most price data free in cloud. LIMIT: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified.
+
+PreparationV1, no marketstrategyresult (https://www.quantconnect.com/pricing/) · Główne reguły Lehmanna przeszły7kontroli. Gotowy projekt kontroliPIT/delistingu/borrow. Pełny panel i backtest nadal czekają na rzeczywiste dane.
+
+Actual authenticated UI attempt; no verified data result (https://www.quantconnect.com/project/38622173) · Konto Free potwierdzone w Chrome. Projekt 38622173 utworzony; edytor pozostaje na Loading coding environment. Kod Lehmanna gotowy lokalnie, import i cztery kontrole danych jeszcze niewykonane.
+
+Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38622173) · Wykonano 4 zaplanowane kontrole Lehmanna na FREE. Pełny log panel_2021 potwierdza problem klasyfikacji: 42 641 nieodczytanych rekordów, 0 zakwalifikowanych akcji. Trzy pozostałe próby zakończyły obliczenia; pełne logi są jeszcze do odczytu z zawieszających się widoków QC.
+
+Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38622173) · Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około1690 zakwalifikowanych akcji i80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii.
+
+Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38622173) · Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około 1690 zakwalifikowanych akcji i 80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii.
+
+Następny krok: Na podstawie zachowanych logów przygotować kolejną odrębną kontrolę danych: uzgodnić AMEX/ASE i brakujące klasyfikacje, poprawić oknoENE na styczeń 2002 oraz dzielić audyt na komunikaty poniżej limitu8192 znaków. Najpierw zamrozić nowy ograniczony plan; obecny budżet 7 wykorzystany. Równolegle źródła terminalnych zwrotów i czasu publikacji borrow; dopiero po domknięciu danych pełny test strategii po kosztach.
+T010-EXEC-04 · Zablokowany dostępnymi danymi
+Potwierdzone elementy i pozostałe warunki podano poniżej.
+
+Potwierdzone:
+
+Źródłowy koszt transakcyjny jest scenariuszem tc*zmiana wag; przypis16 nie zakłada bezwarunkowej darmowej pożyczki.
+
+IBKR publicznie dokumentuje indicative availability/rates oraz faktyczne pola dziennych borrowfees i ich dzień360; nie pobrano rachunku ani historii pożyczek.
+
+FINRA publiczne short-salevolume to zrealizowany obrót off-exchange, a nie availability/borrowfee/locate; nie zamyka tego braku.
+
+Provider describes daily shortable quantities, fee rates and rebates for10500US equities fromJan2018. Dataset listing advertises CloudAccessFree.
+
+16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.
+
+Publicznefixtures oraz ich niewystarczający zakres przejrzano; gotowy plan weryfikacjiENE/LEH/GME i per-shareclass exchangeID.
+
+29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.
+
+Drugi projekt utworzony po przełączeniu pojedynczej darmowej sesji; kod lokalny zachowany.
+
+Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.
+
+Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.
+
+Pełne logi i JSON wszystkich4 oryginalnych sond T010 odczytane; runID,LEAN18215 i hashe plików zachowane.
+
+Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i8historycznych próbek.
+
+Semantyka nullilości i zerowych stawek dla brakującego rekordu potwierdzona wpublicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.
+
+Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.
+
+Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.
+
+Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.
+
+Pozostało:
+
+Per-security/per-date shortability, borrow inventory and recall/corporate-action obligations, history of rates/fees at the proposed scale.
+
+Bidask, impact, fills, financing/margin and restricted-proceeds treatment for the actual account and period. Currentmarginpage does not provide1962–1986 costs.
+
+No1962–1986 borrow history, no actual account entitlement/query verified; sparse coverage, recalls/intradayinventory and terminalOTCreturns remain to check.
+
+Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.
+
+KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.
+
+Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.
+
+Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.
+
+Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.
+
+QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.
+
+Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.
+
+ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.
+
+Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.
+
+LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.
+
+Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.
+
+Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii.
+
+[15, 17, 18, 23, 24] (https://www.nber.org/system/files/working_papers/w2533/w2533.pdf) · footnote16, tc scenarios, pricepressure and execution limits
+
+Provider cloudpricing and source schema; checked29Oct2026 (https://www.quantconnect.com/data/us-equities-short-availability) · Provider describes daily shortable quantities, fee rates and rebates for10500US equities fromJan2018. Dataset listing advertises CloudAccessFree. LIMIT: No1962–1986 borrow history, no actual account entitlement/query verified; sparse coverage, recalls/intradayinventory and terminalOTCreturns remain to check.
+
+PreparationV1, no marketstrategyresult (https://www.quantconnect.com/pricing/) · Główne reguły Lehmanna przeszły7kontroli. Gotowy projekt kontroliPIT/delistingu/borrow. Pełny panel i backtest nadal czekają na rzeczywiste dane.
+
+Actual authenticated UI attempt; no verified data result (https://www.quantconnect.com/project/38622173) · Konto Free potwierdzone w Chrome. Projekt 38622173 utworzony; edytor pozostaje na Loading coding environment. Kod Lehmanna gotowy lokalnie, import i cztery kontrole danych jeszcze niewykonane.
+
+Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38622173) · Wykonano 4 zaplanowane kontrole Lehmanna na FREE. Pełny log panel_2021 potwierdza problem klasyfikacji: 42 641 nieodczytanych rekordów, 0 zakwalifikowanych akcji. Trzy pozostałe próby zakończyły obliczenia; pełne logi są jeszcze do odczytu z zawieszających się widoków QC.
+
+Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38622173) · Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około1690 zakwalifikowanych akcji i80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii.
+
+Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38622173) · Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około 1690 zakwalifikowanych akcji i 80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii.
+
+Następny krok: Na podstawie zachowanych logów przygotować kolejną odrębną kontrolę danych: uzgodnić AMEX/ASE i brakujące klasyfikacje, poprawić oknoENE na styczeń 2002 oraz dzielić audyt na komunikaty poniżej limitu8192 znaków. Najpierw zamrozić nowy ograniczony plan; obecny budżet 7 wykorzystany. Równolegle źródła terminalnych zwrotów i czasu publikacji borrow; dopiero po domknięciu danych pełny test strategii po kosztach.
+
+QuantConnect: kontrole danych · 29.10.2026
+
+Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około 1690 zakwalifikowanych akcji i 80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii.
+
+KontrolaWynik / ograniczenie
+
+Oryginalne kontrole4/4 pełne logi odczytane; razem z Turtle 5/5, bez duplikatów
+
+Błąd filtraNYS ≠ NYSE. Potwierdzony błąd naszego kodu, poprawka daje 1689–1691 akcji na 5 kompletnych datach
+
+Zakres po poprawce80 barów próbki; 8 historii po 10 rekordów. Nadal nie pełny panel/strategia
+
+Klasyfikacja 04.01.20218923 rekordy; 4256 bez pól, 198 AMEX jeszcze poza mapowaniem
+
+Enron22 bary, 0 zdarzeń; błędne okno kończy się przed zawieszeniem wstyczniu 2002
+
+Lehman BrothersWARNING 17.09.2008 / DELISTED18.09.2008; terminalna wypłata niepotwierdzona
+
+GME short9/13 odczytów z ilością; 4 brakujące. Zero stawki przy null nie dowodzi darmowego short
+
+Jakość zapisuJSONV3 ucięty na 8192 znakach; jawnie PARTIAL, parser pełnego audytu odrzuca
+
+Liczba prób / wynik7 kontroli danych łącznie; 0 nowych wyników strategii, 0 kosztów płatnych usług
+
+Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.
+
+Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.
+
+ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.
+
+LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.
+
+Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.
+
+Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii.
+
+Dane wyniku i ograniczenia
+
+Przygotowane testy i kontrola QuantConnect · 29.10.2026
+
+Główne reguły Lehmanna przeszły7kontroli. Gotowy projekt kontroliPIT/delistingu/borrow. Pełny panel i backtest nadal czekają na rzeczywiste dane.
+
+ElementStan
+
+Reguły7syntetycznych kontroliPASS
+
+Bez kontaPróbki21wybranych plików; brak pełnegoPITpanelu i rzeczywistego borrow
+
+ProjektQCT010_LEHMANN_DATA/main.py;4kontrolki, bez zleceń
+
+Pełny backtestJeszcze niegotowy: cały panel, terminalreturns, borrow i pełny ledger
+
+Następny krokPo zalogowaniuFree: odczyt parametrów i zdarzeń, bez zmiany próby pod wynik
+
+Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.
+
+KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.
+
+Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.
+
+Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.
+
+Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.
+
+QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.
+
+Dane wyniku i ograniczenia
+
+Co blokuje test i co pozyskano za darmo · 29.10.2026
+
+Reguły przekrojowej rewersji są w posiadanym pełnym źródle. Blokadą jest panel wszystkich historycznie kwalifikujących się akcji, także wycofanych, końcowe zwroty i możliwość/koszt short.
+
+Darmowa ścieżkaCo rzeczywiście mamyCo nadal trzeba sprawdzić
+
+PełnyLehmannNBERJuż posiadane wagi, weeklyWed→Tue i opis próbyŹródłowy filtr przyszłej obecności wymaga oddzielenia literalnej reprodukcji od wariantuPIT
+
+QuantConnectCloud equity+masterDarmowa ścieżka od1998 według publicznych stronKonto/realny panel/terminalreturns/shortborrow niezweryfikowane
+
+DawnyCRSP / dostęp instytucjonalnyWłaściwa ścieżka do próby1962–1986Brak potwierdzonego legalnego eksportu; dzisiejsze tickery nie zastępują panelu
+
+QuantConnect short availabilityCloudFree, shortablequantity/fee/rebate od2018 według dostawcyFaktyczny odczyt i pokrycie do potwierdzenia; brak1962–1986 i gwarancji borrow w rachunku
+
+Przed wynikiem ustalić uniwersum na każdą datę, bez wymogu przyszłego przetrwania. Nie usuwać papieru z próby dlatego, że później zniknął.
+
+Akceptacja terminalnego przypadku: wskazać ostatni zwykły zwrot, zdarzenie wycofania i finalną wycenę/wypłatę, bez podwójnego delistingreturn lub założeniazero.
+
+Nawet dobry grosslong/short nie potwierdzi strategii netto bez shortability, stawekborrow, finansowania, bidask i ograniczeń środków ze sprzedaży.
+
+Dla późniejszego testu netto najpierw walidować rekordy shortable_quantity, fee_rate i rebate_rate z jawnym asof/date na darmowym koncie, np. kontrola trudno pożyczalnego GME2021. Brak rekordu to brak danych, nie fee0; nie przenosić stawek z2018+ do1962–1986.
+
+Dane wyniku i ograniczenia
+
+Dzisiejsza kontrola wykonania · 29.10.2026
+
+Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.
+
+ZakresStan
+
+Oryginałnadal blokowany przez braki reguł lub danych wskazane przy karcie; dzisiejsze ETF-y tego nie zastępują
+
+Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.
+
+IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.
+
+Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.
+
+Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L.
+
+Dane wyniku i ograniczenia
+
+Następne działanie dla karty: Na podstawie zachowanych logów przygotować kolejną odrębną kontrolę danych: uzgodnić AMEX/ASE i brakujące klasyfikacje, poprawić oknoENE na styczeń 2002 oraz dzielić audyt na komunikaty poniżej limitu8192 znaków. Najpierw zamrozić nowy ograniczony plan; obecny budżet 7 wykorzystany. Równolegle źródła terminalnych zwrotów i czasu publikacji borrow; dopiero po domknięciu danych pełny test strategii po kosztach.
+
+Pełny zapis ustaleń, dowodów i braków tej rundy
+
+Braki i sposób ich zdobycia
+
+Uzyskanie pliku nie zamyka braku automatycznie. Musi on spełnić poniższe warunki kontroli; przybliżenie nie staje się danymi oryginalnymi.
+T010-SOURCE-01 · Źródłowe tygodnie, przekrojowe wagi long-short i oddzielenie literalnej replikacji od poprawnej wersjiPIT
+Dlaczego potrzebne: SPY po spadku5dni i próg-3% nie odtwarzająLehmanna. Źródłowy working paper dodatkowo opisuje selekcję obecności akcji w tygodniu t i t+k, a przypis15 przyznaje możliwy survivorship/selection bias.
+
+Dostępność: Dostępne bezpłatnie — trzeba pozyskać i zweryfikować
+
+Jak zdobyć:
+
+ZPDFNBERs14–15 przepisać tygodnie środa–wtorek, de-meaned cross-sectional returns oraz normalizację do1dolara long i1dolara short; wybrać dokładne k,J i źródłową tabelę.
+
+Udokumentować oryginalny wymóg istnienia papieru w t oraz t+k jako historyczne ograniczenie; literalna reprodukcja tabeli i przyczynowy wariantPIT muszą być dwoma nazwanymi protokołami.
+
+Dla bota selekcję oprzeć wyłącznie na danych znanych w t, z obsługą późniejszych delistingów; nie usuwać przyszłych przegranych.
+
+Źródła i zakres:
+
+Lehmann: źródłowy working paperNBER2533 (https://www.nber.org/system/files/working_papers/w2533/w2533.pdf) · dostęp sprawdzonyPDF200: przekrojowe portfele long-short, tygodnie środa–wtorek, próbaNYSE/AMEX1962–1986; PDFs14–15, przypis15 opisuje ograniczenie selekcji.Nie dostarcza: Surowej bazy akcji ani gotowej, pozbawionej biasu implementacji dla współczesnego brokera.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Są osobne reguły wejścia/wyjścia i algebra wag; brak arbitralnegoSPY-3%/hold5.
+
+Przypis15 i ryzyko future-selection są wskazane; oryginalny projekt nie jest bezkrytycznie nazwanyPIT.
+
+WersjaPIT nie wybiera składu według istnienia notowania za tydzień; przyszły delisting nie zmienia wcześniejszej decyzji o członkostwie.
+
+Gdy nie uda się zdobyć: NIEZBADANA w zakresieLehmanna. WcześniejszySPYwariant zachować wyłącznie jako naszą odrębną adaptację.
+
+Następne działanie: Na podstawie zachowanych logów przygotować kolejną odrębną kontrolę danych: uzgodnić AMEX/ASE i brakujące klasyfikacje, poprawić oknoENE na styczeń 2002 oraz dzielić audyt na komunikaty poniżej limitu8192 znaków. Najpierw zamrozić nowy ograniczony plan; obecny budżet 7 wykorzystany. Równolegle źródła terminalnych zwrotów i czasu publikacji borrow; dopiero po domknięciu danych pełny test strategii po kosztach.
+T010-DATA-02 · Historyczne uniwersumNYSE/AMEX i trwałe identyfikatory, obejmujące spółki wycofane
+Dlaczego potrzebne: Wagi są relatywne do przekroju dostępnych wtedy akcji. Dzisiejsza listaNasdaq lub portfel obecnych zwycięzców powodują selection/survivorship bias i mają inny rynek niż oryginał.
+
+Dostępność: Oryginalne dane licencjonowane; bez zakupu w tym zadaniu
+
+Jak zdobyć:
+
+Sprawdzić, czy użytkownik ma już legalny eksportCRSP lub dostęp instytucjonalny obejmujący potrzebny zakres; nie kupować subskrypcji.
+
+Wymagany eksport musi zawierać permanentID, exchange/share type, daty notowań i historii nazw, statusy oraz historię aktywnych i nieaktywnych papierów.
+
+Publiczny bieżącyNasdaqSymbolDirectory można archiwizować prospektywnie dla osobnego współczesnego badania; nie używać go do rekonstrukcji1962–1986 ani dawnychNYSE/AMEX.
+
+Źródła i zakres:
+
+CRSP: opisUSStockDatabase i subskrypcji (https://www.crsp.org/research/crsp-us-stock-databases-2025-layout/) · dostęp sprawdzonyPubliczny opis aktywnych i nieaktywnych papierów, permanent identifiers, corporate actions oraz ścieżki subskrypcji.Nie dostarcza: Dostępu do pełnej bazy. Sprawdzono stronę produktu, nie uprawnienia ani pobranie licencjonowanych rekordów.
+
+Nasdaq: aktualny katalog symboli (https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt) · dostęp sprawdzonyPlik200:5619 wierszy z nagłówkiem i końcową datą utworzenia2026-10-28; bieżące symbole i statusy.Nie dostarcza: Historycznego uniwersumNYSE/AMEX1962–1986, permanent identifiers, akcji wycofanych i PITmembership; nie nadaje się jako zamiennik historycznej próby.
+
+Nasdaq: definicjeSymbolDirectory (https://www.nasdaqtrader.com/trader.aspx?id=symboldirdefs) · dostęp sprawdzonyPubliczny opis pól i aktualizacji plików w ciągu dnia.Nie dostarcza: Retrospektywnej, kompletnej bazy członkostwa i zdarzeń wszystkich historycznych akcji.
+
+QuantConnect/AlgoSeek: equity data listing (https://www.quantconnect.com/data/algoseek-us-equities) · dostęp sprawdzonyProvider advertises free cloud access to approximately27,500 listed/delisted US securities since1998, plus security-master dependency.Nie dostarcza: No1962–1986 data, no OTC, no proof of terminal delisting recovery/borrow. Access verified only to documentation, not a user account or records.
+
+QuantConnect security master listing (https://www.quantconnect.com/data/quantconnect-us-equity-security-master) · dostęp sprawdzonyCloud listing includes historical ticker mapping, splits, dividends and delisting events.Nie dostarcza: A delisting event is not automatically the final total-return/payment required by Lehmann. No complete panel acquired.
+
+QuantConnect current free-plan pricing (https://www.quantconnect.com/pricing/) · dostęp sprawdzonyFree plan advertises backtesting across asset classes; one backtest-node limit.Nie dostarcza: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data.
+
+QuantConnect licensing (https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing) · dostęp sprawdzonyDistinguishes cloud use from local data licensing; most price data free in cloud.Nie dostarcza: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Dla każdego tygodnia da się odtworzyć eligible universe z informacji asof, również dla papierów później wycofanych.
+
+Zmiany tickerów nie tworzą nowych spółek; brak samplingu wyłącznie obecnych symboli.
+
+Publiczne katalogi mają datę utworzenia, ale nie są przedstawiane jako historyczna baza; aktualny plikNasdaq zweryfikowano jako2026-10-28.
+
+Dostęp doCRSP jest rzeczywiście potwierdzony legalnym plikiem/uprawnieniem; strona produktu200 tego nie potwierdza.
+
+Gdy nie uda się zdobyć: Pozostawić oryginalny testNIEZBADANY. Można od dziś budować nowy prospektywny zbiór ze snapshotów, opisując inne uniwersum i datę startu.
+
+Następne działanie: Na podstawie zachowanych logów przygotować kolejną odrębną kontrolę danych: uzgodnić AMEX/ASE i brakujące klasyfikacje, poprawić oknoENE na styczeń 2002 oraz dzielić audyt na komunikaty poniżej limitu8192 znaków. Najpierw zamrozić nowy ograniczony plan; obecny budżet 7 wykorzystany. Równolegle źródła terminalnych zwrotów i czasu publikacji borrow; dopiero po domknięciu danych pełny test strategii po kosztach.
+T010-DATA-03 · Dzienne total returns, corporate actions i delisting returns na całym historycznym przekroju
+Dlaczego potrzebne: Brak zwrotu po wycofaniu lub dywidend/splitów może zmienić cross-sectional ranking i zawyżyć profit. Gotowy czynnikShortTermReversal nie dostarcza wag każdej akcji ani nie odtwarza dokładnego źródła.
+
+Dostępność: Bezpłatnie dostępna część lub przybliżenie
+
+Jak zdobyć:
+
+Dla legalnie dostępnego uniwersum uzyskać dzienne zwroty/prices, dystrybucje, corporate actions oraz połączenie delisting-return z ostatnim zwykłym zwrotem według wybranego formatu bazy.
+
+Zamrozić reguły braków, dat świątecznych, cienkiego handlu i4dniowego wariantu korygującego bid-askbounce zgodnie ze źródłem; nie zastępować braków zerem.
+
+Sprawdzony darmowyFrenchST_REV można zachować jako potencjalny oddzielny test tematyczny, ze wskazaniem różnej konstrukcji20dni i wag.
+
+Źródła i zakres:
+
+CRSP: opisUSStockDatabase i subskrypcji (https://www.crsp.org/research/crsp-us-stock-databases-2025-layout/) · dostęp sprawdzonyPubliczny opis aktywnych i nieaktywnych papierów, permanent identifiers, corporate actions oraz ścieżki subskrypcji.Nie dostarcza: Dostępu do pełnej bazy. Sprawdzono stronę produktu, nie uprawnienia ani pobranie licencjonowanych rekordów.
+
+Lehmann: źródłowy working paperNBER2533 (https://www.nber.org/system/files/working_papers/w2533/w2533.pdf) · dostęp sprawdzonyPDF200: przekrojowe portfele long-short, tygodnie środa–wtorek, próbaNYSE/AMEX1962–1986; PDFs14–15, przypis15 opisuje ograniczenie selekcji.Nie dostarcza: Surowej bazy akcji ani gotowej, pozbawionej biasu implementacji dla współczesnego brokera.
+
+Kenneth French: dziennySTReversalFactor (https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_ST_Reversal_Factor_daily_CSV.zip) · dostęp sprawdzonySprawdzony ZIP200:26467 dni1926-01-26–2026-09-30; gotowa seria tematycznego czynnika.Nie dostarcza: ReplikacjiLehmanna: konstrukcja w pliku używa innych sortowań i poprzednich20dni, a nie jego dokładnych wag/tygodni; brak indywidualnych nóg i wykonalnych kosztów.
+
+QuantConnect/AlgoSeek: equity data listing (https://www.quantconnect.com/data/algoseek-us-equities) · dostęp sprawdzonyProvider advertises free cloud access to approximately27,500 listed/delisted US securities since1998, plus security-master dependency.Nie dostarcza: No1962–1986 data, no OTC, no proof of terminal delisting recovery/borrow. Access verified only to documentation, not a user account or records.
+
+QuantConnect security master listing (https://www.quantconnect.com/data/quantconnect-us-equity-security-master) · dostęp sprawdzonyCloud listing includes historical ticker mapping, splits, dividends and delisting events.Nie dostarcza: A delisting event is not automatically the final total-return/payment required by Lehmann. No complete panel acquired.
+
+QuantConnect current free-plan pricing (https://www.quantconnect.com/pricing/) · dostęp sprawdzonyFree plan advertises backtesting across asset classes; one backtest-node limit.Nie dostarcza: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data.
+
+QuantConnect licensing (https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing) · dostęp sprawdzonyDistinguishes cloud use from local data licensing; most price data free in cloud.Nie dostarcza: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Każdy zwrot ma ID, datę, definicjętotal-return i obsługę delistingu; sentinel braków nie jest0.
+
+Liczebności przekroju i attrition są raportowane; błędy danych nie powodują werdyktuUTOPIONA.
+
+FrenchST_REV nie zostaje nazwany odtworzeniemLehmanna ani testem jego indywidualnych pozycji.
+
+Bieżący pobranyST_REV ma26467 rekordów i kończy się2026-09-30; jego availability nie rozwiązuje braku CRSPmicrodata.
+
+Gdy nie uda się zdobyć: Tematyczny test gotowego czynnika jako nowa karta/wersja z własnym pytaniem; oryginał nadalNIEZBADANY.
+
+Następne działanie: Na podstawie zachowanych logów przygotować kolejną odrębną kontrolę danych: uzgodnić AMEX/ASE i brakujące klasyfikacje, poprawić oknoENE na styczeń 2002 oraz dzielić audyt na komunikaty poniżej limitu8192 znaków. Najpierw zamrozić nowy ograniczony plan; obecny budżet 7 wykorzystany. Równolegle źródła terminalnych zwrotów i czasu publikacji borrow; dopiero po domknięciu danych pełny test strategii po kosztach.
+T010-EXEC-04 · Historyczna możliwość short, rzeczywiste borrow/financing i płynność obu nóg
+Dlaczego potrzebne: Zero-net-investment w teorii nie oznacza braku kapitału, margin lub kosztów. Dostępność shortów i opłaty są zależne od papieru, daty, rachunku i zabezpieczenia.
+
+Dostępność: Dostępność jeszcze nieustalona
+
+Jak zdobyć:
+
+W osobnym protokole wykonawczym określić broker, dostępność instrumentów, gross/net exposure, margin i finansowanie obu nóg.
+
+Pozyskać legalną historię availability/indicative borrow oraz rzeczywistych opłat/wyciągów i rozróżnić te kategorie. DokumentacjaIBKR wskazuje możliwe pola, nie potwierdza posiadania danych.
+
+Zebrać historyczne bid/ask, poślizg, wolumen i corporate-action obligations dla shortów; darmowe dane dzienne lub dzisiejszy status easy-to-borrow nie zastępują tej historii.
+
+Źródła i zakres:
+
+IBKR: opisSLB i danych o pożyczaniu akcji (https://www.interactivebrokers.com/en/trading/short-securities-availability.php) · dostęp sprawdzonyPubliczna dokumentacja narzędzia klienta opisuje bieżącą dostępność i bieżące oraz historyczne stawki indicative borrow.Nie dostarcza: Nie pobrano kontaSLB, danych per-akcja/per-dzień ani potwierdzenia pełnego zakresu historycznego; indicative nie oznacza wykonanego borrow.
+
+IBKR: opis wyciągu rzeczywistych borrow fees (https://www.ibkrguides.com/reportingreference/reportguide/borrowfeedetails_default.htm) · dostęp sprawdzonyDokumentacja pól dziennych opłat, stawek i kwot w activity statement.Nie dostarcza: Rzeczywistych wyciągów Piotra ani kosztów hipotetycznych historycznych transakcji, które nigdy nie zaszły.
+
+IBKR: publikowane stawki finansowania (https://www.interactivebrokers.com/en/trading/pricing-margin-rates.php) · dostęp sprawdzonyPubliczna strona bieżących warunków finansowania i zastrzeżeń brokerowych.Nie dostarcza: Pełnej historii kosztu właściwego dla rachunku Piotra, kwoty, waluty i dat1962–1986 lub całego okresu replikacji.
+
+Lehmann: źródłowy working paperNBER2533 (https://www.nber.org/system/files/working_papers/w2533/w2533.pdf) · dostęp sprawdzonyPDF200: przekrojowe portfele long-short, tygodnie środa–wtorek, próbaNYSE/AMEX1962–1986; PDFs14–15, przypis15 opisuje ograniczenie selekcji.Nie dostarcza: Surowej bazy akcji ani gotowej, pozbawionej biasu implementacji dla współczesnego brokera.
+
+QuantConnect: free cloud short availability and borrowing-cost route (https://www.quantconnect.com/data/us-equities-short-availability) · dostęp sprawdzonyProvider describes daily shortable quantities, fee rates and rebates for10500US equities fromJan2018. Dataset listing advertises CloudAccessFree.Nie dostarcza: No1962–1986 borrow history, no actual account entitlement/query verified; sparse coverage, recalls/intradayinventory and terminalOTCreturns remain to check.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Każda krótka pozycja ma sprawdzoną możliwość pożyczenia i pełny koszt albo test jest oznaczony jako teoretyczny/gross.
+
+Brak pożyczki nie jest zakodowany jako darmowa dowolna shortposition.
+
+Rzeczywiste koszty są oddzielone od stress5/20bps i od źródłowych historycznych korekt statystycznych.
+
+Brak danych nie jest obaleniem efektu źródłowego; blokuje wykonywalny wynik netto.
+
+Gdy nie uda się zdobyć: Tylko kwalifikowana statystyczna replikacja gross, jeśli mikrohistoria jest legalnie dostępna; brakWYGRANA/wykonania.
+
+Następne działanie: Na podstawie zachowanych logów przygotować kolejną odrębną kontrolę danych: uzgodnić AMEX/ASE i brakujące klasyfikacje, poprawić oknoENE na styczeń 2002 oraz dzielić audyt na komunikaty poniżej limitu8192 znaków. Najpierw zamrozić nowy ograniczony plan; obecny budżet 7 wykorzystany. Równolegle źródła terminalnych zwrotów i czasu publikacji borrow; dopiero po domknięciu danych pełny test strategii po kosztach.
+
+Krótka karta dla AI · Źródło (https://www.nber.org/papers/w2533) · Pełna karta, audyt i stare wyniki
+
+Evidence and code: ../code/index.json, ../evidence/.
+This is a logic-review package; raw licensed market datasets are not included.

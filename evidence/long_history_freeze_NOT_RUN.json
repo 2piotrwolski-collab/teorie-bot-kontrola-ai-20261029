@@ -1,0 +1,11 @@
+{
+  "at_utc": "2026-10-29T18:21:05.351903+00:00",
+  "economic_results_computed": false,
+  "files": {
+    "research_round10/extended_core.py": "eb434fb4334dba61213fb57266ebfd4ea42e01a214b07e49d74402dbbfe6d3b1",
+    "research_round10/qc_extended_adapter.py": "f34f7ca7222305d7db9d04971599537cbba56d5906173c2e4bc6de89dae0e444",
+    "research_round10/QC_EXTENDED_MAIN.py": "1955e45ca9b35d429276d80d1eb5cdc996d11305796f48807ccc207089cd47ab",
+    "research_round10/long_history_plan.json": "e112b7937c588f572109ea026d0ad1b5db44e8325ed2966e31ea9044da12b0dc",
+    "net_engine.py": "a5d192ae939980bd8364d36967486b660e3a284daed50bca04bc09fac84e6481"
+  }
+}

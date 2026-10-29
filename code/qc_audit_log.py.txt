@@ -1,0 +1,36 @@
+"""Extract the bounded research JSON from a downloaded QC log, never infer P&L."""
+import argparse
+import json
+from pathlib import Path
+
+
+def extract(text):
+    decoder = json.JSONDecoder()
+    unique = {}
+    for fragment in text.split('RESEARCH_AUDIT_JSON ')[1:]:
+        # raw_decode tolerates the next timestamp/message after the JSON object.
+        value, _ = decoder.raw_decode(fragment.lstrip())
+        unique[json.dumps(value, sort_keys=True)] = value
+    if len(unique) != 1:
+        raise ValueError('Expected one unique complete audit JSON; missing/truncated/conflicting logs are not a result')
+    audit = next(iter(unique.values()))
+    if audit.get('orders_allowed') is not False or audit.get('strategy_return_calculated') is not False:
+        raise ValueError('Not the frozen read-only data audit')
+    expected = {'T003_QC_DATA_AUDIT_V1': 'AUDIT_FINISHED_FULL_DATA_GATES_STILL_REQUIRED',
+                'T010_QC_DATA_AUDIT_V1': 'AUDIT_FINISHED_NOT_A_STRATEGY_RESULT',
+                'T010_QC_DATA_AUDIT_SCHEMA_TRACE_V2': 'AUDIT_FINISHED_NOT_A_STRATEGY_RESULT',
+                'T010_QC_DATA_AUDIT_EXCHANGE_V3': 'AUDIT_FINISHED_NOT_A_STRATEGY_RESULT',
+                'T010_QC_DATA_AUDIT_ACCESSOR_V2': 'AUDIT_FINISHED_NOT_A_STRATEGY_RESULT'}
+    if audit.get('protocol') not in expected or audit.get('runtime_status') != expected[audit['protocol']]:
+        raise ValueError('Audit completion not confirmed')
+    if audit['protocol'].startswith('T010_') and audit.get('case') not in [
+            'panel_2021', 'ene_2001', 'leh_2008', 'borrow_2021']:
+        raise ValueError('Unexpected unfrozen case')
+    return audit
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('log', type=Path)
+    args = parser.parse_args()
+    print(json.dumps(extract(args.log.read_text()), ensure_ascii=False, indent=2))

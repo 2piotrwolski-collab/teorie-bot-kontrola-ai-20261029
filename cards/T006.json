@@ -1,0 +1,701 @@
+{
+  "snapshot_at_utc": "2026-10-29T18:43:35.427389+00:00",
+  "scope": "Research snapshot. No full original-theory verification; no live orders.",
+  "card": {
+    "id": "T006",
+    "round": 5,
+    "findings": [
+      "Ponownie pobrano cały oficjalny pięciostronicowy Method III Manual. Potwierdza alert pasmo + Intraday Intensity oraz jakościowe potwierdzenie ceny.",
+      "Dokument nadal nie dostarcza kompletnej liczbowej reguły potwierdzenia, wyjścia i sizingu. Dostęp do instrukcji instalacji płatnego dodatku nie oznacza dostępu do jego kodu ani kompletnej strategii.",
+      "Nie dopisano arbitralnego stopu/wyjścia i nie policzono ich jako metody autora.",
+      "Dzisiejszy pomiar ETF-ów nie usuwa braków tej teorii. Zachowano wymagania źródłowe i dotychczasowy konkretny plan zdobycia danych/reguł.",
+      "Pobrano dodatkowy oficjalny vendorPDF podpisany przez Bollingera. Wymienia komponenty MethodIII i wprost opisuje zestaw jako narzędzia do budowy systemów, nie kompletny system.",
+      "Odczytano publiczną stronę autoryzowanej witryny o MethodIII i osobną stronę stopów. Są dodatkowe definicje, ale ogólny stop Chandelier nie staje się automatycznie wyjściem MethodIII.",
+      "Sekcja szczegółowych metod zwraca Subscribers only. Nie uruchomiono trialu ani zakupu; HTTP200 tej strony nie zamyka luki reguł."
+    ],
+    "next_action": "Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.",
+    "overall_status": "source_gap_still_blocks_original_test",
+    "gap_updates": [
+      {
+        "gap_id": "T006-SOURCE-01",
+        "status": "partial",
+        "status_reason": "Dostępny jest właściwy oficjalny Method III Manual, lecz karta v1 nie została zamieniona w oryginalną kompletną metodę.",
+        "criteria_met": [
+          "Oficjalny tekst metody i hash zachowane.",
+          "Wyodrębniono alert z potwierdzeniem wolumenowym; v1 band-touch nie jest metodą autora.",
+          "Round5: Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system.",
+          "Round5: MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization."
+        ],
+        "criteria_unmet": [
+          "Wierna kompletna karta wybranej metody nadal nie istnieje.",
+          "Round5: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained.",
+          "Round5: A qualitative description, not a fully specified executable strategy."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "results/acquisition_methods_receipts/bollinger_method3.pdf",
+            "url": "https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf",
+            "sha256": "9470f93f9849ef96767f7126783a45e549c96d49ada55d3abbaf7d736a67f6c0",
+            "locator": "PDF pp1–3",
+            "what_verified": "Oficjalny opis Method III; alerty, Intraday Intensity i jakościowe potwierdzenie ceny. Nie kompletny algorytm wyjścia i sizingu."
+          },
+          {
+            "evidence_path": "sources/round2/T006_help_methods.html",
+            "url": "https://bollingerbands.us/help-methods.php",
+            "sha256": "039d2a32937090e2fd214798a3f8c7c536f310eff07b42e4f9a8dc40970ab3cc",
+            "locator": "Methods Explanation → Reversals (Method III)",
+            "what_verified": "Opis potwierdzenia wolumenowego; nie odnaleziono w tym publicznym tekście kompletnych reguł exit/sizing."
+          },
+          {
+            "url": "https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf",
+            "evidence_path": "sources/round3/bollinger_method3.pdf",
+            "locator": "Round3boundedsourcecheck",
+            "what_verified": "Full5pageMethodIIImanual read; alerts/confirmation qualitative, fullstrategy stillincomplete."
+          },
+          {
+            "url": "https://www.tradenavigator.com/legacy/pdf/BBTK.pdf",
+            "evidence_path": "sources/round5/bollinger_toolkit.pdf",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system. LIMIT: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained."
+          },
+          {
+            "url": "https://bollingerbands.us/help-methods.php",
+            "evidence_path": "sources/round5/bb_methods.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization. LIMIT: A qualitative description, not a fully specified executable strategy."
+          }
+        ],
+        "next_action": "Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.",
+        "round3_context_next_action": "Szukać pełnej oficjalnej specyfikacji potwierdzenia, wyjścia i sizingu. Jeśli jest niedostępna bezpłatnie, ewentualne własne reguły wymagają osobnego planu i nie są reprodukcją autora."
+      },
+      {
+        "gap_id": "T006-RULE-02",
+        "status": "open",
+        "status_reason": "W dodatkowym publicznym opisie i katalogu autora nie zdobyto liczbowego potwierdzenia, pełnego exit, sizingu ani zamkniętego uniwersum.",
+        "criteria_met": [
+          "Oddzielono alert od wykonywalnego sygnału; zmapowano luki.",
+          "Round5: Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system.",
+          "Round5: MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization.",
+          "Round5: Public Chandelier formula and default10period/3ATR, plus other optional stop tools.",
+          "Round5: HTTP200 page says Subscribers only; no free complete rules downloaded."
+        ],
+        "criteria_unmet": [
+          "Jednoznaczne price confirmation.",
+          "Pełne wyjście, sizing, segment/reżim i wyjątki.",
+          "Round5: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained.",
+          "Round5: A qualitative description, not a fully specified executable strategy.",
+          "Round5: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction.",
+          "Round5: A200response or free-trial offer is not evidence of access. No subscription/trial activated."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "results/acquisition_methods_receipts/bollinger_method3.pdf",
+            "url": "https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf",
+            "sha256": "9470f93f9849ef96767f7126783a45e549c96d49ada55d3abbaf7d736a67f6c0",
+            "locator": "PDF pp1–3",
+            "what_verified": "Oficjalny opis Method III; alerty, Intraday Intensity i jakościowe potwierdzenie ceny. Nie kompletny algorytm wyjścia i sizingu."
+          },
+          {
+            "evidence_path": "sources/round2/T006_help_methods.html",
+            "url": "https://bollingerbands.us/help-methods.php",
+            "sha256": "039d2a32937090e2fd214798a3f8c7c536f310eff07b42e4f9a8dc40970ab3cc",
+            "locator": "Methods Explanation → Reversals (Method III)",
+            "what_verified": "Opis potwierdzenia wolumenowego; nie odnaleziono w tym publicznym tekście kompletnych reguł exit/sizing."
+          },
+          {
+            "evidence_path": "sources/round2/T006_author_media.html",
+            "url": "https://www.bollingerbands.com/videos-articles-interviews",
+            "sha256": "15c896f7b014e3b5998e8be533f377cbb600f6a3e1a10740a3e67dc0dff298f3",
+            "locator": "Publiczna lista materiałów autora",
+            "what_verified": "Sprawdzono listę i opisy, nie obejrzano wszystkich nagrań. Nie wolno wnioskować, że nigdzie nie ma pełnej metody."
+          },
+          {
+            "url": "https://www.tradenavigator.com/legacy/pdf/BBTK.pdf",
+            "evidence_path": "sources/round5/bollinger_toolkit.pdf",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system. LIMIT: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained."
+          },
+          {
+            "url": "https://bollingerbands.us/help-methods.php",
+            "evidence_path": "sources/round5/bb_methods.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization. LIMIT: A qualitative description, not a fully specified executable strategy."
+          },
+          {
+            "url": "https://bollingerbands.us/help-stops.php",
+            "evidence_path": "sources/round5/bb_stops.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Public Chandelier formula and default10period/3ATR, plus other optional stop tools. LIMIT: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction."
+          },
+          {
+            "url": "https://bollingerbands.us/lists.php",
+            "evidence_path": "sources/round5/bb_methods_restricted.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "HTTP200 page says Subscribers only; no free complete rules downloaded. LIMIT: A200response or free-trial offer is not evidence of access. No subscription/trial activated."
+          }
+        ],
+        "next_action": "Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.",
+        "round3_context_next_action": "Szukać pełnej oficjalnej specyfikacji potwierdzenia, wyjścia i sizingu. Jeśli jest niedostępna bezpłatnie, ewentualne własne reguły wymagają osobnego planu i nie są reprodukcją autora."
+      },
+      {
+        "gap_id": "T006-EXEC-03",
+        "status": "open",
+        "status_reason": "Nie wybieramy danych ani filli za nieokreśloną metodę; reguły02 nadal blokują wykonanie.",
+        "criteria_met": [
+          "Ustalono, że źródło wymaga aktywności w świecy i dodatkowego potwierdzenia.",
+          "Round5: Public Chandelier formula and default10period/3ATR, plus other optional stop tools."
+        ],
+        "criteria_unmet": [
+          "Dokładna chwila decyzji i wykonalny fill.",
+          "Właściwe uniwersum, dostawca i koszty.",
+          "Round5: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "results/acquisition_methods_receipts/bollinger_method3.pdf",
+            "url": "https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf",
+            "sha256": "9470f93f9849ef96767f7126783a45e549c96d49ada55d3abbaf7d736a67f6c0",
+            "locator": "PDF pp1–3",
+            "what_verified": "Oficjalny opis Method III; alerty, Intraday Intensity i jakościowe potwierdzenie ceny. Nie kompletny algorytm wyjścia i sizingu."
+          },
+          {
+            "url": "https://bollingerbands.us/help-stops.php",
+            "evidence_path": "sources/round5/bb_stops.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Public Chandelier formula and default10period/3ATR, plus other optional stop tools. LIMIT: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction."
+          }
+        ],
+        "next_action": "Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.",
+        "round3_context_next_action": "Szukać pełnej oficjalnej specyfikacji potwierdzenia, wyjścia i sizingu. Jeśli jest niedostępna bezpłatnie, ewentualne własne reguły wymagają osobnego planu i nie są reprodukcją autora."
+      }
+    ],
+    "source_urls_verified": [
+      "https://bollingerbands.us/help-methods.php",
+      "https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf",
+      "https://www.bollingerbands.com/videos-articles-interviews"
+    ],
+    "observations": [
+      {
+        "id": "FREE_SOURCE_GAP_REVIEW_20261029_V2_T006",
+        "title": "Co blokuje test i co pozyskano za darmo · 29.10.2026",
+        "summary": "Brakuje jednoznacznej kompletnej strategii MethodIII: liczbowego potwierdzenia wejścia, wyjścia, sizingu i wyjątków. Dane giełdowe nie naprawią brakującej definicji.",
+        "columns": [
+          "Darmowa ścieżka",
+          "Co rzeczywiście mamy",
+          "Co nadal trzeba sprawdzić"
+        ],
+        "rows": [
+          [
+            "Autoryzowane help-methods / help-stops",
+            "Opis mechanizmu i ogólne narzędzia stop",
+            "Nie dowodzą jednej obowiązkowej kompletnej MethodIII"
+          ],
+          [
+            "Bollinger/Genesis PDF",
+            "Pobrane4strony; lista wejść/wyjść jako komponentów",
+            "Brak formuł/kodu tych komponentów"
+          ],
+          [
+            "Legalna biblioteka / posiadana książka",
+            "Konkretna ścieżka uzyskania brakującego rozdziału",
+            "Dostęp niepotwierdzony; brakującego rozdziału nie zastępujemy cudzym blogiem"
+          ]
+        ],
+        "limitations": [
+          "Akceptacja: reguła wejścia/confirmation i jej czas, pełne wyjście/stopy, wielkość pozycji, horyzont oraz ograniczenia rynku powiązane z miejscem w pierwotnym źródle.",
+          "Jeżeli książka nie rozstrzyga reguł mechanicznie, dokładny automat autora nie jest zdefiniowany. Odrębny wariant może być badany po zamrożeniu własnych decyzji.",
+          "Nie liczyć losowego stopu lub celu zysku jako reprodukcji Bollingera."
+        ],
+        "evidence_report": "BRAKI_5_TEORII/T006.json"
+      },
+      {
+        "id": "ARRIVAL_20261029_T006",
+        "title": "Dzisiejsza kontrola wykonania · 29.10.2026",
+        "summary": "Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.",
+        "columns": [
+          "Zakres",
+          "Stan"
+        ],
+        "rows": [
+          [
+            "Oryginał",
+            "nadal blokowany przez braki reguł lub danych wskazane przy karcie; dzisiejsze ETF-y tego nie zastępują"
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_DZISIAJ/T006.json"
+      }
+    ],
+    "source_detail": null,
+    "source_update_artifact": "research_round2/source_updates_T006_T008.json",
+    "source_update_sha256": "408fb7981d414b0e45e82666f44a6585e9957bdc622fc446c706d2b6a8f612fb",
+    "observation_ids": [
+      "FREE_SOURCE_GAP_REVIEW_20261029_V2_T006",
+      "ARRIVAL_20261029_T006"
+    ],
+    "previous_findings_round2": [
+      "Odnaleziono oficjalny Method III Manual i sprawdzono pełny dokument. Metoda zawiera alerty, Intraday Intensity i potwierdzenie ceny.",
+      "W darmowych materiałach nie znaleziono kompletu liczbowych reguł wyjścia, wielkości pozycji i zamkniętego uniwersum.",
+      "Dotknięcie dolnego pasma samo w sobie nadal nie jest źródłową strategią kupna. Nie uruchomiono kolejnego zastępczego testu."
+    ],
+    "strategy_result_file": "NET_STRATEGIE/T006.json",
+    "execution_evidence_file": "WYKONANIE_DZISIAJ/T006.json",
+    "free_source_review_id": "FREE_SOURCE_GAP_REVIEW_20261029_V2"
+  },
+  "source_qualification": {
+    "id": "T006",
+    "intended_market": "Instrumenty z wystarczającą aktywnością, dla których konkretna opublikowana metodaBollingera ma zdefiniowane reguły.",
+    "segment": "Nieustalony dla samodzielnego band-touch; źródło definiuje wskaźnik i ostrzeżenia, nie taką strategię.",
+    "regime": "Zależy od wybranej metody: trend/breakout albo potwierdzone patterny; sam lower-band nie ustanawia reżimu odwrócenia.",
+    "horizon": "Nieustalony dla rzeczywistej metody źródłowej;20 sesji limitu jest naszym dodatkiem.",
+    "universe": [],
+    "original_objective": "Poprawna interpretacja band i ich zastosowanie w pełnych metodach, a nie twierdzenie o zysku z każdego wybicia dołem.",
+    "correct_benchmark": "Do określenia po wybraniu konkretnej kompletnej metody; własny lower-band test nie jest benchmarkiem teorii autora.",
+    "falsification_question": "Nie ma jeszcze zgodnej ze źródłem kompletnej hipotezy do falsyfikacji.",
+    "missing_data": [
+      "Konkretny opis metody autora, potwierdzenia, wejście, wyjście, sizing, segment i horyzont."
+    ],
+    "ready_for_valid_test": false,
+    "readiness_reason": "Testowana reguła jest sprzeczna z interpretacją źródła i wymaga przeprojektowania.",
+    "qualification_status": "requires_redesign_dequalified",
+    "source_fit": "misaligned",
+    "exact_mismatch": "Karta kupuje wyłącznie dlatego, że close jest poniżej dolnej bandy i wychodzi przy średniej/max20. Bollinger nie przedstawia tej reguły jako swojej strategii; wyraźnie odrzuca interpretację samego tagu bandy jako sygnału kupna. Wyjście do średniej oraz limit20 są również naszym dodatkiem. Zamieszczenie tej wersji na liście źródłowych teorii autora jest merytorycznie mylące mimo wcześniejszego ujawnienia adaptacji.",
+    "correction_needed": "Zmienić kategorię na własną hipotezę/negatywną kontrolę, bez przypisywania autorowi. Dla badania jego teorii utworzyć nową wersję konkretnej opublikowanej metody z potwierdzeniami, kompletnymi regułami i odpowiednimi danymi.",
+    "source_url": "https://www.bollingerbands.com/bollinger-band-rules",
+    "applies_to_theory_version": 1
+  },
+  "acquisition_plan": {
+    "id": "T006",
+    "scope": "Zastąpienie niewłaściwego band-touch pełną, wybraną metodą autora; nie odrzucać teorii Bollingera wynikiemv1.",
+    "gaps": [
+      {
+        "gap_id": "T006-SOURCE-01",
+        "missing_item": "Wybór rzeczywistej metody autora zamiast samodzielnego close<dolna banda.",
+        "category": "source",
+        "why_needed": "Obecne źródło zasad ostrzega przed takim samodzielnym sygnałem. Potrzebny opis konkretnej metody, segmentu i celu.",
+        "acquisition_steps": [
+          "Zarchiwizować oficjalny Method III Manual i stronę metod (PDF już pobrany).",
+          "Przepisać do source_fit wyłącznie wskazane alerty i potwierdzenia; porównać je z regułami v1.",
+          "Wybrać jawnie Method III lub inną konkretną metodę przed implementacją i nadać nową wersję; nie zmieniać wyniku starego testu."
+        ],
+        "candidate_sources": [
+          {
+            "name": "John Bollinger — oficjalna lista metod",
+            "url": "https://www.bollingerbands.com/tradestation-methods",
+            "access_verified": true,
+            "what_available": "Strona autora z odnośnikami do czterech podręczników metod.",
+            "does_not_supply": "Nie zawiera pełnego automatycznego algorytmu i wyników replikacji."
+          },
+          {
+            "name": "John Bollinger — Method III Reversals Manual",
+            "url": "https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf",
+            "access_verified": true,
+            "what_available": "Pobrany bezpłatny oficjalny PDF, 5 stron: alert bandy z Intraday Intensity i zalecenie potwierdzenia ceny.",
+            "does_not_supply": "Nie zamienia wszystkich alertów w kompletny algorytm pozycji; brak w pełni liczbowego potwierdzenia, zamknięcia pozycji, sizingu i historycznego uniwersum."
+          },
+          {
+            "name": "John Bollinger/Genesis toolkit",
+            "url": "https://www.tradenavigator.com/legacy/pdf/BBTK.pdf",
+            "access_verified": true,
+            "verification": {
+              "url": "https://www.tradenavigator.com/legacy/pdf/BBTK.pdf",
+              "at_utc": "2026-10-29T12:39:56.123883+00:00",
+              "file": "sources/round5/bollinger_toolkit.pdf",
+              "status": 200,
+              "final_url": "https://www.tradenavigator.com/legacy/pdf/BBTK.pdf",
+              "content_type": "application/pdf",
+              "bytes": 30927,
+              "sha256": "7eeeb1c894f87559e659dd24836fea1012b8b2a8ff5c408cb862853cfd971c48",
+              "pdf": true
+            },
+            "what_available": "Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system.",
+            "does_not_supply": "Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T006-SOURCE-01",
+              "T006-RULE-02"
+            ]
+          },
+          {
+            "name": "Authorized Bollinger methods explanation",
+            "url": "https://bollingerbands.us/help-methods.php",
+            "access_verified": true,
+            "verification": {
+              "url": "https://bollingerbands.us/help-methods.php",
+              "file": "sources/round5/bb_methods.html",
+              "at_utc": "2026-10-29T12:42:59.165414+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://bollingerbands.us/help-methods.php",
+              "bytes": 25566,
+              "sha256": "039d2a32937090e2fd214798a3f8c7c536f310eff07b42e4f9a8dc40970ab3cc",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization.",
+            "does_not_supply": "A qualitative description, not a fully specified executable strategy.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T006-SOURCE-01",
+              "T006-RULE-02"
+            ]
+          }
+        ],
+        "free_feasibility": "available_free",
+        "verification_acceptance": [
+          "Tytuł i numer metody, autor, URL, hashPDF oraz lokalizacje reguł zapisane.",
+          "Karta nie przypisuje prostego band-touch strategii autora."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Pozostawićv1 wyłącznie jako własną uproszczoną hipotezę/negatywną kontrolę; brak wniosku o autorze.",
+        "next_action": "Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.",
+        "initial_next_action": "Uzupełnić source_fit T006 z pobranego Method III Manual; nie uruchamiać backtestu.",
+        "progress": {
+          "gap_id": "T006-SOURCE-01",
+          "status": "partial",
+          "status_reason": "Dostępny jest właściwy oficjalny Method III Manual, lecz karta v1 nie została zamieniona w oryginalną kompletną metodę.",
+          "criteria_met": [
+            "Oficjalny tekst metody i hash zachowane.",
+            "Wyodrębniono alert z potwierdzeniem wolumenowym; v1 band-touch nie jest metodą autora.",
+            "Round5: Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system.",
+            "Round5: MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization."
+          ],
+          "criteria_unmet": [
+            "Wierna kompletna karta wybranej metody nadal nie istnieje.",
+            "Round5: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained.",
+            "Round5: A qualitative description, not a fully specified executable strategy."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "results/acquisition_methods_receipts/bollinger_method3.pdf",
+              "url": "https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf",
+              "sha256": "9470f93f9849ef96767f7126783a45e549c96d49ada55d3abbaf7d736a67f6c0",
+              "locator": "PDF pp1–3",
+              "what_verified": "Oficjalny opis Method III; alerty, Intraday Intensity i jakościowe potwierdzenie ceny. Nie kompletny algorytm wyjścia i sizingu."
+            },
+            {
+              "evidence_path": "sources/round2/T006_help_methods.html",
+              "url": "https://bollingerbands.us/help-methods.php",
+              "sha256": "039d2a32937090e2fd214798a3f8c7c536f310eff07b42e4f9a8dc40970ab3cc",
+              "locator": "Methods Explanation → Reversals (Method III)",
+              "what_verified": "Opis potwierdzenia wolumenowego; nie odnaleziono w tym publicznym tekście kompletnych reguł exit/sizing."
+            },
+            {
+              "url": "https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf",
+              "evidence_path": "sources/round3/bollinger_method3.pdf",
+              "locator": "Round3boundedsourcecheck",
+              "what_verified": "Full5pageMethodIIImanual read; alerts/confirmation qualitative, fullstrategy stillincomplete."
+            },
+            {
+              "url": "https://www.tradenavigator.com/legacy/pdf/BBTK.pdf",
+              "evidence_path": "sources/round5/bollinger_toolkit.pdf",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system. LIMIT: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained."
+            },
+            {
+              "url": "https://bollingerbands.us/help-methods.php",
+              "evidence_path": "sources/round5/bb_methods.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization. LIMIT: A qualitative description, not a fully specified executable strategy."
+            }
+          ],
+          "next_action": "Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.",
+          "round3_context_next_action": "Szukać pełnej oficjalnej specyfikacji potwierdzenia, wyjścia i sizingu. Jeśli jest niedostępna bezpłatnie, ewentualne własne reguły wymagają osobnego planu i nie są reprodukcją autora."
+        }
+      },
+      {
+        "gap_id": "T006-RULE-02",
+        "missing_item": "Jednoznaczne potwierdzenie alertu, wyjście, sizing, segment/reżim i horyzont.",
+        "category": "rule",
+        "why_needed": "Podręcznik rozróżnia alert od sygnału; opis potwierdzenia jest jakościowy. Bez zamknięcia pozycji nie istnieje kompletny test portfelowy.",
+        "acquisition_steps": [
+          "Wskazać w bezpłatnym podręczniku pola określone i nadal nieokreślone (potwierdzenie, lookback II, exit, ryzyko).",
+          "Sprawdzić, czy legalnie dostępny rozdział książki autora przez istniejącą bibliotekę rozstrzyga te pola; nie kupować produktu/subskrypcji.",
+          "Jeżeli źródło nie narzuca algorytmu, zapisać własne liczbowe uzupełnienie jako nową adaptację i zamrozić je przed wynikiem."
+        ],
+        "candidate_sources": [
+          {
+            "name": "John Bollinger — Method III Reversals Manual",
+            "url": "https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf",
+            "access_verified": true,
+            "what_available": "Pobrany bezpłatny oficjalny PDF, 5 stron: alert bandy z Intraday Intensity i zalecenie potwierdzenia ceny.",
+            "does_not_supply": "Nie zamienia wszystkich alertów w kompletny algorytm pozycji; brak w pełni liczbowego potwierdzenia, zamknięcia pozycji, sizingu i historycznego uniwersum."
+          },
+          {
+            "name": "Bollinger on Bollinger Bands — oficjalna strona produktu",
+            "url": "https://www.bollingerbands.com/bollinger-band-book",
+            "access_verified": true,
+            "what_available": "Sprawdzona oficjalna strona książki i dane bibliograficzne; pełny tekst nie jest bezpłatnie udostępniony na tej stronie.",
+            "does_not_supply": "Nie potwierdzono bezpłatnego pełnego tekstu; nie zakładamy zakupu ani dostępu bibliotecznego."
+          },
+          {
+            "name": "John Bollinger/Genesis toolkit",
+            "url": "https://www.tradenavigator.com/legacy/pdf/BBTK.pdf",
+            "access_verified": true,
+            "verification": {
+              "url": "https://www.tradenavigator.com/legacy/pdf/BBTK.pdf",
+              "at_utc": "2026-10-29T12:39:56.123883+00:00",
+              "file": "sources/round5/bollinger_toolkit.pdf",
+              "status": 200,
+              "final_url": "https://www.tradenavigator.com/legacy/pdf/BBTK.pdf",
+              "content_type": "application/pdf",
+              "bytes": 30927,
+              "sha256": "7eeeb1c894f87559e659dd24836fea1012b8b2a8ff5c408cb862853cfd971c48",
+              "pdf": true
+            },
+            "what_available": "Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system.",
+            "does_not_supply": "Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T006-SOURCE-01",
+              "T006-RULE-02"
+            ]
+          },
+          {
+            "name": "Authorized Bollinger methods explanation",
+            "url": "https://bollingerbands.us/help-methods.php",
+            "access_verified": true,
+            "verification": {
+              "url": "https://bollingerbands.us/help-methods.php",
+              "file": "sources/round5/bb_methods.html",
+              "at_utc": "2026-10-29T12:42:59.165414+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://bollingerbands.us/help-methods.php",
+              "bytes": 25566,
+              "sha256": "039d2a32937090e2fd214798a3f8c7c536f310eff07b42e4f9a8dc40970ab3cc",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization.",
+            "does_not_supply": "A qualitative description, not a fully specified executable strategy.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T006-SOURCE-01",
+              "T006-RULE-02"
+            ]
+          },
+          {
+            "name": "Authorized Bollinger stops explanation",
+            "url": "https://bollingerbands.us/help-stops.php",
+            "access_verified": true,
+            "verification": {
+              "url": "https://bollingerbands.us/help-stops.php",
+              "file": "sources/round5/bb_stops.html",
+              "at_utc": "2026-10-29T12:42:59.167386+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://bollingerbands.us/help-stops.php",
+              "bytes": 28443,
+              "sha256": "43fff790b65b3f6933812f558331aaeaaf7879f5c384627cb93e29058d1b84d3",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Public Chandelier formula and default10period/3ATR, plus other optional stop tools.",
+            "does_not_supply": "Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T006-RULE-02",
+              "T006-EXEC-03"
+            ]
+          },
+          {
+            "name": "Authorized methods section access check",
+            "url": "https://bollingerbands.us/lists.php",
+            "access_verified": true,
+            "verification": {
+              "url": "https://bollingerbands.us/lists.php",
+              "file": "sources/round5/bb_methods_restricted.html",
+              "at_utc": "2026-10-29T12:42:59.231096+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://bollingerbands.us/lists.php",
+              "bytes": 18115,
+              "sha256": "f7d119e472d034ef821bfc6e8338e35bdc93b05bc19448cf0af88d6d88d4a418",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "HTTP200 page says Subscribers only; no free complete rules downloaded.",
+            "does_not_supply": "A200response or free-trial offer is not evidence of access. No subscription/trial activated.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T006-RULE-02"
+            ]
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Każde wymagane pole ma źródłowy lokalizator lub oznaczenie nasze założenie.",
+          "Definicje silnych/słabych warunków oraz kryteria odrzucenia zapisane przed wynikiem.",
+          "Brak pola nie jest zastąpiony arbitralną regułą przypisaną autorowi."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "requires_redesign; można przygotować jawną własną adaptację, ale nie nazywać jej dokładną reprodukcją autora.",
+        "next_action": "Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.",
+        "initial_next_action": "Zrobić listę nieustalonych pól Method III i określić, które da się rozstrzygnąć ze źródła.",
+        "progress": {
+          "gap_id": "T006-RULE-02",
+          "status": "open",
+          "status_reason": "W dodatkowym publicznym opisie i katalogu autora nie zdobyto liczbowego potwierdzenia, pełnego exit, sizingu ani zamkniętego uniwersum.",
+          "criteria_met": [
+            "Oddzielono alert od wykonywalnego sygnału; zmapowano luki.",
+            "Round5: Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system.",
+            "Round5: MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization.",
+            "Round5: Public Chandelier formula and default10period/3ATR, plus other optional stop tools.",
+            "Round5: HTTP200 page says Subscribers only; no free complete rules downloaded."
+          ],
+          "criteria_unmet": [
+            "Jednoznaczne price confirmation.",
+            "Pełne wyjście, sizing, segment/reżim i wyjątki.",
+            "Round5: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained.",
+            "Round5: A qualitative description, not a fully specified executable strategy.",
+            "Round5: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction.",
+            "Round5: A200response or free-trial offer is not evidence of access. No subscription/trial activated."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "results/acquisition_methods_receipts/bollinger_method3.pdf",
+              "url": "https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf",
+              "sha256": "9470f93f9849ef96767f7126783a45e549c96d49ada55d3abbaf7d736a67f6c0",
+              "locator": "PDF pp1–3",
+              "what_verified": "Oficjalny opis Method III; alerty, Intraday Intensity i jakościowe potwierdzenie ceny. Nie kompletny algorytm wyjścia i sizingu."
+            },
+            {
+              "evidence_path": "sources/round2/T006_help_methods.html",
+              "url": "https://bollingerbands.us/help-methods.php",
+              "sha256": "039d2a32937090e2fd214798a3f8c7c536f310eff07b42e4f9a8dc40970ab3cc",
+              "locator": "Methods Explanation → Reversals (Method III)",
+              "what_verified": "Opis potwierdzenia wolumenowego; nie odnaleziono w tym publicznym tekście kompletnych reguł exit/sizing."
+            },
+            {
+              "evidence_path": "sources/round2/T006_author_media.html",
+              "url": "https://www.bollingerbands.com/videos-articles-interviews",
+              "sha256": "15c896f7b014e3b5998e8be533f377cbb600f6a3e1a10740a3e67dc0dff298f3",
+              "locator": "Publiczna lista materiałów autora",
+              "what_verified": "Sprawdzono listę i opisy, nie obejrzano wszystkich nagrań. Nie wolno wnioskować, że nigdzie nie ma pełnej metody."
+            },
+            {
+              "url": "https://www.tradenavigator.com/legacy/pdf/BBTK.pdf",
+              "evidence_path": "sources/round5/bollinger_toolkit.pdf",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system. LIMIT: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained."
+            },
+            {
+              "url": "https://bollingerbands.us/help-methods.php",
+              "evidence_path": "sources/round5/bb_methods.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization. LIMIT: A qualitative description, not a fully specified executable strategy."
+            },
+            {
+              "url": "https://bollingerbands.us/help-stops.php",
+              "evidence_path": "sources/round5/bb_stops.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Public Chandelier formula and default10period/3ATR, plus other optional stop tools. LIMIT: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction."
+            },
+            {
+              "url": "https://bollingerbands.us/lists.php",
+              "evidence_path": "sources/round5/bb_methods_restricted.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "HTTP200 page says Subscribers only; no free complete rules downloaded. LIMIT: A200response or free-trial offer is not evidence of access. No subscription/trial activated."
+            }
+          ],
+          "next_action": "Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.",
+          "round3_context_next_action": "Szukać pełnej oficjalnej specyfikacji potwierdzenia, wyjścia i sizingu. Jeśli jest niedostępna bezpłatnie, ewentualne własne reguły wymagają osobnego planu i nie są reprodukcją autora."
+        }
+      },
+      {
+        "gap_id": "T006-EXEC-03",
+        "missing_item": "Dane OHLCV wybranego rynku oraz wykonalny timing i koszty potwierdzonej metody.",
+        "category": "execution",
+        "why_needed": "Potwierdzenie po zakończeniu świecy i zlecenie na tym samym close mogą być niewykonalne. Dochodzi kontrola wolumenu, splitów i dywidend.",
+        "acquisition_steps": [
+          "Dopiero po wyborze metody zamrozić instrumenty i częstotliwość; nie rozszerzać po wyniku na najlepsze ETF.",
+          "Dla demonstracji pobrać bezpłatne OHLCV z publicznego dostawcy i sprawdzić adjustmenty oraz formułę II.",
+          "Osobno zamrozić wykonalne wykonanie, dostępną w chwili sygnału cenę i koszty; bez bid/ask oznaczyć screening, nie potwierdzenie wykonania."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Yahoo Finance — istniejący lokalny zbiór SPY",
+            "url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY",
+            "access_verified": true,
+            "what_available": "W projekcie pobrano dzienne OHLCV, adjusted close i dywidendy SPY; istnieją receipts/hash.",
+            "does_not_supply": "Nie zapewnia historycznego uniwersum metody ani aukcyjnego bid/ask i rzeczywistych filli."
+          },
+          {
+            "name": "NYSE — Holidays & Trading Hours",
+            "url": "https://www.nyse.com/trade/hours-calendars",
+            "access_verified": true,
+            "what_available": "Oficjalne godziny aukcji i kalendarze2026–2028, odczytane przez web.",
+            "does_not_supply": "Nie jest kompletnym archiwum kalendarza znanego ex ante dla1926–2005 ani kwotowaniami/fillami."
+          },
+          {
+            "name": "Authorized Bollinger stops explanation",
+            "url": "https://bollingerbands.us/help-stops.php",
+            "access_verified": true,
+            "verification": {
+              "url": "https://bollingerbands.us/help-stops.php",
+              "file": "sources/round5/bb_stops.html",
+              "at_utc": "2026-10-29T12:42:59.167386+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://bollingerbands.us/help-stops.php",
+              "bytes": 28443,
+              "sha256": "43fff790b65b3f6933812f558331aaeaaf7879f5c384627cb93e29058d1b84d3",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Public Chandelier formula and default10period/3ATR, plus other optional stop tools.",
+            "does_not_supply": "Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T006-RULE-02",
+              "T006-EXEC-03"
+            ]
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Sygnały wskaźników odtworzone ręcznie na kilku rzeczywistych świecach.",
+          "Żadne wejście nie korzysta z nieznanej jeszcze ceny zamknięcia.",
+          "Koszty scenariuszowe oddzielone od zmierzonych; brak danych jasno blokuje wniosek o wykonalnym wyniku."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Zachować zakres jako demonstrację wskaźnika/alertu albo screening na OHLCV, z brakiem walidacji egzekucji.",
+        "next_action": "Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.",
+        "initial_next_action": "Najpierw zamknąć T006-RULE-02; nie kupować danych wykonania.",
+        "progress": {
+          "gap_id": "T006-EXEC-03",
+          "status": "open",
+          "status_reason": "Nie wybieramy danych ani filli za nieokreśloną metodę; reguły02 nadal blokują wykonanie.",
+          "criteria_met": [
+            "Ustalono, że źródło wymaga aktywności w świecy i dodatkowego potwierdzenia.",
+            "Round5: Public Chandelier formula and default10period/3ATR, plus other optional stop tools."
+          ],
+          "criteria_unmet": [
+            "Dokładna chwila decyzji i wykonalny fill.",
+            "Właściwe uniwersum, dostawca i koszty.",
+            "Round5: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "results/acquisition_methods_receipts/bollinger_method3.pdf",
+              "url": "https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf",
+              "sha256": "9470f93f9849ef96767f7126783a45e549c96d49ada55d3abbaf7d736a67f6c0",
+              "locator": "PDF pp1–3",
+              "what_verified": "Oficjalny opis Method III; alerty, Intraday Intensity i jakościowe potwierdzenie ceny. Nie kompletny algorytm wyjścia i sizingu."
+            },
+            {
+              "url": "https://bollingerbands.us/help-stops.php",
+              "evidence_path": "sources/round5/bb_stops.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Public Chandelier formula and default10period/3ATR, plus other optional stop tools. LIMIT: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction."
+            }
+          ],
+          "next_action": "Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.",
+          "round3_context_next_action": "Szukać pełnej oficjalnej specyfikacji potwierdzenia, wyjścia i sizingu. Jeśli jest niedostępna bezpłatnie, ewentualne własne reguły wymagają osobnego planu i nie są reprodukcją autora."
+        }
+      }
+    ]
+  },
+  "quantconnect_data_review": null
+}

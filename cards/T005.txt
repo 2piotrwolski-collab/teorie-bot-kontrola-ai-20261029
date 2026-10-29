@@ -1,0 +1,549 @@
+Snapshot: 2026-10-29T18:43:35.427389+00:00
+T005 · Archiwalny v1: Zmienione reguły / adaptacja
+
+IBS: warunkowe zwroty ETF-ów akcyjnych
+
+NIEROZSTRZYGNIĘTA — WYNIKI OGRANICZONEGO BADANIA
+
+Rynek / instrumenty
+ETF-y akcyjne notowane w USA, szczególnie equity-index ETF. Nie zakładamy transferu do wszystkich lokalnych rynków.
+
+Segment
+Dzienny IBS bucket; źródło pokazuje różnice m.in. według wolumenu, zakresu, zmienności i dnia tygodnia.
+
+Reżim i horyzont
+Źródło bada bull/bear według własnego200-sesyjnego zwrotu oraz high/low volatility/volume. Kwalifikator ma być dostępny ex ante; opisowej mediany pełnej próby nie używać jako rzekomej regułyPIT. Ważna sprzeczność źródła: tekst używa20 dni zmienności, aTable6 10dni i mediany całejpróby. Dokładne odtworzenie tego podziału wymaga wyjaśnienia. · Główny efekt: następny jednodniowy close-to-close. Odrębny source-defined wariant: IBS jako filtr swing RSI3.
+
+Co rzeczywiście twierdzi źródło
+Autor bada następny jednodniowy close-to-close po IBS. Na stronie 4 opisuje dzienną strategię long przy IBS≤0,2 i short przy IBS≥0,8. Wysoki wolumen jest ważny w źródłowej grupie USA. Nowe long-only warianty wykonania nie są pełnym odtworzeniem tej strategii.
+
+Cel oryginalnego badania
+Warunkowa różnica następnych zwrotów pomiędzy bucketamiIBS oraz poprawa określonej strategiiRSI przez filtrIBS.
+
+Właściwe porównanie
+Średni następny zwrot danegoETF i przeciwne buckety w tej samej próbie; dla wariantuRSI porównanie identycznegoRSI z filtrem i bez. SPY jest oddzielną bramką projektu.
+
+Archiwalny wariant v1: IBS: zamknięcie blisko minimum świecy
+
+Dlaczego v1 nie rozstrzyga tej teorii
+
+Pierwotny główny efekt dotyczy następnego jednodniowego close-to-close po wartości IBS; dodatkowa strategia filtruje Cutler RSI3 regułą IBS<=0.5. Pilot kupuje dopiero następny open i trzyma do IBS>0.8 lub maksymalnie 10 sesji. Zmienia zarówno badany interwał zwrotu, jak i holding oraz pomija warstwę RSI w strategii z artykułu.
+
+Co pozwala ocenić stary wynik
+
+Tylko wielodniową wersję IBS .2/.8/max10 na SPY, nie jednodniową zależność IBS ani strategię IBS jako filtra opisaną w artykule.
+
+Jak zaprojektować właściwy test
+
+Dla strategii źródłowej trzeba odtworzyć dzienne long/short, wykonanie i borrow. Nasze long-only open→open oraz estymacja15:40→fillproxy15:45 są osobnymi wariantami. Zachowano źródłowy horyzont jednej sesji, bez arbitralnego trzymania10dni.
+
+Pytanie falsyfikujące: Czy niskiIBS prognozuje wyższy następny close-to-close w podanym segmencie oraz czy source-defined filtr poprawia tę samą bazową strategię?
+
+Brakujące dane: ['Dokładne close/overnight/intraday zwroty i egzekucja przy zamknięciu.', 'Źródłowe filtry i ich definicjePIT dla wariantu transakcyjnego.', 'Wyjaśnienie20-vs10-dniowej zmienności w źródle; jawna mapa developed/developing; kompletna historia33ETF wraz zRSX.']
+
+Uzupełnianie braków · runda 4
+
+Ponowny odczyt strony 4 potwierdził, że źródłowa Table 5 opisuje dzienne long przy IBS≤0,2 i short przy IBS≥0,8. Trzymanie long aż do przeciwnego sygnału nie jest tą strategią.
+
+Przetestowano osobny long-only wariant jednodniowy na źródłowej grupie USA, z wysokim wolumenem i wykonaniem open→open; pominięcie short oraz przesunięcie czasu są jawne.
+
+W osobnej próbie 15:40→15:45 z 42 sesji IWM i QQQ mają dodatnie wyniki, ale odpowiednio tylko jedno i dwa wejścia. SPY nie wygenerował wejścia. Wszystkie koszty i przypadki zerowej aktywności zapisano.
+
+Yahoo wskazuje CSI jako dostawcę części historycznych danych USA. Publiczny interfejs Yahoo nie jest niezależnym potwierdzeniem danych CSI autora; zgodność oryginalnej próby, korekt i vintage nadal wymaga kontroli.
+
+Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, IWM, QQQ, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.
+
+Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.
+T005-R1 · Częściowo uzupełniony
+Źródłowy horyzont następnej sesjiC2C i ekstremaIBS≤0.2/≥0.8 zostały odtworzone w US3. Rozszerzany jest zakres źródłowego uniwersum; nie wymyślamy10dniowego wyjścia.
+
+Potwierdzone:
+
+Jednodniowy target bez portfela i arbitralnej reguły wyjścia.
+
+SPY/IWM/QQQ to jawna grupa autoraTable11.
+
+Zachowano wynikUS3 w6okresach oraz niezależną kontrolęSQL.
+
+Wykonano źródłową obserwację32z33ETF oraz obie zadeklarowane konwencje mediany wolumenu; wszystkie wyniki zapisane, bez selekcji po efekcie.
+
+Pozostało:
+
+Odtworzenie wszystkich5bucketów i wszystkich podziałów publikacji.
+
+Dokładna konwencja CSIadjustment.
+
+Table1,2,11; PDFp2–5 (https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf) · Rynki, daty, target, jawna grupaUS3.
+
+Następny krok: Rozszerzyć późniejszą kontrolę wyłącznie w osobnym planie i zbadać źródłowe5bucketów; nie mieszać mechanizmu z wykonaniem zlecenia.
+T005-D1 · Częściowo uzupełniony
+Pozyskano komplet historii źródłowego okresu dla32z33ETF u darmowego dostawcyYahoo; CSI nie pozyskano. RSX pozostał w rejestrze jako brak, nie został podmieniony.
+
+Potwierdzone:
+
+Dokładna lista33 i daty startuTable2, end2013-12-05.
+
+32 pobrane serie bez invalidOHLC i bez brakujących source-sessiondates względemSPYdiagnostic.
+
+GXG→COLO to potwierdzona przez giełdę zmiana tickera tego samegoETF, nie inny instrument.
+
+Wolumen0 jest liczony i jawnie oznaczany; nie utożsamiamy go z potwierdzonym CSIvolume.
+
+Niezależny reviewPASS; jawnyRSXmissing i21ETFzUNVALIDATED_VOLUME zachowane w wyniku.
+
+Pozostało:
+
+Darmowa kompletna dziennaOHLC/volume/adjustedhistoryRSX2007–2013.
+
+OryginalneCSI, niezależny kalendarz i vendor-adjustment.
+
+Weryfikacja dni zerowego wolumenu na niezależnym źródle.
+
+ILF ma3049bar/3048adjacentpairs względem źródłowych3047observations; dokładnyCSIvendoralignment nieustalony.
+
+Niezależność upstreamdanych: Yahoo wskazujeCSI; publiczny interfejs nie oznacza innego niezależnego dostawcy ani oryginalnego autorowskiego datasetu.
+
+June20,2025 exchange corporate action (https://www.miaxglobal.com/alert/2025/06/20/miax-exchange-group-options-markets-corporate-action-alert-global-x-msci-1) · GXG symbol changes toCOLO effective2025-06-23; odzyskano historię pod nowym symbolem.
+
+RSX delisting2023 afterhalt2022 (https://www.vaneck.com/us/en/blogs/emerging-markets-equity/rsx-rsxj-liquidation-faq/) · Historyczna tożsamość i brak bieżącego obrotu; sam dokument nie dostarcza OHLC.
+
+Round3boundedsourcecheck (https://help.yahoo.com/kb/SLN2310.html) · Yahoo documents CSI as upstreamUS historicalprovider; publicYahoointerface is not independentvendorconfirmation nor originalpaperdataset.
+
+Następny krok: Pozyskać darmowe archiwumRSX2007–2013 oraz niezależne potwierdzenie zero-volume i konwencjiadjustment. Nie usuwać różnicyNILF do dopasowania źródła.
+T005-R2 · Otwarty
+Sprzeczność10vs20dni volatility i brak jawnej source-mapdeveloped/emerging nie zostały rozwiązane; nie zgadujemy podziału.
+
+Potwierdzone:
+
+Sprzeczność udokumentowano.
+
+US3vsother30 jest źródłowo jawny, ale to inny podział.
+
+Pozostało:
+
+Authorclarification lub supplementarycode vol10vs20.
+
+Jawna mapaticker→developed/emerging dla historycznej próby.
+
+Następny krok: Sprawdzić archiwa strony autora i supplementarycode; pozostałe obserwacje oznaczyć jako nieobejmujące tych podziałów.
+T005-E1 · Częściowo uzupełniony
+Wykonano i zapisano jawny wariant po modelowanych kosztach; rzeczywiste fille, pełne koszty osobiste i wierna egzekucja źródła pozostają niepotwierdzone.
+
+Potwierdzone:
+
+Nie raportujemyCAGR ani rachunku z obserwacji.
+
+Osobny zamrożony plan, ledger, model aktualnej taryfy i scenariusze spreadu/poślizgu, kontrole przyczynowości i rachunków.
+
+Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/T005.json
+
+Pozostało:
+
+Time-stamped executablequotes, final-close signalcutoff, realspreads/commissions.
+
+Bid/ask, partial fills, rozliczenie i kolejność sprzedaży/zakupu, realny poślizg, podatki, FX oraz KID/uprawnienia UE. Brak paper forward i partner consensus.
+
+Następny krok: Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania.
+
+Rzeczywiste kwotowania przed zamknięciem · 28.10.2026
+
+Historyczne SIP o 15:45 NY: zmierzony spread; osobno model kosztu zakupu i natychmiastowej sprzedaży dla budżetu 10 000 USD, bez ruchu rynku.
+
+ETFSpread bpsPołowa spreadu bpsModel kosztu pełnego obrotu USD
+
+SPY0.3890.19453.2855
+
+IWM0.35640.17823.3319
+
+QQQ0.55260.27633.461
+
+BIL1.09090.54554.0891
+
+Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.
+
+IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.
+
+Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.
+
+Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L.
+
+Dane wyniku i ograniczenia
+
+Dzisiejsza kontrola wykonania · 29.10.2026
+
+Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.
+
+ZakresStan
+
+SPYoczekuje
+
+IWMoczekuje
+
+QQQoczekuje
+
+BILoczekuje
+
+Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.
+
+IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.
+
+Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.
+
+Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L.
+
+Dane wyniku i ograniczenia
+
+Warianty strategii po modelowanych kosztach transakcyjnych
+
+Decyzja na zamknięciu → najwcześniej następne otwarcie. Wynik w USD po modelowanej prowizji IBKR Pro Fixed USA, spreadzie/poślizgu i założonej rezerwie 1 bps przy sprzedaży, przed podatkiem i FX. Skala 10 000 USD służy policzeniu minimalnych prowizji; nie jest założeniem o kapitale użytkownika. BIL jest kupowany/sprzedawany z kosztami. 0/5/20 bps oznacza dodatkowy scenariusz spreadu i poślizgu na stronę; prowizje są zawsze naliczane.
+
+Wersja wykonaniaOkresDodatkowe bps/stronęZwrot (%)SPY (%)Własny benchmark (%)Max DD (%)Koszty USDŚr. ekspozycja ryzykowna (%)
+
+T005_SPY_IBS_LOW_HIVOL_OPEN2010–28.10.20265-3.80822.10822.10-35.958747.7010.56
+
+T005_SPY_IBS_LOW_HIVOL_OPEN2010–20195-9.96249.41249.41-19.295061.299.74
+
+T005_SPY_IBS_LOW_HIVOL_OPEN2020–20235-10.0556.2556.25-23.942798.9514.81
+
+T005_SPY_IBS_LOW_HIVOL_OPEN2024–28.10.2026031.9868.8868.88-4.02306.987.48
+
+T005_SPY_IBS_LOW_HIVOL_OPEN2024–28.10.2026519.6868.7168.71-4.211373.877.48
+
+T005_SPY_IBS_LOW_HIVOL_OPEN2024–28.10.202620-10.7868.2068.20-13.193990.557.48
+
+T005_IWM_IBS_LOW_HIVOL_OPEN2010–28.10.20265-23.50822.10455.67-41.689543.7511.18
+
+T005_IWM_IBS_LOW_HIVOL_OPEN2010–20195-6.78249.41201.39-21.095580.219.70
+
+T005_IWM_IBS_LOW_HIVOL_OPEN2020–20235-15.4556.2526.73-22.662703.1114.21
+
+T005_IWM_IBS_LOW_HIVOL_OPEN2024–28.10.2026013.3068.8845.27-14.29426.4512.13
+
+T005_IWM_IBS_LOW_HIVOL_OPEN2024–28.10.20265-1.9168.7145.13-17.351741.2912.13
+
+T005_IWM_IBS_LOW_HIVOL_OPEN2024–28.10.202620-36.4368.2044.69-38.584705.4812.13
+
+T005_QQQ_IBS_LOW_HIVOL_OPEN2010–28.10.2026549.80822.101706.10-21.079578.979.74
+
+T005_QQQ_IBS_LOW_HIVOL_OPEN2010–201951.25249.41408.90-21.074153.167.87
+
+T005_QQQ_IBS_LOW_HIVOL_OPEN2020–2023516.7556.2595.54-13.163562.0715.11
+
+T005_QQQ_IBS_LOW_HIVOL_OPEN2024–28.10.2026041.0968.8881.34-7.29357.918.74
+
+T005_QQQ_IBS_LOW_HIVOL_OPEN2024–28.10.2026525.8768.7181.15-7.841591.038.74
+
+T005_QQQ_IBS_LOW_HIVOL_OPEN2024–28.10.202620-10.6668.2080.61-15.764508.598.74
+
+To jawne warianty wykonania, nie pełne reprodukcje publikacji. Szczegółowa macierz zgodności, wszystkie scenariusze, NAV, roczne wyniki i transakcje są zachowane.
+
+Żaden z ośmiu wariantów dziennych nie spełnił bramki przewagi nad SPY w obu okresach 2020–2023 oraz 2024–2026 przy 5 i 20 bps. To wynik tych portfeli; nie obalenie teorii lub rzadkiego modułu wejścia.
+
+Dla Fabera własny benchmark to ten sam koszyk pięciu ETF-ów, dla pozostałych — ten sam bazowy ETF. Ochrona ryzyka i cel pobicia pełnego SPY są oddzielnymi pytaniami.
+
+Cena otwarcia OHLC, jednoczesne wykonanie koszyka, kolejność sprzedaży/zakupu i pełne fille pozostają przybliżeniami. Faktyczny spread, poślizg, rozliczenie, podatki, FX i dostępność ETF/KID dla inwestora UE nie zostały potwierdzone.
+
+Wszystkie okresy są retrospektywne i częściowo nakładają się. Brak nietkniętego OOS, paper forward i konsensusu z Claude’em. Kontrola rachunkowa inną implementacją: PASS dla 168 ścieżek.
+
+Dane wyniku i ograniczenia
+
+Próba wykonania przed zamknięciem: 42 sesje, 31.08–28.10.2026
+
+Sygnał korzysta wyłącznie ze świec kończących się do 15:40 czasu Nowego Jorku. Zakładamy ich dostępność przed 15:45; cena wykonania jest przybliżona otwarciem świecy 15:45. Dzięki temu zachowujemy większą część ruchu nocnego. Dane pięciominutowe pozyskano bezpłatnie; nie są to rzeczywiste bid/ask ani fille brokera. Warianty i koszty zamrożono przed wynikiem tej próby.
+
+WariantDodatkowe bps/stronęZwrot (%)SPY (%)Bazowy ETF (%)Wejścia ryzykowneSymulowane operacjeKoszty USDOperacje >1% wol. 5 min
+
+T005_SPY_IBS_LOW_HIVOL_NEARCLOSE00.560.780.78023.010
+
+T005_SPY_IBS_LOW_HIVOL_NEARCLOSE50.460.680.680213.030
+
+T005_SPY_IBS_LOW_HIVOL_NEARCLOSE200.160.380.380243.040
+
+T005_IWM_IBS_LOW_HIVOL_NEARCLOSE02.100.78-4.29169.050
+
+T005_IWM_IBS_LOW_HIVOL_NEARCLOSE51.800.68-4.391639.340
+
+T005_IWM_IBS_LOW_HIVOL_NEARCLOSE200.890.38-4.6716129.690
+
+T005_QQQ_IBS_LOW_HIVOL_NEARCLOSE02.410.781.1621015.100
+
+T005_QQQ_IBS_LOW_HIVOL_NEARCLOSE51.900.681.0621065.800
+
+T005_QQQ_IBS_LOW_HIVOL_NEARCLOSE200.380.380.76210216.380
+
+Tylko 42 sesje i 0–2 wejścia na wariant. Nie wolno z tego wyprowadzać prawdopodobieństwa zysku, stabilnej przewagi ani wybierać zwycięzcy.
+
+Przy zerowej liczbie wejść wynik pochodzi wyłącznie z BIL, nie z przetestowanego sygnału.
+
+Czas świecy nie dowodzi czasu udostępnienia danych. Dostępność bezpłatnego strumienia przed zleceniem nie została zmierzona; 15:40→15:45 jest założeniem wymagającym sprawdzenia w bieżącej sesji.
+
+IBS używa częściowego dziennego high/low/wolumenu do 15:40, a nie przyszłych finalnych wartości. To nadal zmiana względem źródłowego finalnego close i strategii long/short.
+
+CAGR nie został wyliczony dla tej krótkiej próby. Drawdown w plikach jest próbkowany o 15:45, nie pełnym ryzykiem intraday.
+
+30 ścieżek uzgodniono inną implementacją z oryginalnymi plikami; 378 kontroli IBS potwierdza granicę informacji. To kontrola rachunków, nie niezależna walidacja przez partnera.
+
+Dane wyniku i ograniczenia
+
+Wynik: IBS w 32 z 33 źródłowych ETF-ów
+
+Te same progi IBS ≤0,2 oraz ≥0,8, następny jednodniowy zwrot adjusted close-to-close. Każdy ETF ma zakres dat z Table 2. Nie połączono rynków w jeden wynik ani nie policzono zależnych ETF-ów jako niezależnych głosów. Wszystkie 33 pozycje pozostają w tabeli.
+
+ETFOkres źródłowyN niski/wysoki IBSŚredni zwrot: niski IBS (bps)Wysoki IBS (bps)Różnica (bps)Wykluczone płaskie świeceWolumen
+
+ECH2007-11-20–2013-12-05352 / 41916.9117.56-0.660QA Yahoo bez zer; nie CSI
+
+EEM2003-04-15–2013-12-05576 / 81042.71-0.8443.551QA Yahoo bez zer; nie CSI
+
+EFA2001-08-27–2013-12-05582 / 92627.14-10.2337.360QA Yahoo bez zer; nie CSI
+
+EPHE2010-09-29–2013-12-05148 / 23128.80-3.7632.560QA Yahoo bez zer; nie CSI
+
+EPI2008-02-26–2013-12-05275 / 39239.53-31.8571.380QA Yahoo bez zer; nie CSI
+
+EPP2001-10-26–2013-12-05609 / 96624.76-7.1231.8825NIEZWERYFIKOWANY — zera/braki
+
+EWA1996-04-01–2013-12-05992 / 145950.51-29.3179.82180NIEZWERYFIKOWANY — zera/braki
+
+EWC1996-04-01–2013-12-051010 / 127220.38-5.2025.58422NIEZWERYFIKOWANY — zera/braki
+
+EWD1996-04-01–2013-12-05998 / 143737.89-16.5154.40473NIEZWERYFIKOWANY — zera/braki
+
+EWG1996-04-01–2013-12-05919 / 137929.10-12.1141.21100NIEZWERYFIKOWANY — zera/braki
+
+EWH1996-04-01–2013-12-05881 / 110852.90-34.6487.5450NIEZWERYFIKOWANY — zera/braki
+
+EWI1996-04-01–2013-12-051105 / 144135.14-22.2457.38159NIEZWERYFIKOWANY — zera/braki
+
+EWJ1996-04-01–2013-12-05822 / 120245.01-30.1175.1211QA Yahoo bez zer; nie CSI
+
+EWL1996-04-01–2013-12-051003 / 143750.12-25.8575.97266NIEZWERYFIKOWANY — zera/braki
+
+EWM1996-04-01–2013-12-051025 / 124431.37-32.7064.0758NIEZWERYFIKOWANY — zera/braki
+
+EWO1996-04-01–2013-12-05935 / 128633.46-17.4150.87780NIEZWERYFIKOWANY — zera/braki
+
+EWP1996-04-01–2013-12-051038 / 144734.85-20.1154.96376NIEZWERYFIKOWANY — zera/braki
+
+EWQ1996-04-01–2013-12-051072 / 141426.84-10.8737.70159NIEZWERYFIKOWANY — zera/braki
+
+EWS1996-04-01–2013-12-05944 / 113551.90-38.2790.1756NIEZWERYFIKOWANY — zera/braki
+
+EWT2000-06-23–2013-12-05674 / 86748.20-36.6684.8642NIEZWERYFIKOWANY — zera/braki
+
+EWU1996-04-01–2013-12-05851 / 137234.75-20.9255.68168NIEZWERYFIKOWANY — zera/braki
+
+EWY2000-05-12–2013-12-05742 / 90646.19-19.6565.8427NIEZWERYFIKOWANY — zera/braki
+
+EWZ2000-07-14–2013-12-05703 / 92015.785.6610.1299NIEZWERYFIKOWANY — zera/braki
+
+EZA2003-05-28–2013-12-05544 / 85948.31-9.4657.7724NIEZWERYFIKOWANY — zera/braki
+
+FXI2004-10-12–2013-12-05426 / 60154.22-15.4969.720QA Yahoo bez zer; nie CSI
+
+GXG2009-02-09–2013-12-05274 / 3326.7813.69-6.9137NIEZWERYFIKOWANY — zera/braki
+
+IDX2009-01-20–2013-12-05258 / 36327.8611.5016.3610NIEZWERYFIKOWANY — zera/braki
+
+ILF2001-10-26–2013-12-05695 / 102015.7116.77-1.05114NIEZWERYFIKOWANY — zera/braki
+
+IWM2000-05-26–2013-12-05757 / 102625.08-0.2025.280QA Yahoo bez zer; nie CSI
+
+QQQ1999-03-10–2013-12-05796 / 100125.29-7.5832.870QA Yahoo bez zer; nie CSI
+
+RSX2007-05-07–2013-12-05brakbrakbrakbrakbrakbrak danych, bez zamiennika
+
+SPY1993-01-29–2013-12-051080 / 150017.22-2.1619.380QA Yahoo bez zer; nie CSI
+
+THD2008-04-01–2013-12-05281 / 41951.51-10.1461.650QA Yahoo bez zer; nie CSI
+
+RSX: brak szeregu. GXG: tożsamość COLO potwierdzona zmianą tickera, zachowano źródłową nazwę.
+
+Bezpłatne dane Yahoo zastępują CSI; brak ścisłej reprodukcji liczb autora. ILF ma dodatkową parę sesji względem liczności publikacji — nie usuwano dat dla dopasowania wyniku.
+
+Są to średnie opisowe bez przedziałów i testów istotności dla tego rozszerzenia. Nie dowodzą alfy ani zysku bota po kosztach.
+
+Dwadzieścia jeden ETF-ów ma niezweryfikowany wolumen z historycznymi zerami. Ich cenowe obserwacje pozostają, lecz wyniki grup wolumenowych nie potwierdzają źródłowego twierdzenia o wolumenie.
+
+Niejednoznaczny podział zmienności 10/20 dni i developed/emerging pozostaje poza zakresem.
+
+Dane wyniku i ograniczenia
+
+IBS: źródłowa grupa USA i podział według wolumenu
+
+SPY/IWM/QQQ to wskazana przez autora grupa USA. Główna konwencja: dzisiejszy wolumen większy od mediany poprzednich 500 sesji. Druga, zapisana przed wynikiem, włącza dzisiejszą sesję do okna 500. Remisy należą do pozostałych dni.
+
+ETFKonwencja medianyHigh-volume: N niski/wysoki IBSRóżnica IBS w high-volume (bps)Pozostałe: N niski/wysoki IBSRóżnica IBS w pozostałych (bps)Brak rozgrzewki/klasyfikacji
+
+IWMprior500_strict455 / 57539.44149 / 290-3.70500
+
+IWMinclusive500_strict455 / 57639.56149 / 289-4.04499
+
+QQQprior500_strict416 / 38348.03246 / 4607.14500
+
+QQQinclusive500_strict416 / 38349.14246 / 4617.16499
+
+SPYprior500_strict775 / 88524.44200 / 4749.10500
+
+SPYinclusive500_strict775 / 88524.78200 / 4747.78499
+
+Porównania opisowe, bez rodzinnej istotności i bez wyniku rachunku. Wszystkie warianty pozostałych ETF-ów zapisano w pliku wyniku wraz z flagami jakości.
+
+Brak CSI i nieustalonej źródłowej konwencji mediany nie został ukryty. Nie wybieramy lepszego okna po wyniku.
+
+Dane wyniku i ograniczenia
+
+Następne działanie dla karty: Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania.
+
+Pełny zapis ustaleń, dowodów i braków tej rundy
+
+Wcześniejsza obserwacja US3: okres źródłowy i późniejsza kontrola
+
+SPY/IWM/QQQ to wskazana przez autora grupa amerykańskich ETF-ów. Mierzymy następny jednodniowy zwrot close-to-close po IBS≤0,2 i IBS≥0,8. Nie tworzymy pozycji, reguły wyjścia ani wyniku rachunku. Yahoo zastępuje CSI wyłącznie jako jawne przybliżenie danych.
+
+ETFOkresn niski / wysoki IBSŚredni następny zwrot: niski IBS (bps)Wysoki IBS (bps)Różnica (bps)95% przedział punktowy (bps)
+
+SPY1993-01-29 – 2013-12-051080 / 1500+17.22-2.16+19.38[+9.88; +30.96]
+
+IWM2000-05-26 – 2013-12-05757 / 1026+25.08-0.20+25.28[+9.81; +42.40]
+
+QQQ1999-03-10 – 2013-12-05796 / 1001+25.29-7.58+32.87[+16.42; +49.47]
+
+SPY2014-01-01 – 2026-10-27570 / 991+12.71+3.38+9.33[-5.51; +25.46]
+
+IWM2014-01-01 – 2026-10-27641 / 868+11.56+0.12+11.44[-2.02; +25.25]
+
+QQQ2014-01-01 – 2026-10-27566 / 1035+25.08+3.76+21.32[+3.59; +40.57]
+
+1 bps = 0,01 punktu procentowego. Przedziały: moving-block bootstrap,20sesji,2000powtórzeń. Są punktowe, nie jednoczesne dla wszystkich zależnych porównań. W tym wcześniejszym badaniu US3 nie sprawdzono pozostałych 30 ETF-ów, interakcji wolumenu ani niejednoznacznego podziału zmienności. Dane późniejsze są retrospektywne, nie nietkniętym końcowym OOS. To obserwacja mechanizmu, nie potwierdzenie zarabialności netto.
+
+Pełny wynik wraz z podziałem bull/bear i ograniczeniami
+
+Braki i sposób ich zdobycia
+
+Uzyskanie pliku nie zamyka braku automatycznie. Musi on spełnić poniższe warunki kontroli; przybliżenie nie staje się danymi oryginalnymi.
+T005-R1 · Źródłowyjednodniowytarget i buckety zamiastholdingdo10dni.
+Dlaczego potrzebne: V1 testujeinnąścieżkę; pierwotnaobserwacja to następnyclose-to-close.
+
+Dostępność: Dostępne bezpłatnie — trzeba pozyskać i zweryfikować
+
+Jak zdobyć:
+
+Użyćresults/ibs_source_protocol.json i33tickerówTable1.
+
+Zamrozićlow<=.2/high>=.8 lub jawne5bucketzkonwencjągranic.
+
+OddzielićtestefektuodoryginalnegowariantuCutlerRSI3+IBS<=.5 i od naszejv1strategii.
+
+Źródła i zakres:
+
+Pagonidis — pierwotnyIBSPDF (https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf) · dostęp sprawdzonyPobranyPDF z33tickerami,datami,CSI,bucketami i tabelamireżimów.Nie dostarcza: SurowychCSI; brak jawnej mapydeveloped/developing; sprzeczność20vs10dni dla zmienności.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Target jestclose_(t+1)/close_t-1 i przypisany do sygnałut.
+
+Flatbars,błędneOHLC i granicebucketów jawne,countswykluczeńwidoczne.
+
+Brakpozycji10dni w teścieefektu.
+
+Gdy nie uda się zdobyć: Tylkooznaczona własnastrategiav1; nie jejporażkajakoobalenieIBS.
+
+Następne działanie: Rozszerzyć późniejszą kontrolę wyłącznie w osobnym planie i zbadać źródłowe5bucketów; nie mieszać mechanizmu z wykonaniem zlecenia.
+T005-D1 · 33źródłoweETF zCSI, datami i obsługą niedostępnychserii.
+Dlaczego potrzebne: Próbaautora ma33ETFodróżnychstartówdo2013-12-05;3USbenchmarki to tylkojawny podzbiór.
+
+Dostępność: Bezpłatnie dostępna część lub przybliżenie
+
+Jak zdobyć:
+
+SprawdzićlegalnieposiadanąhistorięCSI i dostępnośćkażdegotickera.
+
+Dla freeproxy zbadaćYahoo oddzielniedlaSPY/IWM/QQQ; zachowaćrawsnapshot iDQ.
+
+Nie usuwaćcichoRSX/pozostałychniedostępnychETF; nie nazywaćpodzbiorupełnąreprodukcją.
+
+Źródła i zakres:
+
+Pagonidis — pierwotnyIBSPDF (https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf) · dostęp sprawdzonyPobranyPDF z33tickerami,datami,CSI,bucketami i tabelamireżimów.Nie dostarcza: SurowychCSI; brak jawnej mapydeveloped/developing; sprzeczność20vs10dni dla zmienności.
+
+Yahoo — publiczna próbkaSPY chart (https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1=946684800&period2=1793145600&interval=1d&events=div%2Csplits&includeAdjustedClose=true) · dostęp sprawdzonyPotwierdzony publiczny odczyt dziennychOHLC,adjusted-close i zdarzeń dlaSPY; możliwa bezpłatna baza ograniczonej adaptacji.Nie dostarcza: Nie potwierdzono tym kompletu innychsymboli, źródłowychCSI/GFD, bid/ask ani gwarancji trwałego dostępu.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Źródłowyend to5grudnia2013, nie12maja.
+
+Lista33 i zakreskażdegoETF porównane zTable2.
+
+Adjustment,volume,brakisedelisting są sprawdzone; różniceCSI/Yahoojawne.
+
+Gdy nie uda się zdobyć: Ograniczonydemonstracyjnytestefektu na z góry wskazanymUSsubsetSPY/IWM/QQQ, bez wniosków dla pełnych33ETF.
+
+Następne działanie: Pozyskać darmowe archiwumRSX2007–2013 oraz niezależne potwierdzenie zero-volume i konwencjiadjustment. Nie usuwać różnicyNILF do dopasowania źródła.
+T005-R2 · Niejednoznacznośćvol10vs20dni oraz mapydeveloped/developing.
+Dlaczego potrzebne: Publikacjama sprzecznetekst/table i niejawny countrymap; nie wolno udawaćPITexactsplit.
+
+Dostępność: Dostępność jeszcze nieustalona
+
+Jak zdobyć:
+
+Zachowaćodwołania:tekstPDFs.5 mówi20dni;Table6s.14 mówi10dni/samplemedian.
+
+Sprawdzićpubliczneerratum/kodautora w jednymograniczonymprzeglądzie.
+
+Jeślibraak, wyłączyćtenpodziałzprimarytestu; ewentualne10/20variants zamrozićjako sensitivity zrejestremprób.
+
+UżywaćjawnychUSsubset3 i bullreturn200>=0; mapydeveloped/emerging nie zgadywać.
+
+Źródła i zakres:
+
+Pagonidis — pierwotnyIBSPDF (https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf) · dostęp sprawdzonyPobranyPDF z33tickerami,datami,CSI,bucketami i tabelamireżimów.Nie dostarcza: SurowychCSI; brak jawnej mapydeveloped/developing; sprzeczność20vs10dni dla zmienności.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Oryginalnafullsamplemedian nie jestopisana jakoPITtradingsignal.
+
+Każdyreżim ma definicję znanąprzedtargetem.
+
+Nie wybiera siękorzystniejszego reżimupo wynikach.
+
+Gdy nie uda się zdobyć: Coreeffect tylko w jawnieodtworzonychsegmentach; nierozstrzygnięteregimes pozostająrequiresclarification.
+
+Następne działanie: Sprawdzić archiwa strony autora i supplementarycode; pozostałe obserwacje oznaczyć jako nieobejmujące tych podziałów.
+T005-E1 · Wykonalnośćhandlu po sygnaleIBS oraz faktycznekoszty.
+Dlaczego potrzebne: Dodatni conditionalclose-to-close niejestwykonywalnymzyskiem; poznanieclose następuje przednext-open lecz po hipotetycznymfillclose.
+
+Dostępność: Bezpłatnie dostępna część lub przybliżenie
+
+Jak zdobyć:
+
+Najpierwwykonaćtylkoprawidłowyteststatystyczny zodpowiedniąniepewnością.
+
+Potemdopiero nowawersjatransakcyjna zczasemdecyzji,pomiaramispread iopóźnienia.
+
+Przybrakubid/ask korzystaćzuczciwegocostscenario lubprospektywnegopaper, bezpłatnychzakupówdanych.
+
+Źródła i zakres:
+
+Pagonidis — pierwotnyIBSPDF (https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf) · dostęp sprawdzonyPobranyPDF z33tickerami,datami,CSI,bucketami i tabelamireżimów.Nie dostarcza: SurowychCSI; brak jawnej mapydeveloped/developing; sprzeczność20vs10dni dla zmienności.
+
+NYSE — trading information (https://www.nyse.com/trade/trading-information) · dostęp sprawdzonyPubliczne zasady aukcji, sesji i odnośniki do kalendarza.Nie dostarcza: Historycznychbid/ask,filli i pełnego archiwum reguł aukcji dla całej próby.
+
+Yahoo — publiczna próbkaSPY chart (https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1=946684800&period2=1793145600&interval=1d&events=div%2Csplits&includeAdjustedClose=true) · dostęp sprawdzonyPotwierdzony publiczny odczyt dziennychOHLC,adjusted-close i zdarzeń dlaSPY; możliwa bezpłatna baza ograniczonej adaptacji.Nie dostarcza: Nie potwierdzono tym kompletu innychsymboli, źródłowychCSI/GFD, bid/ask ani gwarancji trwałego dostępu.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Raportefektunie zawierawerdyktu oalpha netto.
+
+Nieprzemyconosamecloseexecution zfinalnymclose.
+
+Transakcyjnyplanmazapiskosztów ibenchmark wedługregułprojektu.
+
+Gdy nie uda się zdobyć: Zachowaćwniosekstatystyczny ograniczony dosygnału; statusnettrade niepotwierdzony.
+
+Następne działanie: Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania.
+
+Krótka karta dla AI · Źródło (https://www.naaim.org/wp-content/uploads/2014/04/00V_Alexander_Pagonidis_The-IBS-Effect-Mean-Reversion-in-Equity-ETFs-1.pdf) · Pełna karta, audyt i stare wyniki
+
+Evidence and code: ../code/index.json, ../evidence/.
+This is a logic-review package; raw licensed market datasets are not included.

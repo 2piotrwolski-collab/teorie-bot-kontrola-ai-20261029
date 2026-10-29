@@ -1,0 +1,612 @@
+{
+  "snapshot_at_utc": "2026-10-29T18:43:35.427389+00:00",
+  "scope": "Research snapshot. No full original-theory verification; no live orders.",
+  "card": {
+    "id": "T007",
+    "round": 4,
+    "findings": [
+      "Zaprogramowano jawny kalendarz NYSE, w tym święta i nadzwyczajne zamknięcia. Kalendarz pasuje do wszystkich dziewięciu pobranych serii; reguła nie czyta przyszłych cen ani przyszłej długości miesiąca z danych.",
+      "Wykonano wariant SPY open→open dla pozycji −1/+1/+2/+3 z BIL i kosztami. Jest to implementacja ETF z innymi nocami granicznymi niż źródłowe close→close.",
+      "W latach 2024–28.10.2026 wariant przy 5 bps uzyskał +10,47% wobec +68,71% pełnego SPY. Nie rozstrzyga to oryginalnej statystycznej obserwacji szerokiego rynku.",
+      "Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.",
+      "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii."
+    ],
+    "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Zweryfikować wykonalne zlecenia na granicach okna oraz dostępny instrument UE; nie przesuwać okna do najlepszego miesiąca. Źródłowy CRSP/EW i pełne kontrolki pozostają otwarte.",
+    "overall_status": "strategie_kosztowe_provisional",
+    "gap_updates": [
+      {
+        "gap_id": "T007-DATA-01",
+        "status": "partial",
+        "status_reason": "Publiczny French Mkt-RF+RF jest pasującym do mechanizmu szerokim US VW market return, nie przypadkowym ETF. Nadal nie jest dokładnym oryginalnym CRSP VW/EW vintage.",
+        "criteria_met": [
+          "Zweryfikowano darmowy plik daily, jego zakres i definicję szerokiego equity market.",
+          "Można zaplanować scoped observation tego samego mechanizmu VW bez zastępowania goSPY.",
+          "Wykonano4zadeklarowane okresy; niezależnySQLpotwierdza wszystkie liczności i średnie."
+        ],
+        "criteria_unmet": [
+          "Dokładna wersja źródłowego CRSP VW i osobne EW.",
+          "Publiczny plik zaczyna1926-07-01, więc nie obejmuje całegoJanuary1926.",
+          "Nie odtwarzamy35rynków ani analiz wielkości/cen/volume."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/turn_month.pdf",
+            "url": "https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf",
+            "sha256": "ff96e65274af4f3651a37a05e42944bda89b8e5ee58a9b1397e18fd1051237ca",
+            "locator": "PDF pp2–4; druk pp49–51; Table1 i jej przypis",
+            "what_verified": "CRSP VW/EW, okresy1926–2005,1926–1986,1987–2005; grupy(-1,+1,+2,+3) oraz(-10..-2,+4..+10). Odczytano i wizualnie sprawdzono Table1."
+          },
+          {
+            "evidence_path": "sources/round2/T007_french_factors_definition.html",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library/f-f_factors.html",
+            "sha256": "9a851fe8e34edef5ef2b7039cd296fb20892fce1ba3de5deca53481e034988af",
+            "locator": "Construction → Rm-Rf",
+            "what_verified": "Publiczny Mkt-RF to szeroki amerykański value-weight equity market minus RF; dodanie RF odtwarza jego prosty market return."
+          },
+          {
+            "evidence_path": "sources/round2/T007_french_data_library.html",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html",
+            "sha256": "dd48316327898aea2e3ad3dd070b34c3325ce3b25ced7f719245efd5ad36146a",
+            "locator": "Daily download; akapity December2012, CIZ/FIZ oraz monthly reconstruction",
+            "what_verified": "Bieżące uniwersum i rewizje nie są identyczne z oryginalnym CRSP vintage użytym w publikacji."
+          },
+          {
+            "evidence_path": "sources/round2/ff_daily.zip",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip",
+            "sha256": "96c23b88e651cbfff3740a53f8225e59ee39893371e96385a1d8125ec2cd9c89",
+            "locator": "CSV header i datowane wiersze; availability only",
+            "what_verified": "Bezpłatny kompletny plik pobrany; w tej rundzie nie liczono stóp ani kontrastuTOM."
+          }
+        ],
+        "next_action": "Pozyskać matching historycznyCRSPvintage i wariantEW; obecne wyniki zachować jako ograniczoną obserwacjęFrenchVW.",
+        "round3_context_next_action": "Zweryfikować wykonalne zlecenia na granicach okna oraz dostępny instrument UE; nie przesuwać okna do najlepszego miesiąca. Źródłowy CRSP/EW i pełne kontrolki pozostają otwarte."
+      },
+      {
+        "gap_id": "T007-RULE-02",
+        "status": "resolved",
+        "status_reason": "Uzyskano i wizualnie potwierdzono właściwe definicje okna i grupy odniesienia oraz pytanie o średni daily return, nieCAGRportfela. Rozwiązanie dotyczy tych definicji, nie pełnej reprodukcji wszystkichstatystyk autora.",
+        "criteria_met": [
+          "TOM to cztery pozycje−1,+1,+2,+3.",
+          "OtherDays to−10..−2,+4..+10; nie wszystkie pozostałe daty miesiąca.",
+          "Źródłowe okresy i VW/EW zapisane; proponowany scopeVW jawnie ograniczony."
+        ],
+        "criteria_unmet": [],
+        "evidence": [
+          {
+            "evidence_path": "sources/turn_month.pdf",
+            "url": "https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf",
+            "sha256": "ff96e65274af4f3651a37a05e42944bda89b8e5ee58a9b1397e18fd1051237ca",
+            "locator": "PDF pp2–4; druk pp49–51; Table1 i jej przypis",
+            "what_verified": "CRSP VW/EW, okresy1926–2005,1926–1986,1987–2005; grupy(-1,+1,+2,+3) oraz(-10..-2,+4..+10). Odczytano i wizualnie sprawdzono Table1."
+          }
+        ],
+        "next_action": "Zachować zamrożone okna i wszystkie4wyniki; dokładne source-boundary porównać z kodem autora, jeśli będzie dostępny.",
+        "round3_context_next_action": "Zweryfikować wykonalne zlecenia na granicach okna oraz dostępny instrument UE; nie przesuwać okna do najlepszego miesiąca. Źródłowy CRSP/EW i pełne kontrolki pozostają otwarte."
+      },
+      {
+        "gap_id": "T007-EXEC-03",
+        "status": "partial",
+        "status_reason": "Wykonano i zapisano jawny wariant po modelowanych kosztach; rzeczywiste fille, pełne koszty osobiste i wierna egzekucja źródła pozostają niepotwierdzone.",
+        "criteria_met": [
+          "Wyłączono portfel, zlecenia i model filli z pytania obserwacyjnego.",
+          "Osobny zamrożony plan, ledger, model aktualnej taryfy i scenariusze spreadu/poślizgu, kontrole przyczynowości i rachunków.",
+          "Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/T007.json"
+        ],
+        "criteria_unmet": [
+          "KalendarzPIT, wykonanie, koszty i cash dla ewentualnej strategii pozostają osobnym etapem.",
+          "Bid/ask, partial fills, rozliczenie i kolejność sprzedaży/zakupu, realny poślizg, podatki, FX oraz KID/uprawnienia UE. Brak paper forward i partner consensus."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/turn_month.pdf",
+            "url": "https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf",
+            "sha256": "ff96e65274af4f3651a37a05e42944bda89b8e5ee58a9b1397e18fd1051237ca",
+            "locator": "PDF pp2–4; druk pp49–51; Table1 i jej przypis",
+            "what_verified": "CRSP VW/EW, okresy1926–2005,1926–1986,1987–2005; grupy(-1,+1,+2,+3) oraz(-10..-2,+4..+10). Odczytano i wizualnie sprawdzono Table1."
+          },
+          {
+            "url": "https://www.nyse.com/publicdocs/nyse/ICE_NYSE_2026_Yearly_Trading_Calendar.pdf",
+            "evidence_path": "research_round3/data_quality.json",
+            "locator": "Round3boundedsourcecheck",
+            "what_verified": "DeclaredNYSEcalendar checked against9series; actualbrokerfills remainunverified."
+          }
+        ],
+        "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Zweryfikować wykonalne zlecenia na granicach okna oraz dostępny instrument UE; nie przesuwać okna do najlepszego miesiąca. Źródłowy CRSP/EW i pełne kontrolki pozostają otwarte.",
+        "round3_context_next_action": "Zweryfikować wykonalne zlecenia na granicach okna oraz dostępny instrument UE; nie przesuwać okna do najlepszego miesiąca. Źródłowy CRSP/EW i pełne kontrolki pozostają otwarte."
+      }
+    ],
+    "source_urls_verified": [
+      "https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf",
+      "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html",
+      "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library/f-f_factors.html",
+      "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip"
+    ],
+    "observations": [
+      {
+        "id": "QUOTE_PREFLIGHT_20261028_T007",
+        "title": "Rzeczywiste kwotowania przed zamknięciem · 28.10.2026",
+        "summary": "Historyczne SIP o 15:45 NY: zmierzony spread; osobno model kosztu zakupu i natychmiastowej sprzedaży dla budżetu 10 000 USD, bez ruchu rynku.",
+        "columns": [
+          "ETF",
+          "Spread bps",
+          "Połowa spreadu bps",
+          "Model kosztu pełnego obrotu USD"
+        ],
+        "rows": [
+          [
+            "SPY",
+            0.389,
+            0.1945,
+            3.2855
+          ],
+          [
+            "BIL",
+            1.0909,
+            0.5455,
+            4.0891
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_20261028.json"
+      },
+      {
+        "id": "ARRIVAL_20261029_T007",
+        "title": "Dzisiejsza kontrola wykonania · 29.10.2026",
+        "summary": "Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.",
+        "columns": [
+          "Zakres",
+          "Stan"
+        ],
+        "rows": [
+          [
+            "SPY",
+            "oczekuje"
+          ],
+          [
+            "BIL",
+            "oczekuje"
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_DZISIAJ/T007.json"
+      },
+      {
+        "id": "MODERN_EXECUTION_NET_R2_T007",
+        "title": "Warianty strategii po modelowanych kosztach transakcyjnych",
+        "summary": "Decyzja na zamknięciu → najwcześniej następne otwarcie. Wynik w USD po modelowanej prowizji IBKR Pro Fixed USA, spreadzie/poślizgu i założonej rezerwie 1 bps przy sprzedaży, przed podatkiem i FX. Skala 10 000 USD służy policzeniu minimalnych prowizji; nie jest założeniem o kapitale użytkownika. BIL jest kupowany/sprzedawany z kosztami. 0/5/20 bps oznacza dodatkowy scenariusz spreadu i poślizgu na stronę; prowizje są zawsze naliczane.",
+        "columns": [
+          "Wersja wykonania",
+          "Okres",
+          "Dodatkowe bps/stronę",
+          "Zwrot (%)",
+          "SPY (%)",
+          "Własny benchmark (%)",
+          "Max DD (%)",
+          "Koszty USD",
+          "Śr. ekspozycja ryzykowna (%)"
+        ],
+        "rows": [
+          [
+            "T007_SPY_TOM_OPEN",
+            "2010–28.10.2026",
+            5,
+            "25.31",
+            "822.10",
+            "822.10",
+            "-26.91",
+            "5399.12",
+            "19.07"
+          ],
+          [
+            "T007_SPY_TOM_OPEN",
+            "2010–2019",
+            5,
+            "-13.32",
+            "249.41",
+            "249.41",
+            "-26.91",
+            "3111.32",
+            "19.08"
+          ],
+          [
+            "T007_SPY_TOM_OPEN",
+            "2020–2023",
+            5,
+            "30.82",
+            "56.25",
+            "56.25",
+            "-8.53",
+            "1483.38",
+            "19.09"
+          ],
+          [
+            "T007_SPY_TOM_OPEN",
+            "2024–28.10.2026",
+            0,
+            "18.30",
+            "68.88",
+            "68.88",
+            "-7.62",
+            "207.53",
+            "19.04"
+          ],
+          [
+            "T007_SPY_TOM_OPEN",
+            "2024–28.10.2026",
+            5,
+            "10.47",
+            "68.71",
+            "68.71",
+            "-8.82",
+            "895.05",
+            "19.04"
+          ],
+          [
+            "T007_SPY_TOM_OPEN",
+            "2024–28.10.2026",
+            20,
+            "-10.05",
+            "68.20",
+            "68.20",
+            "-16.59",
+            "2691.93",
+            "19.04"
+          ]
+        ],
+        "evidence_report": "NET_STRATEGIE/T007.json",
+        "limitations": [
+          "To jawne warianty wykonania, nie pełne reprodukcje publikacji. Szczegółowa macierz zgodności, wszystkie scenariusze, NAV, roczne wyniki i transakcje są zachowane.",
+          "Żaden z ośmiu wariantów dziennych nie spełnił bramki przewagi nad SPY w obu okresach 2020–2023 oraz 2024–2026 przy 5 i 20 bps. To wynik tych portfeli; nie obalenie teorii lub rzadkiego modułu wejścia.",
+          "Dla Fabera własny benchmark to ten sam koszyk pięciu ETF-ów, dla pozostałych — ten sam bazowy ETF. Ochrona ryzyka i cel pobicia pełnego SPY są oddzielnymi pytaniami.",
+          "Cena otwarcia OHLC, jednoczesne wykonanie koszyka, kolejność sprzedaży/zakupu i pełne fille pozostają przybliżeniami. Faktyczny spread, poślizg, rozliczenie, podatki, FX i dostępność ETF/KID dla inwestora UE nie zostały potwierdzone.",
+          "Wszystkie okresy są retrospektywne i częściowo nakładają się. Brak nietkniętego OOS, paper forward i konsensusu z Claude’em. Kontrola rachunkowa inną implementacją: PASS dla 168 ścieżek."
+        ]
+      },
+      {
+        "id": "T007_US_VW_MARKET_TOM_OBSERVATION_R2",
+        "title": "Wynik: przełom miesiąca na szerokim rynku USA",
+        "summary": "Dzienny zwrot rynku ważonego kapitalizacją = French Mkt-RF + RF. TOM: ostatnia sesja poprzedniego i pierwsze trzy sesje bieżącego miesiąca. OtherDays: −10…−2 oraz +4…+10. 1 bps = 0,01 punktu procentowego.",
+        "columns": [
+          "Okres planu",
+          "Rzeczywiste daty",
+          "N TOM",
+          "N Other",
+          "Średnia TOM (bps)",
+          "Średnia Other (bps)",
+          "Różnica (bps)",
+          "95% CI różnicy (bps)",
+          "Dodatkowe kopie dat"
+        ],
+        "rows": [
+          [
+            "source_full_available",
+            "1926-07-21–2005-12-30",
+            3813,
+            15257,
+            "16.14",
+            "1.23",
+            "14.91",
+            "[11.69; 17.95]",
+            108
+          ],
+          [
+            "source_early_available",
+            "1926-07-21–1986-12-31",
+            2901,
+            11609,
+            "16.27",
+            "1.44",
+            "14.83",
+            "[11.40; 17.99]",
+            80
+          ],
+          [
+            "source_1987_2005",
+            "1987-01-02–2005-12-30",
+            912,
+            3648,
+            "15.71",
+            "0.55",
+            "15.16",
+            "[6.34; 23.39]",
+            28
+          ],
+          [
+            "later_historical_control",
+            "2006-01-03–2026-09-15",
+            995,
+            3975,
+            "5.67",
+            "3.97",
+            "1.70",
+            "[-4.37; 7.93]",
+            31
+          ]
+        ],
+        "evidence_report": "TOM_OBSERWACJA.json",
+        "limitations": [
+          "Darmowa seria French jest konceptualnie zgodna z szerokim rynkiem VW, lecz nie identyczna z oryginalnym CRSP vintage. Brak wariantu równoważonego i pierwszych sześciu miesięcy 1926 r.",
+          "Stałe okna i konwencja granic są jawne. W krótkich miesiącach daty mogą należeć do dwóch zdarzeń; nie usuwano ich po wyniku.",
+          "Przedziały są opisowym dodatkiem z bootstrapu blokami 12 miesięcy, 2000 powtórzeń; nie reprodukcją źródłowego t-testu. Okresy źródłowe nakładają się.",
+          "Nie obliczono portfela, zysku netto ani wykonywalnych filli. Późniejsze dane są kontrolą retrospektywną."
+        ]
+      }
+    ],
+    "source_detail": null,
+    "source_update_artifact": "research_round2/source_updates_T006_T008.json",
+    "source_update_sha256": "408fb7981d414b0e45e82666f44a6585e9957bdc622fc446c706d2b6a8f612fb",
+    "observation_ids": [
+      "QUOTE_PREFLIGHT_20261028_T007",
+      "ARRIVAL_20261029_T007",
+      "MODERN_EXECUTION_NET_R2_T007",
+      "T007_US_VW_MARKET_TOM_OBSERVATION_R2"
+    ],
+    "previous_findings_round2": [
+      "Zweryfikowano właściwe okno przełomu miesiąca: ostatnia sesja poprzedniego miesiąca i pierwsze trzy sesje bieżącego.",
+      "Źródłowa grupa porównawcza obejmuje pozycje −10 do −2 oraz +4 do +10, łącznie 16 pozycji, a nie wszystkie inne dni miesiąca.",
+      "Darmowy French Mkt-RF + RF pozwala zbadać ten sam mechanizm na szerokim rynku ważonym kapitalizacją. Nie jest dokładnym vintage CRSP ani indeksem równoważonym.",
+      "Badanie wykonano: różnica średniego zwrotu TOM minus źródłowe OtherDays wynosi 14,91 bps dziennie w dostępnej historii do 2005 r. i 1,70 bps w latach 2006–2026; późniejszy przedział obejmuje zero. Niezależna kontrola SQL potwierdziła wszystkie liczności i średnie."
+    ],
+    "strategy_result_file": "NET_STRATEGIE/T007.json",
+    "execution_evidence_file": "WYKONANIE_DZISIAJ/T007.json"
+  },
+  "source_qualification": {
+    "id": "T007",
+    "intended_market": "AkcjeUSA i inne rynki akcji; główne badanie długiej historiiCRSP oraz porównania międzynarodowe.",
+    "segment": "Okno kalendarzowe: ostatnia sesja poprzedniego miesiąca i pierwsze trzy kolejnego, rozumiane w source-defined zwrotach dziennych.",
+    "regime": "Efekt kalendarzowy badany przez cykle; źródło nie uzasadnia wyboru wyłącznie korzystnych hoss po fakcie.",
+    "horizon": "Cztery sesyjne zwrotyclose-to-close w każdym miesiącu; pozostałe dni jako grupa odniesienia.",
+    "universe": [
+      "CRSP value/equal-weight US equity portfolios oraz rynki międzynarodowe z publikacji."
+    ],
+    "original_objective": "Porównanie średniego dziennego zwrotu w oknie przełomu miesiąca ze zwrotem w pozostałych dniach i kontrolami.",
+    "correct_benchmark": "Pozostałe dni tego samego rynku w tej samej próbie; w implementacji inwestowalnej również total-return tego samego pasywnego rynku i cash return.",
+    "falsification_question": "Czy z góry określone okno(-1,+3) ma wyższy średni close-to-close zwrot niż pozostałe dni po odpowiednich kontrolach?",
+    "missing_data": [
+      "Odtworzenie źródłowego okna zwrotów i właściwej populacji.",
+      "Dla strategii: kalendarz znany przed decyzją, źródłowa cena wykonania i dochód poza oknem."
+    ],
+    "ready_for_valid_test": false,
+    "readiness_reason": "Open-to-open w v1 przesuwa część overnight; wymagany nowy test statystyczny oryginalnego okna przed oceną strategii.",
+    "qualification_status": "requires_return_window_redesign",
+    "source_fit": "adaptation",
+    "exact_mismatch": "Źródło analizuje dzienne zwroty przypisane sesjom (-1,+3), czyli granice close-to-close. Pilot inwestuje od open ostatniej sesji do open czwartej sesji następnego miesiąca: pomija overnight przed ostatnią sesją i dodaje overnight po trzeciej sesji. Test CAGR versus całoroczne SPY nie jest tym samym co test wyższej średniej stopy zwrotu w oknie. Historyczny zrealizowany kalendarz ma dodatkową niepewność PIT.",
+    "correction_needed": "Oddzielnie odtworzyć porównanie średnich dziennych zwrotów w oryginalnym oknie i poza nim. W nowym teście egzekucji jawnie zamrozić granice close/open oraz kalendarz znany w chwili decyzji. Uwzględnić stopę gotówki.",
+    "source_url": "https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf",
+    "applies_to_theory_version": 1
+  },
+  "acquisition_plan": {
+    "id": "T007",
+    "scope": "Oddzielić oryginalny efekt statystyczny przełomu miesiąca od inwestowalnej adaptacjiETF.",
+    "gaps": [
+      {
+        "gap_id": "T007-DATA-01",
+        "missing_item": "Oryginalne dzienne serieCRSP value/equal-weight i zgodna populacja oraz vintage.",
+        "category": "data",
+        "why_needed": "PojedynczySPY oraz jego krótsza historia nie odtwarzają populacji i okresu autorów.",
+        "acquisition_steps": [
+          "Z pełnej publikacji zapisać dokładne nazwy serii, okresy, sposób reinwestycji i międzynarodową próbę.",
+          "Sprawdzić istniejące uprawnienia instytucjonalne do CRSP; bez nowej zgody niczego nie kupować.",
+          "Jeśli brak licencji, użyć publicznegoFrench Daily wyłącznie jako jawnie innego rynku/proxy w nowym planie; nie zastępować nim cicho obu oryginalnych indeksów."
+        ],
+        "candidate_sources": [
+          {
+            "name": "McConnell i Xu — pełny tekst na stronie współautora",
+            "url": "https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf",
+            "access_verified": true,
+            "what_available": "Lokalny PDF pobrany wcześniejHTTP200; potwierdzony SHA i dostępna definicja źródłowych zwrotów/okna.",
+            "does_not_supply": "Brak pakietu surowych CRSP i pełnego kodu replikacji; bieżące otwarcie web miało timeout, nie usuwa to wcześniej pobranego PDF."
+          },
+          {
+            "name": "CRSP Historical Indexes — oficjalny produkt",
+            "url": "https://indexes.morningstar.com/research-data-products/crsp-historical-indexes-database",
+            "access_verified": true,
+            "what_available": "Opis baz i metod; dostawca jawnie wskazuje dostarczanie licencjobiorcom i subskrypcję.",
+            "does_not_supply": "Nie znaleziono bezpłatnego pełnego oryginalnego zbioru CRSP."
+          },
+          {
+            "name": "Kenneth French — bezpłatny dzienny plik czynników",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip",
+            "access_verified": true,
+            "what_available": "Pobrany publiczny ZIP z dziennymi Mkt-RF, SMB, HML i RF; opis konstrukcji dostępny osobno.",
+            "does_not_supply": "Nie jest dokładną historyczną serią CRSP value/equal-weight z McConnell ani S&P Composite Frencha 1980; brak open, bid/ask i oryginalnego vintage."
+          },
+          {
+            "name": "French — opis konstrukcji czynników",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library/f-f_factors.html",
+            "access_verified": true,
+            "what_available": "Dokładna definicja publicznej seriiMkt-RF iRF.",
+            "does_not_supply": "Nie potwierdza tożsamości z oryginalną serią McConnell/Xu."
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Oryginalne nazwyserii i daty wpisane do karty.",
+          "Dane oryginalne mają potwierdzone prawo użycia i porównanie z tabelą autora; proxy ma osobną nazwę i ograniczony wniosek."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "blocked_original_data; osobna demonstracja efektu na bezpłatnym rynku po nowym freeze, bez werdyktu o oryginalnej próbie.",
+        "next_action": "Pozyskać matching historycznyCRSPvintage i wariantEW; obecne wyniki zachować jako ograniczoną obserwacjęFrenchVW.",
+        "initial_next_action": "Wypisać mapę wymaganych serii CRSP z PDF i sprawdzić istniejący dostęp.",
+        "progress": {
+          "gap_id": "T007-DATA-01",
+          "status": "partial",
+          "status_reason": "Publiczny French Mkt-RF+RF jest pasującym do mechanizmu szerokim US VW market return, nie przypadkowym ETF. Nadal nie jest dokładnym oryginalnym CRSP VW/EW vintage.",
+          "criteria_met": [
+            "Zweryfikowano darmowy plik daily, jego zakres i definicję szerokiego equity market.",
+            "Można zaplanować scoped observation tego samego mechanizmu VW bez zastępowania goSPY.",
+            "Wykonano4zadeklarowane okresy; niezależnySQLpotwierdza wszystkie liczności i średnie."
+          ],
+          "criteria_unmet": [
+            "Dokładna wersja źródłowego CRSP VW i osobne EW.",
+            "Publiczny plik zaczyna1926-07-01, więc nie obejmuje całegoJanuary1926.",
+            "Nie odtwarzamy35rynków ani analiz wielkości/cen/volume."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/turn_month.pdf",
+              "url": "https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf",
+              "sha256": "ff96e65274af4f3651a37a05e42944bda89b8e5ee58a9b1397e18fd1051237ca",
+              "locator": "PDF pp2–4; druk pp49–51; Table1 i jej przypis",
+              "what_verified": "CRSP VW/EW, okresy1926–2005,1926–1986,1987–2005; grupy(-1,+1,+2,+3) oraz(-10..-2,+4..+10). Odczytano i wizualnie sprawdzono Table1."
+            },
+            {
+              "evidence_path": "sources/round2/T007_french_factors_definition.html",
+              "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library/f-f_factors.html",
+              "sha256": "9a851fe8e34edef5ef2b7039cd296fb20892fce1ba3de5deca53481e034988af",
+              "locator": "Construction → Rm-Rf",
+              "what_verified": "Publiczny Mkt-RF to szeroki amerykański value-weight equity market minus RF; dodanie RF odtwarza jego prosty market return."
+            },
+            {
+              "evidence_path": "sources/round2/T007_french_data_library.html",
+              "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html",
+              "sha256": "dd48316327898aea2e3ad3dd070b34c3325ce3b25ced7f719245efd5ad36146a",
+              "locator": "Daily download; akapity December2012, CIZ/FIZ oraz monthly reconstruction",
+              "what_verified": "Bieżące uniwersum i rewizje nie są identyczne z oryginalnym CRSP vintage użytym w publikacji."
+            },
+            {
+              "evidence_path": "sources/round2/ff_daily.zip",
+              "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip",
+              "sha256": "96c23b88e651cbfff3740a53f8225e59ee39893371e96385a1d8125ec2cd9c89",
+              "locator": "CSV header i datowane wiersze; availability only",
+              "what_verified": "Bezpłatny kompletny plik pobrany; w tej rundzie nie liczono stóp ani kontrastuTOM."
+            }
+          ],
+          "next_action": "Pozyskać matching historycznyCRSPvintage i wariantEW; obecne wyniki zachować jako ograniczoną obserwacjęFrenchVW.",
+          "round3_context_next_action": "Zweryfikować wykonalne zlecenia na granicach okna oraz dostępny instrument UE; nie przesuwać okna do najlepszego miesiąca. Źródłowy CRSP/EW i pełne kontrolki pozostają otwarte."
+        }
+      },
+      {
+        "gap_id": "T007-RULE-02",
+        "missing_item": "Dokładna implementacja okna (-1,+3), close-to-close i testu średnich wobec pozostałych sesji.",
+        "category": "rule",
+        "why_needed": "Okno open-to-open v1 przesuwa granice nocnych zwrotów. CAGR strategii nie jest pierwotną statystyką artykułu.",
+        "acquisition_steps": [
+          "Z pobranego PDF przepisać definicję jednostki obserwacji i przynależności sesji do okna wraz z lokalizatorem.",
+          "Przygotować ręczne przykłady przełomów miesięcy ze świętami i weekendami bez liczenia wyniku finansowego.",
+          "Zamrozić statystykę, grupę odniesienia, podokresy i sposób uwzględnienia zależności obserwacji przed testem."
+        ],
+        "candidate_sources": [
+          {
+            "name": "McConnell i Xu — pełny tekst na stronie współautora",
+            "url": "https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf",
+            "access_verified": true,
+            "what_available": "Lokalny PDF pobrany wcześniejHTTP200; potwierdzony SHA i dostępna definicja źródłowych zwrotów/okna.",
+            "does_not_supply": "Brak pakietu surowych CRSP i pełnego kodu replikacji; bieżące otwarcie web miało timeout, nie usuwa to wcześniej pobranego PDF."
+          }
+        ],
+        "free_feasibility": "available_free",
+        "verification_acceptance": [
+          "Dla każdej obserwacji wiadomo, z którego poprzedniego close do którego close liczony jest zwrot.",
+          "Reguła oznaczania sesji zgadza się z definicją autora na ręcznych przykładach.",
+          "Cel testu jest zgodny ze średnią warunkową, a późniejsza strategia ma osobny plan."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "requires_return_window_redesign; brak wniosku o efekcie źródłowym z wyniku v1.",
+        "next_action": "Zachować zamrożone okna i wszystkie4wyniki; dokładne source-boundary porównać z kodem autora, jeśli będzie dostępny.",
+        "initial_next_action": "Sporządzić protokół statystyczny źródłowego okna z lokalnego PDF.",
+        "progress": {
+          "gap_id": "T007-RULE-02",
+          "status": "resolved",
+          "status_reason": "Uzyskano i wizualnie potwierdzono właściwe definicje okna i grupy odniesienia oraz pytanie o średni daily return, nieCAGRportfela. Rozwiązanie dotyczy tych definicji, nie pełnej reprodukcji wszystkichstatystyk autora.",
+          "criteria_met": [
+            "TOM to cztery pozycje−1,+1,+2,+3.",
+            "OtherDays to−10..−2,+4..+10; nie wszystkie pozostałe daty miesiąca.",
+            "Źródłowe okresy i VW/EW zapisane; proponowany scopeVW jawnie ograniczony."
+          ],
+          "criteria_unmet": [],
+          "evidence": [
+            {
+              "evidence_path": "sources/turn_month.pdf",
+              "url": "https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf",
+              "sha256": "ff96e65274af4f3651a37a05e42944bda89b8e5ee58a9b1397e18fd1051237ca",
+              "locator": "PDF pp2–4; druk pp49–51; Table1 i jej przypis",
+              "what_verified": "CRSP VW/EW, okresy1926–2005,1926–1986,1987–2005; grupy(-1,+1,+2,+3) oraz(-10..-2,+4..+10). Odczytano i wizualnie sprawdzono Table1."
+            }
+          ],
+          "next_action": "Zachować zamrożone okna i wszystkie4wyniki; dokładne source-boundary porównać z kodem autora, jeśli będzie dostępny.",
+          "round3_context_next_action": "Zweryfikować wykonalne zlecenia na granicach okna oraz dostępny instrument UE; nie przesuwać okna do najlepszego miesiąca. Źródłowy CRSP/EW i pełne kontrolki pozostają otwarte."
+        }
+      },
+      {
+        "gap_id": "T007-EXEC-03",
+        "missing_item": "Dla strategii: kalendarz znany przed zleceniem, granice close/open, dochód gotówki i koszty.",
+        "category": "execution",
+        "why_needed": "Odtworzenie opisanego efektu statystycznego nie dowodzi jego wykonywalności w aucie.",
+        "acquisition_steps": [
+          "Oddzielić plan reprodukcji statystyki od planu handlowego.",
+          "Zarchiwizować oficjalny kalendarz i reguły aukcji dla testu prospektywnego; historyczne nadzwyczajne zamknięcia pozostawić jako osobną lukę PIT.",
+          "Ustalić dostępny moment decyzji/zlecenia i przyjęty cash-return;RF z biblioteki French może służyć tylko jawnej konwencji badawczej, nie gwarantowanemu oprocentowaniu rachunku."
+        ],
+        "candidate_sources": [
+          {
+            "name": "NYSE — Holidays & Trading Hours",
+            "url": "https://www.nyse.com/trade/hours-calendars",
+            "access_verified": true,
+            "what_available": "Oficjalne godziny aukcji i kalendarze2026–2028, odczytane przez web.",
+            "does_not_supply": "Nie jest kompletnym archiwum kalendarza znanego ex ante dla1926–2005 ani kwotowaniami/fillami."
+          },
+          {
+            "name": "Kenneth French — bezpłatny dzienny plik czynników",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip",
+            "access_verified": true,
+            "what_available": "Pobrany publiczny ZIP z dziennymi Mkt-RF, SMB, HML i RF; opis konstrukcji dostępny osobno.",
+            "does_not_supply": "Nie jest dokładną historyczną serią CRSP value/equal-weight z McConnell ani S&P Composite Frencha 1980; brak open, bid/ask i oryginalnego vintage."
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Brak wiedzy z przyszłej listy sesji przy podejmowaniu zlecenia.",
+          "Źródłowe close-to-close nie zostało bez uzasadnienia zamienione na inne granice.",
+          "Osobno zapisano statystyczny rezultat i wynik egzekucji po kosztach."
+        ],
+        "blocking_original_test": false,
+        "fallback_if_unavailable": "Można odtworzyć sam efekt statystyczny na dostępnej zgodnej serii; test handlowy pozostaje niepotwierdzony.",
+        "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Zweryfikować wykonalne zlecenia na granicach okna oraz dostępny instrument UE; nie przesuwać okna do najlepszego miesiąca. Źródłowy CRSP/EW i pełne kontrolki pozostają otwarte.",
+        "initial_next_action": "Po protokole statystycznym przygotować osobną kartę wykonalnego wariantu, bez uruchamiania go automatycznie.",
+        "progress": {
+          "gap_id": "T007-EXEC-03",
+          "status": "partial",
+          "status_reason": "Wykonano i zapisano jawny wariant po modelowanych kosztach; rzeczywiste fille, pełne koszty osobiste i wierna egzekucja źródła pozostają niepotwierdzone.",
+          "criteria_met": [
+            "Wyłączono portfel, zlecenia i model filli z pytania obserwacyjnego.",
+            "Osobny zamrożony plan, ledger, model aktualnej taryfy i scenariusze spreadu/poślizgu, kontrole przyczynowości i rachunków.",
+            "Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/T007.json"
+          ],
+          "criteria_unmet": [
+            "KalendarzPIT, wykonanie, koszty i cash dla ewentualnej strategii pozostają osobnym etapem.",
+            "Bid/ask, partial fills, rozliczenie i kolejność sprzedaży/zakupu, realny poślizg, podatki, FX oraz KID/uprawnienia UE. Brak paper forward i partner consensus."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/turn_month.pdf",
+              "url": "https://business.purdue.edu/faculty/mcconnell/publications/Equity-Returns-at-the-Turn-of-the-Month.pdf",
+              "sha256": "ff96e65274af4f3651a37a05e42944bda89b8e5ee58a9b1397e18fd1051237ca",
+              "locator": "PDF pp2–4; druk pp49–51; Table1 i jej przypis",
+              "what_verified": "CRSP VW/EW, okresy1926–2005,1926–1986,1987–2005; grupy(-1,+1,+2,+3) oraz(-10..-2,+4..+10). Odczytano i wizualnie sprawdzono Table1."
+            },
+            {
+              "url": "https://www.nyse.com/publicdocs/nyse/ICE_NYSE_2026_Yearly_Trading_Calendar.pdf",
+              "evidence_path": "research_round3/data_quality.json",
+              "locator": "Round3boundedsourcecheck",
+              "what_verified": "DeclaredNYSEcalendar checked against9series; actualbrokerfills remainunverified."
+            }
+          ],
+          "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Zweryfikować wykonalne zlecenia na granicach okna oraz dostępny instrument UE; nie przesuwać okna do najlepszego miesiąca. Źródłowy CRSP/EW i pełne kontrolki pozostają otwarte.",
+          "round3_context_next_action": "Zweryfikować wykonalne zlecenia na granicach okna oraz dostępny instrument UE; nie przesuwać okna do najlepszego miesiąca. Źródłowy CRSP/EW i pełne kontrolki pozostają otwarte."
+        }
+      }
+    ]
+  },
+  "quantconnect_data_review": null
+}

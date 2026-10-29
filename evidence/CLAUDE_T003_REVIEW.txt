@@ -1,0 +1,76 @@
+Claude responded: Czytam źródłowy PDF, żeby potwierdzić reguły, a potem odnoszę zarzuty do Twoich plików.
+Reviewing the T003 Turtle System 2 logic for problems.
+Reviewing the T003 Turtle System 2 logic for problems.
+
+Czytam źródłowy PDF, żeby potwierdzić reguły, a potem odnoszę zarzuty do Twoich plików.
+
+Read therobusttrader.com
+
+Read therobusttrader.com
+
+Przeczytałem cały PDF źródłowy i porównałem go z planem, research_kernels.py, main.py, JSON-em audytu i kartą. W paczce nie ma numeracji linii, więc odwołuję się do funkcji, wyrażeń kodu i pól JSON.
+
+Zero PnL nie jest porażką. main.py nie składa żadnych zleceń, a JSON ma orders_allowed:false i strategy_return_calculated:false. Zero wyniku jest tu poprawne i niczego nie dowodzi o strategii.
+
+Zgodne ze źródłem (sprawdzone)
+N i sizing: N=(19·PDN+TR)/20 z seedem SMA z 20 TR (PDF s.14) oraz floor(1%·konto/(N·$/pkt)) (s.15–16) zgadzają się z wilder_n i contracts_per_unit.
+Piramidowanie i stopy: krok 0,5N od faktycznego fillu, max 4 jednostki, stop 2N, starsze stopy +0,5N. Przykład z luką (nowa jednostka 30,80, stop 28,40, starsze stopy 27,70, s.23–24) przeliczyłem ręcznie przez _enter: wychodzi zgodnie.
+Wejście i wyjście: wejście o tick poza 55 poprzednich sesji, wyjście System 2 po 20 sesjach.
+Lokatory planu (PDF/printed) trafiają w odpowiednie strony. Opcjonalny Whipsaw jest jawnie wyłączony.
+Maks. 5 istotnych problemów
+
+1. BŁĄD kernela: kanały 55/20 są zamrożone na całą kampanię.
+
+Gdzie: turtle_levels(...) jest liczone raz i trafia do TurtleCampaign.__init__ jako self.levels. event() czyta wyłącznie levels['exit_long'/'exit_short'/'buy'/'sell_short']. Nic nie aktualizuje kanałów.
+Źródło: „preceding 55/20 days“ to okno kroczące (s.19, s.27).
+Różnica względem planu: w declared_reconstruction_conventions zadeklarowano tylko stałe N i stałą liczbę kontraktów. Zamrożone kanały nie są zadeklarowane. To błąd, nie jawny brak.
+Skutek: w długim trendzie wyjście 20-sesyjne nie podąża za rynkiem i zostaje stop 2N. Ponowne wejście po wyjściu używa starego kanału 55.
+Test: syntetyczna seria. Płaska baza, wejście, trend 100→200 przez 100 sesji, potem spadek do rolling-20-low. Oczekiwane jest wyjście na kroczącym 20-low, a kernel go nie wykona. Drugi test: po wyjściu nowy kanał 55 musi uwzględniać dni kampanii.
+
+2. BŁĄD/NIEZGODNOŚĆ z planem: „55 sesji“ to 55 sztuk barów, a okno N jest dowolne.
+
+Gdzie: turtle_levels: if len(bars)<55 plus sprawdzanie tylko kolejności available_at. Plan (mandatory_input_fields) wymaga 55 kompletnych sesji CME plus warmup 20 TR dla każdego kontraktu.
+Brak kontroli ciągłości: brakująca sesja po cichu rozciąga kanał na więcej niż 55 dni kalendarza.
+N zależy od okna: wilder_n seeduje na pierwszych 20 TR przekazanego okna. Przy 55 barach waga seedu to ok. 0,95³⁴ ≈ 17%. Ten sam kontrakt daje różne N zależnie od długości listy. [H, rachunek] Źródło też startuje od SMA seed, więc trzeba zadeklarować kotwicę: pierwsza sesja kontraktu.
+Test: (a) ta sama seria przy 55, 75, 150, 400 barach, N musi być deterministyczne wg deklarowanej kotwicy. (b) usuń jedną sesję ze środka 55 barów, kernel ma rzucić MissingData, a teraz tego nie zrobi.
+
+3. SPRZECZNOŚĆ planu z próbką: próbka zawiera kontrakt po FND, a filtr liczy od ostatniego dnia handlu.
+
+Gdzie: plan mówi „roll before first notice“. main.py używa set_filter(20,120), czyli dni do wygaśnięcia. Pole JSON contracts[*].expiry (np. 2024-01-29) to trzeci od końca dzień roboczy miesiąca, zgodny z regułą CME dla GC (COMEX ch. 113 [S]). To ostatni dzień handlu, nie FND.
+GC29F24: był na liście kontraktów od 2024-01-02. Jego pierwszy dzień pozycji przypada według CME ok. 28.12.2023, przed początkiem okna. [H, wyprowadzone z fragmentu PDF CME o 2 dniach roboczych przed pierwszym dniem miesiąca dostawy] Tego kontraktu Turtle nie trzymałby po rollu.
+Test: dla 4 kontraktów oblicz FND/first position day z oficjalnego kalendarza CME i porównaj z first_seen_engine_time. Oczekiwany wynik: GC29F24 pada. Osobny test okna: czy 2024-01-02 00:00 NY nie ucina sesji CME o dacie handlowej 2.01, która zaczęła się 1.01 o 18:00 ET. [H]
+
+4. NADINTERPRETACJA/BŁĄD projektu audytu: selekcja „po OI“ degeneruje się.
+
+Gdzie: main.py: sorted(chain, key=(-open_interest, str(symbol.id)))[:2]. W JSON open_interest_as_observed=0.0 dla wszystkich 4 kontraktów, a pierwsze pojawienie wszystkich mieści się w 3 h 20 min pierwszego dnia (first_seen_engine_time).
+Skutek: przy OI=0 klucz zostaje tylko tie-breakiem po id tekstowym. Wybrano pierwsze 4 widziane kontrakty (len<4), nie najpłynniejsze. Karta przyznaje „to nie dowód wyboru po OI“, ale komentarz w kodzie („Choose ... NOW“) sugeruje coś więcej niż się dzieje.
+Historia dzienna: history pobrano dla pierwszego dodanego kontraktu, GC27G24 (JSON history.sid). W VIII–XII 2023 to kontrakt odległy, więc 0 naruszeń OHLC nie mówi o kontraktach, które Turtle by handlował.
+Plausibility check, nie dowód: count:100 jest po prostu tym, o co poprosił kod. Między 10.08 a 29.12.2023 jest 102 dni robocze, minus Święto Dziękczynienia i Boże Narodzenie daje ok. 100. [H] To wskazuje na brak dziur, ale nie potwierdza definicji sesji (daily_session_definition_verified:false).
+Test: zagregowany log zamiast logu per event: liczba zdarzeń łańcucha z OI=0 i z OI>0 oraz pierwszy moment OI>0 dla każdego kontraktu, w limicie 10 KB.
+
+5. KARTA twierdzi więcej niż dowody w paczce.
+
+„Zakończyła się poprawnie“: runtime_status='AUDIT_FINISHED...' ustawia się bezwarunkowo w on_end_of_algorithm. To znacznik końca, nie walidacja.
+Niesprawdzalne tu: AST-zgodność kodu, runID, wersja LEAN 2.5.0.0.18215 i „pełny log“ nie występują w żadnym przekazanym pliku ani polu JSON. Potrzebny jest artefakt: linia RESEARCH_AUDIT_JSON z logu i skrót main.py.
+„Potwierdzono mnożnik 100 i tick 0,1“: w JSON to symbol_properties z QC. 100 uncji potwierdza rulebook CME [S], tick nie sprawdzany niezależnie.
+„0 duplikatów“: kod nie liczy duplikatów barów. Chodzi o próbę, ale zdanie można źle odczytać.
+Docstring „tested components“: brak testów jednostkowych w paczce. Test z przykładu crude oil (s.23–24) jako przypadek jednostkowy byłby minimum.
+Liczby 24 540 / 18 990 / 24 zgadzają się z JSON. bad_quotes łączy brak strony, nieprawidłowe bid i ask<bid. Nie rozbija ich na typy i nie liczy locked (ask=bid).
+Jawne braki, nie błędy
+
+Intraday kolejność zdarzeń (last i bid/ask nie są synchronizowane w data.bars i data.quote_bars), koszty, margin, finansowanie, rolling portfel i reset notional, a także pełne grupy korelacji. Plan i karta je wymieniają. Nie zaliczam ich do błędów.
+
+Dwie drobne uwagi: tick na wyjściu 20-sesyjnym nie wynika ze źródła (s.27 go nie podaje), więc to deklarowane rozszerzenie. Po częściowym stopie kernel liczy próg dodania od units[-1], nie od ostatniego fillu.
+
+Czego nie sprawdziłem
+
+Dokładnego FND per kontrakt (potrzebny kalendarz CME), ticku GC w źródle CME i faktycznego logu przebiegu. Niczego nie uruchamiałem.
+
+
+Create a doc
+
+
+
+
+
+4 minutes ago

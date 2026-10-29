@@ -1,0 +1,35 @@
+{
+  "id": "T003_CLAUDE_LOGIC_REVIEW_20261029_V1",
+  "at_utc": "2026-10-29T18:42:47.290064+00:00",
+  "scope": "Peer opinion on selected source/code/data-audit artifacts; no independent market PnL reproduction.",
+  "reviewer": "Claude Sonnet 5.5 Medium via user-authorized web conversation",
+  "opinion_file": "research_round10/CLAUDE_T003_REVIEW.txt",
+  "prompt_file": "research_round10/T003_review_for_Claude.txt",
+  "provenance_file": "research_round10/T003_review_provenance.json",
+  "assessment": [
+    {
+      "issue": "Rolling55/20 channels",
+      "disposition": "Required integration check before full backtest. TurtleCampaign has no daily update method; it retains the supplied mutable levels dict. An external adapter could update it, but no full adapter has been completed. Do not call this an observed error in a market strategy result."
+    },
+    {
+      "issue": "Complete CME sessions and N initialization anchor",
+      "disposition": "Still required. Ordered bars alone do not prove consecutive source sessions; specify calendar and seed anchor before running a full test."
+    },
+    {
+      "issue": "FND and OI-based selection",
+      "disposition": "Existing open data/roll gates. First-seen OI0 does not prove OI0 for the whole interval. Specific January2024 FND claim from Claude remains unverified against official calendar."
+    },
+    {
+      "issue": "Provenance not in selected prompt",
+      "disposition": "Review-package omission, not absence from local project. Full3-line log confirms runID/LEAN/completion; local, uploaded and run code AST equality verified. Added provenance artifact and synthetic-test source to review package."
+    },
+    {
+      "issue": "Duplicate wording",
+      "disposition": "No repeated cloud run was performed; no claim of duplicate-free market bars is supported by this audit."
+    }
+  ],
+  "new_market_strategy_results": 0,
+  "verdict_changed": false,
+  "independent_recalculation": false,
+  "next_action": "Before full Turtle test implement and verify daily channel updates, complete-session validation and fixed N seed anchor; separately verify FND and point-in-time OI."
+}

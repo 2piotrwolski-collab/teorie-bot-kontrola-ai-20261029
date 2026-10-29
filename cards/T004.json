@@ -1,0 +1,861 @@
+{
+  "snapshot_at_utc": "2026-10-29T18:43:35.427389+00:00",
+  "scope": "Research snapshot. No full original-theory verification; no live orders.",
+  "card": {
+    "id": "T004",
+    "round": 4,
+    "findings": [
+      "Wykonano źródłowe RSI(2)<5/SMA200 z wyjściem RSI(2)>70 na obu przykładach autora: IWM i FXI. Każdy ma osobny wynik, a pełna nieznana lista ETF-ów z badania autora nie jest udawana.",
+      "Oddzielono wariant następnego otwarcia od estymacji sygnału o 15:40 i wykonania o 15:45. Obie wersje mają koszty i zachowane wszystkie próby.",
+      "Próba 42 sesji dla IWM jest dodatnia, lecz obejmuje tylko dwa wejścia. FXI nie wygenerował wejścia; jego wynik pochodzi z BIL. Nie nadaje się to do potwierdzenia przewagi.",
+      "Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla IWM, FXI, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.",
+      "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii."
+    ],
+    "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje pięciominutowe i weryfikować bid/ask, czas zlecenia oraz dostępność instrumentu. Wymagany większy niezależny zbiór i partner review; nie wybierać zwycięzcy z dwóch transakcji.",
+    "verified_market": "Zwykłe ETF-y akcyjne z pierwotnego opisu Connorsa z 2009 r.; reguła 5/70 jest odrębna od wariantu 2×ETF.",
+    "verified_claim": "W trendzie close>SMA200 autor opisuje kupno na close przy RSI(2)<5 i wyjście przy RSI(2)>70. To inne wyjście niż SMA5 w archiwalnym wariancie v1.",
+    "verified_source_url": "https://tradingmarkets.com/recent/how_to_enter_and_exit_a_position_on_the_close-677551",
+    "overall_status": "strategie_kosztowe_provisional",
+    "gap_updates": [
+      {
+        "gap_id": "T004-S1",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "Authored primary evidence recovered for the entry family and for author-used SMA5 dynamic exit separately.",
+          "Complete core signal of a distinct unleveraged ETF candidate is explicit in entry_exit_close; no 2x-ETF assumption required.",
+          "A different SPY-specific TPS core rule is publicly available."
+        ],
+        "criteria_unmet": [
+          "No retrieved primary source explicitly binds the exact frozen-v1 entry and SMA5 exit in one strategy.",
+          "Full Wilder RSI initialization, original complete universe and adjustment convention remain unverified."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/round2/connors/entry_exit_close.web_receipt.json",
+            "url": "https://tradingmarkets.com/recent/how_to_enter_and_exit_a_position_on_the_close-677551",
+            "sha256": "5a2b8700258bfe127740dada639ac4e13eb006942cd5e7bd518a328e80a2dce7",
+            "raw_content_sha256": null,
+            "locator": {
+              "metadata": "lines 27–30",
+              "illustrative_signal_rule": "line 34",
+              "final_close_knowledge_problem": "line 38",
+              "author_execution_examples": "lines 41–55"
+            },
+            "evidence_kind": "web_read_receipt_not_raw_html",
+            "direct_http_status": 403,
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/connors/dynamic_exits.web_receipt.json",
+            "url": "https://tradingmarkets.com/recent/dynamic_exits_how_to_properly_exit_a_trade-641067",
+            "sha256": "3bddf1e12707ac74173d0f83ef835b297242301494221d8722a14e14ce20d696",
+            "raw_content_sha256": null,
+            "locator": {
+              "metadata": "lines 27–30",
+              "exit_choices": "line 35",
+              "strategy_specific_choice": "lines 37–39"
+            },
+            "evidence_kind": "web_read_receipt_not_raw_html",
+            "direct_http_status": 403,
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/connors/proper_testing_tps.web_receipt.json",
+            "url": "https://tradingmarkets.com/recent/how_to_properly_test_your_strategies-639264",
+            "sha256": "d6e1fef3d760b2ae8fc9021463ce06aa9255ca944c3a906c0b57acff2b5faa49",
+            "raw_content_sha256": null,
+            "locator": {
+              "metadata": "lines 27–30",
+              "market_and_start": "line 39",
+              "core_rules": "lines 41–49",
+              "data_platform": "lines 65–67",
+              "additional_entry_filter": "line 69"
+            },
+            "evidence_kind": "web_read_receipt_not_raw_html",
+            "direct_http_status": 403,
+            "what_verified": ""
+          }
+        ],
+        "next_action": "Keep frozen v1 as partial-source adaptation. If extending, create a separately versioned candidate based on entry_exit_close; do not call it book replication or silently exchange exit.",
+        "round3_context_next_action": "Gromadzić nowe sesje pięciominutowe i weryfikować bid/ask, czas zlecenia oraz dostępność instrumentu. Wymagany większy niezależny zbiór i partner review; nie wybierać zwycięzcy z dwóch transakcji."
+      },
+      {
+        "gap_id": "T004-D1",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "Author directly discusses ordinary equity ETFs; TPS source directly prescribes SPY.",
+          "Primary source explicitly states no further TPS additions below trend MA."
+        ],
+        "criteria_unmet": [
+          "No primary full universe for frozen-v1 rule.",
+          "Public daily price history is not the author CSI history and original adjustment convention is unknown.",
+          "No new data validation or fresh history download performed in this bounded source task."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/round2/connors/entry_exit_close.web_receipt.json",
+            "url": "https://tradingmarkets.com/recent/how_to_enter_and_exit_a_position_on_the_close-677551",
+            "sha256": "5a2b8700258bfe127740dada639ac4e13eb006942cd5e7bd518a328e80a2dce7",
+            "raw_content_sha256": null,
+            "locator": {
+              "metadata": "lines 27–30",
+              "illustrative_signal_rule": "line 34",
+              "final_close_knowledge_problem": "line 38",
+              "author_execution_examples": "lines 41–55"
+            },
+            "evidence_kind": "web_read_receipt_not_raw_html",
+            "direct_http_status": 403,
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/connors/proper_testing_tps.web_receipt.json",
+            "url": "https://tradingmarkets.com/recent/how_to_properly_test_your_strategies-639264",
+            "sha256": "d6e1fef3d760b2ae8fc9021463ce06aa9255ca944c3a906c0b57acff2b5faa49",
+            "raw_content_sha256": null,
+            "locator": {
+              "metadata": "lines 27–30",
+              "market_and_start": "line 39",
+              "core_rules": "lines 41–49",
+              "data_platform": "lines 65–67",
+              "additional_entry_filter": "line 69"
+            },
+            "evidence_kind": "web_read_receipt_not_raw_html",
+            "direct_http_status": 403,
+            "what_verified": ""
+          }
+        ],
+        "next_action": "Freeze source variant before acquiring and validating matching price history. A free SPY reconstruction can be labeled vendor-data reconstruction, not original CSI replication.",
+        "round3_context_next_action": "Gromadzić nowe sesje pięciominutowe i weryfikować bid/ask, czas zlecenia oraz dostępność instrumentu. Wymagany większy niezależny zbiór i partner review; nie wybierać zwycięzcy z dwóch transakcji."
+      },
+      {
+        "gap_id": "T004-E1",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "Primary author explicitly describes final-close uncertainty and near-close practical approximations.",
+          "Historical close signal and causal trading implementation can now be separated with primary support.",
+          "Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/T004.json"
+        ],
+        "criteria_unmet": [
+          "Daily bars cannot reconstruct near-close indicator estimates or actual auction fills.",
+          "Historical auction deadline and intraday quotes/fills were not acquired."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/round2/connors/entry_exit_close.web_receipt.json",
+            "url": "https://tradingmarkets.com/recent/how_to_enter_and_exit_a_position_on_the_close-677551",
+            "sha256": "5a2b8700258bfe127740dada639ac4e13eb006942cd5e7bd518a328e80a2dce7",
+            "raw_content_sha256": null,
+            "locator": {
+              "metadata": "lines 27–30",
+              "illustrative_signal_rule": "line 34",
+              "final_close_knowledge_problem": "line 38",
+              "author_execution_examples": "lines 41–55"
+            },
+            "evidence_kind": "web_read_receipt_not_raw_html",
+            "direct_http_status": 403,
+            "what_verified": ""
+          },
+          {
+            "url": "https://www.interactivebrokers.com/en/pricing/commissions-stocks.php",
+            "evidence_path": "config/modern_net_plan.json",
+            "locator": "Round3boundedsourcecheck",
+            "what_verified": "Frozen execution/costvariants; currenttariff and costassumptions separated."
+          }
+        ],
+        "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje pięciominutowe i weryfikować bid/ask, czas zlecenia oraz dostępność instrumentu. Wymagany większy niezależny zbiór i partner review; nie wybierać zwycięzcy z dwóch transakcji.",
+        "round3_context_next_action": "Gromadzić nowe sesje pięciominutowe i weryfikować bid/ask, czas zlecenia oraz dostępność instrumentu. Wymagany większy niezależny zbiór i partner review; nie wybierać zwycięzcy z dwóch transakcji."
+      }
+    ],
+    "source_urls_verified": [
+      "https://tradingmarkets.com/recent/dynamic_exits_how_to_properly_exit_a_trade-641067",
+      "https://tradingmarkets.com/recent/how_to_enter_and_exit_a_position_on_the_close-677551",
+      "https://tradingmarkets.com/recent/how_to_properly_test_your_strategies-639264"
+    ],
+    "observations": [
+      {
+        "id": "QUOTE_PREFLIGHT_20261028_T004",
+        "title": "Rzeczywiste kwotowania przed zamknięciem · 28.10.2026",
+        "summary": "Historyczne SIP o 15:45 NY: zmierzony spread; osobno model kosztu zakupu i natychmiastowej sprzedaży dla budżetu 10 000 USD, bez ruchu rynku.",
+        "columns": [
+          "ETF",
+          "Spread bps",
+          "Połowa spreadu bps",
+          "Model kosztu pełnego obrotu USD"
+        ],
+        "rows": [
+          [
+            "IWM",
+            0.3564,
+            0.1782,
+            3.3319
+          ],
+          [
+            "FXI",
+            3.0821,
+            1.5411,
+            7.1592
+          ],
+          [
+            "BIL",
+            1.0909,
+            0.5455,
+            4.0891
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_20261028.json"
+      },
+      {
+        "id": "ARRIVAL_20261029_T004",
+        "title": "Dzisiejsza kontrola wykonania · 29.10.2026",
+        "summary": "Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.",
+        "columns": [
+          "Zakres",
+          "Stan"
+        ],
+        "rows": [
+          [
+            "IWM",
+            "oczekuje"
+          ],
+          [
+            "FXI",
+            "oczekuje"
+          ],
+          [
+            "BIL",
+            "oczekuje"
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_DZISIAJ/T004.json"
+      },
+      {
+        "id": "MODERN_EXECUTION_NET_R2_T004",
+        "title": "Warianty strategii po modelowanych kosztach transakcyjnych",
+        "summary": "Decyzja na zamknięciu → najwcześniej następne otwarcie. Wynik w USD po modelowanej prowizji IBKR Pro Fixed USA, spreadzie/poślizgu i założonej rezerwie 1 bps przy sprzedaży, przed podatkiem i FX. Skala 10 000 USD służy policzeniu minimalnych prowizji; nie jest założeniem o kapitale użytkownika. BIL jest kupowany/sprzedawany z kosztami. 0/5/20 bps oznacza dodatkowy scenariusz spreadu i poślizgu na stronę; prowizje są zawsze naliczane.",
+        "columns": [
+          "Wersja wykonania",
+          "Okres",
+          "Dodatkowe bps/stronę",
+          "Zwrot (%)",
+          "SPY (%)",
+          "Własny benchmark (%)",
+          "Max DD (%)",
+          "Koszty USD",
+          "Śr. ekspozycja ryzykowna (%)"
+        ],
+        "rows": [
+          [
+            "T004_IWM_RSI570_OPEN",
+            "2010–28.10.2026",
+            5,
+            "26.73",
+            "822.10",
+            "455.67",
+            "-39.98",
+            "1950.61",
+            "8.53"
+          ],
+          [
+            "T004_IWM_RSI570_OPEN",
+            "2010–2019",
+            5,
+            "10.81",
+            "249.41",
+            "201.39",
+            "-20.37",
+            "1044.43",
+            "7.63"
+          ],
+          [
+            "T004_IWM_RSI570_OPEN",
+            "2020–2023",
+            5,
+            "-18.19",
+            "56.25",
+            "26.73",
+            "-38.61",
+            "380.98",
+            "9.34"
+          ],
+          [
+            "T004_IWM_RSI570_OPEN",
+            "2024–28.10.2026",
+            0,
+            "44.61",
+            "68.88",
+            "45.27",
+            "-9.47",
+            "119.37",
+            "10.58"
+          ],
+          [
+            "T004_IWM_RSI570_OPEN",
+            "2024–28.10.2026",
+            5,
+            "39.35",
+            "68.71",
+            "45.13",
+            "-9.56",
+            "561.07",
+            "10.58"
+          ],
+          [
+            "T004_IWM_RSI570_OPEN",
+            "2024–28.10.2026",
+            20,
+            "24.66",
+            "68.20",
+            "44.69",
+            "-9.83",
+            "1786.08",
+            "10.58"
+          ],
+          [
+            "T004_FXI_RSI570_OPEN",
+            "2010–28.10.2026",
+            5,
+            "22.98",
+            "822.10",
+            "12.50",
+            "-18.60",
+            "1374.46",
+            "5.93"
+          ],
+          [
+            "T004_FXI_RSI570_OPEN",
+            "2010–2019",
+            5,
+            "-1.13",
+            "249.41",
+            "30.91",
+            "-18.60",
+            "851.79",
+            "6.60"
+          ],
+          [
+            "T004_FXI_RSI570_OPEN",
+            "2020–2023",
+            5,
+            "9.33",
+            "56.25",
+            "-40.64",
+            "-7.23",
+            "204.83",
+            "3.78"
+          ],
+          [
+            "T004_FXI_RSI570_OPEN",
+            "2024–28.10.2026",
+            0,
+            "16.06",
+            "68.88",
+            "45.56",
+            "-12.05",
+            "82.93",
+            "6.63"
+          ],
+          [
+            "T004_FXI_RSI570_OPEN",
+            "2024–28.10.2026",
+            5,
+            "13.42",
+            "68.71",
+            "45.42",
+            "-12.22",
+            "321.45",
+            "6.63"
+          ],
+          [
+            "T004_FXI_RSI570_OPEN",
+            "2024–28.10.2026",
+            20,
+            "5.85",
+            "68.20",
+            "44.98",
+            "-13.65",
+            "1004.27",
+            "6.63"
+          ]
+        ],
+        "evidence_report": "NET_STRATEGIE/T004.json",
+        "limitations": [
+          "To jawne warianty wykonania, nie pełne reprodukcje publikacji. Szczegółowa macierz zgodności, wszystkie scenariusze, NAV, roczne wyniki i transakcje są zachowane.",
+          "Żaden z ośmiu wariantów dziennych nie spełnił bramki przewagi nad SPY w obu okresach 2020–2023 oraz 2024–2026 przy 5 i 20 bps. To wynik tych portfeli; nie obalenie teorii lub rzadkiego modułu wejścia.",
+          "Dla Fabera własny benchmark to ten sam koszyk pięciu ETF-ów, dla pozostałych — ten sam bazowy ETF. Ochrona ryzyka i cel pobicia pełnego SPY są oddzielnymi pytaniami.",
+          "Cena otwarcia OHLC, jednoczesne wykonanie koszyka, kolejność sprzedaży/zakupu i pełne fille pozostają przybliżeniami. Faktyczny spread, poślizg, rozliczenie, podatki, FX i dostępność ETF/KID dla inwestora UE nie zostały potwierdzone.",
+          "Wszystkie okresy są retrospektywne i częściowo nakładają się. Brak nietkniętego OOS, paper forward i konsensusu z Claude’em. Kontrola rachunkowa inną implementacją: PASS dla 168 ścieżek."
+        ]
+      },
+      {
+        "id": "NEARCLOSE_1540_SIGNAL_1545_PROXY_R1_T004",
+        "title": "Próba wykonania przed zamknięciem: 42 sesje, 31.08–28.10.2026",
+        "summary": "Sygnał korzysta wyłącznie ze świec kończących się do 15:40 czasu Nowego Jorku. Zakładamy ich dostępność przed 15:45; cena wykonania jest przybliżona otwarciem świecy 15:45. Dzięki temu zachowujemy większą część ruchu nocnego. Dane pięciominutowe pozyskano bezpłatnie; nie są to rzeczywiste bid/ask ani fille brokera. Warianty i koszty zamrożono przed wynikiem tej próby.",
+        "columns": [
+          "Wariant",
+          "Dodatkowe bps/stronę",
+          "Zwrot (%)",
+          "SPY (%)",
+          "Bazowy ETF (%)",
+          "Wejścia ryzykowne",
+          "Symulowane operacje",
+          "Koszty USD",
+          "Operacje >1% wol. 5 min"
+        ],
+        "rows": [
+          [
+            "T004_IWM_RSI570_NEARCLOSE",
+            0,
+            "1.95",
+            "0.78",
+            "-4.29",
+            2,
+            10,
+            "15.07",
+            0
+          ],
+          [
+            "T004_IWM_RSI570_NEARCLOSE",
+            5,
+            "1.44",
+            "0.68",
+            "-4.39",
+            2,
+            10,
+            "65.57",
+            0
+          ],
+          [
+            "T004_IWM_RSI570_NEARCLOSE",
+            20,
+            "-0.07",
+            "0.38",
+            "-4.67",
+            2,
+            10,
+            "215.53",
+            0
+          ],
+          [
+            "T004_FXI_RSI570_NEARCLOSE",
+            0,
+            "0.56",
+            "0.78",
+            "-8.42",
+            0,
+            2,
+            "3.01",
+            0
+          ],
+          [
+            "T004_FXI_RSI570_NEARCLOSE",
+            5,
+            "0.46",
+            "0.68",
+            "-8.51",
+            0,
+            2,
+            "13.03",
+            0
+          ],
+          [
+            "T004_FXI_RSI570_NEARCLOSE",
+            20,
+            "0.16",
+            "0.38",
+            "-8.79",
+            0,
+            2,
+            "43.04",
+            0
+          ]
+        ],
+        "evidence_report": "NET_STRATEGIE/T004.json",
+        "limitations": [
+          "Tylko 42 sesje i 0–2 wejścia na wariant. Nie wolno z tego wyprowadzać prawdopodobieństwa zysku, stabilnej przewagi ani wybierać zwycięzcy.",
+          "Przy zerowej liczbie wejść wynik pochodzi wyłącznie z BIL, nie z przetestowanego sygnału.",
+          "Czas świecy nie dowodzi czasu udostępnienia danych. Dostępność bezpłatnego strumienia przed zleceniem nie została zmierzona; 15:40→15:45 jest założeniem wymagającym sprawdzenia w bieżącej sesji.",
+          "IBS używa częściowego dziennego high/low/wolumenu do 15:40, a nie przyszłych finalnych wartości. To nadal zmiana względem źródłowego finalnego close i strategii long/short.",
+          "CAGR nie został wyliczony dla tej krótkiej próby. Drawdown w plikach jest próbkowany o 15:45, nie pełnym ryzykiem intraday.",
+          "30 ścieżek uzgodniono inną implementacją z oryginalnymi plikami; 378 kontroli IBS potwierdza granicę informacji. To kontrola rachunków, nie niezależna walidacja przez partnera."
+        ]
+      }
+    ],
+    "source_detail": {
+      "variant_id": "CONNORS_ETF_20090821_RSI5_70_SOURCE_RULE_DRAFT",
+      "source": "Larry Connors, How To Enter and Exit a Position on the Close, 2009-08-21.",
+      "source_core": {
+        "universe": "Ordinary ETF; article examples IWM/FXI, complete eligible basket not supplied.",
+        "entry": "Final ETF close above its200-day moving average and2-period RSI<5; historical purchase at that close.",
+        "exit": "RSI2 closes>70; no source exit at SMA5 in this article.",
+        "execution": "Author explicitly acknowledges uncertainty before final tick and describes near-close RSI estimates, MOC for robust signal or near-close market orders."
+      },
+      "relationship_to_frozen_v1": "Source entry family recovered. Exact combination RSI<5 +MA200 entry and SMA5 exit remains unverified by one retrieved primary strategy. Author separately discusses SMA5 dynamic exits. Do not replace frozen v1 or label its result a replication.",
+      "proposed_research_only_variant": {
+        "asset": "SPY as one declared ordinary equity ETF choice; the complete 2009 article test universe and allocation are not claimed.",
+        "direction": "Long/cash; one position, no scale-in or pyramiding.",
+        "entry": "If flat at signal close_t and C_t>SMA200_t and RSI2_t<5, signal entry.",
+        "exit": "If holding and RSI2_t>70, signal full exit; no added timeout, profit target or SMA5 exit.",
+        "indicator_convention": "Proposed standard Wilder RSI: two-period simple seed of positive/negative price changes, recursively alpha1/2; loss0 & gain>0→100, gain0 & loss>0→0, both0→50. SMA arithmetic and includes current close. This formula/initialization is a declared implementation convention, not recovered author code.",
+        "price_convention": "Freeze split/distribution-adjusted signal and performance inputs, with an explicit raw-close sensitivity only if prescribed before results. Original author adjustment convention remains unknown.",
+        "execution_choices": "Source historical final-close observation (hypothetical) or separately versioned next-open causal adaptation. Daily bars cannot recover original near-close estimates or fill decisions.",
+        "cash_and_costs": "Declare one cash return and a cost schedule; both are modeling decisions, not proven author original inputs.",
+        "dates": "If extended, freeze date intervals and warmup before calculations; no interval chosen from outcomes. Modern history is a new study, not a recreation of the author CSI sample."
+      },
+      "different_primary_SPY_variant": "Connors2009-07-07 TPS includes RSI25 condition on2days and10/20/30/40 scale-ins, exit70, plus no additions belowMA200. It is documented separately, not mixed into the simple candidate.",
+      "before_test_acceptance": [
+        "Freeze distinct variant and complete indicator/data/execution/cash conventions.",
+        "QA daily ETF history, adjustments, calendars and at least200-session warmup.",
+        "Use descriptive trade/return outcomes with matched passive and cash exposure comparators; historical-close result is not executable alpha.",
+        "Keep original-v1 source gap open and avoid claiming full-book numerical replication."
+      ],
+      "ready_for_original_CSI_or_book_replication": false,
+      "ready_for_new_source_rule_spec_review": true,
+      "ready_for_execution_without_further_checks": false
+    },
+    "source_update_artifact": "research_round2/source_updates_T001_T004.json",
+    "source_update_sha256": "2953f6d2229cc4cc35f01b17b0ed374572ae1805eabdeaa991755a222392c6e2",
+    "observation_ids": [
+      "QUOTE_PREFLIGHT_20261028_T004",
+      "ARRIVAL_20261029_T004",
+      "MODERN_EXECUTION_NET_R2_T004",
+      "NEARCLOSE_1540_SIGNAL_1545_PROXY_R1_T004"
+    ],
+    "previous_findings_round2": [
+      "Znaleziono pierwotny opis Connorsa dla zwykłych ETF-ów: close powyżej SMA200, RSI(2) poniżej 5, wejście na close i wyjście przy RSI(2) powyżej 70.",
+      "Stare wyjście przez SMA5 jest innym wariantem. Nie może rozstrzygać nowo odnalezionej reguły 5/70.",
+      "Przygotowano osobną specyfikację. Wzór i inicjalizacja RSI, dobór ETF-ów, korekty cen oraz wykonalność sygnału na finalnym close wymagają kontroli przed testem."
+    ],
+    "strategy_result_file": "NET_STRATEGIE/T004.json",
+    "execution_evidence_file": "WYKONANIE_DZISIAJ/T004.json"
+  },
+  "source_qualification": {
+    "id": "T004",
+    "intended_market": "Akcje i equity ETF w wariancie RSI2 pullback; dokładna karta opiera się na wtórnym opisie. Przywołane slajdy autora dotyczą osobno2xETF.",
+    "segment": "Długie wejścia tylko przy close>SMA200, czyli z góry zdefiniowany lokalny trend wzrostowy.",
+    "regime": "Bullish trend filter z danych dostępnych w chwili sygnału; nie całe retrospektywnie nazwane lata hossy. Po wejściu transakcja trwa według swojego wyjścia, nawet gdy reżim później się zmienia.",
+    "horizon": "Krótkie pullbacki RSI2; wyjście SMA5, zwykle kilka sesji, bez arbitralnego przycięcia stratnych transakcji.",
+    "universe": [
+      "SPY jako jawnie wybrany ETF do ograniczonej demonstracji; szersze uniwersum wymaga osobnej specyfikacji."
+    ],
+    "original_objective": "Wykorzystanie krótkoterminowego odbicia po wyprzedaniu, oceniane pełnym wynikiem transakcji i ryzykiem; sama trafność nie dowodzi alfy.",
+    "correct_benchmark": "Matched SPY na identycznych oknach/kapitale oraz jawne wyniki w ex-ante kwalifikującym reżimie; osobno globalny wynik konta vs pełne SPY.",
+    "falsification_question": "Czy dokładnie wybrany source-linked wariant RSI2/SMA200/SMA5 ma dodatnią wykonalną przewagę netto przy zadeklarowanym wykonaniu?",
+    "missing_data": [
+      "Pierwotny fragment dla dokładnego wariantu zamiast slajdów innej strategii.",
+      "Sprawdzenie rzeczywistego wariantu close versus next-open i kosztów."
+    ],
+    "ready_for_valid_test": false,
+    "readiness_reason": "Mechanizm i segment są sensowne, ale przed source-level werdyktem potrzeba właściwego źródła oraz nowej kwalifikacji zakresu. Ograniczona demonstracja jawnej wersji jest możliwa.",
+    "qualification_status": "requires_source_confirmation_and_execution_split",
+    "source_fit": "adaptation",
+    "exact_mismatch": "Dokładna reguła RSI2<5/SMA200/wyjście SMA5 pochodzi z wtórnego opisu StockCharts. Załączone pierwotne slajdy dotyczą 2x ETF i obejmują niższy limit wejścia następnego dnia oraz inne warianty wyjść. Karta nie reprodukuje slajdów autora. Next-open może być praktyczną wersją omawianą przez StockCharts, ale nie odtwarza książkowych filli na close.",
+    "correction_needed": "Przed deklaracją reprodukcji pozyskać właściwy rozdział pierwotnego źródła dla dokładnej reguły. Osobno zmierzyć efekt zmiany close na next-open, bez wybierania korzystniejszej wersji po fakcie.",
+    "source_url": "https://cmtassociation.org/wp-content/uploads/2024/01/0808-connors-1.pdf",
+    "applies_to_theory_version": 1
+  },
+  "acquisition_plan": {
+    "id": "T004",
+    "gaps": [
+      {
+        "gap_id": "T004-S1",
+        "missing_item": "Pierwotneźródło dokładnejRSI2<5/SMA200/SMA5 strategii.",
+        "category": "source",
+        "why_needed": "Slajdyautora warchiwumopisująinnąwersję2xETF; nie wystarczają doatrybucjikarty.",
+        "acquisition_steps": [
+          "Sprawdzić publicznyautorskifragment i jużposiadanylegalnyrozdziałShortTermTradingStrategiesThatWork.",
+          "Porównaćkażdywarunek z dokładnymwtórnymStockCharts.",
+          "Jeśli brakfreeprimary, oznaczyćsourcepartial; ewentualny innyautorskiwariant nadać nowyID."
+        ],
+        "candidate_sources": [
+          {
+            "name": "ConnorsResearch — autorskie slajdy2012",
+            "url": "https://cmtassociation.org/wp-content/uploads/2024/01/0808-connors-1.pdf",
+            "access_verified": true,
+            "what_available": "Pobrane autorskie slajdy:RSI2 i jawne warianty2xETF/limit-entry/wyjścia.",
+            "does_not_supply": "Nie jest dokładnym pierwotnym źródłem książkowej kartySPY/RSI<5/SMA200/SMA5."
+          },
+          {
+            "name": "StockCharts — dokładny opisRSI2",
+            "url": "https://chartschool.stockcharts.com/table-of-contents/trading-strategies-and-models/trading-strategies/rsi-2",
+            "access_verified": true,
+            "what_available": "Pobrany wtórny opis wariantuRSI2/SMA200/SMA5, omawiaclose i next-open.",
+            "does_not_supply": "Pierwotnej próby autora, surowychdanych i dowodu że każdy szczegół odpowiada książce."
+          },
+          {
+            "name": "CesarAlvarez — publiczna formalizacja meanreversion",
+            "url": "https://alvarezquanttrading.com/blog/the-abcs-of-creating-a-mean-reversion-strategy-part1/",
+            "access_verified": true,
+            "what_available": "Publiczny autorski materiał współtwórcy strategii o sygnałach i elementach pełnejreguły.",
+            "does_not_supply": "Nie reprodukuje dokładnieT004 ani nie udostępniaNorgatepełnejhistorii."
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Źródłojednoznaczniewskazujerynek,RSIformułę,progi,entry,exit iexecution.",
+          "Nie podmienionoWilderRSI naConnorsRSI.",
+          "Własneuzupełnienia nie przypisaneautorowi."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Jawna adaptacja na podstawiewtórnegoopisu lub nowateza zkompletnegoautorskiegobloga; nie udawana książkowareprodukcja.",
+        "next_action": "Keep frozen v1 as partial-source adaptation. If extending, create a separately versioned candidate based on entry_exit_close; do not call it book replication or silently exchange exit.",
+        "initial_next_action": "Wykonaćograniczoneszukanie autorskiegofragmentu i zapisaćmacierzreguła→miejscewźródle.",
+        "progress": {
+          "gap_id": "T004-S1",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "Authored primary evidence recovered for the entry family and for author-used SMA5 dynamic exit separately.",
+            "Complete core signal of a distinct unleveraged ETF candidate is explicit in entry_exit_close; no 2x-ETF assumption required.",
+            "A different SPY-specific TPS core rule is publicly available."
+          ],
+          "criteria_unmet": [
+            "No retrieved primary source explicitly binds the exact frozen-v1 entry and SMA5 exit in one strategy.",
+            "Full Wilder RSI initialization, original complete universe and adjustment convention remain unverified."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/round2/connors/entry_exit_close.web_receipt.json",
+              "url": "https://tradingmarkets.com/recent/how_to_enter_and_exit_a_position_on_the_close-677551",
+              "sha256": "5a2b8700258bfe127740dada639ac4e13eb006942cd5e7bd518a328e80a2dce7",
+              "raw_content_sha256": null,
+              "locator": {
+                "metadata": "lines 27–30",
+                "illustrative_signal_rule": "line 34",
+                "final_close_knowledge_problem": "line 38",
+                "author_execution_examples": "lines 41–55"
+              },
+              "evidence_kind": "web_read_receipt_not_raw_html",
+              "direct_http_status": 403,
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/connors/dynamic_exits.web_receipt.json",
+              "url": "https://tradingmarkets.com/recent/dynamic_exits_how_to_properly_exit_a_trade-641067",
+              "sha256": "3bddf1e12707ac74173d0f83ef835b297242301494221d8722a14e14ce20d696",
+              "raw_content_sha256": null,
+              "locator": {
+                "metadata": "lines 27–30",
+                "exit_choices": "line 35",
+                "strategy_specific_choice": "lines 37–39"
+              },
+              "evidence_kind": "web_read_receipt_not_raw_html",
+              "direct_http_status": 403,
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/connors/proper_testing_tps.web_receipt.json",
+              "url": "https://tradingmarkets.com/recent/how_to_properly_test_your_strategies-639264",
+              "sha256": "d6e1fef3d760b2ae8fc9021463ce06aa9255ca944c3a906c0b57acff2b5faa49",
+              "raw_content_sha256": null,
+              "locator": {
+                "metadata": "lines 27–30",
+                "market_and_start": "line 39",
+                "core_rules": "lines 41–49",
+                "data_platform": "lines 65–67",
+                "additional_entry_filter": "line 69"
+              },
+              "evidence_kind": "web_read_receipt_not_raw_html",
+              "direct_http_status": 403,
+              "what_verified": ""
+            }
+          ],
+          "next_action": "Keep frozen v1 as partial-source adaptation. If extending, create a separately versioned candidate based on entry_exit_close; do not call it book replication or silently exchange exit.",
+          "round3_context_next_action": "Gromadzić nowe sesje pięciominutowe i weryfikować bid/ask, czas zlecenia oraz dostępność instrumentu. Wymagany większy niezależny zbiór i partner review; nie wybierać zwycięzcy z dwóch transakcji."
+        }
+      },
+      {
+        "gap_id": "T004-D1",
+        "missing_item": "Danezgodne z wybranym źródłowymrynkiem i bullfilterem.",
+        "category": "data",
+        "why_needed": "SPY może byćuprawniony tylkowwyraźniezawężonymwariancie; testpopulacjiakcjiwymagahistorycznego uniwersum.",
+        "acquisition_steps": [
+          "Po potwierdzeniuźródła zamrozićinstrumenty i zakres.",
+          "DlaSPYsprawdzićOHLC,corporateactions iwarmup200sesji.",
+          "Jeżeliźródło dotyczyakcji, sprawdzićPITconstituents/delistings; nie zastępowaćobecnąlistą."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Yahoo — publiczna próbkaSPY chart",
+            "url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1=946684800&period2=1793145600&interval=1d&events=div%2Csplits&includeAdjustedClose=true",
+            "access_verified": true,
+            "what_available": "Potwierdzony publiczny odczyt dziennychOHLC,adjusted-close i zdarzeń dlaSPY; możliwa bezpłatna baza ograniczonej adaptacji.",
+            "does_not_supply": "Nie potwierdzono tym kompletu innychsymboli, źródłowychCSI/GFD, bid/ask ani gwarancji trwałego dostępu."
+          },
+          {
+            "name": "StockCharts — dokładny opisRSI2",
+            "url": "https://chartschool.stockcharts.com/table-of-contents/trading-strategies-and-models/trading-strategies/rsi-2",
+            "access_verified": true,
+            "what_available": "Pobrany wtórny opis wariantuRSI2/SMA200/SMA5, omawiaclose i next-open.",
+            "does_not_supply": "Pierwotnej próby autora, surowychdanych i dowodu że każdy szczegół odpowiada książce."
+          },
+          {
+            "name": "CesarAlvarez — publiczna formalizacja meanreversion",
+            "url": "https://alvarezquanttrading.com/blog/the-abcs-of-creating-a-mean-reversion-strategy-part1/",
+            "access_verified": true,
+            "what_available": "Publiczny autorski materiał współtwórcy strategii o sygnałach i elementach pełnejreguły.",
+            "does_not_supply": "Nie reprodukuje dokładnieT004 ani nie udostępniaNorgatepełnejhistorii."
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Trendclose>SMA200 jest obliczony w chwilisygnału.",
+          "Daneobejmujądywidendy/splity; brakprzyszłychskładów.",
+          "Nie porównuje sięsamychsygnałów dopełnegoSPYjaktestuoryginału."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "UtrzymaćtylkokonkretnąSPYadaptację i oryginalnypopulacyjnywyniknierozstrzygnięty.",
+        "next_action": "Freeze source variant before acquiring and validating matching price history. A free SPY reconstruction can be labeled vendor-data reconstruction, not original CSI replication.",
+        "initial_next_action": "ZrobićdataQA iregimeeligibility po wyborze właściwegoźródła.",
+        "progress": {
+          "gap_id": "T004-D1",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "Author directly discusses ordinary equity ETFs; TPS source directly prescribes SPY.",
+            "Primary source explicitly states no further TPS additions below trend MA."
+          ],
+          "criteria_unmet": [
+            "No primary full universe for frozen-v1 rule.",
+            "Public daily price history is not the author CSI history and original adjustment convention is unknown.",
+            "No new data validation or fresh history download performed in this bounded source task."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/round2/connors/entry_exit_close.web_receipt.json",
+              "url": "https://tradingmarkets.com/recent/how_to_enter_and_exit_a_position_on_the_close-677551",
+              "sha256": "5a2b8700258bfe127740dada639ac4e13eb006942cd5e7bd518a328e80a2dce7",
+              "raw_content_sha256": null,
+              "locator": {
+                "metadata": "lines 27–30",
+                "illustrative_signal_rule": "line 34",
+                "final_close_knowledge_problem": "line 38",
+                "author_execution_examples": "lines 41–55"
+              },
+              "evidence_kind": "web_read_receipt_not_raw_html",
+              "direct_http_status": 403,
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/connors/proper_testing_tps.web_receipt.json",
+              "url": "https://tradingmarkets.com/recent/how_to_properly_test_your_strategies-639264",
+              "sha256": "d6e1fef3d760b2ae8fc9021463ce06aa9255ca944c3a906c0b57acff2b5faa49",
+              "raw_content_sha256": null,
+              "locator": {
+                "metadata": "lines 27–30",
+                "market_and_start": "line 39",
+                "core_rules": "lines 41–49",
+                "data_platform": "lines 65–67",
+                "additional_entry_filter": "line 69"
+              },
+              "evidence_kind": "web_read_receipt_not_raw_html",
+              "direct_http_status": 403,
+              "what_verified": ""
+            }
+          ],
+          "next_action": "Freeze source variant before acquiring and validating matching price history. A free SPY reconstruction can be labeled vendor-data reconstruction, not original CSI replication.",
+          "round3_context_next_action": "Gromadzić nowe sesje pięciominutowe i weryfikować bid/ask, czas zlecenia oraz dostępność instrumentu. Wymagany większy niezależny zbiór i partner review; nie wybierać zwycięzcy z dwóch transakcji."
+        }
+      },
+      {
+        "gap_id": "T004-E1",
+        "missing_item": "Oddzieleniewejścianaostatnimcloseodwykonania pojużznanymsygnale.",
+        "category": "execution",
+        "why_needed": "Krótkoterminowa przewaga może zniknąćprzednext-open; samclosefill nie dowodzi wykonalności.",
+        "acquisition_steps": [
+          "Rozdzielićhipotetycznywariantclose i causalnext-open.",
+          "Dla rzeczywistegocloseexecution sprawdzićaukcyjnedecisioncutoff i dostępnesygnałyprzedcutoff.",
+          "Do czasu pomiarukosztów raportowaćscenario, a niezweryfikowanynetfill."
+        ],
+        "candidate_sources": [
+          {
+            "name": "NYSE — trading information",
+            "url": "https://www.nyse.com/trade/trading-information",
+            "access_verified": true,
+            "what_available": "Publiczne zasady aukcji, sesji i odnośniki do kalendarza.",
+            "does_not_supply": "Historycznychbid/ask,filli i pełnego archiwum reguł aukcji dla całej próby."
+          },
+          {
+            "name": "StockCharts — dokładny opisRSI2",
+            "url": "https://chartschool.stockcharts.com/table-of-contents/trading-strategies-and-models/trading-strategies/rsi-2",
+            "access_verified": true,
+            "what_available": "Pobrany wtórny opis wariantuRSI2/SMA200/SMA5, omawiaclose i next-open.",
+            "does_not_supply": "Pierwotnej próby autora, surowychdanych i dowodu że każdy szczegół odpowiada książce."
+          },
+          {
+            "name": "Yahoo — publiczna próbkaSPY chart",
+            "url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1=946684800&period2=1793145600&interval=1d&events=div%2Csplits&includeAdjustedClose=true",
+            "access_verified": true,
+            "what_available": "Potwierdzony publiczny odczyt dziennychOHLC,adjusted-close i zdarzeń dlaSPY; możliwa bezpłatna baza ograniczonej adaptacji.",
+            "does_not_supply": "Nie potwierdzono tym kompletu innychsymboli, źródłowychCSI/GFD, bid/ask ani gwarancji trwałego dostępu."
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "MomentpoznaniaRSI/close poprzedzazlecenie.",
+          "Pozycjezakończonezgodniezregułą bezskracania niekorzystnychtransakcji.",
+          "Koszty mająetykietęassumption/measurement."
+        ],
+        "blocking_original_test": false,
+        "fallback_if_unavailable": "Wynikretrospektywny lub causaladaptacja; brakclaimedoryginalnegoexecution.",
+        "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje pięciominutowe i weryfikować bid/ask, czas zlecenia oraz dostępność instrumentu. Wymagany większy niezależny zbiór i partner review; nie wybierać zwycięzcy z dwóch transakcji.",
+        "blocking_trading_validation": true,
+        "initial_next_action": "Rozpisaćdwatimingwarianty iichróżnice przednowymtestem.",
+        "progress": {
+          "gap_id": "T004-E1",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "Primary author explicitly describes final-close uncertainty and near-close practical approximations.",
+            "Historical close signal and causal trading implementation can now be separated with primary support.",
+            "Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/T004.json"
+          ],
+          "criteria_unmet": [
+            "Daily bars cannot reconstruct near-close indicator estimates or actual auction fills.",
+            "Historical auction deadline and intraday quotes/fills were not acquired."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/round2/connors/entry_exit_close.web_receipt.json",
+              "url": "https://tradingmarkets.com/recent/how_to_enter_and_exit_a_position_on_the_close-677551",
+              "sha256": "5a2b8700258bfe127740dada639ac4e13eb006942cd5e7bd518a328e80a2dce7",
+              "raw_content_sha256": null,
+              "locator": {
+                "metadata": "lines 27–30",
+                "illustrative_signal_rule": "line 34",
+                "final_close_knowledge_problem": "line 38",
+                "author_execution_examples": "lines 41–55"
+              },
+              "evidence_kind": "web_read_receipt_not_raw_html",
+              "direct_http_status": 403,
+              "what_verified": ""
+            },
+            {
+              "url": "https://www.interactivebrokers.com/en/pricing/commissions-stocks.php",
+              "evidence_path": "config/modern_net_plan.json",
+              "locator": "Round3boundedsourcecheck",
+              "what_verified": "Frozen execution/costvariants; currenttariff and costassumptions separated."
+            }
+          ],
+          "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje pięciominutowe i weryfikować bid/ask, czas zlecenia oraz dostępność instrumentu. Wymagany większy niezależny zbiór i partner review; nie wybierać zwycięzcy z dwóch transakcji.",
+          "round3_context_next_action": "Gromadzić nowe sesje pięciominutowe i weryfikować bid/ask, czas zlecenia oraz dostępność instrumentu. Wymagany większy niezależny zbiór i partner review; nie wybierać zwycięzcy z dwóch transakcji."
+        }
+      }
+    ]
+  },
+  "quantconnect_data_review": null
+}

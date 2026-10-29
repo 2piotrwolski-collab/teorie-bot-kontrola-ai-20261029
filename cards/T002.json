@@ -1,0 +1,1008 @@
+{
+  "snapshot_at_utc": "2026-10-29T18:43:35.427389+00:00",
+  "scope": "Research snapshot. No full original-theory verification; no live orders.",
+  "card": {
+    "id": "T002",
+    "round": 5,
+    "findings": [
+      "Sprawdzono aktualne możliwości darmowych settlementów CME. Oficjalny FAQ opisuje publiczne strony po północy CT, ale nie dostarcza kompletnej historii 58 kontraktów wraz z rolowaniem, walutami i kosztami.",
+      "Bezpośrednie pobranie stron CME zwróciło 403; dostęp do opisu przez wyszukiwarkę nie jest pobraniem danych. Nie zastąpiono kontraktów gotowym wynikiem AQR ani ETF-em.",
+      "Test strategii futures po kosztach nadal blokuje brak panelu wejściowego i warunków wykonania. Brak wyniku nie oznacza odrzucenia teorii.",
+      "Dzisiejszy pomiar ETF-ów nie usuwa braków tej teorii. Zachowano wymagania źródłowe i dotychczasowy konkretny plan zdobycia danych/reguł.",
+      "Za darmo pobrano wieloletnie marks złota i S&P z identyfikatorami kontraktów oraz kalendarze rolowania; to konkretne nowe dane do kontroli konstrukcji zwrotów.",
+      "Kontrola wykazała braki cen i niespójne końce kalendarzy. Pliki nie zawierają pełnego OHLCV,58rynków ani oryginalnych FXforwards. Nie wyliczano strategii z nieuzgodnionych cen.",
+      "Nowszy darmowy zestaw opisuje40instrumentów; pobrane dwie serie kończą się23.09.2025 i mają historyczne aliasy micro. Wymagają mapy rzeczywistego kontraktu i mnożnika."
+    ],
+    "next_action": "Zmapować58instrumentów z AppendixA na pliki i luki. Najpierw uzgodnić jedną serię GOLD: kontrakt, punkt, waluta, timestamp, nakładające się ceny starego/nowego kontraktu i koszt roll. Budować zwrot z P&L kontraktu; nie z procentowej zmiany dowolnej back-adjusted ceny. Potem zamrozić osobny plan rekonstrukcji, bez podstawiania braków innym rynkiem.",
+    "overall_status": "source_gap_still_blocks_original_test",
+    "gap_updates": [
+      {
+        "gap_id": "T002-S1",
+        "status": "resolved",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "Previously downloaded original output file is valid HTTP200 XLSX; exact row/column schema is inspected and frozen.",
+          "Original/updated column ordering and methodology differences are documented.",
+          "Fixed all-assets and all-four-class audit scope prevents ex-post selecting a winning asset class."
+        ],
+        "criteria_unmet": [
+          "This resolves data availability/specification for an author-output audit only; no performance audit has been calculated."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/free_dataset_inventory/aqr_original.xlsx",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Original-Paper-Data.xlsx",
+            "sha256": "91bdbae6366ccb0693581b690236dc14862562a98ee83052c4f440f8b6ae0db8",
+            "locator": "TSMOM factors!A6, A11:F311; Disclosures",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/free_dataset_inventory/aqr_updated.xlsx",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+            "sha256": "33470930e2269c0d97be4732ec2d9c27ddbc69ac8133b059a263e27400263eeb",
+            "locator": "TSMOM Factors!A3:A12, B18:F18; Definitions and Data Sources embedded EMF drawings",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/T002_AQR_embedded_image_text.json",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+            "sha256": "bfadfd3bd26d0871339fc0cb2343a46b72fa29a95bddb368811e70978e2f06cc",
+            "locator": "xl/media/image1.emf = definitions, image3.emf = data sources; extraction of EMR_EXTTEXTOUTW records",
+            "evidence_kind": "derived_text_from_archived_workbook",
+            "what_verified": ""
+          }
+        ],
+        "next_action": "Run only the fixed original-output QA and summary audit as an explicitly labelled audit of author-published returns; it is not independent strategy reconstruction.",
+        "round3_context_next_action": "Sprawdzić legalne darmowe archiwum konkretnych wygasających kontraktów i umowę danych/rolowania; gotowe czynniki AQR służą tylko kontroli wyników autora."
+      },
+      {
+        "gap_id": "T002-D1",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "Full original AppendixA and updated workbook establish separately labelled vendor lists,58-instrument structure,daily excess-return construction and bond-duration normalization.",
+          "Round5: Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps.",
+          "Round5: Downloaded35,898marks,1982-09-14..2024-03-28, PRICE/CARRY/FORWARD plus contract IDs.",
+          "Round5: 274roll rows with current/next/carry contract IDs,1975..2020.",
+          "Round5: README describes40instruments. Two actual files downloaded: GOLD_micro1975..2025-09-23; SP500_micro1997..2025-09-23.",
+          "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+          "Round5: Distinguishes cloud use from local data licensing; most price data free in cloud."
+        ],
+        "criteria_unmet": [
+          "Underlying contract histories,rolls,complete identifier histories and original vendor backfills are not delivered by aggregate XLSX.",
+          "A fully free lawful source for matching all original inputs has not been established.",
+          "Round5: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel.",
+          "Round5: 1537missing PRICE/7842missing FORWARD; not OHLCV, volume, OI, quotes or exact paper inputs.",
+          "Round5: Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll.",
+          "Round5: Still stale for Oct2026; raw closes only, gaps remain. Micro alias before its actual launch needs a documented contract/backfill map; do not treat it as actual historical micro trading.",
+          "Round5: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+          "Round5: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/round2/T002_original_paper_author_hosted.pdf",
+            "url": "https://fairmodel.econ.yale.edu/ec439/mosk.pdf",
+            "sha256": "7682f8e97eb4b77591dc85e36731ff51ed031970cdde81678108734db9478379",
+            "locator": "Published JFE104(2012)228–250; PDF3–4: universe/return construction, PDF6: equation1 and lags, PDF9: equation5 and factor aggregation, PDF22–23: AppendixA; PDF page+227=journal page",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/free_dataset_inventory/aqr_updated.xlsx",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+            "sha256": "33470930e2269c0d97be4732ec2d9c27ddbc69ac8133b059a263e27400263eeb",
+            "locator": "TSMOM Factors!A3:A12, B18:F18; Definitions and Data Sources embedded EMF drawings",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/T002_AQR_embedded_image_text.json",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+            "sha256": "bfadfd3bd26d0871339fc0cb2343a46b72fa29a95bddb368811e70978e2f06cc",
+            "locator": "xl/media/image1.emf = definitions, image3.emf = data sources; extraction of EMR_EXTTEXTOUTW records",
+            "evidence_kind": "derived_text_from_archived_workbook",
+            "what_verified": ""
+          },
+          {
+            "url": "https://www.cmegroup.com/articles/faqs/access-to-cme-group-settlement-data-faq.html",
+            "evidence_path": "sources/round3/gap_receipts.json",
+            "locator": "Round3boundedsourcecheck",
+            "what_verified": "Public settlement availabilitydescription viawebreader; direct403 and no full58contractpanel acquired."
+          },
+          {
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+            "evidence_path": "sources/round5/pst_GOLD_multiple.csv",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps. LIMIT: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel."
+          },
+          {
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/SP500.csv",
+            "evidence_path": "sources/round5/pst_SP500_multiple.csv",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Downloaded35,898marks,1982-09-14..2024-03-28, PRICE/CARRY/FORWARD plus contract IDs. LIMIT: 1537missing PRICE/7842missing FORWARD; not OHLCV, volume, OI, quotes or exact paper inputs."
+          },
+          {
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+            "evidence_path": "sources/round5/pst_GOLD_rolls.csv",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "274roll rows with current/next/carry contract IDs,1975..2020. LIMIT: Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll."
+          },
+          {
+            "url": "https://raw.githubusercontent.com/bug-or-feature/pst-csv-data/ef27b05c5d3305834afc4579cef6d8945b6801eb/README.md",
+            "evidence_path": "sources/round5/pst_current_README.md",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "README describes40instruments. Two actual files downloaded: GOLD_micro1975..2025-09-23; SP500_micro1997..2025-09-23. LIMIT: Still stale for Oct2026; raw closes only, gaps remain. Micro alias before its actual launch needs a documented contract/backfill map; do not treat it as actual historical micro trading."
+          },
+          {
+            "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+            "evidence_path": "sources/round5/qc_futures.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting. LIMIT: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate."
+          },
+          {
+            "url": "https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing",
+            "evidence_path": "sources/round5/qc_licensing.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Distinguishes cloud use from local data licensing; most price data free in cloud. LIMIT: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified."
+          }
+        ],
+        "next_action": "Zmapować58instrumentów z AppendixA na pliki i luki. Najpierw uzgodnić jedną serię GOLD: kontrakt, punkt, waluta, timestamp, nakładające się ceny starego/nowego kontraktu i koszt roll. Budować zwrot z P&L kontraktu; nie z procentowej zmiany dowolnej back-adjusted ceny. Potem zamrozić osobny plan rekonstrukcji, bez podstawiania braków innym rynkiem.",
+        "round3_context_next_action": "Sprawdzić legalne darmowe archiwum konkretnych wygasających kontraktów i umowę danych/rolowania; gotowe czynniki AQR służą tylko kontroli wyników autora."
+      },
+      {
+        "gap_id": "T002-R1",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "Full original paper acquired; equation1 and section4.1 confirm the core formulas independently of the changed updated workbook.",
+          "Published12-month sign,1-month holding,40% per-instrument volatility sizing,EW volatility with center-of-mass60,lagged estimates and equal available-instrument averaging are now source pinned.",
+          "Embedded EMF text is archived instead of silently treating blank cells as missing definitions.",
+          "Round5: Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps."
+        ],
+        "criteria_unmet": [
+          "Exact original implementation startup/warmup,contract-selection/roll calendars and vendor values are not published as executable code.",
+          "Independent rebuilt portfolio still needs underlying daily returns and a reviewed causal implementation.",
+          "Round5: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/round2/T002_original_paper_author_hosted.pdf",
+            "url": "https://fairmodel.econ.yale.edu/ec439/mosk.pdf",
+            "sha256": "7682f8e97eb4b77591dc85e36731ff51ed031970cdde81678108734db9478379",
+            "locator": "Published JFE104(2012)228–250; PDF3–4: universe/return construction, PDF6: equation1 and lags, PDF9: equation5 and factor aggregation, PDF22–23: AppendixA; PDF page+227=journal page",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/free_dataset_inventory/aqr_updated.xlsx",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+            "sha256": "33470930e2269c0d97be4732ec2d9c27ddbc69ac8133b059a263e27400263eeb",
+            "locator": "TSMOM Factors!A3:A12, B18:F18; Definitions and Data Sources embedded EMF drawings",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/T002_AQR_embedded_image_text.json",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+            "sha256": "bfadfd3bd26d0871339fc0cb2343a46b72fa29a95bddb368811e70978e2f06cc",
+            "locator": "xl/media/image1.emf = definitions, image3.emf = data sources; extraction of EMR_EXTTEXTOUTW records",
+            "evidence_kind": "derived_text_from_archived_workbook",
+            "what_verified": ""
+          },
+          {
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+            "evidence_path": "sources/round5/pst_GOLD_multiple.csv",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps. LIMIT: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel."
+          }
+        ],
+        "next_action": "Zmapować58instrumentów z AppendixA na pliki i luki. Najpierw uzgodnić jedną serię GOLD: kontrakt, punkt, waluta, timestamp, nakładające się ceny starego/nowego kontraktu i koszt roll. Budować zwrot z P&L kontraktu; nie z procentowej zmiany dowolnej back-adjusted ceny. Potem zamrozić osobny plan rekonstrukcji, bez podstawiania braków innym rynkiem.",
+        "round3_context_next_action": "Sprawdzić legalne darmowe archiwum konkretnych wygasających kontraktów i umowę danych/rolowania; gotowe czynniki AQR służą tylko kontroli wyników autora."
+      },
+      {
+        "gap_id": "T002-E1",
+        "status": "open",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "Published data are long/short factor excess returns; they are distinguished from a funded account.",
+          "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting."
+        ],
+        "criteria_unmet": [
+          "Execution quotes, contract costs, margin, rolling fills and a self-financing account are not supplied.",
+          "Round5: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/free_dataset_inventory/aqr_original.xlsx",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Original-Paper-Data.xlsx",
+            "sha256": "91bdbae6366ccb0693581b690236dc14862562a98ee83052c4f440f8b6ae0db8",
+            "locator": "TSMOM factors!A6, A11:F311; Disclosures",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/free_dataset_inventory/aqr_updated.xlsx",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+            "sha256": "33470930e2269c0d97be4732ec2d9c27ddbc69ac8133b059a263e27400263eeb",
+            "locator": "TSMOM Factors!A3:A12, B18:F18; Definitions and Data Sources embedded EMF drawings",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/T002_AQR_embedded_image_text.json",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+            "sha256": "bfadfd3bd26d0871339fc0cb2343a46b72fa29a95bddb368811e70978e2f06cc",
+            "locator": "xl/media/image1.emf = definitions, image3.emf = data sources; extraction of EMR_EXTTEXTOUTW records",
+            "evidence_kind": "derived_text_from_archived_workbook",
+            "what_verified": ""
+          },
+          {
+            "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+            "evidence_path": "sources/round5/qc_futures.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting. LIMIT: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate."
+          }
+        ],
+        "next_action": "Zmapować58instrumentów z AppendixA na pliki i luki. Najpierw uzgodnić jedną serię GOLD: kontrakt, punkt, waluta, timestamp, nakładające się ceny starego/nowego kontraktu i koszt roll. Budować zwrot z P&L kontraktu; nie z procentowej zmiany dowolnej back-adjusted ceny. Potem zamrozić osobny plan rekonstrukcji, bez podstawiania braków innym rynkiem.",
+        "round3_context_next_action": "Sprawdzić legalne darmowe archiwum konkretnych wygasających kontraktów i umowę danych/rolowania; gotowe czynniki AQR służą tylko kontroli wyników autora."
+      }
+    ],
+    "source_urls_verified": [
+      "https://fairmodel.econ.yale.edu/ec439/mosk.pdf",
+      "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+      "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Original-Paper-Data.xlsx"
+    ],
+    "observations": [
+      {
+        "id": "FREE_SOURCE_GAP_REVIEW_20261029_V2_T002",
+        "title": "Co blokuje test i co pozyskano za darmo · 29.10.2026",
+        "summary": "Reguły TSMOM już znamy. Brakuje danych wejściowych wszystkich58futures/forward, ich rolowania i kosztów; gotowy wynik AQR tego nie zastępuje.",
+        "columns": [
+          "Darmowa ścieżka",
+          "Co rzeczywiście mamy",
+          "Co nadal trzeba sprawdzić"
+        ],
+        "rows": [
+          [
+            "Publiczne CSV pysystemtrade",
+            "Złoto1975–2024 i S&P1982–2024, contractIDs",
+            "Braki cen, brak wszystkich58rynków, brak pełnego pochodzenia i kosztów"
+          ],
+          [
+            "Nowsze community CSV",
+            "Dwa pliki sprawdzone do23.09.2025; opis40rynków",
+            "Nie są bieżące; aliasy micro i backfill wymagają uzgodnienia"
+          ],
+          [
+            "AQR / darmowy audyt wyników autora",
+            "Poprzednio pobrane XLSX",
+            "Można sprawdzić statystyki autora; to nie niezależny bot netto"
+          ]
+        ],
+        "limitations": [
+          "Kryterium danych: każda z58serii ma instrumentID/contractID, walutę, tick i multiplier, kalendarz sesji, expiry i jawny roll oraz źródło finansowania.",
+          "Kryterium P&L: w dniu roll znane ceny obu kontraktów; nieznana cena nie jest zerem ani darmowym przejściem. Reguły12m/1m/laggedEWvol40% pozostają źródłowe.",
+          "Publiczne repozytorium nie potwierdza identyczności z danymi autorów. Zestaw kodu GPL nie dowodzi praw do dalszej redystrybucji danych vendorów."
+        ],
+        "evidence_report": "BRAKI_5_TEORII/T002.json"
+      },
+      {
+        "id": "ARRIVAL_20261029_T002",
+        "title": "Dzisiejsza kontrola wykonania · 29.10.2026",
+        "summary": "Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.",
+        "columns": [
+          "Zakres",
+          "Stan"
+        ],
+        "rows": [
+          [
+            "Oryginał",
+            "nadal blokowany przez braki reguł lub danych wskazane przy karcie; dzisiejsze ETF-y tego nie zastępują"
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_DZISIAJ/T002.json"
+      }
+    ],
+    "source_detail": {
+      "original_workbook_fact": "Original-paper XLSX contains only TSMOM factors and Disclosures. It does not contain Definitions/Data Sources tabs. Those tabs are in the updated extended workbook; attributing them to the original file is incorrect.",
+      "original_output_schema": {
+        "sheet": "TSMOM factors",
+        "header_row": 11,
+        "data_rows": "12:311",
+        "date_column": "A; Excel serial dates",
+        "columns": {
+          "B": "TSMOM all assets",
+          "C": "TSMOM^EQ",
+          "D": "TSMOM^FX",
+          "E": "TSMOM^FI",
+          "F": "TSMOM^CM"
+        },
+        "dates": "Monthly 1985-01 through 2009-12, 300 observations expected; validate actual values before analysis.",
+        "units": "Monthly excess-return fractions; e.g. stored 0.04100435 is 4.100435%, not 0.04100435%. Original number format is decimal, updated workbook uses percent formatting.",
+        "warning": "Do not add/subtract RF a second time when reporting an excess-return statistic. A compounded excess-return curve is not a funded total-wealth curve without a financing convention."
+      },
+      "updated_output_schema": {
+        "sheet": "TSMOM Factors",
+        "header_row": 18,
+        "columns": {
+          "B": "TSMOM all assets",
+          "C": "TSMOM^CM",
+          "D": "TSMOM^EQ",
+          "E": "TSMOM^FI",
+          "F": "TSMOM^FX"
+        },
+        "warning": "Column order differs from original. A3:A12 says long/short excess factors, 12-month lookback/1-month holding, data/method differences, full history reconstructed on update. It is a distinct frozen snapshot, not immutable original data."
+      },
+      "updated_definition_readback": {
+        "return_basis": "Daily excess return of most liquid futures, typically nearest/next delivery; compound daily returns into return level used for horizons.",
+        "volatility": "Exponentially weighted squared daily returns around EW mean; annualize with 261. Decay center of mass=60 days, delta/(1-delta)=60, hence delta=60/61. Estimates lagged; never apply a realized future estimate.",
+        "signal": "Sign of preceding 12-month own excess return, long or short, held one month.",
+        "position": "Per-instrument target 40% ex-ante annual volatility, size=0.40/sigma. Equal average across instruments available at each time, not equal average of four class factors.",
+        "universe": "58 instruments: 9 equity index futures, 13 bond futures, 12 FX cross pairs and 24 commodity futures. These are source updated definitions, not ETF proxies.",
+        "data_sources": "Bloomberg/Datastream (equities, bonds, commodities), Morgan Markets bonds; MSCI/JPMorgan index backfills; Citigroup forward/spot data, Datastream FX spot and Bloomberg IBOR. Bond duration normalization is specified. The workbook contains descriptions and aggregate factor outputs, not these histories."
+      },
+      "original_full_paper_crosscheck": {
+        "acquired": "Full23-page published article from Yale academic host, HTTP200, archived with hash. This closes the gap between updated-workbook formula descriptions and original published equations.",
+        "rules_confirmed": "Original equation1 annualizes EW variance by261, delta=60/61, lagged estimates. Section4.1/equation5 uses12-month own excess return sign,40%/sigma per instrument and equal average over available securities. PDF3 explicitly gives24 commodities,12 FX cross pairs from9 underlying currencies,9 equity and13 bond instruments.",
+        "original_sources": "AppendixA says Datastream equity/bond futures with MSCI/JPMorgan index backfills; Citigroup FX forwards, earlier Datastream spots and Bloomberg IBOR; commodities from named exchanges. Updated-workbook vendor list must remain labelled updated.",
+        "remaining_code_level_details": "Paper equations do not deliver actual contract histories, original roll calendars, full vendor identifiers, EW startup/warmup state or execution/cost ledger. These are distinct remaining inputs, not missing knowledge of the published core formula."
+      },
+      "permitted_output_audit": [
+        "Validate the archived original factor monthly grid, units, missingness and fixed five columns.",
+        "Recompute descriptive moments and the paper-compatible aggregate factor summaries over fixed original dates, with stated annualization; compare the author-reported outputs, not an independent rebuilt strategy.",
+        "Examine a separately labelled updated factor snapshot using fixed dates; an updated series can revise the old history.",
+        "Keep the all-assets factor primary; show all four classes without selecting a winner."
+      ],
+      "not_reproducible_from_five_outputs": [
+        "Contract-level signals and volatility estimates, individual positions and equal weighting.",
+        "Raw data construction, roll choice, missing-contract treatment, original instrument regressions and signal horizons not in the supplied factor outputs.",
+        "Independent implementable net portfolio with transaction costs, margin, financing and slippage.",
+        "A causal live sizing rule or deployment; published aggregate returns are research outputs."
+      ],
+      "readiness": {
+        "author_output_audit_after_file_QA": true,
+        "independent_original_58_instrument_replication": false,
+        "original_claim_refuted_by_SPY_long_cash_test": false
+      }
+    },
+    "source_update_artifact": "research_round2/source_updates_T001_T004.json",
+    "source_update_sha256": "2953f6d2229cc4cc35f01b17b0ed374572ae1805eabdeaa991755a222392c6e2",
+    "observation_ids": [
+      "FREE_SOURCE_GAP_REVIEW_20261029_V2_T002",
+      "ARRIVAL_20261029_T002"
+    ],
+    "previous_findings_round2": [
+      "Pobrano oryginalny arkusz AQR i oddzielono go od aktualizowanego pliku, który przelicza historię. Pięć kolumn to wyniki portfeli, a nie dane 58 kontraktów.",
+      "Pełna pierwotna publikacja pozwoliła doprecyzować roczny sygnał, wykładniczą estymację zmienności i skalowanie ryzyka.",
+      "Możliwa jest kontrola gotowych wyników autora. Niezależna reprodukcja futures wymaga nadal cen kontraktów, rolowania, walut i kosztów."
+    ],
+    "strategy_result_file": "NET_STRATEGIE/T002.json",
+    "execution_evidence_file": "WYKONANIE_DZISIAJ/T002.json",
+    "free_source_review_id": "FREE_SOURCE_GAP_REVIEW_20261029_V2"
+  },
+  "source_qualification": {
+    "id": "T002",
+    "intended_market": "Płynne kontrakty futures i forward na akcje, obligacje, waluty i surowce.",
+    "segment": "Wiele rynków i klas, nie tylko jeden akcyjny ETF.",
+    "regime": "Oba kierunki trendu, w tym wzrosty i spadki; long lub short według własnego minionego excess return. Nie ograniczono do hossy.",
+    "horizon": "Roczny lookback, główna analiza następnego miesiąca i portfelowy rebalance; także inne horyzonty w testach źródłowych.",
+    "universe": [
+      "58 kontraktów futures/forward z publikacji"
+    ],
+    "original_objective": "Wykazanie przewidywalności własnych excess returns i premii portfela trendowego z kontrolą ryzyka i ekspozycji na czynniki.",
+    "correct_benchmark": "Excess returns i modele czynnikowe/pasywne portfele z tej samej klasy, przy jawnej normalizacji ryzyka; SPY dodatkowo dla celu projektu.",
+    "falsification_question": "Czy znak minionego12-miesięcznego excess return prognozuje kolejny zwrot w odpowiednim uniwersum, a source-defined portfel daje premię po kontroli ekspozycji?",
+    "missing_data": [
+      "Rollowane, kontraktowo poprawne futures/forward returns i historia stopy wolnej od ryzyka.",
+      "Źródłowa estymacja zmienności, sizing i pełne zasady rebalancingu.",
+      "Definicja wariantu long/cash, jeśli projekt nie dopuszcza strony short; taki wariant musi być odrębny."
+    ],
+    "ready_for_valid_test": false,
+    "readiness_reason": "SPY gross-return sign bez risk scaling/short testuje tylko uproszczony wariant, nie źródłową premię.",
+    "qualification_status": "requires_data_and_portfolio_reconstruction",
+    "source_fit": "adaptation",
+    "exact_mismatch": "Publikacja używa minionego excess return, kontraktów futures/forward z wielu klas aktywów, pozycji long i short oraz skalowania ryzykiem. Karta używa znaku całkowitego 252-sesyjnego zwrotu jednego ETF, ekspozycji long/cash 0/1 i dziennego przeliczania. Nie odtwarza portfela, premii ponad stopę wolną od ryzyka ani jej normalizacji ryzykiem.",
+    "correction_needed": "Nowa wersja musi rozdzielić test samej predykcji rocznego excess return od portfelowej implementacji. Ustalić miesięczne holding/rebalance, stopę gotówki i skalowanie; jeżeli brak futures, nazwać to przybliżeniem ETF i zachować ograniczenie.",
+    "source_url": "https://fairmodel.econ.yale.edu/ec439/mosk.pdf",
+    "applies_to_theory_version": 1
+  },
+  "acquisition_plan": {
+    "id": "T002",
+    "gaps": [
+      {
+        "gap_id": "T002-S1",
+        "missing_item": "Wykorzystanie autorskich factorreturns zamiast bezpodstawnegoETFproxy jako pierwszego audytu publikacji.",
+        "category": "source",
+        "why_needed": "AQRpublicfile daje wynikoryginalnegoprocesu, lecz nie jego suroweinputs.",
+        "acquisition_steps": [
+          "Użyć pobranegoaqr_original.xlsx i zachowaćhash.",
+          "PrzeczytaćDisclosures/definitions i ustalić jednostki, zakres i serie.",
+          "Odtworzyćtylko statystyki opublikowanych factorreturns według nowegoplanu, bezudawaniaindependentrebuild."
+        ],
+        "candidate_sources": [
+          {
+            "name": "AQR — OriginalPaperData",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Original-Paper-Data.xlsx",
+            "access_verified": true,
+            "what_available": "Pobrany XLSX HTTP200; miesięczne gotoweTSMOMfactorreturns oryginalnej próby, arkuszeTSMOMfactors/Disclosures.",
+            "does_not_supply": "58surowych serii kontraktów, ichprices,rolls,spready i kompletnej rekonstrukcji sygnałów."
+          },
+          {
+            "name": "AQR — updatedMonthlyTSMOM",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+            "access_verified": true,
+            "what_available": "PobranyXLSX HTTP200 zFactors/Definitions/DataSources/Disclosures.",
+            "does_not_supply": "Nie jest surowymi futures ani rzeczywistymwynikiem rachunku inwestora."
+          }
+        ],
+        "free_feasibility": "available_free",
+        "verification_acceptance": [
+          "Plik rzeczywiściepobranyHTTP200 iZIPstrukturapoprawna.",
+          "Zidentyfikowane kolumny/units i brakwyboru najlepszejklasy po wyniku.",
+          "Wynikopisany jako auditpublishedfactoroutput, nie nowabacktestimplementacja."
+        ],
+        "blocking_original_test": false,
+        "fallback_if_unavailable": "Jeśli autorskiplik nieczytelny, zachować blokadęanalizy, niezastępowaćSPY.",
+        "next_action": "Run only the fixed original-output QA and summary audit as an explicitly labelled audit of author-published returns; it is not independent strategy reconstruction.",
+        "blocking_independent_reconstruction": true,
+        "initial_next_action": "Przejrzeć arkusze oryginalnegoXLSX i przygotować plan odtworzeniastatystyk.",
+        "progress": {
+          "gap_id": "T002-S1",
+          "status": "resolved",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "Previously downloaded original output file is valid HTTP200 XLSX; exact row/column schema is inspected and frozen.",
+            "Original/updated column ordering and methodology differences are documented.",
+            "Fixed all-assets and all-four-class audit scope prevents ex-post selecting a winning asset class."
+          ],
+          "criteria_unmet": [
+            "This resolves data availability/specification for an author-output audit only; no performance audit has been calculated."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/free_dataset_inventory/aqr_original.xlsx",
+              "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Original-Paper-Data.xlsx",
+              "sha256": "91bdbae6366ccb0693581b690236dc14862562a98ee83052c4f440f8b6ae0db8",
+              "locator": "TSMOM factors!A6, A11:F311; Disclosures",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/free_dataset_inventory/aqr_updated.xlsx",
+              "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+              "sha256": "33470930e2269c0d97be4732ec2d9c27ddbc69ac8133b059a263e27400263eeb",
+              "locator": "TSMOM Factors!A3:A12, B18:F18; Definitions and Data Sources embedded EMF drawings",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/T002_AQR_embedded_image_text.json",
+              "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+              "sha256": "bfadfd3bd26d0871339fc0cb2343a46b72fa29a95bddb368811e70978e2f06cc",
+              "locator": "xl/media/image1.emf = definitions, image3.emf = data sources; extraction of EMR_EXTTEXTOUTW records",
+              "evidence_kind": "derived_text_from_archived_workbook",
+              "what_verified": ""
+            }
+          ],
+          "next_action": "Run only the fixed original-output QA and summary audit as an explicitly labelled audit of author-published returns; it is not independent strategy reconstruction.",
+          "round3_context_next_action": "Sprawdzić legalne darmowe archiwum konkretnych wygasających kontraktów i umowę danych/rolowania; gotowe czynniki AQR służą tylko kontroli wyników autora."
+        }
+      },
+      {
+        "gap_id": "T002-D1",
+        "missing_item": "58surowych returnsfutures/forward, contractIDs i regułrollowania.",
+        "category": "data",
+        "why_needed": "Gotowyfactor nie pozwala sprawdzić czy własnyalgorytm odtworzył sygnały iportfel.",
+        "acquisition_steps": [
+          "Zmapować instrumenty i dostawców zAppendixA publikacji.",
+          "Sprawdzić lokalne posiadane kontraktowe archiwa i zakres.",
+          "Dla braków sprawdzić giełdowe sample/katalogi bezzamówień; zapisaćniepokrytezbiory."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Moskowitz/Ooi/Pedersen — pełna publikacja",
+            "url": "https://fairmodel.econ.yale.edu/ec439/mosk.pdf",
+            "access_verified": true,
+            "what_available": "PierwotnyPDF dostępny; definicje excessreturn, horyzonty, ryzyko, konstrukcjaTSMOM i źródła.",
+            "does_not_supply": "Nie dostarcza każdego dziennego inputu i kontraktowego fillu."
+          },
+          {
+            "name": "AQR — OriginalPaperData",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Original-Paper-Data.xlsx",
+            "access_verified": true,
+            "what_available": "Pobrany XLSX HTTP200; miesięczne gotoweTSMOMfactorreturns oryginalnej próby, arkuszeTSMOMfactors/Disclosures.",
+            "does_not_supply": "58surowych serii kontraktów, ichprices,rolls,spready i kompletnej rekonstrukcji sygnałów."
+          },
+          {
+            "name": "CME — DataMine",
+            "url": "https://www.cmegroup.com/datamine.html",
+            "access_verified": true,
+            "what_available": "Publiczny katalog historycznych danych giełdowych; bezpłatnie dostępny opis możliwości.",
+            "does_not_supply": "Nie potwierdzono bezpłatnego pobrania potrzebnej pełnejhistorii; dostęp do katalogu nie oznacza uprawnień do danych."
+          },
+          {
+            "name": "pysystemtrade: public GOLD prices, pinned commit",
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+            "access_verified": true,
+            "verification": {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+              "file": "sources/round5/pst_GOLD_multiple.csv",
+              "at_utc": "2026-10-29T12:42:58.213303+00:00",
+              "http_status": 200,
+              "content_type": "text/plain; charset=utf-8",
+              "final_url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+              "bytes": 3379539,
+              "sha256": "5e02e932c5c17aa7e5807e942866a6a0f6f867c1bdca6698acf3609d05af6bdd",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps.",
+            "does_not_supply": "Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel.",
+            "access_scope": "public raw file acquired; research provenance and underlying redistribution rights still require review",
+            "relevant_gaps": [
+              "T002-D1",
+              "T002-R1",
+              "T003-D1",
+              "T003-E1"
+            ]
+          },
+          {
+            "name": "pysystemtrade: public S&P futures marks",
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/SP500.csv",
+            "access_verified": true,
+            "verification": {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/SP500.csv",
+              "file": "sources/round5/pst_SP500_multiple.csv",
+              "at_utc": "2026-10-29T12:42:58.213870+00:00",
+              "http_status": 200,
+              "content_type": "text/plain; charset=utf-8",
+              "final_url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/SP500.csv",
+              "bytes": 2377012,
+              "sha256": "3373bd1e83a6d1297e7e56f543fe2df1397d9bfb67b276a7befbaa5c8b5aa670",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Downloaded35,898marks,1982-09-14..2024-03-28, PRICE/CARRY/FORWARD plus contract IDs.",
+            "does_not_supply": "1537missing PRICE/7842missing FORWARD; not OHLCV, volume, OI, quotes or exact paper inputs.",
+            "access_scope": "public raw file acquired",
+            "relevant_gaps": [
+              "T002-D1",
+              "T003-D1"
+            ]
+          },
+          {
+            "name": "pysystemtrade: GOLD roll calendar",
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+            "access_verified": true,
+            "verification": {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+              "file": "sources/round5/pst_GOLD_rolls.csv",
+              "at_utc": "2026-10-29T12:42:58.214004+00:00",
+              "http_status": 200,
+              "content_type": "text/plain; charset=utf-8",
+              "final_url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+              "bytes": 12934,
+              "sha256": "b455c0b8594b3ded7d4aa56cd8abd8252ec3f411075cdefb69fc7379724d4887",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "274roll rows with current/next/carry contract IDs,1975..2020.",
+            "does_not_supply": "Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll.",
+            "access_scope": "public file acquired and date coverage checked",
+            "relevant_gaps": [
+              "T002-D1",
+              "T003-D1",
+              "T003-E1"
+            ]
+          },
+          {
+            "name": "Newer community CSV subset",
+            "url": "https://raw.githubusercontent.com/bug-or-feature/pst-csv-data/ef27b05c5d3305834afc4579cef6d8945b6801eb/README.md",
+            "access_verified": true,
+            "verification": {
+              "url": "https://raw.githubusercontent.com/bug-or-feature/pst-csv-data/ef27b05c5d3305834afc4579cef6d8945b6801eb/README.md",
+              "file": "sources/round5/pst_current_README.md",
+              "at_utc": "2026-10-29T12:42:58.926001+00:00",
+              "http_status": 200,
+              "content_type": "text/plain; charset=utf-8",
+              "final_url": "https://raw.githubusercontent.com/bug-or-feature/pst-csv-data/ef27b05c5d3305834afc4579cef6d8945b6801eb/README.md",
+              "bytes": 881,
+              "sha256": "b7c64d003dbecb9086413a9a7dd04c54009cc35305238af70e3651a8c7415202",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "README describes40instruments. Two actual files downloaded: GOLD_micro1975..2025-09-23; SP500_micro1997..2025-09-23.",
+            "does_not_supply": "Still stale for Oct2026; raw closes only, gaps remain. Micro alias before its actual launch needs a documented contract/backfill map; do not treat it as actual historical micro trading.",
+            "access_scope": "README and two pinned CSVs actually acquired; no completeness warranty",
+            "relevant_gaps": [
+              "T002-D1",
+              "T003-D1"
+            ]
+          },
+          {
+            "name": "QuantConnect/AlgoSeek: futures documentation",
+            "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+            "access_verified": true,
+            "verification": {
+              "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "file": "sources/round5/qc_futures.html",
+              "at_utc": "2026-10-29T12:45:47.678443+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "bytes": 475880,
+              "sha256": "46003d0334c947d8628c996f121c7f3d177e2dced5fe2e95c9d05fa4f3113cd5",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+            "does_not_supply": "Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T002-D1",
+              "T002-E1",
+              "T003-D1",
+              "T003-E1",
+              "T003-E2"
+            ]
+          },
+          {
+            "name": "QuantConnect licensing",
+            "url": "https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing",
+            "access_verified": true,
+            "verification": {
+              "url": "https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing",
+              "file": "sources/round5/qc_licensing.html",
+              "at_utc": "2026-10-29T12:43:00.006157+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing",
+              "bytes": 166032,
+              "sha256": "eb872f3ef01bc1ea99ade376b767521a1e08c410481f1338788d902a86938bf5",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Distinguishes cloud use from local data licensing; most price data free in cloud.",
+            "does_not_supply": "Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T002-D1",
+              "T003-D1",
+              "T010-DATA-02",
+              "T010-DATA-03"
+            ]
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Każdy kontrakt ma daty,rollrule,currency,tickunits.",
+          "Returns sąexcess i zgodne zfinansowaniem.",
+          "Nie pominięto trudnychkontraktów bezrejestru."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Audyt autorfactoroutput albo ograniczona jawnaETFadaptacja; żaden z nich nie jest niezależnąreprodukcją58kontraktów.",
+        "next_action": "Zmapować58instrumentów z AppendixA na pliki i luki. Najpierw uzgodnić jedną serię GOLD: kontrakt, punkt, waluta, timestamp, nakładające się ceny starego/nowego kontraktu i koszt roll. Budować zwrot z P&L kontraktu; nie z procentowej zmiany dowolnej back-adjusted ceny. Potem zamrozić osobny plan rekonstrukcji, bez podstawiania braków innym rynkiem.",
+        "initial_next_action": "Sporządzić mapę58inputs→posiadanyplik/dostęp/brak.",
+        "progress": {
+          "gap_id": "T002-D1",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "Full original AppendixA and updated workbook establish separately labelled vendor lists,58-instrument structure,daily excess-return construction and bond-duration normalization.",
+            "Round5: Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps.",
+            "Round5: Downloaded35,898marks,1982-09-14..2024-03-28, PRICE/CARRY/FORWARD plus contract IDs.",
+            "Round5: 274roll rows with current/next/carry contract IDs,1975..2020.",
+            "Round5: README describes40instruments. Two actual files downloaded: GOLD_micro1975..2025-09-23; SP500_micro1997..2025-09-23.",
+            "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+            "Round5: Distinguishes cloud use from local data licensing; most price data free in cloud."
+          ],
+          "criteria_unmet": [
+            "Underlying contract histories,rolls,complete identifier histories and original vendor backfills are not delivered by aggregate XLSX.",
+            "A fully free lawful source for matching all original inputs has not been established.",
+            "Round5: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel.",
+            "Round5: 1537missing PRICE/7842missing FORWARD; not OHLCV, volume, OI, quotes or exact paper inputs.",
+            "Round5: Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll.",
+            "Round5: Still stale for Oct2026; raw closes only, gaps remain. Micro alias before its actual launch needs a documented contract/backfill map; do not treat it as actual historical micro trading.",
+            "Round5: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+            "Round5: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/round2/T002_original_paper_author_hosted.pdf",
+              "url": "https://fairmodel.econ.yale.edu/ec439/mosk.pdf",
+              "sha256": "7682f8e97eb4b77591dc85e36731ff51ed031970cdde81678108734db9478379",
+              "locator": "Published JFE104(2012)228–250; PDF3–4: universe/return construction, PDF6: equation1 and lags, PDF9: equation5 and factor aggregation, PDF22–23: AppendixA; PDF page+227=journal page",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/free_dataset_inventory/aqr_updated.xlsx",
+              "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+              "sha256": "33470930e2269c0d97be4732ec2d9c27ddbc69ac8133b059a263e27400263eeb",
+              "locator": "TSMOM Factors!A3:A12, B18:F18; Definitions and Data Sources embedded EMF drawings",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/T002_AQR_embedded_image_text.json",
+              "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+              "sha256": "bfadfd3bd26d0871339fc0cb2343a46b72fa29a95bddb368811e70978e2f06cc",
+              "locator": "xl/media/image1.emf = definitions, image3.emf = data sources; extraction of EMR_EXTTEXTOUTW records",
+              "evidence_kind": "derived_text_from_archived_workbook",
+              "what_verified": ""
+            },
+            {
+              "url": "https://www.cmegroup.com/articles/faqs/access-to-cme-group-settlement-data-faq.html",
+              "evidence_path": "sources/round3/gap_receipts.json",
+              "locator": "Round3boundedsourcecheck",
+              "what_verified": "Public settlement availabilitydescription viawebreader; direct403 and no full58contractpanel acquired."
+            },
+            {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+              "evidence_path": "sources/round5/pst_GOLD_multiple.csv",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps. LIMIT: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel."
+            },
+            {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/SP500.csv",
+              "evidence_path": "sources/round5/pst_SP500_multiple.csv",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Downloaded35,898marks,1982-09-14..2024-03-28, PRICE/CARRY/FORWARD plus contract IDs. LIMIT: 1537missing PRICE/7842missing FORWARD; not OHLCV, volume, OI, quotes or exact paper inputs."
+            },
+            {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+              "evidence_path": "sources/round5/pst_GOLD_rolls.csv",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "274roll rows with current/next/carry contract IDs,1975..2020. LIMIT: Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll."
+            },
+            {
+              "url": "https://raw.githubusercontent.com/bug-or-feature/pst-csv-data/ef27b05c5d3305834afc4579cef6d8945b6801eb/README.md",
+              "evidence_path": "sources/round5/pst_current_README.md",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "README describes40instruments. Two actual files downloaded: GOLD_micro1975..2025-09-23; SP500_micro1997..2025-09-23. LIMIT: Still stale for Oct2026; raw closes only, gaps remain. Micro alias before its actual launch needs a documented contract/backfill map; do not treat it as actual historical micro trading."
+            },
+            {
+              "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "evidence_path": "sources/round5/qc_futures.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting. LIMIT: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate."
+            },
+            {
+              "url": "https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing",
+              "evidence_path": "sources/round5/qc_licensing.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Distinguishes cloud use from local data licensing; most price data free in cloud. LIMIT: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified."
+            }
+          ],
+          "next_action": "Zmapować58instrumentów z AppendixA na pliki i luki. Najpierw uzgodnić jedną serię GOLD: kontrakt, punkt, waluta, timestamp, nakładające się ceny starego/nowego kontraktu i koszt roll. Budować zwrot z P&L kontraktu; nie z procentowej zmiany dowolnej back-adjusted ceny. Potem zamrozić osobny plan rekonstrukcji, bez podstawiania braków innym rynkiem.",
+          "round3_context_next_action": "Sprawdzić legalne darmowe archiwum konkretnych wygasających kontraktów i umowę danych/rolowania; gotowe czynniki AQR służą tylko kontroli wyników autora."
+        }
+      },
+      {
+        "gap_id": "T002-R1",
+        "missing_item": "Dokładna estymacja zmienności, sizing, miesięcznyholding i regułyportfela.",
+        "category": "rule",
+        "why_needed": "Grosssign252daily/0–1 nie jest sourceTSMOM.",
+        "acquisition_steps": [
+          "Przepisaćrównania i definicje z sekcji3–4 źródła.",
+          "Zweryfikowaćhoryzont12m,holding1m,excessreturn i normalizacjęryzyka.",
+          "Zapisać pełnewyjścia,long/short,rolowanie i konfliktz ograniczeniamiprojektu jako osobnywariant."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Moskowitz/Ooi/Pedersen — pełna publikacja",
+            "url": "https://fairmodel.econ.yale.edu/ec439/mosk.pdf",
+            "access_verified": true,
+            "what_available": "PierwotnyPDF dostępny; definicje excessreturn, horyzonty, ryzyko, konstrukcjaTSMOM i źródła.",
+            "does_not_supply": "Nie dostarcza każdego dziennego inputu i kontraktowego fillu."
+          },
+          {
+            "name": "AQR — updatedMonthlyTSMOM",
+            "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+            "access_verified": true,
+            "what_available": "PobranyXLSX HTTP200 zFactors/Definitions/DataSources/Disclosures.",
+            "does_not_supply": "Nie jest surowymi futures ani rzeczywistymwynikiem rachunku inwestora."
+          },
+          {
+            "name": "pysystemtrade: public GOLD prices, pinned commit",
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+            "access_verified": true,
+            "verification": {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+              "file": "sources/round5/pst_GOLD_multiple.csv",
+              "at_utc": "2026-10-29T12:42:58.213303+00:00",
+              "http_status": 200,
+              "content_type": "text/plain; charset=utf-8",
+              "final_url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+              "bytes": 3379539,
+              "sha256": "5e02e932c5c17aa7e5807e942866a6a0f6f867c1bdca6698acf3609d05af6bdd",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps.",
+            "does_not_supply": "Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel.",
+            "access_scope": "public raw file acquired; research provenance and underlying redistribution rights still require review",
+            "relevant_gaps": [
+              "T002-D1",
+              "T002-R1",
+              "T003-D1",
+              "T003-E1"
+            ]
+          }
+        ],
+        "free_feasibility": "available_free",
+        "verification_acceptance": [
+          "Symboliczne równania mają cytowane miejsce.",
+          "Wszystkie estymaty używają tylko dozwolonejhistorii; brak ex-post riskcalibration udającejPIT.",
+          "Rozbieżności z originalfactor są raportowane."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Jeśliźródłowyshort/sizing niemożliwy wprojekcie, zachowaćoryginałnierozstrzygnięty i osobnywariantlong/cash.",
+        "next_action": "Zmapować58instrumentów z AppendixA na pliki i luki. Najpierw uzgodnić jedną serię GOLD: kontrakt, punkt, waluta, timestamp, nakładające się ceny starego/nowego kontraktu i koszt roll. Budować zwrot z P&L kontraktu; nie z procentowej zmiany dowolnej back-adjusted ceny. Potem zamrozić osobny plan rekonstrukcji, bez podstawiania braków innym rynkiem.",
+        "initial_next_action": "Napisać nowąsource-spec i niezależnie jąsprawdzić przed kodowaniem.",
+        "progress": {
+          "gap_id": "T002-R1",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "Full original paper acquired; equation1 and section4.1 confirm the core formulas independently of the changed updated workbook.",
+            "Published12-month sign,1-month holding,40% per-instrument volatility sizing,EW volatility with center-of-mass60,lagged estimates and equal available-instrument averaging are now source pinned.",
+            "Embedded EMF text is archived instead of silently treating blank cells as missing definitions.",
+            "Round5: Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps."
+          ],
+          "criteria_unmet": [
+            "Exact original implementation startup/warmup,contract-selection/roll calendars and vendor values are not published as executable code.",
+            "Independent rebuilt portfolio still needs underlying daily returns and a reviewed causal implementation.",
+            "Round5: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/round2/T002_original_paper_author_hosted.pdf",
+              "url": "https://fairmodel.econ.yale.edu/ec439/mosk.pdf",
+              "sha256": "7682f8e97eb4b77591dc85e36731ff51ed031970cdde81678108734db9478379",
+              "locator": "Published JFE104(2012)228–250; PDF3–4: universe/return construction, PDF6: equation1 and lags, PDF9: equation5 and factor aggregation, PDF22–23: AppendixA; PDF page+227=journal page",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/free_dataset_inventory/aqr_updated.xlsx",
+              "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+              "sha256": "33470930e2269c0d97be4732ec2d9c27ddbc69ac8133b059a263e27400263eeb",
+              "locator": "TSMOM Factors!A3:A12, B18:F18; Definitions and Data Sources embedded EMF drawings",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/T002_AQR_embedded_image_text.json",
+              "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+              "sha256": "bfadfd3bd26d0871339fc0cb2343a46b72fa29a95bddb368811e70978e2f06cc",
+              "locator": "xl/media/image1.emf = definitions, image3.emf = data sources; extraction of EMR_EXTTEXTOUTW records",
+              "evidence_kind": "derived_text_from_archived_workbook",
+              "what_verified": ""
+            },
+            {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+              "evidence_path": "sources/round5/pst_GOLD_multiple.csv",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps. LIMIT: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel."
+            }
+          ],
+          "next_action": "Zmapować58instrumentów z AppendixA na pliki i luki. Najpierw uzgodnić jedną serię GOLD: kontrakt, punkt, waluta, timestamp, nakładające się ceny starego/nowego kontraktu i koszt roll. Budować zwrot z P&L kontraktu; nie z procentowej zmiany dowolnej back-adjusted ceny. Potem zamrozić osobny plan rekonstrukcji, bez podstawiania braków innym rynkiem.",
+          "round3_context_next_action": "Sprawdzić legalne darmowe archiwum konkretnych wygasających kontraktów i umowę danych/rolowania; gotowe czynniki AQR służą tylko kontroli wyników autora."
+        }
+      },
+      {
+        "gap_id": "T002-E1",
+        "missing_item": "Model kosztów, margin,roll i realizacji dla własnego portfelafutures.",
+        "category": "execution",
+        "why_needed": "Publikowanefactorreturns nie są netwyciągiem brokera ani dowodem wykonalności naszychzleceń.",
+        "acquisition_steps": [
+          "Oddzielić ocenępremii factor od wykonania.",
+          "Dobrać kontraktowe opłaty i rollcost zjawnych źródeł oraz jużposiadanych danych.",
+          "Jeśli brak bid/ask, stosować opisanyscenario i zbieraćpaperforward."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Moskowitz/Ooi/Pedersen — pełna publikacja",
+            "url": "https://fairmodel.econ.yale.edu/ec439/mosk.pdf",
+            "access_verified": true,
+            "what_available": "PierwotnyPDF dostępny; definicje excessreturn, horyzonty, ryzyko, konstrukcjaTSMOM i źródła.",
+            "does_not_supply": "Nie dostarcza każdego dziennego inputu i kontraktowego fillu."
+          },
+          {
+            "name": "CME — DataMine",
+            "url": "https://www.cmegroup.com/datamine.html",
+            "access_verified": true,
+            "what_available": "Publiczny katalog historycznych danych giełdowych; bezpłatnie dostępny opis możliwości.",
+            "does_not_supply": "Nie potwierdzono bezpłatnego pobrania potrzebnej pełnejhistorii; dostęp do katalogu nie oznacza uprawnień do danych."
+          },
+          {
+            "name": "QuantConnect/AlgoSeek: futures documentation",
+            "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+            "access_verified": true,
+            "verification": {
+              "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "file": "sources/round5/qc_futures.html",
+              "at_utc": "2026-10-29T12:45:47.678443+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "bytes": 475880,
+              "sha256": "46003d0334c947d8628c996f121c7f3d177e2dced5fe2e95c9d05fa4f3113cd5",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+            "does_not_supply": "Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T002-D1",
+              "T002-E1",
+              "T003-D1",
+              "T003-E1",
+              "T003-E2"
+            ]
+          }
+        ],
+        "free_feasibility": "unresolved",
+        "verification_acceptance": [
+          "Każdykoszt ma źródło lub etykietęscenario.",
+          "Returnsgross/net nie są mylone; financiowanie i cash sąspójne."
+        ],
+        "blocking_original_test": false,
+        "fallback_if_unavailable": "Raportgross/statystyczny z ograniczeniami; brak statusu netwygrana.",
+        "next_action": "Zmapować58instrumentów z AppendixA na pliki i luki. Najpierw uzgodnić jedną serię GOLD: kontrakt, punkt, waluta, timestamp, nakładające się ceny starego/nowego kontraktu i koszt roll. Budować zwrot z P&L kontraktu; nie z procentowej zmiany dowolnej back-adjusted ceny. Potem zamrozić osobny plan rekonstrukcji, bez podstawiania braków innym rynkiem.",
+        "blocking_trading_validation": true,
+        "initial_next_action": "Wypisaćkoszty według instrumentów i oznaczyć brakpomiaru.",
+        "progress": {
+          "gap_id": "T002-E1",
+          "status": "open",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "Published data are long/short factor excess returns; they are distinguished from a funded account.",
+            "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting."
+          ],
+          "criteria_unmet": [
+            "Execution quotes, contract costs, margin, rolling fills and a self-financing account are not supplied.",
+            "Round5: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/free_dataset_inventory/aqr_original.xlsx",
+              "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Original-Paper-Data.xlsx",
+              "sha256": "91bdbae6366ccb0693581b690236dc14862562a98ee83052c4f440f8b6ae0db8",
+              "locator": "TSMOM factors!A6, A11:F311; Disclosures",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/free_dataset_inventory/aqr_updated.xlsx",
+              "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+              "sha256": "33470930e2269c0d97be4732ec2d9c27ddbc69ac8133b059a263e27400263eeb",
+              "locator": "TSMOM Factors!A3:A12, B18:F18; Definitions and Data Sources embedded EMF drawings",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/T002_AQR_embedded_image_text.json",
+              "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+              "sha256": "bfadfd3bd26d0871339fc0cb2343a46b72fa29a95bddb368811e70978e2f06cc",
+              "locator": "xl/media/image1.emf = definitions, image3.emf = data sources; extraction of EMR_EXTTEXTOUTW records",
+              "evidence_kind": "derived_text_from_archived_workbook",
+              "what_verified": ""
+            },
+            {
+              "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "evidence_path": "sources/round5/qc_futures.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting. LIMIT: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate."
+            }
+          ],
+          "next_action": "Zmapować58instrumentów z AppendixA na pliki i luki. Najpierw uzgodnić jedną serię GOLD: kontrakt, punkt, waluta, timestamp, nakładające się ceny starego/nowego kontraktu i koszt roll. Budować zwrot z P&L kontraktu; nie z procentowej zmiany dowolnej back-adjusted ceny. Potem zamrozić osobny plan rekonstrukcji, bez podstawiania braków innym rynkiem.",
+          "round3_context_next_action": "Sprawdzić legalne darmowe archiwum konkretnych wygasających kontraktów i umowę danych/rolowania; gotowe czynniki AQR służą tylko kontroli wyników autora."
+        }
+      }
+    ]
+  },
+  "quantconnect_data_review": null
+}

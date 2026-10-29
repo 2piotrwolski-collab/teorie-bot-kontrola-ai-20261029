@@ -1,0 +1,954 @@
+{
+  "snapshot_at_utc": "2026-10-29T18:43:35.427389+00:00",
+  "scope": "Research snapshot. No full original-theory verification; no live orders.",
+  "card": {
+    "id": "T009",
+    "round": 4,
+    "findings": [
+      "Wykonano nowy przyczynowy wariant SPY/BIL: c ustalone wyłącznie na danych 2008–2009, następnie zamrożone, ekspozycja 0–1 i miesięczny sygnał z poprzedniego miesiąca. Nie używa przyszłego c z całej próby ani kredytu.",
+      "W latach 2024–28.10.2026 wynik przy 5 bps to +62,49%, SPY +68,71%. To ograniczony wariant wdrożeniowy, a nie ponowne odtworzenie źródłowych dziesięciu czynników.",
+      "Kalibracja i limit 1 dały w najnowszym okresie około 97,6% średniej ekspozycji. Ta wersja zachowuje się więc blisko SPY i nie testuje całego źródłowego efektu przy dźwigni. c nie będzie dopasowywane po wyniku.",
+      "Dodatkowo pobrano cztery darmowe archiwa: French 5 Factors i Momentum w częstotliwości dziennej i miesięcznej. Sprawdzono daty i unikalność; nie liczono jeszcze nowych kontrastów tych czynników.",
+      "Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.",
+      "Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii."
+    ],
+    "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki.",
+    "verified_correction": "Dla źródłowego pytania statystycznego należy skalować miesięczny excess return odwrotnością RV z poprzedniego miesiąca i porównywać go z tym samym nieskalowanym czynnikiem. Pełnopróbkowe c jest jawną normalizacją ex post publikacji. Osobny wariant wykonywalnego bota wymaga przyczynowego sizingu, limitu dźwigni, dochodu gotówki i kosztów; nie należy przypisywać mu obecnej alfy brutto.",
+    "verified_missing_data": "Oryginalny vintage i dokładne granice miesięcy Table I, źródłowa implementacja RV dla zmiennej liczby sesji, pozostałe czynniki oraz warunki wykonania i finansowania osobnego wariantu bota.",
+    "overall_status": "strategie_kosztowe_provisional",
+    "gap_updates": [
+      {
+        "gap_id": "T009-RULE-01",
+        "status": "partial",
+        "status_reason": "Odtworzono źródłowy mechanizm inverse variance, miesięczny horyzont i benchmark tego samego czynnika; wykonano ograniczone badanie Mkt. Dokładna numeryczna reprodukcjaTableI pozostaje otwarta.",
+        "criteria_met": [
+          "Źródłowe równania1–3 i pytanie alpha/Sharpe ustalone.",
+          "Trzy konwencjeRV zapisane przed wynikiem; raportujemy wszystkie6porównań.",
+          "Niezależny source/plan/code review i synthetic testyPASS przed freeze."
+        ],
+        "criteria_unmet": [
+          "Dokładny source-vintage, granice miesięcy źródłowej próby i implementacja zmiennej długości miesiąca.",
+          "Pozostałe czynniki nie są zbadane."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/round2/moreira_published.pdf",
+            "url": "https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf",
+            "locator": "I.A–C, Eq1–3, TableI",
+            "what_verified": "Miesięczne excess returns skalowane lagged realized variance, źródłowe porównanie do tego samego czynnika."
+          },
+          {
+            "evidence_path": "config/moreira_observation_frozen.json",
+            "locator": "Plan/code/data identities frozen before results",
+            "what_verified": "Ślad zakresu i sześciu zaplanowanych porównań.",
+            "url": ""
+          }
+        ],
+        "next_action": "Pozyskać źródłowy kod/InternetAppendix i matching dailyvintage; nie dopasowywać dat doN1065 po wyniku.",
+        "round3_context_next_action": "Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki."
+      },
+      {
+        "gap_id": "T009-DATA-02",
+        "status": "partial",
+        "status_reason": "Pobrano i zamrożono publiczne dzienne oraz miesięczneFrench factors; dane spójne i kompletne na poziomie miesięcy. To current2026vintage, nie oryginalny2015.",
+        "criteria_met": [
+          "26338dailyrows1926-07-01–2026-09-30 i1203monthlyrows192607–202609.",
+          "Brak duplikatów i brakujących całych miesięcy; jawne15–27sesji miesięcznie, w tym historyczne soboty.",
+          "Sygnał z miesiąca t łączony tylko z t+1calendar, nie z następnym dostępnym wierszem."
+        ],
+        "criteria_unmet": [
+          "Identyczny historyczny vintage autorów.",
+          "Sprawdzenie korekt CRSPFIZ/CIZ; monthly nie zastąpiono złożonym dailyexcess."
+        ],
+        "evidence": [
+          {
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html",
+            "evidence_path": "sources/round2/ff_daily.zip",
+            "locator": "FF3Daily/Monthly officialfiles",
+            "what_verified": "Darmowe official factor returns dostępne."
+          },
+          {
+            "evidence_path": "research_round2/moreira_data_quality.json",
+            "locator": "DataQA",
+            "what_verified": "Liczności, daty, brakujące miesiące, jednostki%→decimal.",
+            "url": ""
+          }
+        ],
+        "next_action": "Zestawić monthlyarchivesJuly2016 z bieżącymi danymi i poszukać odpowiadającego dailyarchive; zachować osobne vintage.",
+        "round3_context_next_action": "Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki."
+      },
+      {
+        "gap_id": "T009-RULE-03",
+        "status": "resolved",
+        "status_reason": "Rozdział statystycznego c ex post od przyczynowego sizingu jest jawny w planie, kodzie, wyniku i ograniczeniach. Rozwiązano definicję, nie sizing wykonywalnego bota.",
+        "criteria_met": [
+          "Każdy wynik oznacza normalization_uses_future=true i net_profit_tested=false.",
+          "c równa unconditionalSDw obrębie każdego okresu wyłącznie na potrzeby źródłowej statystyki.",
+          "Nie wyliczonoCAGR/NAV ani wykonywalnej pozycji z c pełnopróbkowego."
+        ],
+        "criteria_unmet": [],
+        "evidence": [
+          {
+            "evidence_path": "sources/round2/moreira_published.pdf",
+            "url": "https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf",
+            "locator": "I.A–C, Eq1–3, TableI",
+            "what_verified": "Miesięczne excess returns skalowane lagged realized variance, źródłowe porównanie do tego samego czynnika."
+          },
+          {
+            "evidence_path": "config/moreira_observation_frozen.json",
+            "locator": "Plan/code/data identities frozen before results",
+            "what_verified": "Ślad zakresu i sześciu zaplanowanych porównań.",
+            "url": ""
+          }
+        ],
+        "next_action": "Ewentualny sizingPIT wymaga osobnego zamrożonego planu, limitów dźwigni i kosztów; obecnego wyniku nie wdrażać jako gotowej reguły kapitału.",
+        "round3_context_next_action": "Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki."
+      },
+      {
+        "gap_id": "T009-EXEC-04",
+        "status": "partial",
+        "status_reason": "Wykonano i zapisano jawny wariant po modelowanych kosztach; rzeczywiste fille, pełne koszty osobiste i wierna egzekucja źródła pozostają niepotwierdzone.",
+        "criteria_met": [
+          "Cel statystyczny został oddzielony od wyniku netto.",
+          "Osobny zamrożony plan, ledger, model aktualnej taryfy i scenariusze spreadu/poślizgu, kontrole przyczynowości i rachunków.",
+          "Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/T009.json"
+        ],
+        "criteria_unmet": [
+          "Historyczne bid/ask, financing/borrow, replikacja portfela, dostępne limity i podatki.",
+          "Bid/ask, partial fills, rozliczenie i kolejność sprzedaży/zakupu, realny poślizg, podatki, FX oraz KID/uprawnienia UE. Brak paper forward i partner consensus."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/round2/moreira_published.pdf",
+            "url": "https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf",
+            "locator": "I.A–C, Eq1–3, TableI",
+            "what_verified": "Miesięczne excess returns skalowane lagged realized variance, źródłowe porównanie do tego samego czynnika."
+          },
+          {
+            "evidence_path": "config/moreira_observation_frozen.json",
+            "locator": "Plan/code/data identities frozen before results",
+            "what_verified": "Ślad zakresu i sześciu zaplanowanych porównań.",
+            "url": ""
+          }
+        ],
+        "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki.",
+        "round3_context_next_action": "Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki."
+      },
+      {
+        "gap_id": "T009-DATA-05",
+        "status": "partial",
+        "status_reason": "Źródłowy zestaw i dostawcy są potwierdzeni; obecnie policzono tylkoMkt, nie10czynników.",
+        "criteria_met": [
+          "French udostępnia daily/monthlyMkt,SMB,HML,Mom,RMW,CMA; dostępność pierwotnie zweryfikowana.",
+          "Pobrano 4 publiczne ZIP: FF5 daily15918/monthly759, Momentum daily26237/monthly1197; daty unikalne, koniec202609. Nowe wyniki czynników jeszcze nie są policzone."
+        ],
+        "criteria_unmet": [
+          "Zamrożone i sprawdzone dzienne/miesięczneMom,RMW,CMA orazHXZIA/ROE,BAB/FX do osobnych testów.",
+          "Source-vintage i samplebounds każdego czynnika."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/round2/moreira_published.pdf",
+            "url": "https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf",
+            "locator": "I.A–C, Eq1–3, TableI",
+            "what_verified": "Miesięczne excess returns skalowane lagged realized variance, źródłowe porównanie do tego samego czynnika."
+          },
+          {
+            "evidence_path": "config/moreira_observation_frozen.json",
+            "locator": "Plan/code/data identities frozen before results",
+            "what_verified": "Ślad zakresu i sześciu zaplanowanych porównań.",
+            "url": ""
+          },
+          {
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html",
+            "evidence_path": "research_round3/moreira_additional_factor_inventory.json",
+            "locator": "Round3boundedsourcecheck",
+            "what_verified": "FouradditionalcurrentvintageFF5/Momdaily/monthlyZIPs acquired and dateQA; no newfactor contrasts."
+          }
+        ],
+        "next_action": "Pobrać pozostałeFrenchdaily/monthly, sprawdzić dopasowanie dat/wariantówSMB; następnie osobno sprawdzić bezpłatne authorfilesHXZ/BAB/FX.",
+        "round3_context_next_action": "Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki."
+      }
+    ],
+    "source_urls_verified": [
+      "https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf",
+      "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html"
+    ],
+    "observations": [
+      {
+        "id": "QUOTE_PREFLIGHT_20261028_T009",
+        "title": "Rzeczywiste kwotowania przed zamknięciem · 28.10.2026",
+        "summary": "Historyczne SIP o 15:45 NY: zmierzony spread; osobno model kosztu zakupu i natychmiastowej sprzedaży dla budżetu 10 000 USD, bez ruchu rynku.",
+        "columns": [
+          "ETF",
+          "Spread bps",
+          "Połowa spreadu bps",
+          "Model kosztu pełnego obrotu USD"
+        ],
+        "rows": [
+          [
+            "SPY",
+            0.389,
+            0.1945,
+            3.2855
+          ],
+          [
+            "BIL",
+            1.0909,
+            0.5455,
+            4.0891
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_20261028.json"
+      },
+      {
+        "id": "ARRIVAL_20261029_T009",
+        "title": "Dzisiejsza kontrola wykonania · 29.10.2026",
+        "summary": "Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.",
+        "columns": [
+          "Zakres",
+          "Stan"
+        ],
+        "rows": [
+          [
+            "SPY",
+            "oczekuje"
+          ],
+          [
+            "BIL",
+            "oczekuje"
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_DZISIAJ/T009.json"
+      },
+      {
+        "id": "MODERN_EXECUTION_NET_R2_T009",
+        "title": "Warianty strategii po modelowanych kosztach transakcyjnych",
+        "summary": "Decyzja na zamknięciu → najwcześniej następne otwarcie. Wynik w USD po modelowanej prowizji IBKR Pro Fixed USA, spreadzie/poślizgu i założonej rezerwie 1 bps przy sprzedaży, przed podatkiem i FX. Skala 10 000 USD służy policzeniu minimalnych prowizji; nie jest założeniem o kapitale użytkownika. BIL jest kupowany/sprzedawany z kosztami. 0/5/20 bps oznacza dodatkowy scenariusz spreadu i poślizgu na stronę; prowizje są zawsze naliczane.",
+        "columns": [
+          "Wersja wykonania",
+          "Okres",
+          "Dodatkowe bps/stronę",
+          "Zwrot (%)",
+          "SPY (%)",
+          "Własny benchmark (%)",
+          "Max DD (%)",
+          "Koszty USD",
+          "Śr. ekspozycja ryzykowna (%)"
+        ],
+        "rows": [
+          [
+            "T009_SPY_PIT_RV_CAP1",
+            "2010–28.10.2026",
+            5,
+            "639.24",
+            "822.10",
+            "822.10",
+            "-32.70",
+            "458.25",
+            "95.97"
+          ],
+          [
+            "T009_SPY_PIT_RV_CAP1",
+            "2010–2019",
+            5,
+            "243.09",
+            "249.41",
+            "249.41",
+            "-19.38",
+            "142.23",
+            "97.11"
+          ],
+          [
+            "T009_SPY_PIT_RV_CAP1",
+            "2020–2023",
+            5,
+            "32.09",
+            "56.25",
+            "56.25",
+            "-32.71",
+            "93.36",
+            "91.92"
+          ],
+          [
+            "T009_SPY_PIT_RV_CAP1",
+            "2024–28.10.2026",
+            0,
+            "62.92",
+            "68.88",
+            "68.88",
+            "-18.76",
+            "9.58",
+            "97.62"
+          ],
+          [
+            "T009_SPY_PIT_RV_CAP1",
+            "2024–28.10.2026",
+            5,
+            "62.49",
+            "68.71",
+            "68.71",
+            "-18.76",
+            "42.19",
+            "97.62"
+          ],
+          [
+            "T009_SPY_PIT_RV_CAP1",
+            "2024–28.10.2026",
+            20,
+            "61.23",
+            "68.20",
+            "68.20",
+            "-18.76",
+            "139.47",
+            "97.62"
+          ]
+        ],
+        "evidence_report": "NET_STRATEGIE/T009.json",
+        "limitations": [
+          "To jawne warianty wykonania, nie pełne reprodukcje publikacji. Szczegółowa macierz zgodności, wszystkie scenariusze, NAV, roczne wyniki i transakcje są zachowane.",
+          "Żaden z ośmiu wariantów dziennych nie spełnił bramki przewagi nad SPY w obu okresach 2020–2023 oraz 2024–2026 przy 5 i 20 bps. To wynik tych portfeli; nie obalenie teorii lub rzadkiego modułu wejścia.",
+          "Dla Fabera własny benchmark to ten sam koszyk pięciu ETF-ów, dla pozostałych — ten sam bazowy ETF. Ochrona ryzyka i cel pobicia pełnego SPY są oddzielnymi pytaniami.",
+          "Cena otwarcia OHLC, jednoczesne wykonanie koszyka, kolejność sprzedaży/zakupu i pełne fille pozostają przybliżeniami. Faktyczny spread, poślizg, rozliczenie, podatki, FX i dostępność ETF/KID dla inwestora UE nie zostały potwierdzone.",
+          "Wszystkie okresy są retrospektywne i częściowo nakładają się. Brak nietkniętego OOS, paper forward i konsensusu z Claude’em. Kontrola rachunkowa inną implementacją: PASS dla 168 ścieżek."
+        ]
+      },
+      {
+        "id": "MOREIRA_MKT_MONTHLY_V1",
+        "title": "Wynik: miesięczne skalowanie zmiennością na Mkt-RF",
+        "summary": "Ten sam czynnik rynkowy, te same miesiące i równa zmienność w porównaniu. Alpha to roczny intercept regresji względem tego czynnika; nie CAGR ani zysk rachunku. Konwencja sum_squares jest główna, pozostałe dwie zapisano przed wynikiem jako analizę wrażliwości.",
+        "columns": [
+          "Miesiące wyniku",
+          "RV",
+          "N miesięcy",
+          "Sharpe rynku",
+          "Sharpe skalowany",
+          "Alpha roczna (%)",
+          "95% CI alpha, HC1",
+          "Maks. mnożnik ex post"
+        ],
+        "rows": [
+          [
+            "192608–201512",
+            "sum_squares",
+            1073,
+            "0.42",
+            "0.51",
+            "4.88",
+            "[1.82; 7.93]",
+            "16.85"
+          ],
+          [
+            "201601–202609",
+            "sum_squares",
+            129,
+            "0.83",
+            "0.59",
+            "1.45",
+            "[-7.42; 10.32]",
+            "4.26"
+          ],
+          [
+            "192608–201512",
+            "sample_variance",
+            1073,
+            "0.42",
+            "0.51",
+            "4.79",
+            "[1.76; 7.82]",
+            "14.46"
+          ],
+          [
+            "201601–202609",
+            "sample_variance",
+            129,
+            "0.83",
+            "0.63",
+            "1.94",
+            "[-6.71; 10.59]",
+            "4.19"
+          ],
+          [
+            "192608–201512",
+            "population_variance",
+            1073,
+            "0.42",
+            "0.51",
+            "4.79",
+            "[1.76; 7.82]",
+            "14.58"
+          ],
+          [
+            "201601–202609",
+            "population_variance",
+            129,
+            "0.83",
+            "0.63",
+            "1.92",
+            "[-6.74; 10.58]",
+            "4.17"
+          ]
+        ],
+        "evidence_report": "MOREIRA_OBSERWACJA.json",
+        "limitations": [
+          "Current French vintage, nie pełna numeryczna reprodukcja publikacji. Dokładne granice źródłowej Table I pozostają nieustalone.",
+          "c wyznaczono ex post osobno w każdym okresie. Mnożniki powyżej 1 wymagają dźwigni; nie są sprawdzonym sizingiem ani finansowaniem bota.",
+          "Wynik brutto; bez kosztów wykonania i finansowania. Późniejszy okres jest retrospektywny.",
+          "Przedziały HC1 są punktowe i nie uwzględniają ogólnej autokorelacji. Sześć powiązanych porównań nie jest sześcioma niezależnymi potwierdzeniami.",
+          "Niezależne przeliczenie primary w obu okresach zgodne z dokładnością poniżej 6×10⁻¹⁵."
+        ]
+      }
+    ],
+    "source_detail": null,
+    "source_update_artifact": "research_round2/source_updates_T009.json",
+    "source_update_sha256": "58eb7cb791b5fa5fc21cb6d6e3a23055236967741b9f10dae1ab22f11ce841ca",
+    "observation_ids": [
+      "QUOTE_PREFLIGHT_20261028_T009",
+      "ARRIVAL_20261029_T009",
+      "MODERN_EXECUTION_NET_R2_T009",
+      "MOREIRA_MKT_MONTHLY_V1"
+    ],
+    "previous_findings_round2": [
+      "Wykonano nowy miesięczny test źródłowego mechanizmu inverse variance na czynniku Mkt-RF, z dopasowanym benchmarkiem tego samego rynku.",
+      "W historycznej próbie Sharpe rośnie z około 0,42 do 0,51; w późniejszej spada z 0,83 do 0,59. Wszystkie trzy wcześniej ustalone konwencje RV są zapisane.",
+      "Normalizacja ryzyka c jest pełnopróbkowa, zgodnie z pytaniem statystycznym publikacji. Nie jest przyczynową wielkością pozycji bota, a wynik nie jest zyskiem netto."
+    ],
+    "strategy_result_file": "NET_STRATEGIE/T009.json",
+    "execution_evidence_file": "WYKONANIE_DZISIAJ/T009.json"
+  },
+  "source_qualification": {
+    "id": "T009",
+    "intended_market": "Portfele/faktory akcyjne i currency carry z badaniaMoreiry iMuira.",
+    "segment": "Wysoka/niską zmienność prognozowana z lagowanych danych, źródłowa ciągła ekspozycja odwrotna do wariancji.",
+    "regime": "Wiele reżimów, w tym recesje i kryzysy; mechanizm zmienia ryzyko, nie wycina po fakcie lat bessy.",
+    "horizon": "Miesięczny portfel z estymacją zmienności z minionych danych dziennych; sizing i normalizacja muszą być odtworzone.",
+    "universe": [
+      "Market, value, momentum, profitability, ROE, investment i carry zgodnie z wersją publikacji."
+    ],
+    "original_objective": "Poprawa alpha, Sharpe i użyteczności przez zarządzanie ekspozycją przy zmienności, a nie konkretna binarna granica20%.",
+    "correct_benchmark": "Ten sam nieskalowany faktor/portfel przy jasno określonym ryzyku i finansowaniu; SPY osobno jako cel projektu.",
+    "falsification_question": "Czy source-defined ciągłevolatility sizing poprawia wynik skorygowany o ryzyko względem identycznego bazowego portfela?",
+    "missing_data": [
+      "Pełna formuła, normalizacja i estymacja sizingPIT.",
+      "Źródłowe faktory, stopa wolna od ryzyka i ewentualne finansowanie/dźwignia."
+    ],
+    "ready_for_valid_test": false,
+    "readiness_reason": "BinarneSPY/cash w v1 zmienia rdzeń metody; przed testem potrzebny redesign.",
+    "qualification_status": "requires_redesign_dequalified",
+    "source_fit": "misaligned",
+    "exact_mismatch": "Odwrotne do wariancji skalowanie ekspozycji portfeli/faktorów zastąpiono binarnym filtrem SPY z arbitralnym progiem 20%, oknem20 i maksymalną ekspozycją1. Usunięto ciągłe sizing, normalizację ryzyka i portfele/faktory źródłowe. Poprawa alpha/Sharpe w źródle nie jest tożsama z większym surowym CAGR niż pełne SPY; bramka pilotażu nie bada jej bezpośrednio.",
+    "correction_needed": "Nowa wersja musi jawnie odtworzyć formułę sizing i sposób kalibracji dostępny wyłącznie na danych rozwojowych, dochód gotówki i sposób oceny ryzyka/alpha. Ograniczenie ekspozycji do1 traktować jako osobną adaptację i raportować odrębnie.",
+    "source_url": "https://www.nber.org/papers/w22208",
+    "applies_to_theory_version": 1
+  },
+  "acquisition_plan": {
+    "theory_id": "T009",
+    "source_question": "Czy miesięczne skalowanie factor excess return odwrotnością poprzedniej miesięcznej wariancji poprawia źródłowe miaryalpha/Sharpe względem tego samego czynnika?",
+    "current_status": "NIEZBADANA_ZRODLOWO; wcześniejszySPYthreshold to adaptacja",
+    "readiness": "Free statistical subset is feasible after rule/vintage qualification; full factor-set and executable net validation remain incomplete.",
+    "gaps": [
+      {
+        "gap_id": "T009-RULE-01",
+        "missing_item": "Jednoznaczna specyfikacja oryginalnej metody odwrotnej wariancji i właściwego pytania",
+        "category": "rule",
+        "why_needed": "Obecne0/1SPY przy progu20% nie testuje równania źródła; pytanie o alpha/Sharpe czynnika różni się od pobiciaSPY bogactwem w każdym okresie.",
+        "acquisition_steps": [
+          "Z przepisuI.B zapisać f_managed[t+1]=(c/RV[t])*f[t+1], gdzie f to excess return.",
+          "Rozdzielić miesięczny sygnał z dziennych obserwacji poprzedniego miesiąca od miesięcznego zwrotu przyszłego; uzgodnić liczbę dni, centrowanie, jednostki i próbę z konkretną tabelą.",
+          "Zamrozić osobno replikację statystyczną jednego wskazanego czynnika oraz ewentualny wykonywalny wariant portfelowy; nie zastępować oryginału progiem20%, long-only lub nową bramkąSPY."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Moreira–Muir: publikacja na stronie autora",
+            "url": "https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf",
+            "access_verified": true,
+            "what_available": "Pełny PDF: równania strategii i opis danych; sekcjaI.B oraz przypis6 o normalizacji c.",
+            "does_not_supply": "Kod wykonawczy PIT, zmierzone koszty konkretnego brokera ani pewność zgodności bieżącej wersji danych z publikacją.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:48:59.420729+00:00",
+              "http_status": 200,
+              "content_type": "application/pdf",
+              "bytes_received": 778299,
+              "sha256": "9c0c8f7c669e9205847548edd3a7a46d5f175733db62b14937a2ba93641a5a34",
+              "last_modified": "Tue, 08 Sep 2026 21:09:07 GMT"
+            },
+            "access_scope": "public_file_or_document_only; no authenticated account or paid dataset access inferred"
+          }
+        ],
+        "free_feasibility": "available_free",
+        "verification_acceptance": [
+          "W karcie są równania, indeksy czasowe, źródłowa tabela/próba i definicja benchmarku; każdy własny limit ma osobną wersję.",
+          "Nie ma źródłowej sugestii, że wybrane posthoc okresy hossy są obowiązkowym filtrem; reżim do oceny wdrożenia musi być określony przed wynikiem.",
+          "Próby syntetyczne potwierdzają, że zmiana zwrotu miesiąca[t+1] nie zmienia ekspozycji ustalonej po[t]."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "PozostawićNIEZBADANA. Można opisać własny filtrSPY jako osobną adaptację, bez werdyktu oMoreira–Muir.",
+        "next_action": "Pozyskać źródłowy kod/InternetAppendix i matching dailyvintage; nie dopasowywać dat doN1065 po wyniku.",
+        "initial_next_action": "Uzupełnić kartęT009 o źródłowy protokół czynnika i benchmark; nie uruchamiać kolejnegoSPYthreshold testu.",
+        "progress": {
+          "gap_id": "T009-RULE-01",
+          "status": "partial",
+          "status_reason": "Odtworzono źródłowy mechanizm inverse variance, miesięczny horyzont i benchmark tego samego czynnika; wykonano ograniczone badanie Mkt. Dokładna numeryczna reprodukcjaTableI pozostaje otwarta.",
+          "criteria_met": [
+            "Źródłowe równania1–3 i pytanie alpha/Sharpe ustalone.",
+            "Trzy konwencjeRV zapisane przed wynikiem; raportujemy wszystkie6porównań.",
+            "Niezależny source/plan/code review i synthetic testyPASS przed freeze."
+          ],
+          "criteria_unmet": [
+            "Dokładny source-vintage, granice miesięcy źródłowej próby i implementacja zmiennej długości miesiąca.",
+            "Pozostałe czynniki nie są zbadane."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/round2/moreira_published.pdf",
+              "url": "https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf",
+              "locator": "I.A–C, Eq1–3, TableI",
+              "what_verified": "Miesięczne excess returns skalowane lagged realized variance, źródłowe porównanie do tego samego czynnika."
+            },
+            {
+              "evidence_path": "config/moreira_observation_frozen.json",
+              "locator": "Plan/code/data identities frozen before results",
+              "what_verified": "Ślad zakresu i sześciu zaplanowanych porównań.",
+              "url": ""
+            }
+          ],
+          "next_action": "Pozyskać źródłowy kod/InternetAppendix i matching dailyvintage; nie dopasowywać dat doN1065 po wyniku.",
+          "round3_context_next_action": "Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki."
+        }
+      },
+      {
+        "gap_id": "T009-DATA-02",
+        "missing_item": "Dzienne czynniki iRF oraz zgodne miesięczne zwroty; zamrożony vintage danych",
+        "category": "data",
+        "why_needed": "DoRV potrzebne są dzienne excess returns, a do oceny miesięczne zwroty iRF; nie wolno potraktować procentów jak ułamków lub odjąćRF dwukrotnie.",
+        "acquisition_steps": [
+          "Zachować już zweryfikowane ZIPyFrench i ichSHA, datę pobrania oraz znacznikCRSP202609.",
+          "Wyodrębnić dzienne i miesięczne sekcjeCSV, odrzucić roczne tabele i sentinele braków; dzielić wartości procentowe przez100.",
+          "Sprawdzić kalendarz/grain/unikalność i kompletność miesięcy; dla pełnego zestawu publikacji osobno pozyskaćHXZ, BAB iFXcarry, których te ZIPy nie dostarczają.",
+          "Rozstrzygnąć czy celem jest bieżący-vintage statistical rerun czy dosłowna replikacja publikacji; darmowe bieżące dane nie dowodzą zgodności historycznej wersjiFIZ/CIZ."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Kenneth French: dzienne czynniki3 i RF",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip",
+            "access_verified": true,
+            "what_available": "Sprawdzony ZIP200: Mkt-RF,SMB,HML,RF;26338 rekordów1926-07-01–2026-09-30, plik z bazyCRSP202609; dane w procentach.",
+            "does_not_supply": "Indywidualne akcje, historyczne składy/obroty portfeli, rzeczywiste prowizje, borrow i automatycznie historyczny vintage2017.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:48:58.929395+00:00",
+              "http_status": 200,
+              "content_type": "application/x-zip-compressed",
+              "bytes_received": 178326,
+              "sha256": "96c23b88e651cbfff3740a53f8225e59ee39893371e96385a1d8125ec2cd9c89",
+              "last_modified": "Tue, 27 Oct 2026 15:18:47 GMT",
+              "data_date_first": "19260701",
+              "data_date_last": "20260930",
+              "data_rows": 26338
+            },
+            "access_scope": "public_file_or_document_only; no authenticated account or paid dataset access inferred"
+          },
+          {
+            "name": "Kenneth French: miesięczne czynniki3 i RF",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_CSV.zip",
+            "access_verified": true,
+            "what_available": "Sprawdzony ZIP200:1203 miesięcy1926-07–2026-09; czynniki excess oraz RF, przydatne do miesięcznej nogi równania.",
+            "does_not_supply": "Nie gwarantuje tożsamości miesięcznych czynników z prostym składaniem dziennych excess returns ani dawnej wersjiFIZ.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:48:58.929676+00:00",
+              "http_status": 200,
+              "content_type": "application/x-zip-compressed",
+              "bytes_received": 13078,
+              "sha256": "b03d39e4bb253dda0f14893db3b78e64b40b8d6549a0fc0fd4111dae84c98618",
+              "last_modified": "Tue, 27 Oct 2026 15:18:47 GMT",
+              "data_date_first": "192607",
+              "data_date_last": "202609",
+              "data_rows": 1203
+            },
+            "access_scope": "public_file_or_document_only; no authenticated account or paid dataset access inferred"
+          },
+          {
+            "name": "Kenneth French: dzienne czynniki5",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_5_Factors_2x3_daily_CSV.zip",
+            "access_verified": true,
+            "what_available": "Sprawdzony ZIP200:Mkt-RF,SMB,HML,RMW,CMA,RF;15918 dni1963-07-01–2026-09-30.",
+            "does_not_supply": "CzynnikówHXZ, BAB, FX carry ani indywidualnych pozycji i egzekucji.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:48:58.929759+00:00",
+              "http_status": 200,
+              "content_type": "application/x-zip-compressed",
+              "bytes_received": 150489,
+              "sha256": "e58577223032aa45071a46686f7068900c371b516c9eb04e28e974c34264f84f",
+              "last_modified": "Tue, 27 Oct 2026 15:18:47 GMT",
+              "data_date_first": "19630701",
+              "data_date_last": "20260930",
+              "data_rows": 15918
+            },
+            "access_scope": "public_file_or_document_only; no authenticated account or paid dataset access inferred"
+          },
+          {
+            "name": "Kenneth French: dzienny momentum factor",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Momentum_Factor_daily_CSV.zip",
+            "access_verified": true,
+            "what_available": "Sprawdzony ZIP200:26237 dni1926-11-03–2026-09-30.",
+            "does_not_supply": "Pełnego zestawu dziewięciu czynników źródła i historii wykonalnych cen każdej nogi.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:48:58.929814+00:00",
+              "http_status": 200,
+              "content_type": "application/x-zip-compressed",
+              "bytes_received": 85338,
+              "sha256": "e56d5bc845544e2993e77353b12c611cfce3149ef754f9b59fc67904ddadd369",
+              "last_modified": "Tue, 27 Oct 2026 15:18:47 GMT",
+              "data_date_first": "19261103",
+              "data_date_last": "20260930",
+              "data_rows": 26237
+            },
+            "access_scope": "public_file_or_document_only; no authenticated account or paid dataset access inferred"
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "HTTP200, poprawneZIPy i oczekiwane kolumny są już sprawdzone; dane nie kończą się w październiku2026 lecz2026-09-30.",
+          "RF i excess return mają jawne jednostki oraz oddzielne role; na każdym RV używane są wyłącznie dni poprzedniego miesiąca.",
+          "Wersja testu wymienia rzeczywiście dostępny czynnik/próbę; nie nazywa testuMktRF pełną replikacją wszystkich czynników.",
+          "Vintage i późniejsze rewizje są udokumentowane; statystyczny rerun nie jest uznany za nietkniętyPIT/OOS."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Wykonać w przyszłości wyłącznie jawnie ograniczone odtworzenie statystyczne dostępnego czynnika; pozostałe czynnikiNIEZBADANE.",
+        "next_action": "Zestawić monthlyarchivesJuly2016 z bieżącymi danymi i poszukać odpowiadającego dailyarchive; zachować osobne vintage.",
+        "initial_next_action": "Dodać kontrolowany parser i raport jakościFrench do nowego protokołu, bez obliczania strategii przed zamrożeniem.",
+        "progress": {
+          "gap_id": "T009-DATA-02",
+          "status": "partial",
+          "status_reason": "Pobrano i zamrożono publiczne dzienne oraz miesięczneFrench factors; dane spójne i kompletne na poziomie miesięcy. To current2026vintage, nie oryginalny2015.",
+          "criteria_met": [
+            "26338dailyrows1926-07-01–2026-09-30 i1203monthlyrows192607–202609.",
+            "Brak duplikatów i brakujących całych miesięcy; jawne15–27sesji miesięcznie, w tym historyczne soboty.",
+            "Sygnał z miesiąca t łączony tylko z t+1calendar, nie z następnym dostępnym wierszem."
+          ],
+          "criteria_unmet": [
+            "Identyczny historyczny vintage autorów.",
+            "Sprawdzenie korekt CRSPFIZ/CIZ; monthly nie zastąpiono złożonym dailyexcess."
+          ],
+          "evidence": [
+            {
+              "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html",
+              "evidence_path": "sources/round2/ff_daily.zip",
+              "locator": "FF3Daily/Monthly officialfiles",
+              "what_verified": "Darmowe official factor returns dostępne."
+            },
+            {
+              "evidence_path": "research_round2/moreira_data_quality.json",
+              "locator": "DataQA",
+              "what_verified": "Liczności, daty, brakujące miesiące, jednostki%→decimal.",
+              "url": ""
+            }
+          ],
+          "next_action": "Zestawić monthlyarchivesJuly2016 z bieżącymi danymi i poszukać odpowiadającego dailyarchive; zachować osobne vintage.",
+          "round3_context_next_action": "Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki."
+        }
+      },
+      {
+        "gap_id": "T009-RULE-03",
+        "missing_item": "Rozdzielenie pełnopróbkowej normalizacji c od przyczynowej wielkości pozycjiPIT",
+        "category": "rule",
+        "why_needed": "Przypis6 źródła dobiera c do równej zmienności w całej próbie. To normalizacja porównania statystycznego, a nie dostępny wstecz plan wielkości pozycji dla bota.",
+        "acquisition_steps": [
+          "W odtworzeniu statystycznym jawnie oznaczyć ex-post/fullsample c i jego nieprzyczynowość jako sizingu.",
+          "Dla przyszłego wykonywalnego wariantu ustalić c wyłącznie z okresu treningowego lub z góry określonej regułyPIT; zapisać gross exposure, maksymalną dźwignię i postępowanie przy małymRV.",
+          "Trzymać dwa wyniki/protokoły odrębnie; nie dobierać c, capu lub okresu tak, żeby po obejrzeniu wyników uzyskać zwycięstwo."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Moreira–Muir: publikacja na stronie autora",
+            "url": "https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf",
+            "access_verified": true,
+            "what_available": "Pełny PDF: równania strategii i opis danych; sekcjaI.B oraz przypis6 o normalizacji c.",
+            "does_not_supply": "Kod wykonawczy PIT, zmierzone koszty konkretnego brokera ani pewność zgodności bieżącej wersji danych z publikacją.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:48:59.420729+00:00",
+              "http_status": 200,
+              "content_type": "application/pdf",
+              "bytes_received": 778299,
+              "sha256": "9c0c8f7c669e9205847548edd3a7a46d5f175733db62b14937a2ba93641a5a34",
+              "last_modified": "Tue, 08 Sep 2026 21:09:07 GMT"
+            },
+            "access_scope": "public_file_or_document_only; no authenticated account or paid dataset access inferred"
+          },
+          {
+            "name": "Kenneth French: dzienne czynniki3 i RF",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip",
+            "access_verified": true,
+            "what_available": "Sprawdzony ZIP200: Mkt-RF,SMB,HML,RF;26338 rekordów1926-07-01–2026-09-30, plik z bazyCRSP202609; dane w procentach.",
+            "does_not_supply": "Indywidualne akcje, historyczne składy/obroty portfeli, rzeczywiste prowizje, borrow i automatycznie historyczny vintage2017.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:48:58.929395+00:00",
+              "http_status": 200,
+              "content_type": "application/x-zip-compressed",
+              "bytes_received": 178326,
+              "sha256": "96c23b88e651cbfff3740a53f8225e59ee39893371e96385a1d8125ec2cd9c89",
+              "last_modified": "Tue, 27 Oct 2026 15:18:47 GMT",
+              "data_date_first": "19260701",
+              "data_date_last": "20260930",
+              "data_rows": 26338
+            },
+            "access_scope": "public_file_or_document_only; no authenticated account or paid dataset access inferred"
+          }
+        ],
+        "free_feasibility": "available_free",
+        "verification_acceptance": [
+          "Statystyczna replikacja z c_fullsample jest wyraźnie oddzielona od causal deployment.",
+          "Przyszły c_PIT jest zamrożony przed oceną, a jego wyliczenie nie odwołuje się do całego okresu testowego.",
+          "Zapisano, że niezmienniczośćSharpe względem dodatniego stałego c w idealnym modelu nie przenosi się automatycznie na koszty, capy i financing."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Pozostać przy analizie źródłowego równania i danych. BrakPITsizingu nie jest obaleniem wyniku statystycznego autorów.",
+        "next_action": "Ewentualny sizingPIT wymaga osobnego zamrożonego planu, limitów dźwigni i kosztów; obecnego wyniku nie wdrażać jako gotowej reguły kapitału.",
+        "initial_next_action": "Dodać dwa nazwane tryby badania z różnymi bramkami; nie wkładać c_fullsample do bota.",
+        "progress": {
+          "gap_id": "T009-RULE-03",
+          "status": "resolved",
+          "status_reason": "Rozdział statystycznego c ex post od przyczynowego sizingu jest jawny w planie, kodzie, wyniku i ograniczeniach. Rozwiązano definicję, nie sizing wykonywalnego bota.",
+          "criteria_met": [
+            "Każdy wynik oznacza normalization_uses_future=true i net_profit_tested=false.",
+            "c równa unconditionalSDw obrębie każdego okresu wyłącznie na potrzeby źródłowej statystyki.",
+            "Nie wyliczonoCAGR/NAV ani wykonywalnej pozycji z c pełnopróbkowego."
+          ],
+          "criteria_unmet": [],
+          "evidence": [
+            {
+              "evidence_path": "sources/round2/moreira_published.pdf",
+              "url": "https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf",
+              "locator": "I.A–C, Eq1–3, TableI",
+              "what_verified": "Miesięczne excess returns skalowane lagged realized variance, źródłowe porównanie do tego samego czynnika."
+            },
+            {
+              "evidence_path": "config/moreira_observation_frozen.json",
+              "locator": "Plan/code/data identities frozen before results",
+              "what_verified": "Ślad zakresu i sześciu zaplanowanych porównań.",
+              "url": ""
+            }
+          ],
+          "next_action": "Ewentualny sizingPIT wymaga osobnego zamrożonego planu, limitów dźwigni i kosztów; obecnego wyniku nie wdrażać jako gotowej reguły kapitału.",
+          "round3_context_next_action": "Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki."
+        }
+      },
+      {
+        "gap_id": "T009-EXEC-04",
+        "missing_item": "Historyczne koszty finansowania/dźwigni, odwzorowanie czynników i rzeczywiste koszty wykonania",
+        "category": "execution",
+        "why_needed": "Ekspozycja c/RV może przekraczać1, a czynniki long-short nie są pojedynczymETF. RF z biblioteki nie jest potwierdzoną stopą pożyczki brokera; bez tego nie ma netto wykonywalnego testu.",
+        "acquisition_steps": [
+          "Najpierw wyznaczyć instrument i strukturę ekspozycji odpowiadającą badanemu czynnikowi; nie zakładać, żeMktRF/SMB/HML można wykonać jednym zleceniemSPY.",
+          "Zebrać z właściwego brokera historyczne finansowanie, collateral, borrow/availability dla shortów oraz transakcyjne bid/ask i opłaty. Publiczne strony bieżących stawek służą jedynie identyfikacji wymaganych pól.",
+          "Sprawdzić legalnie posiadane wyciągi/eksporty. Nie otwierać kont, nie składać zleceń i nie kupować baz w ramach tej pracy; niczego nie dopowiadać jako0."
+        ],
+        "candidate_sources": [
+          {
+            "name": "IBKR: opisSLB i danych o pożyczaniu akcji",
+            "url": "https://www.interactivebrokers.com/en/trading/short-securities-availability.php",
+            "access_verified": true,
+            "what_available": "Publiczna dokumentacja narzędzia klienta opisuje bieżącą dostępność i bieżące oraz historyczne stawki indicative borrow.",
+            "does_not_supply": "Nie pobrano kontaSLB, danych per-akcja/per-dzień ani potwierdzenia pełnego zakresu historycznego; indicative nie oznacza wykonanego borrow.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:48:59.791728+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "bytes_received": 192722,
+              "sha256": "6c0ec25a04521a384e2e38d1585a6af9bb1785cc954dc5e62a80bbe675f5941f"
+            },
+            "access_scope": "public_file_or_document_only; no authenticated account or paid dataset access inferred"
+          },
+          {
+            "name": "IBKR: publikowane stawki finansowania",
+            "url": "https://www.interactivebrokers.com/en/trading/pricing-margin-rates.php",
+            "access_verified": true,
+            "what_available": "Publiczna strona bieżących warunków finansowania i zastrzeżeń brokerowych.",
+            "does_not_supply": "Pełnej historii kosztu właściwego dla rachunku Piotra, kwoty, waluty i dat1962–1986 lub całego okresu replikacji.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:49:00.161186+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "bytes_received": 288271,
+              "sha256": "77cf4bd2ef37f25e38314ca6492e5189db6e5b9c4ac45cd5e050c01d24cabfa7"
+            },
+            "access_scope": "public_file_or_document_only; no authenticated account or paid dataset access inferred"
+          },
+          {
+            "name": "IBKR: opis wyciągu rzeczywistych borrow fees",
+            "url": "https://www.ibkrguides.com/reportingreference/reportguide/borrowfeedetails_default.htm",
+            "access_verified": true,
+            "what_available": "Dokumentacja pól dziennych opłat, stawek i kwot w activity statement.",
+            "does_not_supply": "Rzeczywistych wyciągów Piotra ani kosztów hipotetycznych historycznych transakcji, które nigdy nie zaszły.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:49:00.472497+00:00",
+              "http_status": 200,
+              "content_type": "text/html",
+              "bytes_received": 41338,
+              "sha256": "0987048197a5a27de4d88e97df2f4855f4c2f857a9d359bb70f1498be58590ff",
+              "last_modified": "Wed, 28 Oct 2026 12:46:59 GMT"
+            },
+            "access_scope": "public_file_or_document_only; no authenticated account or paid dataset access inferred"
+          }
+        ],
+        "free_feasibility": "unresolved",
+        "verification_acceptance": [
+          "Każdy koszt ma właściwy rachunek, walutę, datę i podstawę naliczania albo jawny status brak danych.",
+          "Dostęp do dokumentacji nie jest przedstawiany jako dostęp do historycznychSLB ani posiadanie rachunkuIBKR.",
+          "Brak tych danych blokuje netto deployment-validation; teoretyczna replikacja factor-return pozostaje odrębnym, odpowiednio oznaczonym zadaniem."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Możliwy późniejszy gross/statistical rerun, wyraźnie bez potwierdzenia wykonalności i bez werdyktuWYGRANA.",
+        "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki.",
+        "initial_next_action": "Utworzyć checklistę kosztów dla wybranego rzeczywistego instrumentu; nie wykorzystywać5bps jako zmierzonego kosztu.",
+        "progress": {
+          "gap_id": "T009-EXEC-04",
+          "status": "partial",
+          "status_reason": "Wykonano i zapisano jawny wariant po modelowanych kosztach; rzeczywiste fille, pełne koszty osobiste i wierna egzekucja źródła pozostają niepotwierdzone.",
+          "criteria_met": [
+            "Cel statystyczny został oddzielony od wyniku netto.",
+            "Osobny zamrożony plan, ledger, model aktualnej taryfy i scenariusze spreadu/poślizgu, kontrole przyczynowości i rachunków.",
+            "Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/T009.json"
+          ],
+          "criteria_unmet": [
+            "Historyczne bid/ask, financing/borrow, replikacja portfela, dostępne limity i podatki.",
+            "Bid/ask, partial fills, rozliczenie i kolejność sprzedaży/zakupu, realny poślizg, podatki, FX oraz KID/uprawnienia UE. Brak paper forward i partner consensus."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/round2/moreira_published.pdf",
+              "url": "https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf",
+              "locator": "I.A–C, Eq1–3, TableI",
+              "what_verified": "Miesięczne excess returns skalowane lagged realized variance, źródłowe porównanie do tego samego czynnika."
+            },
+            {
+              "evidence_path": "config/moreira_observation_frozen.json",
+              "locator": "Plan/code/data identities frozen before results",
+              "what_verified": "Ślad zakresu i sześciu zaplanowanych porównań.",
+              "url": ""
+            }
+          ],
+          "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki.",
+          "round3_context_next_action": "Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki."
+        }
+      },
+      {
+        "gap_id": "T009-DATA-05",
+        "missing_item": "Pozostałe czynnikiHXZ/BAB/FX i ich zgodność z oryginalnym zestawem",
+        "category": "data",
+        "why_needed": "ZweryfikowaneZIPyFrench nie pokrywają całego zestawu źródła; pojedynczyMktRF nie może reprezentować pełnego badania.",
+        "acquisition_steps": [
+          "Z oficjalnegoGlobal-q pobrać dopiero po kwalifikacji konkretne dzienne i miesięczne plikiR_IA/R_ROE, zachowaćhash i dokumentację.",
+          "Na stronieAQR rozwiązać linkBABdaily/monthly, sprawdzić darmowy dostęp, zakres i definicję; nie utożsamiać dostępnej strony z pobraną serią.",
+          "Na stronieVerdelhana sprawdzić faktyczne pliki i dzienne zmiany kursów dla skrajnych portfeliFX. Jeśli nie są publicznie dostępne, zapisać brak; nie kontaktować autorów i nie kupować danych bez odrębnej autoryzacji.",
+          "Zbudować macierz czynnik→źródło→zakres→częstotliwość→vintage przed jakimkolwiek wspólnym testem."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Global-q: oficjalne czynnikiHXZ",
+            "url": "https://global-q.org/factors.html",
+            "access_verified": true,
+            "what_available": "Publiczna strona opisuje dzienne i miesięczne CSV z investmentR_IA i return-on-equityR_ROE; sam plikCSV nie został jeszcze pobrany ani zwalidowany.",
+            "does_not_supply": "Nie potwierdzono tożsamości bieżącegoq-factor vintage z próbką publikacji ani danych wykonawczych.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:54:28.033215+00:00",
+              "http_status": 200,
+              "bytes_received": 26262,
+              "content_type": "text/html",
+              "sha256": "741606b0858dc52889380ea01842ea72472e56c68c8cdd50fe080b4af7114472"
+            },
+            "access_scope": "landing documentation only; referenced CSV/XLS payload and entitlement not yet verified"
+          },
+          {
+            "name": "AQR: oficjalnyBABdaily dataset",
+            "url": "https://www.aqr.com/Insights/Datasets/Betting-Against-Beta-Equity-Factors-Daily",
+            "access_verified": true,
+            "what_available": "Dostępna publiczna strona oferuje dziennyBABequity factor i opis konstrukcji; nie sprawdzono jeszcze binarnego pliku danych ani jego zakresu.",
+            "does_not_supply": "Nie jest to pobrana/zatwierdzona seria, skład portfela, historyczna dostępność short ani indywidualne stawki finansowania.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:54:28.033496+00:00",
+              "http_status": 200,
+              "bytes_received": 68763,
+              "content_type": "text/html; charset=utf-8",
+              "sha256": "8170856a04d07030a17d928df0e125400107986322bbf134d08ef7969ded395d"
+            },
+            "access_scope": "landing documentation only; referenced CSV/XLS payload and entitlement not yet verified"
+          },
+          {
+            "name": "AdrienVerdelhanMIT: oficjalna biblioteka danych",
+            "url": "https://web.mit.edu/adrienv/www/Data.html",
+            "access_verified": true,
+            "what_available": "Publiczna strona prowadzi do plików miesięcznych currency excess returns i innych FXserii.",
+            "does_not_supply": "Nie potwierdza dziennej historii high/lowcurrency exchange-rate changes potrzebnej w oryginalnymRVani kompletnego aktualnego zestawuMoreira–Muir.",
+            "verification": {
+              "checked_at_utc": "2026-10-28T21:54:28.033576+00:00",
+              "http_status": 200,
+              "bytes_received": 6289,
+              "content_type": "text/html",
+              "sha256": "8a3fc58b1642d6254ef1e5fedef108fea05de72a7b450a41b1e1de9e0c44ba98"
+            },
+            "access_scope": "landing documentation only; referenced CSV/XLS payload and entitlement not yet verified"
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Każda użyta seria ma pobrany plik,hash,kolumny,częstotliwość,zakres i zweryfikowane jednostki.",
+          "Nie stosowaćETFproxy do brakującego czynnika bez nowej jawnej adaptacji.",
+          "Tylko rzeczywiście zweryfikowane czynniki wchodzą do nazwanego zakresu replikacji;FXpozostajeNIEZBADANY przy braku dziennegoRV."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Ograniczone i nazwane odtworzenie dostępnego podzbioru, nigdy pełna replikacja publikacji.",
+        "next_action": "Pobrać pozostałeFrenchdaily/monthly, sprawdzić dopasowanie dat/wariantówSMB; następnie osobno sprawdzić bezpłatne authorfilesHXZ/BAB/FX.",
+        "initial_next_action": "Uzupełnić macierz dostępności o bezpośrednie plikiHXZ/BAB i rozstrzygnąć dziennyFX; obecnie żaden nowy test nie jest uruchamiany.",
+        "progress": {
+          "gap_id": "T009-DATA-05",
+          "status": "partial",
+          "status_reason": "Źródłowy zestaw i dostawcy są potwierdzeni; obecnie policzono tylkoMkt, nie10czynników.",
+          "criteria_met": [
+            "French udostępnia daily/monthlyMkt,SMB,HML,Mom,RMW,CMA; dostępność pierwotnie zweryfikowana.",
+            "Pobrano 4 publiczne ZIP: FF5 daily15918/monthly759, Momentum daily26237/monthly1197; daty unikalne, koniec202609. Nowe wyniki czynników jeszcze nie są policzone."
+          ],
+          "criteria_unmet": [
+            "Zamrożone i sprawdzone dzienne/miesięczneMom,RMW,CMA orazHXZIA/ROE,BAB/FX do osobnych testów.",
+            "Source-vintage i samplebounds każdego czynnika."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/round2/moreira_published.pdf",
+              "url": "https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf",
+              "locator": "I.A–C, Eq1–3, TableI",
+              "what_verified": "Miesięczne excess returns skalowane lagged realized variance, źródłowe porównanie do tego samego czynnika."
+            },
+            {
+              "evidence_path": "config/moreira_observation_frozen.json",
+              "locator": "Plan/code/data identities frozen before results",
+              "what_verified": "Ślad zakresu i sześciu zaplanowanych porównań.",
+              "url": ""
+            },
+            {
+              "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html",
+              "evidence_path": "research_round3/moreira_additional_factor_inventory.json",
+              "locator": "Round3boundedsourcecheck",
+              "what_verified": "FouradditionalcurrentvintageFF5/Momdaily/monthlyZIPs acquired and dateQA; no newfactor contrasts."
+            }
+          ],
+          "next_action": "Pobrać pozostałeFrenchdaily/monthly, sprawdzić dopasowanie dat/wariantówSMB; następnie osobno sprawdzić bezpłatne authorfilesHXZ/BAB/FX.",
+          "round3_context_next_action": "Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki."
+        }
+      }
+    ],
+    "id": "T009"
+  },
+  "quantconnect_data_review": null
+}

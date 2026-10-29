@@ -1,0 +1,212 @@
+{
+  "id": "T003_T010_QC_PREPARATION_20261029_V1",
+  "at_utc": "2026-10-29T13:26:50.765052+00:00",
+  "state": "RULE_KERNELS_AND_DATA_AUDIT_PROJECTS_PREPARED; FULL_PORTFOLIO_BACKTEST_ADAPTERS_NOT_YET_READY",
+  "user_constraint": "Use free public no-account data first. Ask user to register/login only when required history cannot be acquired independently. Paid options0.",
+  "autonomous_acquisition": "sources/round6 and research_round6/no_account_audit.json; three actual gold contract daily histories plus officialLEANfixtures acquired. Insufficient fullstrategyinputs.",
+  "account_check": "Read live QC home/signup in provided browser: SignIn/CreateFreeAccount; no authenticated session verified. No form submitted, signup, subscription, cloudrun or APIkey used.",
+  "budget": {
+    "paid_api": 0,
+    "subscriptions": 0,
+    "AI_agents": 0,
+    "live_deployments": 0,
+    "broker_connections": 0,
+    "data_audit_runs_max": 5,
+    "concurrency": 1,
+    "parameter_search": false
+  },
+  "local_checks": {
+    "rule_tests": 16,
+    "synthetic_only": true,
+    "cloud_syntax": "local Python syntax only; no cloudcompile claimed"
+  },
+  "T003": {
+    "source_fit": "Full source System2 core preserved. First modern diagnostic is GC only, consistently selected before results; not full21marketportfolio or originalTurtleaccount reproduction.",
+    "source_spec": {
+      "variant": "Turtle System 2, standard 2N stop, full source core; not System1 and not optional Whipsaw.",
+      "market_scope": {
+        "source": "Liquid US-exchange futures; grains excluded due to account limits and meats excluded. Source permits a consistently excluded market, not opportunistic switching.",
+        "markets": [
+          "30Y US Treasury bond",
+          "10Y US Treasury note",
+          "coffee",
+          "cocoa",
+          "sugar",
+          "cotton",
+          "Swiss franc",
+          "Deutschmark",
+          "British pound",
+          "French franc",
+          "Japanese yen",
+          "Canadian dollar",
+          "S&P500",
+          "Eurodollar",
+          "90-day US Treasury bill",
+          "gold",
+          "silver",
+          "copper",
+          "crude oil",
+          "heating oil",
+          "unleaded gasoline"
+        ],
+        "locator": "PDF15–16 / printed11–12; some contracts no longer exist in their original form."
+      },
+      "rules": [
+        {
+          "rule": "TR=max(H−L, abs(H−previous_close), abs(L−previous_close)); N=(19*previous_N+current_TR)/20, first N initialized by simple average of 20 TR values. This is Wilder-style alpha1/20 smoothing, not generic EMA alpha2/21.",
+          "locator": "PDF18 / printed14"
+        },
+        {
+          "rule": "Dollar volatility=N*dollars_per_price_point; contracts per Unit=floor(1% notional account / dollar volatility). Units were supplied on Monday weekly sheets.",
+          "locator": "PDF19–20 / printed15–16"
+        },
+        {
+          "rule": "Enter one Unit long one tick above prior55-session high, or short one tick below prior55-session low, intraday. Opening gap through threshold enters at open. Take every System2 breakout; no System1 prior-winner skip filter.",
+          "locator": "PDF23–24 / printed19–20"
+        },
+        {
+          "rule": "Add a Unit every0.5N favorable move from previous actual fill, until max4 Units, subject to portfolio limits. Multiple units may be added one day.",
+          "locator": "PDF24–25 / printed20–21"
+        },
+        {
+          "rule": "Standard initial stop2N from each fill. When adding units, earlier stops advance0.5N favorably. With ordinary equal spacing this tends to align stops at newest−2N (long), but gap/skid exceptions retain different stops; do not blindly align all stops to newest.",
+          "locator": "PDF27–28 / printed23–24; gap example new30.80/newstop28.40, earlier three stops27.70"
+        },
+        {
+          "rule": "Exit all Units on adverse20-day channel breakout: long below prior20-day low, short above prior20-day high, intraday; do not wait for close.",
+          "locator": "PDF31 / printed27"
+        },
+        {
+          "rule": "Maximum Units:4 per market,6 per closely correlated group per direction,10 per loosely correlated group per direction,12 total per direction. Source gives examples, not complete fixed group membership.",
+          "locator": "PDF21 / printed17"
+        },
+        {
+          "rule": "Notional account reset annually by discretionary evaluation, approximately prior gains/losses. Reduce notional by20% when losses reach10% of current notional, then repeat; recover toward yearly starting equity. Exact re-expansion mechanics need a declared convention.",
+          "locator": "PDF22 / printed18"
+        },
+        {
+          "rule": "Simultaneous signals choose strongest longs/weakest shorts and one liquid contract month per market; source offers visual and N-normalized alternatives. Roll only into a contract that independently supports existing position; generally a few weeks before expiry while liquid, with exceptions for stronger near contract.",
+          "locator": "PDF34–35 / printed30–31"
+        },
+        {
+          "rule": "Actual traders watched thresholds and often used limits/near-market discretion; fast-market waiting/stabilization is not a deterministic daily-bar fill rule.",
+          "locator": "PDF26–27 and32–33 / printed22–23 and28–29"
+        }
+      ],
+      "explicit_exclusion": "Optional Whipsaw0.5N stop/reentry is described PDF28–29; it is a separate strategy and is not silently mixed into standard2N.",
+      "unresolved_for_mechanical_exact_test": [
+        "Weekly N/unit publication cutoff and treatment within an existing pyramid.",
+        "Annual subjective notional reset and complete recovery/resizing algorithm.",
+        "Complete correlation groups and deterministic simultaneous ranking.",
+        "Original individual-contract data, tick/multiplier history and currencies.",
+        "Deterministic contract selection/roll policy and volume/open-interest thresholds; the source gives discretionary constraints.",
+        "Intraday event order, execution quotes, limit fills and gaps; daily OHLC alone cannot establish favorable sequencing.",
+        "Historical transaction costs, margin, funding and capital treatment."
+      ],
+      "acceptance": "A machine test may be a source-constrained reconstruction once these choices are declared and reviewed. It cannot be called exact Turtle performance replication, and a SPY55/20 long/cash channel test is not evidence against the Turtle system.",
+      "ready_for_exact_original_test": false,
+      "ready_for_mechanical_reconstruction_design": true
+    },
+    "rule_kernel": "research_kernels.py:TurtleCampaign; one-contract campaign component, not fullrollingportfolio",
+    "data_project": "T003_TURTLE_DATA/main.py",
+    "data_probe_period": [
+      "2024-01-02",
+      "2024-01-12"
+    ],
+    "intended_retrospective_study": [
+      "2019-01-01",
+      "2025-12-31"
+    ],
+    "periods": [
+      "2019–2023",
+      "2024–2025"
+    ],
+    "untouched_OOS": false,
+    "capital_model_usd": 500000,
+    "capital_note": "Model scale for integerfutures and margin; not a recommendation to deposit money. Also report minimum practical account size and zero-unit cases.",
+    "declared_reconstruction_conventions": [
+      "GC only, full standard100ozcontract; no micro/ETF substitution.",
+      "Use actual individual-contract raw prices and known-at-time chain/volume/OI. Contract selection/roll beforefirstnotice with overlap prices; no back-adjusted percentage-return P&L.",
+      "Full CMEday17:00–16:00Chicago includingDST; verify source aggregation before using. QCcalendar-midnightdaily cannot silently substitute.",
+      "Monday unit sheet uses only previously complete sessions; fixed N and unit contracts for each campaign is OUR named mechanical convention.",
+      "Standard2Nstops and0.5Nadditions max4units, adverse20dayexit and55dayentry one tick through channel. Fill a gap at first executable observed bid/ask, never at skipped trigger.",
+      "Old unit stops advance0.5N on addition; gap exceptions retain differentstops. No mixing Whipsaw.",
+      "Single-market limits4units. Multi-market6/10/12correlation limits are untested in this diagnostic.",
+      "Annual notional rebase/re-expansion convention and full mark-to-market margin engine still require implementation/review before performance run; source contains discretion."
+    ],
+    "mandatory_input_fields": [
+      "contractID+expiry+firstnotice+listinghistory",
+      "tick/multiplier/currency with effective dates",
+      "raw chronological trade and bidask with timezone",
+      "volume/OI with asof timestamps",
+      "55complete daily sessions plus20TRwarmup for EACH new contract",
+      "bothlegprices at everyroll",
+      "fee/margin/funding conventions"
+    ],
+    "data_gate": "No completecoverage => no strategy result. No guessed event ordering withinOHLC. If onlyminute bars, freeze both admissible collision paths as new scenarios before P&L.",
+    "costs": "Observed bidask plus actual documented fees when available; clearly separate stress scenarios. Currenttariff, margin/funding and full account engine not yet validated. No netwinner without them.",
+    "comparators": [
+      "sameGC passive collateralized risk with same rolls/costs",
+      "USDmatchedSPY same dates/capital"
+    ],
+    "ready_for_actual_full_backtest": false
+  },
+  "T010": {
+    "source_spec": "sources/round2/lehmann/source_specification.json",
+    "source_fit": "Preserve source cross-sectional deviations, one dollar each leg,k1weekly andJ26sum. ModernPIT and actual execution are separately labelled changes; not a literal1962–1986 replication.",
+    "rule_kernel": "research_kernels.py:lehmann_weights/profit/turnover_cost/daily_borrow_cost/source_J26",
+    "data_project": "T010_LEHMANN_DATA/main.py",
+    "data_probe_cases": [
+      "panel_2021",
+      "ene_2001",
+      "leh_2008",
+      "borrow_2021"
+    ],
+    "probe_scope": "8deterministic sample symbols are for schema only. NEVER call the sample a source strategy test. Need entireeligibleuniverse for performance.",
+    "intended_retrospective_study": [
+      "2019-01-01",
+      "2025-12-31"
+    ],
+    "untouched_OOS": false,
+    "scientific_output": "Per1USDlong/1USDshort profit; priorTuesday→Tuesdayweekly signal, nextweektarget; J26 arithmetic sum. Not zero-capital CAGR.",
+    "modern_execution_variant": "Separate source-fourday-inspired Wed→Mon signal available byMonday16:15NY, rebalanceTuesday09:35NY using observedbidask. IfTuesdayholiday, nextopensession09:35; do not fillat source finalclose.",
+    "universe": "All currently eligible NYSE/AMEX commonshareclasses at decisionasof. No future-survival, currenttickers, size/liquidity/topNfilter. This explicitly fixes an ambiguous source share-type field; ADR/class mapping to review.",
+    "modern_capital_usd": 100000,
+    "modern_exposure": "Planned0.5NAVlong+0.5NAVshort; restricted shortproceeds. Financing/collateral and real ledger remain unimplemented gates; do not transform sourceprofit into accountreturn.",
+    "mandatory_input_fields": [
+      "stableSecurityID andasof exchange/sharetype eligibility",
+      "complete adjustedtotalreturn andrawexecution prices",
+      "split/dividend/mappingevents without double adjustment",
+      "terminalcash/recovery afterdelisting, with timing inclOTC gaps",
+      "perdate borrowquantity/feerate/rebate and observationdefaultsemantics",
+      "historicalsessioncalendar",
+      "commissions,bidask,impact,restrictedproceeds,funding"
+    ],
+    "borrow_gate": "Missing/sparse/default0not verified as real => unknown, neverfree or unlimitedborrow; ensure known-at-entry availability, monitor recalls and all calendar-day fees.",
+    "terminal_gate": "Do not delete selected security when it later delists. If terminalpayoff unavailable, no fullyvalued result. Delistingevent price alone is not proof.",
+    "data_gate": "No complete panel or sharetypecoverage => no source strategy result. No post-hoc survivor filter or replacing missing terminalreturns with0.",
+    "comparators": [
+      "sourcezero-profitnull with consistent exposure/cost definition",
+      "separately fundedUSDSPY same dates once completecash/margin engine exists"
+    ],
+    "ready_for_actual_full_backtest": false
+  },
+  "reporting": "Registry stage=prepareddataaudits; no strategy_trials added and no costtestedcard increment. Each clouddataauditprofit0 must be ignored as not a strategy result.",
+  "next_external_step": "After autonomousacquisition recorded insufficient, user logs in or creates FREEaccount themselves; agent imports prepared readonly dataauditprojects, runs oneatatime, retainserrors and never upgrades.",
+  "sources": [
+    "https://www.quantconnect.com/pricing/",
+    "https://www.quantconnect.com/docs/v2/cloud-platform/backtesting/getting-started",
+    "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+    "https://www.quantconnect.com/data/algoseek-us-equities",
+    "https://www.quantconnect.com/data/us-equities-short-availability",
+    "https://github.com/QuantConnect/Lean"
+  ],
+  "code_sha256": {
+    "T003_TURTLE_DATA/main.py": "437df335e23dcea42d12c7be5a6b83322c0501ad497b7c5d7342fbec4b1cad6d",
+    "T010_LEHMANN_DATA/main.py": "59afda1689ba3fd66097721c251a6c7d87666b1b49f699deda11156852bbe1d8",
+    "research_kernels.py": "045d5708c20cb28b979c0b46133dda85b0085320e6a77fcda9e53959d2ec2027",
+    "test_rules.py": "54a56f159a23c89c1efdc2235f13f692c3b069c8bfd83ee3bc9128ceaf007bf2"
+  },
+  "new_market_strategy_results": 0,
+  "review_status": "provisional_no_Claude_consensus"
+}

@@ -1,0 +1,165 @@
+"""Shared causal daily portfolio screening; no broker/order connection.
+
+Prices are total-return-adjusted OHLC proxies, not auction bid/ask fills.
+Commission quantities use vendor quote open; NAV uses consistent adjusted units.
+Current fee tariff applied to all replay dates is a scenario, not historical fees.
+"""
+import calendar,datetime as dt,math,statistics
+from engine import _wilder_rsi
+
+def easter(y):
+    a=y%19;b=y//100;c=y%100;d=b//4;e=b%4;f=(b+8)//25;g=(b-f+1)//3
+    h=(19*a+b-d-g+15)%30;i=c//4;k=c%4;l=(32+2*e+2*i-h-k)%7;m=(a+11*h+22*l)//451
+    return dt.date(y,(h+l-7*m+114)//31,(h+l-7*m+114)%31+1)
+
+def nth(y,m,weekday,n):
+    d=dt.date(y,m,1);return d+dt.timedelta(days=(weekday-d.weekday())%7+7*(n-1))
+
+def sessions(y):
+    observed=lambda d:d+dt.timedelta(days=-1 if d.weekday()==5 else 1 if d.weekday()==6 else 0)
+    jan1=dt.date(y,1,1)
+    holidays={jan1+dt.timedelta(days=int(jan1.weekday()==6)),nth(y,1,0,3),nth(y,2,0,3),easter(y)-dt.timedelta(days=2),max(d for d in (dt.date(y,5,k) for k in range(1,32)) if d.weekday()==0),observed(dt.date(y,7,4)),nth(y,9,0,1),nth(y,11,3,4),observed(dt.date(y,12,25))}
+    if y>=2022:holidays.add(observed(dt.date(y,6,19)))
+    holidays.update(dt.date.fromisoformat(x) for x in ['2012-10-29','2012-10-30','2018-12-05','2025-01-09'] if x.startswith(str(y)))
+    days=(dt.date(y,1,1)+dt.timedelta(days=i) for i in range(366 if calendar.isleap(y) else 365))
+    return [d.isoformat() for d in days if d.weekday()<5 and d not in holidays]
+
+def prepare(raw):
+    out={}
+    for symbol,rows in raw.items():
+        converted=[];previous=''
+        for r in rows:
+            if r['date']<=previous:raise ValueError('Dates unordered/duplicate')
+            previous=r['date']
+            if any(r.get(k) is None or not math.isfinite(r[k]) for k in ['open','high','low','close','adj_close','volume']):raise ValueError(f'Missing/nonfinite {symbol} {previous}')
+            if min(r[k] for k in ['open','high','low','close','adj_close'])<=0 or r['volume']<0:raise ValueError('Invalid price/volume')
+            if not r['low']-1e-6<=min(r['open'],r['close'])<=max(r['open'],r['close'])<=r['high']+1e-6:raise ValueError('Invalid OHLC')
+            factor=r['adj_close']/r['close']
+            converted.append({**r,**{k:r[k]*factor for k in ['open','high','low','close']},'quote_open':r['open'],'quote_close':r['close']})
+        out[symbol]=converted
+    return out
+
+def fee(notional,quote_price,sell,spread_bps):
+    if abs(notional)<1e-9:return 0.
+    shares=abs(notional)/quote_price
+    commission=min(.01*abs(notional),max(1.,.005*shares))
+    return commission+abs(notional)*(spread_bps/10000+(0.0001 if sell else 0))
+
+def rebalance(q,cash,weights,prices,quotes,bps,day,reason):
+    if any(w<0 for w in weights.values()) or abs(sum(weights.values())-1)>1e-9:raise ValueError('Unlevered fully allocated weights required')
+    symbols=list(prices);old={s:q.get(s,0)*prices[s] for s in symbols};before=cash+sum(old.values())
+    def cost(nav):return sum(fee(weights.get(s,0)*nav-old[s],quotes[s],weights.get(s,0)*nav<old[s],bps) for s in symbols)
+    lo,hi=0.,before
+    for _ in range(70):
+        mid=(lo+hi)/2
+        if mid+cost(mid)>before:hi=mid
+        else:lo=mid
+    after=(lo+hi)/2;trades=[]
+    for s in symbols:
+        delta=weights.get(s,0)*after-old[s]
+        if abs(delta)>1e-8:trades.append({'date':day,'symbol':s,'signed_notional':delta,'cost':fee(delta,quotes[s],delta<0,bps),'quote_price':quotes[s],'adjusted_price':prices[s],'reason':reason})
+    holdings={s:weights.get(s,0)*after/prices[s] for s in symbols};remaining=before-sum(holdings[s]*prices[s] for s in symbols)-sum(t['cost'] for t in trades)
+    if remaining < -1e-6:raise ValueError('Unfunded trade')
+    return holdings,max(0.,remaining),trades
+
+def monthly_data(stock,cash):
+    daily_cash={r['date']:r for r in cash};groups={}
+    for i,r in enumerate(stock):
+        if i and r['date'] in daily_cash and stock[i-1]['date'] in daily_cash:
+            prev=stock[i-1];a=daily_cash[r['date']];b=daily_cash[prev['date']]
+            groups.setdefault(r['date'][:7],[]).append(r['close']/prev['close']-a['close']/b['close'])
+    ends={r['date'][:7]:r for r in stock if r['date'] in daily_cash};keys=sorted(ends);out={}
+    for i,m in enumerate(keys):
+        values=groups.get(m,[])
+        if len(values)<2:continue
+        rv=sum((v-statistics.fmean(values))**2 for v in values)
+        if rv<=0:raise ValueError('Nonpositive RV')
+        ret=None
+        if i:
+            p=ends[keys[i-1]];r=ends[m]
+            ret=r['close']/p['close']-daily_cash[r['date']]['close']/daily_cash[p['date']]['close']
+        out[m]={'rv':rv,'excess':ret}
+    return out
+
+def desired_schedule(data,spec,start,end):
+    assets=spec['assets'];base=data[assets[0]];cash=data['BIL'];lookup={s:{r['date']:r for r in data[s]} for s in set(assets+['BIL'])}
+    key=spec['key'];closes=[r['close'] for r in base];rsi=_wilder_rsi(closes,2) if key=='connors' else None
+    monthends={s:{} for s in assets}
+    for s in assets:
+        for r in data[s]:monthends[s][r['date'][:7]]=r['close']
+    calendar_months={}
+    if key=='tom':
+        for y in range(int(start[:4]),int(end[:4])+1):
+            for d in sessions(y):calendar_months.setdefault(d[:7],[]).append(d)
+    vol=monthly_data(base,cash) if key=='moreira' else {}
+    c=None
+    if key=='moreira':
+        if start<'2010-01-01':raise ValueError('Calibration must precede every return observation')
+        keys=sorted(vol);pairs=[(vol[m]['excess'],vol[keys[j-1]]['rv']) for j,m in enumerate(keys) if j and '2008-01'<=m<='2009-12']
+        if len(pairs)!=24:raise ValueError('Fixed 24-month calibration incomplete')
+        x=[a for a,b in pairs];scaled=[a/b for a,b in pairs];c=statistics.stdev(x)/statistics.stdev(scaled)
+    result={};state=False;sleeves={s:False for s in assets};last_month=None
+    for i,r in enumerate(base):
+        day=r['date']
+        if not start<=day<=end:continue
+        if i<1:raise ValueError('No prior signal bar')
+        prev=base[i-1];month=day[:7];old_state=state;weights=None
+        if key=='connors':
+            if i<201:raise ValueError('Missing RSI/SMA warmup')
+            if state:state=not(rsi[i-1]>70)
+            else:state=prev['close']>statistics.fmean(closes[i-200:i]) and rsi[i-1]<5
+        elif key=='ibs':
+            if i<501:raise ValueError('Missing500-volume history')
+            width=prev['high']-prev['low'];ibs=(prev['close']-prev['low'])/width if width>0 else None
+            median=statistics.median(b['volume'] for b in base[i-501:i-1])
+            state=ibs is not None and ibs<=.2 and prev['volume']>median
+        elif key=='tom':
+            days=calendar_months[month]
+            if day not in days:raise ValueError('Calendar mismatch')
+            state=day==days[-1] or day in days[:3]
+        elif key=='faber' and month!=last_month:
+            if prev['date'][:7]==month:raise ValueError('Monthly study must initialize at first session of a month')
+            for s in assets:
+                pm=prev['date'][:7];past=sorted(m for m in monthends[s] if m<=pm)
+                if len(past)<10:raise ValueError('Insufficient monthly warmup')
+                level=monthends[s][pm];avg=statistics.fmean(monthends[s][m] for m in past[-10:])
+                if level!=avg:sleeves[s]=level>avg
+            weights={s:.2 if sleeves[s] else 0 for s in assets};weights['BIL']=1-sum(weights.values())
+        elif key=='moreira' and month!=last_month:
+            if prev['date'][:7]==month:raise ValueError('Monthly study must initialize at first session of a month')
+            pm=prev['date'][:7]
+            w=min(1.,max(0.,c/vol[pm]['rv']));weights={assets[0]:w,'BIL':1-w}
+        elif key=='buyhold' and last_month is None:weights={'BIL':1.} if assets[0]=='BIL' else {assets[0]:1.,'BIL':0.}
+        elif key=='basket' and (last_month is None or (month!=last_month and month.endswith('-01'))):weights={s:1/len(assets) for s in assets};weights['BIL']=0.
+        if key in ['connors','ibs','tom'] and (state!=old_state or last_month is None):weights={assets[0]:float(state),'BIL':1-float(state)}
+        if weights is not None:result[day]={'weights':weights,'signal_date':prev['date'],'reason':key,'calibration_c':c}
+        last_month=month
+    return result
+
+def simulate(data,spec,start,end,bps,initial=10000.):
+    events=desired_schedule(data,spec,start,end);symbols=spec['assets']+(['BIL'] if 'BIL' not in spec['assets'] else [])
+    bars={s:{r['date']:r for r in data[s]} for s in symbols};days=[r['date'] for r in data[symbols[0]] if start<=r['date']<=end]
+    if not days:raise ValueError('Empty period')
+    q={s:0. for s in symbols};cash=initial;ledger=[];navs=[];previous=initial;year_base={};year_final={};exposure=[];overnight=[]
+    for day in days:
+        if any(day not in bars[s] for s in symbols):raise ValueError('Missing aligned session')
+        prices={s:bars[s][day]['open'] for s in symbols};quotes={s:bars[s][day]['quote_open'] for s in symbols}
+        before=cash+sum(q[s]*prices[s] for s in symbols)
+        overnight.append(sum(q[s]*prices[s] for s in spec['assets'] if s!='BIL')/before)
+        if day in events:
+            ev=events[day];q,cash,trades=rebalance(q,cash,ev['weights'],prices,quotes,bps,day,ev['reason']);ledger.extend({**t,'signal_date':ev['signal_date']} for t in trades)
+        closing={s:bars[s][day]['close'] for s in symbols};nav=cash+sum(q[s]*closing[s] for s in symbols)
+        exposure.append(sum(q[s]*closing[s] for s in spec['assets'] if s!='BIL')/nav)
+        year_base.setdefault(day[:4],previous);year_final[day[:4]]=nav
+        navs.append({'date':day,'nav':nav,'cash':cash,'risk_weight_close':exposure[-1]});previous=nav
+    # Explicit terminal liquidation at final close, matching all comparators.
+    final=days[-1]
+    for s in symbols:
+        notional=q[s]*bars[s][final]['close']
+        if abs(notional)>1e-8:
+            cost=fee(notional,bars[s][final]['quote_close'],True,bps);cash+=notional-cost;ledger.append({'date':final,'symbol':s,'signed_notional':-notional,'cost':cost,'reason':'terminal_liquidation','signal_date':None});q[s]=0
+    navs[-1]['nav']=cash;year_final[final[:4]]=cash
+    peak=initial;mdd=0
+    for r in navs:peak=max(peak,r['nav']);mdd=min(mdd,r['nav']/peak-1)
+    elapsed=(dt.date.fromisoformat(days[-1])-dt.date.fromisoformat(days[0])).days/365.25
+    return {'metrics':{'total_return_pct':(cash/initial-1)*100,'cagr_pct':((cash/initial)**(1/elapsed)-1)*100 if elapsed else None,'max_drawdown_pct':mdd*100,'cost_usd':sum(t['cost'] for t in ledger),'orders':len(ledger),'risk_exposure_close_pct':statistics.fmean(exposure)*100,'risk_exposure_overnight_pct':statistics.fmean(overnight)*100,'annual_returns_pct':{y:(year_final[y]/year_base[y]-1)*100 for y in year_base},'initial':initial,'final':cash,'first':days[0],'last':days[-1]},'ledger':ledger,'nav':navs,'schedule':events}

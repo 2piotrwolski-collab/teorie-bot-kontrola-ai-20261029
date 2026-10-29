@@ -1,0 +1,63 @@
+{
+  "id": "CONNORS_IBS_LONGHIST_20261029_V1",
+  "at_utc": "2026-10-29T18:17:02.104241+00:00",
+  "state": "DATA_FEASIBILITY_AND_IMPLEMENTATION_PENDING_NO_NEW_RETURN_COMPUTED",
+  "purpose": "Extend fixed near-close Connors and IBS tests beyond42sessions without tuning. Include sourceRSI3/IBScontrast separately.",
+  "dates": [
+    "2008-01-02",
+    "2026-10-28"
+  ],
+  "symbols": [
+    "SPY",
+    "IWM",
+    "QQQ",
+    "FXI",
+    "BIL"
+  ],
+  "source_fit": {
+    "T004": {
+      "source": "https://tradingmarkets.com/recent/how_to_enter_and_exit_a_position_on_the_close-677551",
+      "assets": [
+        "IWM",
+        "FXI"
+      ],
+      "entry": "current estimate>SMA200 AND WilderRSI2<5",
+      "exit": "RSI2>70; no other stop/timeout",
+      "conventions": "Wilder formula/500bar seed is our explicit convention; author onlystates2periodRSI. BILcash/modelcosts/nearclose estimates are implementation choices, not original CSI numericalreplication."
+    },
+    "T005": {
+      "source": "sources/ibs.pdf",
+      "assets": [
+        "SPY",
+        "IWM",
+        "QQQ"
+      ],
+      "existing_component": "IBS<=.2 and volume>median of prior500sessions; longonlyone-session target. Preserve as separate adaptation, not full source longshortTable5.",
+      "new_source_contrast": "CutlerRSI3<10 enters base latentstate, >40 exits; filtereddailyposition=base latentstate AND IBS<=.5. Same base state is independent of filter; no fabricatedSMA/stop. Published dailyclose vs ourbeforeclose estimates keptdistinct."
+    }
+  },
+  "timing": {
+    "information": "20minutesbeforeactualQCexchangeclose; require complete regular-session minute prefix, fill_forward=False",
+    "fill": "first1minTradeBar.open timestamp15minutesbeforeactualclose; decision fixed5minutesearlier. No same-final-close knowledge. Earlycloses use same relative offsets, separatelycounted.",
+    "missing": "No fabricated bars/futurefill. Missingprefix/targetrecord is retained, no newrebalance; carry existingholdings and reportmissingmark. Reject interpretation as complete test if >2% sessions inadequate or terminalmarks incomplete."
+  },
+  "price_corporate_actions": "RAWminute prices/quantities. Prior500daily SCALED_RAW for indicatorwarmup; reset on split/dividend using history ending at current algorithm time beforedecision, assert lastdailybar strictly beforetoday. Splits adjustownedshares, dividends creditcash per standardLEANexdate convention (payment/settlement timing unresolved; not deploymentready).",
+  "costs": {
+    "initial_USD": 10000,
+    "model": "Reuse frozen net_engine.fee/rebalance functions, current IBKRFixed plus1bpssellreserve, modeled5/20bpsperside; not original historicaltariffs, no taxFX/fillguarantee.",
+    "cash": "BIL; switching and terminalcosts charged; dividends heldcash until next rebalance."
+  },
+  "trial_budget": {
+    "data_probe": 1,
+    "full_studies": 2,
+    "max_technical_repairs": 2,
+    "strategy_scenarios": 22,
+    "control_scenarios": 16,
+    "parameter_search": false,
+    "paid": 0,
+    "real_orders": 0
+  },
+  "report": "Fullperiod, yearbyyear5bps, fixedpublicationboundary2014andrecent2024fromannualmarkedNAV; allcases retained. Returns/tradeepisodes/riskdays/fees/drawdown/exposure and wholeledgerSHA. Matchedbuyholdsameasset/BIL and SPY, not onlySPY forconditionalmechanism. NotuntouchedOOS.",
+  "QC_output": "Only compactaggregates+hashes, no rawpricedataset export; chunkmessagesbelow2000characters and aggregatebudgetbelow9KB, validatecompleteframing.",
+  "external_critique": "research_round10/CLAUDE_REVIEW.txt; model criticism toverify, not consensus/reproduction."
+}

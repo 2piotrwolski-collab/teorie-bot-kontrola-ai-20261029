@@ -1,0 +1,8 @@
+# Teorie bot — review snapshot
+Snapshot: 2026-10-29T18:43:35.427389+00:00
+Start: /cards/T003.txt and /cards/T003.json
+Other cards: /cards/T001.txt through /cards/T010.txt
+Code and hashes: /code/index.json
+Task: /PROMPT_DO_KONTROLI.txt
+Full summary: /review.json
+No confirmed original strategy. Prepared longer-history tests have no new market result.

@@ -1,0 +1,78 @@
+import datetime as dt,unittest
+from research_kernels import (DailyBar,MissingData,turtle_levels,wilder_n,
+    contracts_per_unit,TurtleCampaign,lehmann_weights,lehmann_profit,
+    lehmann_turnover_cost,daily_borrow_cost,source_J26)
+
+UTC=dt.timezone.utc
+T=dt.datetime(2024,1,2,tzinfo=UTC)
+def history(n=55):return [DailyBar('GCZ24',T+dt.timedelta(days=i),101.,99.,100.) for i in range(n)]
+def campaign():
+    return TurtleCampaign(turtle_levels(history(),T+dt.timedelta(days=56),.1),500000,100,1000,2.5)
+
+class TurtleRules(unittest.TestCase):
+    def test_wilder_initialization_and_not_generic_ema(self):
+        bars=history(21)+[DailyBar('GCZ24',T+dt.timedelta(days=21),103,97,100)]
+        self.assertAlmostEqual(wilder_n(bars),2.2)
+    def test_complete_prior55_and20_channels(self):
+        rows=history();rows[0]=DailyBar('GCZ24',T,120,80,100)
+        x=turtle_levels(rows,T+dt.timedelta(days=56),.1)
+        self.assertAlmostEqual(x['buy'],120.1);self.assertAlmostEqual(x['exit_long'],98.9)
+        self.assertAlmostEqual(x['sell_short'],79.9)
+    def test_unavailable_current_session_cannot_set_channels(self):
+        with self.assertRaises(MissingData):turtle_levels(history(),T+dt.timedelta(days=54),.1)
+    def test_raw_contracts_not_spliced(self):
+        rows=history();rows[-1]=DailyBar('GCG25',rows[-1].available_at,101,99,100)
+        with self.assertRaises(MissingData):turtle_levels(rows,T+dt.timedelta(days=56),.1)
+    def test_short_warmup_blocks_instead_of_zero_trades(self):
+        with self.assertRaises(MissingData):turtle_levels(history(54),T+dt.timedelta(days=56),.1)
+    def test_insufficient_capital_cannot_create_fractional_contract(self):
+        self.assertEqual(contracts_per_unit(10000,2,100),0)
+    def test_bidask_entry_gap_and_old_stops_in_gap_pyramid(self):
+        c=campaign();t=T+dt.timedelta(days=56)
+        c.event('GCZ24',t,101.1,101,101.2)
+        c.event('GCZ24',t+dt.timedelta(seconds=1),102.3,102.2,102.4)
+        c.event('GCZ24',t+dt.timedelta(seconds=2),110,109.9,110.1)
+        self.assertEqual(len(c.units),3)
+        for actual,expected in zip([u.stop for u in c.units],[99.2,99.4,106.1]):self.assertAlmostEqual(actual,expected)
+        c.event('GCZ24',t+dt.timedelta(seconds=3),90,89.9,90.1)
+        #25contracts/unit,100USD/point. Entry101.2/102.4/110.1, exit89.9; 6*25*2.5fees.
+        self.assertAlmostEqual(c.closed_campaign_pnl(),-110375)
+    def test_margin_blocks_addition_and_units_max4(self):
+        c=campaign();t=T+dt.timedelta(days=56)
+        for i in range(10):c.event('GCZ24',t+dt.timedelta(seconds=i),101.2+2*i,101.1+2*i,101.3+2*i)
+        self.assertEqual(len(c.units),4)
+        c=TurtleCampaign(c.levels,500000,100,20000,2.5)
+        c.event('GCZ24',t,102,101.9,102.1);c.event('GCZ24',t+dt.timedelta(seconds=1),104,103.9,104.1)
+        self.assertEqual(len(c.units),1)
+    def test_unknown_roll_or_crossed_quote_blocks(self):
+        c=campaign();t=T+dt.timedelta(days=56)
+        with self.assertRaises(MissingData):c.event('GCG25',t,102,101.9,102.1)
+        with self.assertRaises(MissingData):c.event('GCZ24',t,102,103,102)
+
+class LehmannRules(unittest.TestCase):
+    def weights(self,r):return lehmann_weights(r,{k:T for k in r},T)
+    def test_cross_sectional_weights_have_one_dollar_each_leg(self):
+        w=self.weights({'loser':-.2,'middle':0.,'winner':.2})
+        self.assertEqual(w,{'loser':1.,'middle':0.,'winner':-1.})
+    def test_future_membership_not_required_and_delisting_not_deleted(self):
+        w=self.weights({'dies_later':-.2,'winner':.2})
+        self.assertEqual(lehmann_profit(w,{'dies_later':-1.,'winner':0.}),-1.)
+        with self.assertRaises(MissingData):lehmann_profit(w,{'winner':0.})
+    def test_missing_signal_and_future_signal_block(self):
+        with self.assertRaises(MissingData):self.weights({'A':None,'B':.2})
+        with self.assertRaises(MissingData):lehmann_weights({'A':0,'B':.2},{'A':T,'B':T+dt.timedelta(seconds=1)},T)
+    def test_flat_cross_section_is_not_invented_alpha(self):
+        self.assertEqual(self.weights({'A':.7,'B':.7,'C':.7}),{'A':0,'B':0,'C':0})
+    def test_cost_uses_drifted_exposure_and_closes_removed_name(self):
+        # Existing A1.1/B-0.9; target A-1/C+1 => total turnover2.1+.9+1=4.
+        self.assertAlmostEqual(lehmann_turnover_cost({'A':-1,'C':1},{'A':1.1,'B':-.9},.001),.004)
+    def test_unknown_borrow_is_not_free_and_inventory_is_enforced(self):
+        with self.assertRaises(MissingData):daily_borrow_cost(1000,10,None,.1)
+        with self.assertRaises(MissingData):daily_borrow_cost(1000,10,100,None)
+        with self.assertRaises(MissingData):daily_borrow_cost(1000,10,5,.1)
+        self.assertAlmostEqual(daily_borrow_cost(3600,10,100,.1),1.)
+    def test_J26_is_sum_not_compounding_or_one26week_position(self):
+        self.assertAlmostEqual(source_J26([.01]*26),.26)
+        with self.assertRaises(MissingData):source_J26([.01]*25)
+
+if __name__=='__main__':unittest.main()

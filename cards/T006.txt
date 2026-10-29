@@ -1,0 +1,309 @@
+Snapshot: 2026-10-29T18:43:35.427389+00:00
+T006 · Archiwalny v1: Test nieadekwatny do źródła
+
+Bollinger: metoda autora wymaga ustalenia pełnych reguł
+
+NIEROZSTRZYGNIĘTA — WYNIKI OGRANICZONEGO BADANIA
+
+Rynek / instrumenty
+Instrumenty z wystarczającą aktywnością, dla których konkretna opublikowana metodaBollingera ma zdefiniowane reguły.
+
+Segment
+Nieustalony dla samodzielnego band-touch; źródło definiuje wskaźnik i ostrzeżenia, nie taką strategię.
+
+Reżim i horyzont
+Zależy od wybranej metody: trend/breakout albo potwierdzone patterny; sam lower-band nie ustanawia reżimu odwrócenia. · Nieustalony dla rzeczywistej metody źródłowej;20 sesji limitu jest naszym dodatkiem.
+
+Co rzeczywiście twierdzi źródło
+Autor definiuje bandy i ostrzega, że dotknięcie dolnej bandy samo w sobie nie stanowi sygnału kupna. Ten pilot świadomie testuje uproszczoną hipotezę powrotu do średniej, której autor nie zaleca jako samodzielnej reguły.
+
+Cel oryginalnego badania
+Poprawna interpretacja band i ich zastosowanie w pełnych metodach, a nie twierdzenie o zysku z każdego wybicia dołem.
+
+Właściwe porównanie
+Do określenia po wybraniu konkretnej kompletnej metody; własny lower-band test nie jest benchmarkiem teorii autora.
+
+Archiwalny wariant v1: Bollinger: sprawdzenie prostego powrotu do średniej
+
+Dlaczego v1 nie rozstrzyga tej teorii
+
+Karta kupuje wyłącznie dlatego, że close jest poniżej dolnej bandy i wychodzi przy średniej/max20. Bollinger nie przedstawia tej reguły jako swojej strategii; wyraźnie odrzuca interpretację samego tagu bandy jako sygnału kupna. Wyjście do średniej oraz limit20 są również naszym dodatkiem. Zamieszczenie tej wersji na liście źródłowych teorii autora jest merytorycznie mylące mimo wcześniejszego ujawnienia adaptacji.
+
+Co pozwala ocenić stary wynik
+
+Nasze uproszczenie mean-reversion na dolnej bandzie; ujemny wynik nie jest dowodem przeciw Bollingerowi, a nawet jest zgodny z jego ostrzeżeniem.
+
+Jak zaprojektować właściwy test
+
+Zmienić kategorię na własną hipotezę/negatywną kontrolę, bez przypisywania autorowi. Dla badania jego teorii utworzyć nową wersję konkretnej opublikowanej metody z potwierdzeniami, kompletnymi regułami i odpowiednimi danymi.
+
+Pytanie falsyfikujące: Nie ma jeszcze zgodnej ze źródłem kompletnej hipotezy do falsyfikacji.
+
+Brakujące dane: ['Konkretny opis metody autora, potwierdzenia, wejście, wyjście, sizing, segment i horyzont.']
+
+Uzupełnianie braków · runda 5
+
+Ponownie pobrano cały oficjalny pięciostronicowy Method III Manual. Potwierdza alert pasmo + Intraday Intensity oraz jakościowe potwierdzenie ceny.
+
+Dokument nadal nie dostarcza kompletnej liczbowej reguły potwierdzenia, wyjścia i sizingu. Dostęp do instrukcji instalacji płatnego dodatku nie oznacza dostępu do jego kodu ani kompletnej strategii.
+
+Nie dopisano arbitralnego stopu/wyjścia i nie policzono ich jako metody autora.
+
+Dzisiejszy pomiar ETF-ów nie usuwa braków tej teorii. Zachowano wymagania źródłowe i dotychczasowy konkretny plan zdobycia danych/reguł.
+
+Pobrano dodatkowy oficjalny vendorPDF podpisany przez Bollingera. Wymienia komponenty MethodIII i wprost opisuje zestaw jako narzędzia do budowy systemów, nie kompletny system.
+
+Odczytano publiczną stronę autoryzowanej witryny o MethodIII i osobną stronę stopów. Są dodatkowe definicje, ale ogólny stop Chandelier nie staje się automatycznie wyjściem MethodIII.
+
+Sekcja szczegółowych metod zwraca Subscribers only. Nie uruchomiono trialu ani zakupu; HTTP200 tej strony nie zamyka luki reguł.
+T006-SOURCE-01 · Częściowo uzupełniony
+Dostępny jest właściwy oficjalny Method III Manual, lecz karta v1 nie została zamieniona w oryginalną kompletną metodę.
+
+Potwierdzone:
+
+Oficjalny tekst metody i hash zachowane.
+
+Wyodrębniono alert z potwierdzeniem wolumenowym; v1 band-touch nie jest metodą autora.
+
+Round5: Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system.
+
+Round5: MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization.
+
+Pozostało:
+
+Wierna kompletna karta wybranej metody nadal nie istnieje.
+
+Round5: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained.
+
+Round5: A qualitative description, not a fully specified executable strategy.
+
+PDF pp1–3 (https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf) · Oficjalny opis Method III; alerty, Intraday Intensity i jakościowe potwierdzenie ceny. Nie kompletny algorytm wyjścia i sizingu.
+
+Methods Explanation → Reversals (Method III) (https://bollingerbands.us/help-methods.php) · Opis potwierdzenia wolumenowego; nie odnaleziono w tym publicznym tekście kompletnych reguł exit/sizing.
+
+Round3boundedsourcecheck (https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf) · Full5pageMethodIIImanual read; alerts/confirmation qualitative, fullstrategy stillincomplete.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://www.tradenavigator.com/legacy/pdf/BBTK.pdf) · Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system. LIMIT: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://bollingerbands.us/help-methods.php) · MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization. LIMIT: A qualitative description, not a fully specified executable strategy.
+
+Następny krok: Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.
+T006-RULE-02 · Otwarty
+W dodatkowym publicznym opisie i katalogu autora nie zdobyto liczbowego potwierdzenia, pełnego exit, sizingu ani zamkniętego uniwersum.
+
+Potwierdzone:
+
+Oddzielono alert od wykonywalnego sygnału; zmapowano luki.
+
+Round5: Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system.
+
+Round5: MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization.
+
+Round5: Public Chandelier formula and default10period/3ATR, plus other optional stop tools.
+
+Round5: HTTP200 page says Subscribers only; no free complete rules downloaded.
+
+Pozostało:
+
+Jednoznaczne price confirmation.
+
+Pełne wyjście, sizing, segment/reżim i wyjątki.
+
+Round5: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained.
+
+Round5: A qualitative description, not a fully specified executable strategy.
+
+Round5: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction.
+
+Round5: A200response or free-trial offer is not evidence of access. No subscription/trial activated.
+
+PDF pp1–3 (https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf) · Oficjalny opis Method III; alerty, Intraday Intensity i jakościowe potwierdzenie ceny. Nie kompletny algorytm wyjścia i sizingu.
+
+Methods Explanation → Reversals (Method III) (https://bollingerbands.us/help-methods.php) · Opis potwierdzenia wolumenowego; nie odnaleziono w tym publicznym tekście kompletnych reguł exit/sizing.
+
+Publiczna lista materiałów autora (https://www.bollingerbands.com/videos-articles-interviews) · Sprawdzono listę i opisy, nie obejrzano wszystkich nagrań. Nie wolno wnioskować, że nigdzie nie ma pełnej metody.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://www.tradenavigator.com/legacy/pdf/BBTK.pdf) · Four-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system. LIMIT: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://bollingerbands.us/help-methods.php) · MethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization. LIMIT: A qualitative description, not a fully specified executable strategy.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://bollingerbands.us/help-stops.php) · Public Chandelier formula and default10period/3ATR, plus other optional stop tools. LIMIT: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://bollingerbands.us/lists.php) · HTTP200 page says Subscribers only; no free complete rules downloaded. LIMIT: A200response or free-trial offer is not evidence of access. No subscription/trial activated.
+
+Następny krok: Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.
+T006-EXEC-03 · Otwarty
+Nie wybieramy danych ani filli za nieokreśloną metodę; reguły02 nadal blokują wykonanie.
+
+Potwierdzone:
+
+Ustalono, że źródło wymaga aktywności w świecy i dodatkowego potwierdzenia.
+
+Round5: Public Chandelier formula and default10period/3ATR, plus other optional stop tools.
+
+Pozostało:
+
+Dokładna chwila decyzji i wykonalny fill.
+
+Właściwe uniwersum, dostawca i koszty.
+
+Round5: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction.
+
+PDF pp1–3 (https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf) · Oficjalny opis Method III; alerty, Intraday Intensity i jakościowe potwierdzenie ceny. Nie kompletny algorytm wyjścia i sizingu.
+
+29.10.2026 free-source check; archived HTTP/hash receipt (https://bollingerbands.us/help-stops.php) · Public Chandelier formula and default10period/3ATR, plus other optional stop tools. LIMIT: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction.
+
+Następny krok: Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.
+
+Co blokuje test i co pozyskano za darmo · 29.10.2026
+
+Brakuje jednoznacznej kompletnej strategii MethodIII: liczbowego potwierdzenia wejścia, wyjścia, sizingu i wyjątków. Dane giełdowe nie naprawią brakującej definicji.
+
+Darmowa ścieżkaCo rzeczywiście mamyCo nadal trzeba sprawdzić
+
+Autoryzowane help-methods / help-stopsOpis mechanizmu i ogólne narzędzia stopNie dowodzą jednej obowiązkowej kompletnej MethodIII
+
+Bollinger/Genesis PDFPobrane4strony; lista wejść/wyjść jako komponentówBrak formuł/kodu tych komponentów
+
+Legalna biblioteka / posiadana książkaKonkretna ścieżka uzyskania brakującego rozdziałuDostęp niepotwierdzony; brakującego rozdziału nie zastępujemy cudzym blogiem
+
+Akceptacja: reguła wejścia/confirmation i jej czas, pełne wyjście/stopy, wielkość pozycji, horyzont oraz ograniczenia rynku powiązane z miejscem w pierwotnym źródle.
+
+Jeżeli książka nie rozstrzyga reguł mechanicznie, dokładny automat autora nie jest zdefiniowany. Odrębny wariant może być badany po zamrożeniu własnych decyzji.
+
+Nie liczyć losowego stopu lub celu zysku jako reprodukcji Bollingera.
+
+Dane wyniku i ograniczenia
+
+Dzisiejsza kontrola wykonania · 29.10.2026
+
+Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.
+
+ZakresStan
+
+Oryginałnadal blokowany przez braki reguł lub danych wskazane przy karcie; dzisiejsze ETF-y tego nie zastępują
+
+Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.
+
+IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.
+
+Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.
+
+Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L.
+
+Dane wyniku i ograniczenia
+
+Następne działanie dla karty: Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.
+
+Pełny zapis ustaleń, dowodów i braków tej rundy
+
+Braki i sposób ich zdobycia
+
+Uzyskanie pliku nie zamyka braku automatycznie. Musi on spełnić poniższe warunki kontroli; przybliżenie nie staje się danymi oryginalnymi.
+T006-SOURCE-01 · Wybór rzeczywistej metody autora zamiast samodzielnego close<dolna banda.
+Dlaczego potrzebne: Obecne źródło zasad ostrzega przed takim samodzielnym sygnałem. Potrzebny opis konkretnej metody, segmentu i celu.
+
+Dostępność: Dostępne bezpłatnie — trzeba pozyskać i zweryfikować
+
+Jak zdobyć:
+
+Zarchiwizować oficjalny Method III Manual i stronę metod (PDF już pobrany).
+
+Przepisać do source_fit wyłącznie wskazane alerty i potwierdzenia; porównać je z regułami v1.
+
+Wybrać jawnie Method III lub inną konkretną metodę przed implementacją i nadać nową wersję; nie zmieniać wyniku starego testu.
+
+Źródła i zakres:
+
+John Bollinger — oficjalna lista metod (https://www.bollingerbands.com/tradestation-methods) · dostęp sprawdzonyStrona autora z odnośnikami do czterech podręczników metod.Nie dostarcza: Nie zawiera pełnego automatycznego algorytmu i wyników replikacji.
+
+John Bollinger — Method III Reversals Manual (https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf) · dostęp sprawdzonyPobrany bezpłatny oficjalny PDF, 5 stron: alert bandy z Intraday Intensity i zalecenie potwierdzenia ceny.Nie dostarcza: Nie zamienia wszystkich alertów w kompletny algorytm pozycji; brak w pełni liczbowego potwierdzenia, zamknięcia pozycji, sizingu i historycznego uniwersum.
+
+John Bollinger/Genesis toolkit (https://www.tradenavigator.com/legacy/pdf/BBTK.pdf) · dostęp sprawdzonyFour-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system.Nie dostarcza: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained.
+
+Authorized Bollinger methods explanation (https://bollingerbands.us/help-methods.php) · dostęp sprawdzonyMethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization.Nie dostarcza: A qualitative description, not a fully specified executable strategy.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Tytuł i numer metody, autor, URL, hashPDF oraz lokalizacje reguł zapisane.
+
+Karta nie przypisuje prostego band-touch strategii autora.
+
+Gdy nie uda się zdobyć: Pozostawićv1 wyłącznie jako własną uproszczoną hipotezę/negatywną kontrolę; brak wniosku o autorze.
+
+Następne działanie: Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.
+T006-RULE-02 · Jednoznaczne potwierdzenie alertu, wyjście, sizing, segment/reżim i horyzont.
+Dlaczego potrzebne: Podręcznik rozróżnia alert od sygnału; opis potwierdzenia jest jakościowy. Bez zamknięcia pozycji nie istnieje kompletny test portfelowy.
+
+Dostępność: Bezpłatnie dostępna część lub przybliżenie
+
+Jak zdobyć:
+
+Wskazać w bezpłatnym podręczniku pola określone i nadal nieokreślone (potwierdzenie, lookback II, exit, ryzyko).
+
+Sprawdzić, czy legalnie dostępny rozdział książki autora przez istniejącą bibliotekę rozstrzyga te pola; nie kupować produktu/subskrypcji.
+
+Jeżeli źródło nie narzuca algorytmu, zapisać własne liczbowe uzupełnienie jako nową adaptację i zamrozić je przed wynikiem.
+
+Źródła i zakres:
+
+John Bollinger — Method III Reversals Manual (https://www.bollingerbands.com/_files/ugd/58be43_377f4254baa04a19aaadb1735b45b6f0.pdf) · dostęp sprawdzonyPobrany bezpłatny oficjalny PDF, 5 stron: alert bandy z Intraday Intensity i zalecenie potwierdzenia ceny.Nie dostarcza: Nie zamienia wszystkich alertów w kompletny algorytm pozycji; brak w pełni liczbowego potwierdzenia, zamknięcia pozycji, sizingu i historycznego uniwersum.
+
+Bollinger on Bollinger Bands — oficjalna strona produktu (https://www.bollingerbands.com/bollinger-band-book) · dostęp sprawdzonySprawdzona oficjalna strona książki i dane bibliograficzne; pełny tekst nie jest bezpłatnie udostępniony na tej stronie.Nie dostarcza: Nie potwierdzono bezpłatnego pełnego tekstu; nie zakładamy zakupu ani dostępu bibliotecznego.
+
+John Bollinger/Genesis toolkit (https://www.tradenavigator.com/legacy/pdf/BBTK.pdf) · dostęp sprawdzonyFour-page vendor PDF signed by John Bollinger lists MethodIII entry/exit components and says the toolkit is not itself a trading system.Nie dostarcza: Names of rules are not their formulas or code. No complete deterministic MethodIII confirmation,exit,sizing obtained.
+
+Authorized Bollinger methods explanation (https://bollingerbands.us/help-methods.php) · dostęp sprawdzonyMethodIII combines band tags with volume/accumulation-distribution confirmation; site states express Bollinger authorization.Nie dostarcza: A qualitative description, not a fully specified executable strategy.
+
+Authorized Bollinger stops explanation (https://bollingerbands.us/help-stops.php) · dostęp sprawdzonyPublic Chandelier formula and default10period/3ATR, plus other optional stop tools.Nie dostarcza: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction.
+
+Authorized methods section access check (https://bollingerbands.us/lists.php) · dostęp sprawdzonyHTTP200 page says Subscribers only; no free complete rules downloaded.Nie dostarcza: A200response or free-trial offer is not evidence of access. No subscription/trial activated.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Każde wymagane pole ma źródłowy lokalizator lub oznaczenie nasze założenie.
+
+Definicje silnych/słabych warunków oraz kryteria odrzucenia zapisane przed wynikiem.
+
+Brak pola nie jest zastąpiony arbitralną regułą przypisaną autorowi.
+
+Gdy nie uda się zdobyć: requires_redesign; można przygotować jawną własną adaptację, ale nie nazywać jej dokładną reprodukcją autora.
+
+Następne działanie: Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.
+T006-EXEC-03 · Dane OHLCV wybranego rynku oraz wykonalny timing i koszty potwierdzonej metody.
+Dlaczego potrzebne: Potwierdzenie po zakończeniu świecy i zlecenie na tym samym close mogą być niewykonalne. Dochodzi kontrola wolumenu, splitów i dywidend.
+
+Dostępność: Bezpłatnie dostępna część lub przybliżenie
+
+Jak zdobyć:
+
+Dopiero po wyborze metody zamrozić instrumenty i częstotliwość; nie rozszerzać po wyniku na najlepsze ETF.
+
+Dla demonstracji pobrać bezpłatne OHLCV z publicznego dostawcy i sprawdzić adjustmenty oraz formułę II.
+
+Osobno zamrozić wykonalne wykonanie, dostępną w chwili sygnału cenę i koszty; bez bid/ask oznaczyć screening, nie potwierdzenie wykonania.
+
+Źródła i zakres:
+
+Yahoo Finance — istniejący lokalny zbiór SPY (https://query1.finance.yahoo.com/v8/finance/chart/SPY) · dostęp sprawdzonyW projekcie pobrano dzienne OHLCV, adjusted close i dywidendy SPY; istnieją receipts/hash.Nie dostarcza: Nie zapewnia historycznego uniwersum metody ani aukcyjnego bid/ask i rzeczywistych filli.
+
+NYSE — Holidays & Trading Hours (https://www.nyse.com/trade/hours-calendars) · dostęp sprawdzonyOficjalne godziny aukcji i kalendarze2026–2028, odczytane przez web.Nie dostarcza: Nie jest kompletnym archiwum kalendarza znanego ex ante dla1926–2005 ani kwotowaniami/fillami.
+
+Authorized Bollinger stops explanation (https://bollingerbands.us/help-stops.php) · dostęp sprawdzonyPublic Chandelier formula and default10period/3ATR, plus other optional stop tools.Nie dostarcza: Does not designate this generic stop as the mandatory MethodIII exit. Combining tools creates a separately named reconstruction.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Sygnały wskaźników odtworzone ręcznie na kilku rzeczywistych świecach.
+
+Żadne wejście nie korzysta z nieznanej jeszcze ceny zamknięcia.
+
+Koszty scenariuszowe oddzielone od zmierzonych; brak danych jasno blokuje wniosek o wykonalnym wyniku.
+
+Gdy nie uda się zdobyć: Zachować zakres jako demonstrację wskaźnika/alertu albo screening na OHLCV, z brakiem walidacji egzekucji.
+
+Następne działanie: Sprawdzić legalny bezpłatny dostęp biblioteczny lub już posiadany egzemplarz Bollinger on Bollinger Bands i odczytać rozdział MethodIII oraz jego warunki wyjścia/confirmation. Jeśli źródło pozostaje uznaniowe, zapisać to jako cechę metody i osobno zdefiniować mechaniczny wariant przed testem. Bez zgadywania reguł autora i bez kupowania dodatku.
+
+Krótka karta dla AI · Źródło (https://www.bollingerbands.com/bollinger-band-rules) · Pełna karta, audyt i stare wyniki
+
+Evidence and code: ../code/index.json, ../evidence/.
+This is a logic-review package; raw licensed market datasets are not included.

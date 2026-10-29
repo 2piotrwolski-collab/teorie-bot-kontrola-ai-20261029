@@ -1,0 +1,609 @@
+{
+  "snapshot_at_utc": "2026-10-29T18:43:35.427389+00:00",
+  "scope": "Research snapshot. No full original-theory verification; no live orders.",
+  "card": {
+    "id": "T008",
+    "round": 5,
+    "findings": [
+      "Pobrano oficjalne metadane Crossref i CV autora. Potwierdzają tożsamość publikacji, lecz nie są pełnym tekstem.",
+      "Jedna próba legalnego endpointu wydawcy wskazanego przez Crossref zakończyła się 429; nie obchodzono ograniczenia i nie ponawiano żądań w pętli.",
+      "Brak pełnego pierwotnego protokołu pozostaje otwarty. Nie podmieniono efektu weekendowego na kupowanie w poniedziałek na otwarciu.",
+      "Dzisiejszy pomiar ETF-ów nie usuwa braków tej teorii. Zachowano wymagania źródłowe i dotychczasowy konkretny plan zdobycia danych/reguł.",
+      "Pozyskano6273dodatnie dzienne ceny indeksu z lat1953–1977, bez duplikatów i dat weekendowych; zapisano surowy JSON, hash i CSVclose.",
+      "Poprzedni link uczelniany nadal zwraca404; RePEc wskazuje tekst subskrypcyjny, a OpenAlex nie podaje otwartej lokalizacji pełnego tekstu. Nie oznacza to, że bezpłatna legalna kopia nigdzie nie istnieje.",
+      "Drugi dostawca Stooq zwrócił HTML z weryfikacją przeglądarki zamiast CSV. Nie uznano go za niezależną kontrolę cen i nie obchodzono zabezpieczenia."
+    ],
+    "next_action": "Uzyskać legalną kopię French1980 przez posiadany dostęp biblioteczny albo kopię autorską, DOI10.1016/0304-405X(80)90021-5, strony55–69. Z niej ustalić price/TR/log-return i traktowanie świąt. Porównać pobrane close z wartościami/tabelami autora, sprawdzić poprzednik indeksu sprzed1957 i nadzwyczajne zamknięcia, zwłaszcza1968. Dopiero potem zamrozić statystyczny test poniedziałku; reguła bota i koszty są osobnym etapem.",
+    "overall_status": "source_gap_still_blocks_original_test",
+    "gap_updates": [
+      {
+        "gap_id": "T008-SOURCE-01",
+        "status": "open",
+        "status_reason": "Poszukiwanie po autorze, repozytoriachDartmouth/Rochester i DOI nie dostarczyło legalnego kompletnegoFrench1980. OpenAlex nie wskazuje OA.",
+        "criteria_met": [
+          "Potwierdzono tożsamość publikacji i brak działającego staregoPDF.",
+          "Zdobytą pełną pracę1984 oznaczono jako późniejszą publikację, nie substytut1980.",
+          "Round5: Record says full text available to ScienceDirect subscribers only."
+        ],
+        "criteria_unmet": [
+          "Pełny pierwotny tekst1980 i jego szczegółowe definicje.",
+          "Round5: Metadata not full text. University PDF link independently returned404; OpenAlex says noOAfulltext location, which does not prove no lawful copy exists anywhere."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/round2/T008_openalex_locations.json",
+            "url": "https://api.openalex.org/works/https://doi.org/10.1016/0304-405x(80)90021-5",
+            "sha256": "7273b32e66479c2d5a4875f185332023c57848db020880d1bb2ef7bbd7583c1c",
+            "locator": "open_access, best_oa_location, locations",
+            "what_verified": "Odczyt metadata wskazuje closed i brak zarejestrowanego OA repo; to wynik ograniczonej kwerendy, nie dowód globalnej nieistniejącej kopii."
+          },
+          {
+            "evidence_path": "sources/manifest.json",
+            "url": "https://www-2.rotman.utoronto.ca/~kan/3032/pdf/AssetPricingAnomalies/French_JFE_1980.pdf",
+            "sha256": "e4e9a8059952d02d949cdc57c1ea5e37b05e3119261204b8184e32eaa0d07b15",
+            "locator": "source_id=monday; publisher receipt; ponowne webopen404",
+            "what_verified": "Stary link uniwersytecki404, wydawca403 w poprzednim odczycie; indeksowane fragmenty nie są pełnym tekstem."
+          },
+          {
+            "evidence_path": "sources/round2/T008_related_primary_Keim_Stambaugh1984.pdf",
+            "url": "https://faculty.wharton.upenn.edu/wp-content/uploads/2014/03/KS-JF1984.pdf",
+            "sha256": "ca0ab7d8b0bcf28391338dae2748682db0d5b296a76b8f0120fdd37e893ccbd6",
+            "locator": "PDF pp1–2 (druk819–820) i p17(druk835), sprawdzone wizualnie",
+            "what_verified": "Późniejsze badanie pierwotne potwierdza definicję weekendowego przedziału i wskazuje pracę Frencha; nie jest oryginałem1980."
+          },
+          {
+            "url": "https://api.crossref.org/works/10.1016%2F0304-405X(80)90021-5",
+            "evidence_path": "research_round3/french_fulltext_attempt.json",
+            "locator": "Round3boundedsourcecheck",
+            "what_verified": "Officialmetadata acquired; publisherendpoint429; no legalfulltext acquired."
+          },
+          {
+            "url": "https://ideas.repec.org/a/eee/jfinec/v8y1980i1p55-69.html",
+            "evidence_path": "sources/round5/french_repec.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Record says full text available to ScienceDirect subscribers only. LIMIT: Metadata not full text. University PDF link independently returned404; OpenAlex says noOAfulltext location, which does not prove no lawful copy exists anywhere."
+          }
+        ],
+        "next_action": "Uzyskać legalną kopię French1980 przez posiadany dostęp biblioteczny albo kopię autorską, DOI10.1016/0304-405X(80)90021-5, strony55–69. Z niej ustalić price/TR/log-return i traktowanie świąt. Porównać pobrane close z wartościami/tabelami autora, sprawdzić poprzednik indeksu sprzed1957 i nadzwyczajne zamknięcia, zwłaszcza1968. Dopiero potem zamrozić statystyczny test poniedziałku; reguła bota i koszty są osobnym etapem.",
+        "round3_context_next_action": "Poszukać legalnej kopii autora lub working paper w repozytorium uczelni/biblioteki; najpierw pełny protokół, potem zgodna seria i horyzont."
+      },
+      {
+        "gap_id": "T008-DATA-02",
+        "status": "partial",
+        "status_reason": "Wcześniejsza darmowa próbka indeksu1953 nie rozwiązuje zgodności z oryginalną serią i vintage, których pełnego opisu nadal brak.",
+        "criteria_met": [
+          "Późniejsza praca niezależnie potwierdza typS&PComposite oraz początek1953 w badaniuFrencha.",
+          "Round5: Acquired6,273daily prices,1953-01-02..1977-12-30, unique dates/positive finite closes/no weekend rows; close-only CSV exported.",
+          "Round5: HTTP200 returned796bytes of browser-verification HTML, not a CSV."
+        ],
+        "criteria_unmet": [
+          "Pełny zakres1953–1977 ze zgodną definicją oryginalnych zwrotów.",
+          "Metadane i kontrola wartości względem pełnegoFrench1980.",
+          "Round5: Not yet reconciled to French source vintage, dividend/index predecessor basis or historical closure calendar. Current vendor vintage, not proof of original series.",
+          "Round5: No independent index-price confirmation obtained. Verification not bypassed."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/round2/T008_related_primary_Keim_Stambaugh1984.pdf",
+            "url": "https://faculty.wharton.upenn.edu/wp-content/uploads/2014/03/KS-JF1984.pdf",
+            "sha256": "ca0ab7d8b0bcf28391338dae2748682db0d5b296a76b8f0120fdd37e893ccbd6",
+            "locator": "PDF pp1–2 (druk819–820) i p17(druk835), sprawdzone wizualnie",
+            "what_verified": "Późniejsze badanie pierwotne potwierdza definicję weekendowego przedziału i wskazuje pracę Frencha; nie jest oryginałem1980."
+          },
+          {
+            "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?period1=-536630400&period2=252460800&interval=1d&events=div%2Csplits",
+            "evidence_path": "sources/round5/gspc_1953_1977_raw.json",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Acquired6,273daily prices,1953-01-02..1977-12-30, unique dates/positive finite closes/no weekend rows; close-only CSV exported. LIMIT: Not yet reconciled to French source vintage, dividend/index predecessor basis or historical closure calendar. Current vendor vintage, not proof of original series."
+          },
+          {
+            "url": "https://stooq.com/q/d/l/?s=%5Espx&i=d&d1=19521230&d2=19771231",
+            "evidence_path": "sources/round5/spx_1953_1977_stooq.csv",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "HTTP200 returned796bytes of browser-verification HTML, not a CSV. LIMIT: No independent index-price confirmation obtained. Verification not bypassed."
+          }
+        ],
+        "next_action": "Uzyskać legalną kopię French1980 przez posiadany dostęp biblioteczny albo kopię autorską, DOI10.1016/0304-405X(80)90021-5, strony55–69. Z niej ustalić price/TR/log-return i traktowanie świąt. Porównać pobrane close z wartościami/tabelami autora, sprawdzić poprzednik indeksu sprzed1957 i nadzwyczajne zamknięcia, zwłaszcza1968. Dopiero potem zamrozić statystyczny test poniedziałku; reguła bota i koszty są osobnym etapem.",
+        "round3_context_next_action": "Poszukać legalnej kopii autora lub working paper w repozytorium uczelni/biblioteki; najpierw pełny protokół, potem zgodna seria i horyzont."
+      },
+      {
+        "gap_id": "T008-RULE-03",
+        "status": "partial",
+        "status_reason": "Primary follow-up wizualnie potwierdza Friday-close→Monday-close i rozdział nocy od intraday; nie dostarcza całego oryginalnego protokołuFrencha.",
+        "criteria_met": [
+          "Nie wracamy do long Monday-open→Tuesday-openv1.",
+          "Framework porównania poniedziałku z innymi dniami i weekendowy przedział są częściowo potwierdzone.",
+          "Round5: Record says full text available to ScienceDirect subscribers only."
+        ],
+        "criteria_unmet": [
+          "Pełna oryginalna obsługa świąt, serie i wszystkie testy1980.",
+          "Nie wolno przejąć metod z późniejszego artykułu jako rzekomych regułFrencha.",
+          "Round5: Metadata not full text. University PDF link independently returned404; OpenAlex says noOAfulltext location, which does not prove no lawful copy exists anywhere."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/round2/T008_related_primary_Keim_Stambaugh1984.pdf",
+            "url": "https://faculty.wharton.upenn.edu/wp-content/uploads/2014/03/KS-JF1984.pdf",
+            "sha256": "ca0ab7d8b0bcf28391338dae2748682db0d5b296a76b8f0120fdd37e893ccbd6",
+            "locator": "PDF pp1–2 (druk819–820) i p17(druk835), sprawdzone wizualnie",
+            "what_verified": "Późniejsze badanie pierwotne potwierdza definicję weekendowego przedziału i wskazuje pracę Frencha; nie jest oryginałem1980."
+          },
+          {
+            "evidence_path": "sources/manifest.json",
+            "url": "https://www-2.rotman.utoronto.ca/~kan/3032/pdf/AssetPricingAnomalies/French_JFE_1980.pdf",
+            "sha256": "e4e9a8059952d02d949cdc57c1ea5e37b05e3119261204b8184e32eaa0d07b15",
+            "locator": "source_id=monday; publisher receipt; ponowne webopen404",
+            "what_verified": "Stary link uniwersytecki404, wydawca403 w poprzednim odczycie; indeksowane fragmenty nie są pełnym tekstem."
+          },
+          {
+            "url": "https://ideas.repec.org/a/eee/jfinec/v8y1980i1p55-69.html",
+            "evidence_path": "sources/round5/french_repec.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Record says full text available to ScienceDirect subscribers only. LIMIT: Metadata not full text. University PDF link independently returned404; OpenAlex says noOAfulltext location, which does not prove no lawful copy exists anywhere."
+          }
+        ],
+        "next_action": "Uzyskać legalną kopię French1980 przez posiadany dostęp biblioteczny albo kopię autorską, DOI10.1016/0304-405X(80)90021-5, strony55–69. Z niej ustalić price/TR/log-return i traktowanie świąt. Porównać pobrane close z wartościami/tabelami autora, sprawdzić poprzednik indeksu sprzed1957 i nadzwyczajne zamknięcia, zwłaszcza1968. Dopiero potem zamrozić statystyczny test poniedziałku; reguła bota i koszty są osobnym etapem.",
+        "round3_context_next_action": "Poszukać legalnej kopii autora lub working paper w repozytorium uczelni/biblioteki; najpierw pełny protokół, potem zgodna seria i horyzont."
+      }
+    ],
+    "source_urls_verified": [
+      "https://api.openalex.org/works/https://doi.org/10.1016/0304-405x(80)90021-5",
+      "https://faculty.wharton.upenn.edu/wp-content/uploads/2014/03/KS-JF1984.pdf",
+      "https://www-2.rotman.utoronto.ca/~kan/3032/pdf/AssetPricingAnomalies/French_JFE_1980.pdf"
+    ],
+    "observations": [
+      {
+        "id": "FREE_SOURCE_GAP_REVIEW_20261029_V2_T008",
+        "title": "Co blokuje test i co pozyskano za darmo · 29.10.2026",
+        "summary": "Brakuje pełnego French1980 i uzgodnienia zwrotów/świąt. Teraz mamy już publiczną serię cen z całego badanego okresu, ale nie potwierdzoną identyczność danych autora.",
+        "columns": [
+          "Darmowa ścieżka",
+          "Co rzeczywiście mamy",
+          "Co nadal trzeba sprawdzić"
+        ],
+        "rows": [
+          [
+            "Yahoo current-vintage ^GSPC",
+            "6273close od02.01.1953 do30.12.1977, podstawoweQA",
+            "Definicja indeksu/zwrotu, vintage i kalendarz do uzgodnienia"
+          ],
+          [
+            "RePEc / OpenAlex / uczelnianyPDF",
+            "Metadane i zapis404; brak pełnego tekstu",
+            "Legalny egzemplarz autora/biblioteki nadal potrzebny"
+          ],
+          [
+            "Stooq",
+            "Zapisano odpowiedźHTTP200, ale to HTMLchallenge",
+            "Cen nie pobrano; brak niezależnego uzgodnienia"
+          ]
+        ],
+        "limitations": [
+          "Hipoteza dotyczy zwrotu kończącego się w poniedziałek. Kupowanie w poniedziałek na otwarciu nie jest automatycznie tym samym eksperymentem.",
+          "6273ceny nie oznaczają6273źródłowo poprawnych obserwacji do finalnego testu: potrzebna obsługa świąt i wyłączeń autora.",
+          "Nie wypełniać braku sesji zerowym zwrotem;1968 ma226rekordów i wymaga historycznego kalendarza, a nie współczesnego schematu świąt."
+        ],
+        "evidence_report": "BRAKI_5_TEORII/T008.json"
+      },
+      {
+        "id": "ARRIVAL_20261029_T008",
+        "title": "Dzisiejsza kontrola wykonania · 29.10.2026",
+        "summary": "Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.",
+        "columns": [
+          "Zakres",
+          "Stan"
+        ],
+        "rows": [
+          [
+            "Oryginał",
+            "nadal blokowany przez braki reguł lub danych wskazane przy karcie; dzisiejsze ETF-y tego nie zastępują"
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_DZISIAJ/T008.json"
+      }
+    ],
+    "source_detail": null,
+    "source_update_artifact": "research_round2/source_updates_T006_T008.json",
+    "source_update_sha256": "408fb7981d414b0e45e82666f44a6585e9957bdc622fc446c706d2b6a8f612fb",
+    "observation_ids": [
+      "FREE_SOURCE_GAP_REVIEW_20261029_V2_T008",
+      "ARRIVAL_20261029_T008"
+    ],
+    "previous_findings_round2": [
+      "Pierwotna praca French 1980 pozostaje bez pozyskanego pełnego legalnego tekstu; zapisano sprawdzone adresy i ograniczenia dostępu.",
+      "Pierwotne badanie uzupełniające potwierdza potrzebę rozdzielenia Friday close → Monday close od nocnego i dziennego składnika.",
+      "Kupno w poniedziałek na open nie jest testem źródłowego efektu weekendu. Darmowa próbka indeksu z 1953 r. nie naprawia braków protokołu i całej serii."
+    ],
+    "strategy_result_file": "NET_STRATEGIE/T008.json",
+    "execution_evidence_file": "WYKONANIE_DZISIAJ/T008.json",
+    "free_source_review_id": "FREE_SOURCE_GAP_REVIEW_20261029_V2"
+  },
+  "source_qualification": {
+    "id": "T008",
+    "intended_market": "Historyczny rynek amerykańskich akcji, indeksS&P w pracyFrencha.",
+    "segment": "Poniedziałkowy close-to-close, obejmujący przerwę weekendową, wobec pozostałych dni.",
+    "regime": "Dni tygodnia w źródłowej próbie i podokresach; nie strategia wyłącznie na poniedziałkową hossę.",
+    "horizon": "Friday-close do Monday-close; potrzebna odrębna dekompozycja weekend i intraday.",
+    "universe": [
+      "Historyczny S&P composite portfolio; dokładna definicja wymaga pełnej publikacji."
+    ],
+    "original_objective": "Test różnic oczekiwanych zwrotów dnia tygodnia i modeli czasu kalendarzowego versus transakcyjnego.",
+    "correct_benchmark": "Średnie pozostałych dni/hipotezy procesu zwrotów z oryginalnej pracy; nie dodatnia stopa Monday-open/Tuesday-open ani pełneSPY.",
+    "falsification_question": "Czy source-defined poniedziałkowy zwrot jest niższy od właściwej grupy odniesienia w ustalonej próbie?",
+    "missing_data": [
+      "Pełny pierwotny tekst i definicje serii.",
+      "Close-to-close i weekend/intraday dekompozycja."
+    ],
+    "ready_for_valid_test": false,
+    "readiness_reason": "Kierunek i przedział v1 nie odpowiadają źródłu; reguła zdekwalifikowana przed dalszymi testami.",
+    "qualification_status": "requires_redesign_dequalified",
+    "source_fit": "misaligned",
+    "exact_mismatch": "French opisuje ujemne średnie poniedziałkowe close-to-close w swojej historycznej próbie. Pilot kupuje Monday open i sprzedaje next open, więc nie obejmuje weekendu Friday-close do Monday-open oraz dodaje noc Monday-close do Tuesday-open. Dodatkowo zakłada długą pozycję zamiast badać ujemną różnicę warunkowych zwrotów. Brak lokalnego pełnego źródła obniża też gotowość do dokładnej reprodukcji.",
+    "correction_needed": "Wyłączyć z kategorii testów twierdzenia Frencha. Najpierw odtworzyć zwroty według dni close-to-close i rozdzielić weekend oraz poniedziałkowe intraday. Jeśli celem jest strategia long-only, jawnie stworzyć regułę unikania wskazanego przedziału jako nową wersję, nie dobierać dnia po wyniku.",
+    "source_url": "https://www.sciencedirect.com/science/article/pii/0304405X80900215",
+    "applies_to_theory_version": 1
+  },
+  "acquisition_plan": {
+    "id": "T008",
+    "scope": "Najpierw pozyskać definicje Frencha 1980; nie przypisywać im long Monday-open/Tuesday-openv1.",
+    "gaps": [
+      {
+        "gap_id": "T008-SOURCE-01",
+        "missing_item": "Pełny legalny tekst pierwotnej publikacjiFrench 1980.",
+        "category": "source",
+        "why_needed": "Abstrakt nie wystarcza do ustalenia serii, holidayhandling i wszystkich testów.",
+        "acquisition_steps": [
+          "Zidentyfikować publikację po DOI10.1016/0304-405X(80)90021-5 i bibliografii autora.",
+          "Sprawdzić autorskie repozytorium i istniejący portal biblioteki po tym DOI; stary link uniwersytecki jest404, pobranie wydawcy403.",
+          "Jeżeli istniejący legalny dostęp biblioteczny udostępni pełny tekst, zachować plik, prawo dostępu i hash; bez niego nie obchodzić paywalla i nie kupować nic automatycznie."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Kenneth French — oficjalny wykaz publikacji",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/curriculum_vitae.html",
+            "access_verified": true,
+            "what_available": "Pobrana strona autora potwierdza tytuł, czasopismo i rok publikacji.",
+            "does_not_supply": "Nie udostępnia pod tą pozycją pełnego tekstu ani oryginalnego zbioru."
+          },
+          {
+            "name": "Stary uniwersytecki PDFFrencha",
+            "url": "https://www-2.rotman.utoronto.ca/~kan/3032/pdf/AssetPricingAnomalies/French_JFE_1980.pdf",
+            "access_verified": false,
+            "what_available": "Indeks wyszukiwarki przechowuje fragmenty; bezpośrednie otwarcie zwróciło404.",
+            "does_not_supply": "Nie potwierdzono aktualnego pobrania pełnego PDF."
+          },
+          {
+            "name": "Elsevier — rekord artykułu French 1980",
+            "url": "https://www.sciencedirect.com/science/article/pii/0304405X80900215",
+            "access_verified": false,
+            "what_available": "Tytuł/DOI i abstrakt widoczne w indeksie wyszukiwarki; bezpośrednie pobranie w projekcieHTTP403.",
+            "does_not_supply": "Nie potwierdzono pełnego bezpłatnego tekstu ani praw dostępu użytkownika."
+          },
+          {
+            "name": "RePEc publisher access record",
+            "url": "https://ideas.repec.org/a/eee/jfinec/v8y1980i1p55-69.html",
+            "access_verified": true,
+            "verification": {
+              "url": "https://ideas.repec.org/a/eee/jfinec/v8y1980i1p55-69.html",
+              "file": "sources/round5/french_repec.html",
+              "at_utc": "2026-10-29T12:45:47.819875+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://ideas.repec.org/a/eee/jfinec/v8y1980i1p55-69.html",
+              "bytes": 27555,
+              "sha256": "bb96a2287598894c2463b89f80147c384968ef46b8f1f2376a6e07cce50c4e14",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Record says full text available to ScienceDirect subscribers only.",
+            "does_not_supply": "Metadata not full text. University PDF link independently returned404; OpenAlex says noOAfulltext location, which does not prove no lawful copy exists anywhere.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T008-SOURCE-01",
+              "T008-RULE-03"
+            ]
+          }
+        ],
+        "free_feasibility": "unresolved",
+        "verification_acceptance": [
+          "Lokalnie odczytany kompletny tekst15 stron, zgodny tytuł/autor/rok/DOI i zachowanyhash.",
+          "Opis źródłowych danych i testów ma lokalizatory stron zamiast założeń z abstraktu."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "requires_source_confirmation; można założyć odrębną kartę legalnie dostępnego późniejszego badania, bez przypisywania jej metod Frenchowi 1980.",
+        "next_action": "Uzyskać legalną kopię French1980 przez posiadany dostęp biblioteczny albo kopię autorską, DOI10.1016/0304-405X(80)90021-5, strony55–69. Z niej ustalić price/TR/log-return i traktowanie świąt. Porównać pobrane close z wartościami/tabelami autora, sprawdzić poprzednik indeksu sprzed1957 i nadzwyczajne zamknięcia, zwłaszcza1968. Dopiero potem zamrozić statystyczny test poniedziałku; reguła bota i koszty są osobnym etapem.",
+        "initial_next_action": "Wyszukać legalną pełną wersję lub istniejący dostęp biblioteczny po DOI; nie wysyłano żadnej wiadomości.",
+        "progress": {
+          "gap_id": "T008-SOURCE-01",
+          "status": "open",
+          "status_reason": "Poszukiwanie po autorze, repozytoriachDartmouth/Rochester i DOI nie dostarczyło legalnego kompletnegoFrench1980. OpenAlex nie wskazuje OA.",
+          "criteria_met": [
+            "Potwierdzono tożsamość publikacji i brak działającego staregoPDF.",
+            "Zdobytą pełną pracę1984 oznaczono jako późniejszą publikację, nie substytut1980.",
+            "Round5: Record says full text available to ScienceDirect subscribers only."
+          ],
+          "criteria_unmet": [
+            "Pełny pierwotny tekst1980 i jego szczegółowe definicje.",
+            "Round5: Metadata not full text. University PDF link independently returned404; OpenAlex says noOAfulltext location, which does not prove no lawful copy exists anywhere."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/round2/T008_openalex_locations.json",
+              "url": "https://api.openalex.org/works/https://doi.org/10.1016/0304-405x(80)90021-5",
+              "sha256": "7273b32e66479c2d5a4875f185332023c57848db020880d1bb2ef7bbd7583c1c",
+              "locator": "open_access, best_oa_location, locations",
+              "what_verified": "Odczyt metadata wskazuje closed i brak zarejestrowanego OA repo; to wynik ograniczonej kwerendy, nie dowód globalnej nieistniejącej kopii."
+            },
+            {
+              "evidence_path": "sources/manifest.json",
+              "url": "https://www-2.rotman.utoronto.ca/~kan/3032/pdf/AssetPricingAnomalies/French_JFE_1980.pdf",
+              "sha256": "e4e9a8059952d02d949cdc57c1ea5e37b05e3119261204b8184e32eaa0d07b15",
+              "locator": "source_id=monday; publisher receipt; ponowne webopen404",
+              "what_verified": "Stary link uniwersytecki404, wydawca403 w poprzednim odczycie; indeksowane fragmenty nie są pełnym tekstem."
+            },
+            {
+              "evidence_path": "sources/round2/T008_related_primary_Keim_Stambaugh1984.pdf",
+              "url": "https://faculty.wharton.upenn.edu/wp-content/uploads/2014/03/KS-JF1984.pdf",
+              "sha256": "ca0ab7d8b0bcf28391338dae2748682db0d5b296a76b8f0120fdd37e893ccbd6",
+              "locator": "PDF pp1–2 (druk819–820) i p17(druk835), sprawdzone wizualnie",
+              "what_verified": "Późniejsze badanie pierwotne potwierdza definicję weekendowego przedziału i wskazuje pracę Frencha; nie jest oryginałem1980."
+            },
+            {
+              "url": "https://api.crossref.org/works/10.1016%2F0304-405X(80)90021-5",
+              "evidence_path": "research_round3/french_fulltext_attempt.json",
+              "locator": "Round3boundedsourcecheck",
+              "what_verified": "Officialmetadata acquired; publisherendpoint429; no legalfulltext acquired."
+            },
+            {
+              "url": "https://ideas.repec.org/a/eee/jfinec/v8y1980i1p55-69.html",
+              "evidence_path": "sources/round5/french_repec.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Record says full text available to ScienceDirect subscribers only. LIMIT: Metadata not full text. University PDF link independently returned404; OpenAlex says noOAfulltext location, which does not prove no lawful copy exists anywhere."
+            }
+          ],
+          "next_action": "Uzyskać legalną kopię French1980 przez posiadany dostęp biblioteczny albo kopię autorską, DOI10.1016/0304-405X(80)90021-5, strony55–69. Z niej ustalić price/TR/log-return i traktowanie świąt. Porównać pobrane close z wartościami/tabelami autora, sprawdzić poprzednik indeksu sprzed1957 i nadzwyczajne zamknięcia, zwłaszcza1968. Dopiero potem zamrozić statystyczny test poniedziałku; reguła bota i koszty są osobnym etapem.",
+          "round3_context_next_action": "Poszukać legalnej kopii autora lub working paper w repozytorium uczelni/biblioteki; najpierw pełny protokół, potem zgodna seria i horyzont."
+        }
+      },
+      {
+        "gap_id": "T008-DATA-02",
+        "missing_item": "Zgodna dzienna seriaS&P Composite dla oryginalnego okresu 1953–1977 i definicji zwrotów.",
+        "category": "data",
+        "why_needed": "SPY nie istniał w oryginalnym okresie i nie odtwarza źródłowego portfela.",
+        "acquisition_steps": [
+          "Po zdobyciu tekstu ustalić dokładną serię, daty i traktowanie dywidend/zmian indeksu.",
+          "Zweryfikowana bezpłatna próbkaYahoo^GSPC obejmuje styczeń1953; przed użyciem trzeba sprawdzić całą wymaganą historię, braki i zgodność z tabelą autora.",
+          "PublicznyFrench Mkt-RF+RF traktować jako inny szeroki rynek, nie zamiennikS&P Composite. Oryginalna zgodność może wymagać istniejącego dostępu dohistorycznych danych licencjonowanych."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Yahoo Finance — próbka historycznego S&P500 price index",
+            "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?period1=-536457600&period2=-535680000&interval=1d",
+            "access_verified": true,
+            "what_available": "Publiczny endpoint zwrócił6 rekordów ze stycznia1953; receipt i surowyJSON zapisane.",
+            "does_not_supply": "Próbka nie dowodzi kompletności1953–1977, zgodności vintage ani reguł historycznego S&P Composite; nie dostarcza wiarygodnego historycznego bid/ask."
+          },
+          {
+            "name": "Kenneth French — bezpłatny dzienny plik czynników",
+            "url": "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip",
+            "access_verified": true,
+            "what_available": "Pobrany publiczny ZIP z dziennymi Mkt-RF, SMB, HML i RF; opis konstrukcji dostępny osobno.",
+            "does_not_supply": "Nie jest dokładną historyczną serią CRSP value/equal-weight z McConnell ani S&P Composite Frencha 1980; brak open, bid/ask i oryginalnego vintage."
+          },
+          {
+            "name": "CRSP Historical Indexes — opis źródeł indeksowych",
+            "url": "https://indexes.morningstar.com/research-data-products/crsp-historical-indexes-database",
+            "access_verified": true,
+            "what_available": "Oficjalny opis badań indeksowych i licencjonowanego dostępu.",
+            "does_not_supply": "Nie zapewnia bezpłatnego konkretnego oryginalnego vintageFrencha."
+          },
+          {
+            "name": "Yahoo: actual index history1953–1977",
+            "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?period1=-536630400&period2=252460800&interval=1d&events=div%2Csplits",
+            "access_verified": true,
+            "verification": {
+              "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?period1=-536630400&period2=252460800&interval=1d&events=div%2Csplits",
+              "file": "sources/round5/gspc_1953_1977_raw.json",
+              "at_utc": "2026-10-29T12:45:47.677812+00:00",
+              "http_status": 200,
+              "content_type": "application/json;charset=utf-8",
+              "final_url": "https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?period1=-536630400&period2=252460800&interval=1d&events=div%2Csplits",
+              "bytes": 673747,
+              "sha256": "cba5a6403d3516036d45a5d1bfb93316687e9960b7612727d2ada6244d5ad1ac",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Acquired6,273daily prices,1953-01-02..1977-12-30, unique dates/positive finite closes/no weekend rows; close-only CSV exported.",
+            "does_not_supply": "Not yet reconciled to French source vintage, dividend/index predecessor basis or historical closure calendar. Current vendor vintage, not proof of original series.",
+            "access_scope": "actual historical data acquired and basic QA completed",
+            "relevant_gaps": [
+              "T008-DATA-02"
+            ]
+          },
+          {
+            "name": "Stooq CSV endpoint content check",
+            "url": "https://stooq.com/q/d/l/?s=%5Espx&i=d&d1=19521230&d2=19771231",
+            "access_verified": false,
+            "verification": {
+              "url": "https://stooq.com/q/d/l/?s=%5Espx&i=d&d1=19521230&d2=19771231",
+              "file": "sources/round5/spx_1953_1977_stooq.csv",
+              "at_utc": "2026-10-29T12:45:47.678299+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=utf-8",
+              "final_url": "https://stooq.com/q/d/l/?s=%5Espx&i=d&d1=19521230&d2=19771231",
+              "bytes": 796,
+              "sha256": "bc6cb6968a0a0621eeb0168b8b82684499bfba6fa492131f72701a9927e8a4c2",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "HTTP200 returned796bytes of browser-verification HTML, not a CSV.",
+            "does_not_supply": "No independent index-price confirmation obtained. Verification not bypassed.",
+            "access_scope": "access challenge, no dataset acquired",
+            "relevant_gaps": [
+              "T008-DATA-02"
+            ]
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Zapisana kompletność całego oryginalnego okresu i brak niejawnego dopełnianiaETFem.",
+          "Rozróżniono price-return/log-return i total-return zgodnie z tekstem.",
+          "Wartości kontrolne lub statystyki porównane z publikacją, zanim padnie deklaracja reprodukcji."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Nowy plan na bezpłatnym^GSPC lub publicznym szerokim rynku może badać odrębną współczesną hipotezę; nie stanowi dokładnej reprodukcji oryginalnej próby.",
+        "next_action": "Uzyskać legalną kopię French1980 przez posiadany dostęp biblioteczny albo kopię autorską, DOI10.1016/0304-405X(80)90021-5, strony55–69. Z niej ustalić price/TR/log-return i traktowanie świąt. Porównać pobrane close z wartościami/tabelami autora, sprawdzić poprzednik indeksu sprzed1957 i nadzwyczajne zamknięcia, zwłaszcza1968. Dopiero potem zamrozić statystyczny test poniedziałku; reguła bota i koszty są osobnym etapem.",
+        "initial_next_action": "Zachować receipt6 historycznych rekordów; nie pobierać ani testować szerszej próby przed T008-SOURCE-01.",
+        "progress": {
+          "gap_id": "T008-DATA-02",
+          "status": "partial",
+          "status_reason": "Wcześniejsza darmowa próbka indeksu1953 nie rozwiązuje zgodności z oryginalną serią i vintage, których pełnego opisu nadal brak.",
+          "criteria_met": [
+            "Późniejsza praca niezależnie potwierdza typS&PComposite oraz początek1953 w badaniuFrencha.",
+            "Round5: Acquired6,273daily prices,1953-01-02..1977-12-30, unique dates/positive finite closes/no weekend rows; close-only CSV exported.",
+            "Round5: HTTP200 returned796bytes of browser-verification HTML, not a CSV."
+          ],
+          "criteria_unmet": [
+            "Pełny zakres1953–1977 ze zgodną definicją oryginalnych zwrotów.",
+            "Metadane i kontrola wartości względem pełnegoFrench1980.",
+            "Round5: Not yet reconciled to French source vintage, dividend/index predecessor basis or historical closure calendar. Current vendor vintage, not proof of original series.",
+            "Round5: No independent index-price confirmation obtained. Verification not bypassed."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/round2/T008_related_primary_Keim_Stambaugh1984.pdf",
+              "url": "https://faculty.wharton.upenn.edu/wp-content/uploads/2014/03/KS-JF1984.pdf",
+              "sha256": "ca0ab7d8b0bcf28391338dae2748682db0d5b296a76b8f0120fdd37e893ccbd6",
+              "locator": "PDF pp1–2 (druk819–820) i p17(druk835), sprawdzone wizualnie",
+              "what_verified": "Późniejsze badanie pierwotne potwierdza definicję weekendowego przedziału i wskazuje pracę Frencha; nie jest oryginałem1980."
+            },
+            {
+              "url": "https://query1.finance.yahoo.com/v8/finance/chart/%5EGSPC?period1=-536630400&period2=252460800&interval=1d&events=div%2Csplits",
+              "evidence_path": "sources/round5/gspc_1953_1977_raw.json",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Acquired6,273daily prices,1953-01-02..1977-12-30, unique dates/positive finite closes/no weekend rows; close-only CSV exported. LIMIT: Not yet reconciled to French source vintage, dividend/index predecessor basis or historical closure calendar. Current vendor vintage, not proof of original series."
+            },
+            {
+              "url": "https://stooq.com/q/d/l/?s=%5Espx&i=d&d1=19521230&d2=19771231",
+              "evidence_path": "sources/round5/spx_1953_1977_stooq.csv",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "HTTP200 returned796bytes of browser-verification HTML, not a CSV. LIMIT: No independent index-price confirmation obtained. Verification not bypassed."
+            }
+          ],
+          "next_action": "Uzyskać legalną kopię French1980 przez posiadany dostęp biblioteczny albo kopię autorską, DOI10.1016/0304-405X(80)90021-5, strony55–69. Z niej ustalić price/TR/log-return i traktowanie świąt. Porównać pobrane close z wartościami/tabelami autora, sprawdzić poprzednik indeksu sprzed1957 i nadzwyczajne zamknięcia, zwłaszcza1968. Dopiero potem zamrozić statystyczny test poniedziałku; reguła bota i koszty są osobnym etapem.",
+          "round3_context_next_action": "Poszukać legalnej kopii autora lub working paper w repozytorium uczelni/biblioteki; najpierw pełny protokół, potem zgodna seria i horyzont."
+        }
+      },
+      {
+        "gap_id": "T008-RULE-03",
+        "missing_item": "Właściwy kierunek i interwał: Friday-close/Monday-close, porównania dni oraz zasady świąt i weekendowej dekompozycji.",
+        "category": "rule",
+        "why_needed": "Wersjav1 long Monday-open/next-open pomija weekend i dodaje inną noc; nie odpowiada ujemnej obserwacji źródła.",
+        "acquisition_steps": [
+          "Po odczycie pełnej publikacji przepisać modele czasu kalendarzowego i transakcyjnego oraz reguły klasyfikacji dni/świąt.",
+          "Przygotować plan statystyczny różnic dni i podokresów przed liczbami; dekompozycjęovernight/intraday oznaczyć jako osobne pytanie z odpowiednimi danymiopen.",
+          "Dla nowej strategii long-only jawnie określić unikanie lub inną reakcję na efekt; nie przejąć starej reguły kupowania poniedziałku."
+        ],
+        "candidate_sources": [
+          {
+            "name": "Elsevier — rekord artykułu French 1980",
+            "url": "https://www.sciencedirect.com/science/article/pii/0304405X80900215",
+            "access_verified": false,
+            "what_available": "Tytuł/DOI i abstrakt widoczne w indeksie wyszukiwarki; bezpośrednie pobranie w projekcieHTTP403.",
+            "does_not_supply": "Nie potwierdzono pełnego bezpłatnego tekstu ani praw dostępu użytkownika."
+          },
+          {
+            "name": "Keim i Stambaugh1984 — bezpłatny pełny artykuł współautora",
+            "url": "https://faculty.wharton.upenn.edu/wp-content/uploads/2014/03/KS-JF1984.pdf",
+            "access_verified": true,
+            "what_available": "Legalnie udostępniony PDF późniejszego badania; zawiera weekend/intraday dyskusję i niezależną definicję badanej próby.",
+            "does_not_supply": "To nie jest artykułFrencha 1980 ani zamiennik jego pełnej metodologii."
+          },
+          {
+            "name": "NYSE — Holidays & Trading Hours",
+            "url": "https://www.nyse.com/trade/hours-calendars",
+            "access_verified": true,
+            "what_available": "Oficjalne godziny aukcji i kalendarze2026–2028, odczytane przez web.",
+            "does_not_supply": "Nie jest kompletnym archiwum kalendarza znanego ex ante dla1926–2005 ani kwotowaniami/fillami."
+          },
+          {
+            "name": "RePEc publisher access record",
+            "url": "https://ideas.repec.org/a/eee/jfinec/v8y1980i1p55-69.html",
+            "access_verified": true,
+            "verification": {
+              "url": "https://ideas.repec.org/a/eee/jfinec/v8y1980i1p55-69.html",
+              "file": "sources/round5/french_repec.html",
+              "at_utc": "2026-10-29T12:45:47.819875+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://ideas.repec.org/a/eee/jfinec/v8y1980i1p55-69.html",
+              "bytes": 27555,
+              "sha256": "bb96a2287598894c2463b89f80147c384968ef46b8f1f2376a6e07cce50c4e14",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Record says full text available to ScienceDirect subscribers only.",
+            "does_not_supply": "Metadata not full text. University PDF link independently returned404; OpenAlex says noOAfulltext location, which does not prove no lawful copy exists anywhere.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T008-SOURCE-01",
+              "T008-RULE-03"
+            ]
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Zwrot poniedziałkowy ma właściwy początek i koniec; święta nie są po cichu traktowane jako zwykłe sesje.",
+          "Kierunek twierdzenia i jego benchmark zgadzają się z pełnym źródłem.",
+          "Rozdzielono test anomalii od kosztowej strategii inwestycyjnej."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "requires_redesign; zachowaćv1 jako własny wariant bez znaczenia dla werdyktu oFrenchu.",
+        "next_action": "Uzyskać legalną kopię French1980 przez posiadany dostęp biblioteczny albo kopię autorską, DOI10.1016/0304-405X(80)90021-5, strony55–69. Z niej ustalić price/TR/log-return i traktowanie świąt. Porównać pobrane close z wartościami/tabelami autora, sprawdzić poprzednik indeksu sprzed1957 i nadzwyczajne zamknięcia, zwłaszcza1968. Dopiero potem zamrozić statystyczny test poniedziałku; reguła bota i koszty są osobnym etapem.",
+        "initial_next_action": "Zdefiniować prawidłowe okna i grupy odniesienia dopiero po potwierdzeniu pełnego źródła.",
+        "progress": {
+          "gap_id": "T008-RULE-03",
+          "status": "partial",
+          "status_reason": "Primary follow-up wizualnie potwierdza Friday-close→Monday-close i rozdział nocy od intraday; nie dostarcza całego oryginalnego protokołuFrencha.",
+          "criteria_met": [
+            "Nie wracamy do long Monday-open→Tuesday-openv1.",
+            "Framework porównania poniedziałku z innymi dniami i weekendowy przedział są częściowo potwierdzone.",
+            "Round5: Record says full text available to ScienceDirect subscribers only."
+          ],
+          "criteria_unmet": [
+            "Pełna oryginalna obsługa świąt, serie i wszystkie testy1980.",
+            "Nie wolno przejąć metod z późniejszego artykułu jako rzekomych regułFrencha.",
+            "Round5: Metadata not full text. University PDF link independently returned404; OpenAlex says noOAfulltext location, which does not prove no lawful copy exists anywhere."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/round2/T008_related_primary_Keim_Stambaugh1984.pdf",
+              "url": "https://faculty.wharton.upenn.edu/wp-content/uploads/2014/03/KS-JF1984.pdf",
+              "sha256": "ca0ab7d8b0bcf28391338dae2748682db0d5b296a76b8f0120fdd37e893ccbd6",
+              "locator": "PDF pp1–2 (druk819–820) i p17(druk835), sprawdzone wizualnie",
+              "what_verified": "Późniejsze badanie pierwotne potwierdza definicję weekendowego przedziału i wskazuje pracę Frencha; nie jest oryginałem1980."
+            },
+            {
+              "evidence_path": "sources/manifest.json",
+              "url": "https://www-2.rotman.utoronto.ca/~kan/3032/pdf/AssetPricingAnomalies/French_JFE_1980.pdf",
+              "sha256": "e4e9a8059952d02d949cdc57c1ea5e37b05e3119261204b8184e32eaa0d07b15",
+              "locator": "source_id=monday; publisher receipt; ponowne webopen404",
+              "what_verified": "Stary link uniwersytecki404, wydawca403 w poprzednim odczycie; indeksowane fragmenty nie są pełnym tekstem."
+            },
+            {
+              "url": "https://ideas.repec.org/a/eee/jfinec/v8y1980i1p55-69.html",
+              "evidence_path": "sources/round5/french_repec.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Record says full text available to ScienceDirect subscribers only. LIMIT: Metadata not full text. University PDF link independently returned404; OpenAlex says noOAfulltext location, which does not prove no lawful copy exists anywhere."
+            }
+          ],
+          "next_action": "Uzyskać legalną kopię French1980 przez posiadany dostęp biblioteczny albo kopię autorską, DOI10.1016/0304-405X(80)90021-5, strony55–69. Z niej ustalić price/TR/log-return i traktowanie świąt. Porównać pobrane close z wartościami/tabelami autora, sprawdzić poprzednik indeksu sprzed1957 i nadzwyczajne zamknięcia, zwłaszcza1968. Dopiero potem zamrozić statystyczny test poniedziałku; reguła bota i koszty są osobnym etapem.",
+          "round3_context_next_action": "Poszukać legalnej kopii autora lub working paper w repozytorium uczelni/biblioteki; najpierw pełny protokół, potem zgodna seria i horyzont."
+        }
+      }
+    ]
+  },
+  "quantconnect_data_review": null
+}

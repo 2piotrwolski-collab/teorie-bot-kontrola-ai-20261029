@@ -1,0 +1,64 @@
+{
+  "bad_quotes": 24,
+  "chain_events": 12061,
+  "contracts": {
+    "GC YFJVX61NK3A5": {
+      "exchange_timezone": "America/New_York",
+      "expiry": "2024-01-29 00:00:00",
+      "first_seen_engine_time": "2024-01-02 03:20:00",
+      "minimum_price_variation": 0.1,
+      "multiplier": 100.0,
+      "open_interest_as_observed": 0.0,
+      "value": "GC29F24"
+    },
+    "GC YGCFVVNJRYXP": {
+      "exchange_timezone": "America/New_York",
+      "expiry": "2024-02-27 00:00:00",
+      "first_seen_engine_time": "2024-01-02 00:00:00",
+      "minimum_price_variation": 0.1,
+      "multiplier": 100.0,
+      "open_interest_as_observed": 0.0,
+      "value": "GC27G24"
+    },
+    "GC YH40EHW9X3FH": {
+      "exchange_timezone": "America/New_York",
+      "expiry": "2024-03-26 00:00:00",
+      "first_seen_engine_time": "2024-01-02 00:13:00",
+      "minimum_price_variation": 0.1,
+      "multiplier": 100.0,
+      "open_interest_as_observed": 0.0,
+      "value": "GC26H24"
+    },
+    "GC YHYJ9E8IAHEL": {
+      "exchange_timezone": "America/New_York",
+      "expiry": "2024-04-26 00:00:00",
+      "first_seen_engine_time": "2024-01-02 00:03:00",
+      "minimum_price_variation": 0.1,
+      "multiplier": 100.0,
+      "open_interest_as_observed": 0.0,
+      "value": "GC26J24"
+    }
+  },
+  "history": {
+    "count": 100,
+    "daily_session_definition_verified": false,
+    "first_end": "2023-08-10 17:00:00",
+    "invalid_ohlc": 0,
+    "last_end": "2023-12-29 17:00:00",
+    "sid": "GC YGCFVVNJRYXP"
+  },
+  "orders_allowed": false,
+  "protocol": "T003_QC_DATA_AUDIT_V1",
+  "quote_bars": 24540,
+  "remaining_gates": [
+    "55complete declared CME sessions per chosen contract",
+    "full study coverage and roll overlap",
+    "sequencing inside minute/quote freshness",
+    "margin/fees/funding",
+    "portfolio conventions and independent review"
+  ],
+  "runtime_status": "AUDIT_FINISHED_FULL_DATA_GATES_STILL_REQUIRED",
+  "strategy_return_calculated": false,
+  "trade_bars": 18990,
+  "universe": "GC contracts, audit only, not completeTurtleportfolio"
+}

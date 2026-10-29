@@ -1,0 +1,824 @@
+FILE: nearclose_net.py
+SHA256: 0456e5052f54f48b67ac7a5b194f3cacacaad7b69a0a0caee54924e4396a91dc
+"""Short recent near-close execution feasibility screen; same shared cost engine."""
+import datetime as dt,json,statistics
+from pathlib import Path
+from engine import _wilder_rsi
+from net_engine import rebalance,fee
+from registry import digest
+from data_io import atomic_json
+ROOT=Path(__file__).resolve().parent
+
+def prefix_features(bars):
+    # Bar15:35 ends15:40; none of the15:40/15:45/...future bars inform signal.
+    known=[b for h,b in sorted(bars.items()) if '09:30'<=h<='15:35']
+    if len(known)!=74:raise ValueError('Full pre-signal coverage required')
+    return {'price':known[-1]['close'],'high':max(b['high'] for b in known),'low':min(b['low'] for b in known),'volume':sum(b['volume'] for b in known)}
+
+def replay(spec,days,daily,intra,cost):
+    symbol=spec['assets'][0];symbols=[symbol]+(['BIL'] if symbol!='BIL' else [])
+    daily_by={s:{r['date']:r for r in daily[s]} for s in symbols};q={s:0. for s in symbols};cash=10000.;state=False;ledger=[];nav=[];signals=[];capacity=[]
+    for index,day in enumerate(days):
+        price={};quotes={}
+        for s in symbols:
+            bar=daily_by[s][day];factor=bar['adj_close']/bar['close'];quotes[s]=intra[s][day]['15:45']['open'];price[s]=quotes[s]*factor
+        old=state
+        if spec['key']=='buyhold':state=True;features=None
+        else:
+            features=prefix_features(intra[symbol][day]);prior=[r for r in daily[symbol] if r['date']<day]
+            if spec['key']=='ibs':
+                if len(prior)<500:raise ValueError('500dayvolume warmup missing')
+                width=features['high']-features['low'];ibs=(features['price']-features['low'])/width if width>0 else None
+                median=statistics.median(r['volume'] for r in prior[-500:]);state=ibs is not None and ibs<=.2 and features['volume']>median
+                features.update(ibs=ibs,median_past500_daily_volume=median)
+            elif spec['key']=='connors':
+                factor=daily_by[symbol][day]['adj_close']/daily_by[symbol][day]['close'];closes=[r['adj_close'] for r in prior]+[features['price']*factor]
+                score=_wilder_rsi(closes,2)[-1];sma=statistics.fmean(closes[-200:])
+                state=not(score>70) if state else closes[-1]>sma and score<5
+                features.update(rsi2=score,sma200=sma)
+        signals.append({'date':day,'information_cutoff_NY':'15:40','fill_proxy_NY':'15:45','desired_risk_state':state,'features':features,'not_a_live_order':True})
+        if index<len(days)-1 and (state!=old or index==0):
+            weights={'BIL':1.} if symbol=='BIL' else {symbol:float(state),'BIL':1-float(state)}
+            q,cash,trades=rebalance(q,cash,weights,price,quotes,cost,day,spec['key'])
+            for t in trades:
+                t['signal_time_NY']=day+'T15:40';t['execution_proxy_time_NY']=day+'T15:45'
+                volume=intra[t['symbol']][day]['15:45']['volume'];ratio=abs(t['signed_notional'])/quotes[t['symbol']]/volume if volume else None
+                capacity.append({'date':day,'symbol':t['symbol'],'order_share_of_5min_volume':ratio,'above1pct':ratio is None or ratio>.01})
+            ledger+=trades
+        value=cash+sum(q[s]*price[s] for s in symbols)
+        if index==len(days)-1:
+            for s in symbols:
+                n=q[s]*price[s]
+                if n>1e-8:
+                    f=fee(n,quotes[s],True,cost);cash+=n-f;ledger.append({'date':day,'symbol':s,'signed_notional':-n,'cost':f,'reason':'terminal15:45liquidation'});q[s]=0
+            value=cash
+        nav.append({'date':day,'nav_15_45':value})
+    peak=10000.;mdd=0
+    for x in nav:peak=max(peak,x['nav_15_45']);mdd=min(mdd,x['nav_15_45']/peak-1)
+    return {'metrics':{'total_return_pct':(cash/10000-1)*100,'sampled_drawdown_pct':mdd*100,'orders':len(ledger),'cost_usd':sum(t['cost'] for t in ledger),'risk_entries':sum(t['signed_notional']>0 and t['symbol']!='BIL' for t in ledger),'orders_above1pct_of_5minvolume':sum(c['above1pct'] for c in capacity),'sessions':len(days),'first':days[0],'last':days[-1]},'ledger':ledger,'signals':signals,'nav':nav,'capacity':capacity}
+
+def identity(plan):
+    files=['nearclose_net.py','net_engine.py','engine.py','config/nearclose_net_plan.json','research_round3/intraday_QA.json']
+    files +=[f'data/modern/{s}.json' for s in plan['symbols']]+[f'data/modern/intraday/{s}_sessions.json' for s in plan['symbols']]
+    return {f:digest((ROOT/f).read_bytes()) for f in files}
+
+def main():
+    plan=json.loads((ROOT/'config/nearclose_net_plan.json').read_text());freeze=json.loads((ROOT/'config/nearclose_net_frozen.json').read_text())
+    if identity(plan)!=freeze['identities']:raise ValueError('Frozen identity differs')
+    target=ROOT/'results/nearclose_net_summary.json'
+    if target.exists():raise ValueError('Cannot overwrite prior results')
+    daily={s:json.loads((ROOT/f'data/modern/{s}.json').read_text()) for s in plan['symbols']};intra={s:json.loads((ROOT/f'data/modern/intraday/{s}_sessions.json').read_text()) for s in plan['symbols']}
+    days=sorted(intra['SPY'])
+    if any(sorted(x)!=days for x in intra.values()):raise ValueError('Session coverage differs')
+    records=[]
+    for spec in plan['controls']+plan['strategies']:
+        for bps in plan['cost_bps']:
+            result=replay(spec,days,daily,intra,bps);rid=spec['id']+'_'+str(bps)+'bps';path=ROOT/'results/nearclose_net'/f'{rid}.json'
+            atomic_json(path,{'id':rid,'spec':spec,'spread_slippage_bps':bps,'plan_id':plan['id'],**result});records.append({'variant':spec['id'],'theory':spec.get('theory'),'spread_slippage_bps':bps,'metrics':result['metrics'],'evidence':str(path.relative_to(ROOT))})
+    result={'id':plan['id'],'at_utc':dt.datetime.now(dt.timezone.utc).isoformat(),'records':records,'identities':freeze['identities'],'inference':'No probability, statistical significance, OOS or reliable edge claim from42sessions.','after_modeled_transaction_costs':True,'after_all_personal_costs':False,'live_execution':False,'review_status':'provisional; no Claudeconsensus','trial_count':30,'limitations':plan['limitations']}
+    atomic_json(target,result);print(json.dumps({'study':plan['id'],'saved_runs':len(records),'sessions':len(days)}))
+if __name__=='__main__':main()
+
+
+FILE: net_engine.py
+SHA256: a5d192ae939980bd8364d36967486b660e3a284daed50bca04bc09fac84e6481
+"""Shared causal daily portfolio screening; no broker/order connection.
+
+Prices are total-return-adjusted OHLC proxies, not auction bid/ask fills.
+Commission quantities use vendor quote open; NAV uses consistent adjusted units.
+Current fee tariff applied to all replay dates is a scenario, not historical fees.
+"""
+import calendar,datetime as dt,math,statistics
+from engine import _wilder_rsi
+
+def easter(y):
+    a=y%19;b=y//100;c=y%100;d=b//4;e=b%4;f=(b+8)//25;g=(b-f+1)//3
+    h=(19*a+b-d-g+15)%30;i=c//4;k=c%4;l=(32+2*e+2*i-h-k)%7;m=(a+11*h+22*l)//451
+    return dt.date(y,(h+l-7*m+114)//31,(h+l-7*m+114)%31+1)
+
+def nth(y,m,weekday,n):
+    d=dt.date(y,m,1);return d+dt.timedelta(days=(weekday-d.weekday())%7+7*(n-1))
+
+def sessions(y):
+    observed=lambda d:d+dt.timedelta(days=-1 if d.weekday()==5 else 1 if d.weekday()==6 else 0)
+    jan1=dt.date(y,1,1)
+    holidays={jan1+dt.timedelta(days=int(jan1.weekday()==6)),nth(y,1,0,3),nth(y,2,0,3),easter(y)-dt.timedelta(days=2),max(d for d in (dt.date(y,5,k) for k in range(1,32)) if d.weekday()==0),observed(dt.date(y,7,4)),nth(y,9,0,1),nth(y,11,3,4),observed(dt.date(y,12,25))}
+    if y>=2022:holidays.add(observed(dt.date(y,6,19)))
+    holidays.update(dt.date.fromisoformat(x) for x in ['2012-10-29','2012-10-30','2018-12-05','2025-01-09'] if x.startswith(str(y)))
+    days=(dt.date(y,1,1)+dt.timedelta(days=i) for i in range(366 if calendar.isleap(y) else 365))
+    return [d.isoformat() for d in days if d.weekday()<5 and d not in holidays]
+
+def prepare(raw):
+    out={}
+    for symbol,rows in raw.items():
+        converted=[];previous=''
+        for r in rows:
+            if r['date']<=previous:raise ValueError('Dates unordered/duplicate')
+            previous=r['date']
+            if any(r.get(k) is None or not math.isfinite(r[k]) for k in ['open','high','low','close','adj_close','volume']):raise ValueError(f'Missing/nonfinite {symbol} {previous}')
+            if min(r[k] for k in ['open','high','low','close','adj_close'])<=0 or r['volume']<0:raise ValueError('Invalid price/volume')
+            if not r['low']-1e-6<=min(r['open'],r['close'])<=max(r['open'],r['close'])<=r['high']+1e-6:raise ValueError('Invalid OHLC')
+            factor=r['adj_close']/r['close']
+            converted.append({**r,**{k:r[k]*factor for k in ['open','high','low','close']},'quote_open':r['open'],'quote_close':r['close']})
+        out[symbol]=converted
+    return out
+
+def fee(notional,quote_price,sell,spread_bps):
+    if abs(notional)<1e-9:return 0.
+    shares=abs(notional)/quote_price
+    commission=min(.01*abs(notional),max(1.,.005*shares))
+    return commission+abs(notional)*(spread_bps/10000+(0.0001 if sell else 0))
+
+def rebalance(q,cash,weights,prices,quotes,bps,day,reason):
+    if any(w<0 for w in weights.values()) or abs(sum(weights.values())-1)>1e-9:raise ValueError('Unlevered fully allocated weights required')
+    symbols=list(prices);old={s:q.get(s,0)*prices[s] for s in symbols};before=cash+sum(old.values())
+    def cost(nav):return sum(fee(weights.get(s,0)*nav-old[s],quotes[s],weights.get(s,0)*nav<old[s],bps) for s in symbols)
+    lo,hi=0.,before
+    for _ in range(70):
+        mid=(lo+hi)/2
+        if mid+cost(mid)>before:hi=mid
+        else:lo=mid
+    after=(lo+hi)/2;trades=[]
+    for s in symbols:
+        delta=weights.get(s,0)*after-old[s]
+        if abs(delta)>1e-8:trades.append({'date':day,'symbol':s,'signed_notional':delta,'cost':fee(delta,quotes[s],delta<0,bps),'quote_price':quotes[s],'adjusted_price':prices[s],'reason':reason})
+    holdings={s:weights.get(s,0)*after/prices[s] for s in symbols};remaining=before-sum(holdings[s]*prices[s] for s in symbols)-sum(t['cost'] for t in trades)
+    if remaining < -1e-6:raise ValueError('Unfunded trade')
+    return holdings,max(0.,remaining),trades
+
+def monthly_data(stock,cash):
+    daily_cash={r['date']:r for r in cash};groups={}
+    for i,r in enumerate(stock):
+        if i and r['date'] in daily_cash and stock[i-1]['date'] in daily_cash:
+            prev=stock[i-1];a=daily_cash[r['date']];b=daily_cash[prev['date']]
+            groups.setdefault(r['date'][:7],[]).append(r['close']/prev['close']-a['close']/b['close'])
+    ends={r['date'][:7]:r for r in stock if r['date'] in daily_cash};keys=sorted(ends);out={}
+    for i,m in enumerate(keys):
+        values=groups.get(m,[])
+        if len(values)<2:continue
+        rv=sum((v-statistics.fmean(values))**2 for v in values)
+        if rv<=0:raise ValueError('Nonpositive RV')
+        ret=None
+        if i:
+            p=ends[keys[i-1]];r=ends[m]
+            ret=r['close']/p['close']-daily_cash[r['date']]['close']/daily_cash[p['date']]['close']
+        out[m]={'rv':rv,'excess':ret}
+    return out
+
+def desired_schedule(data,spec,start,end):
+    assets=spec['assets'];base=data[assets[0]];cash=data['BIL'];lookup={s:{r['date']:r for r in data[s]} for s in set(assets+['BIL'])}
+    key=spec['key'];closes=[r['close'] for r in base];rsi=_wilder_rsi(closes,2) if key=='connors' else None
+    monthends={s:{} for s in assets}
+    for s in assets:
+        for r in data[s]:monthends[s][r['date'][:7]]=r['close']
+    calendar_months={}
+    if key=='tom':
+        for y in range(int(start[:4]),int(end[:4])+1):
+            for d in sessions(y):calendar_months.setdefault(d[:7],[]).append(d)
+    vol=monthly_data(base,cash) if key=='moreira' else {}
+    c=None
+    if key=='moreira':
+        if start<'2010-01-01':raise ValueError('Calibration must precede every return observation')
+        keys=sorted(vol);pairs=[(vol[m]['excess'],vol[keys[j-1]]['rv']) for j,m in enumerate(keys) if j and '2008-01'<=m<='2009-12']
+        if len(pairs)!=24:raise ValueError('Fixed 24-month calibration incomplete')
+        x=[a for a,b in pairs];scaled=[a/b for a,b in pairs];c=statistics.stdev(x)/statistics.stdev(scaled)
+    result={};state=False;sleeves={s:False for s in assets};last_month=None
+    for i,r in enumerate(base):
+        day=r['date']
+        if not start<=day<=end:continue
+        if i<1:raise ValueError('No prior signal bar')
+        prev=base[i-1];month=day[:7];old_state=state;weights=None
+        if key=='connors':
+            if i<201:raise ValueError('Missing RSI/SMA warmup')
+            if state:state=not(rsi[i-1]>70)
+            else:state=prev['close']>statistics.fmean(closes[i-200:i]) and rsi[i-1]<5
+        elif key=='ibs':
+            if i<501:raise ValueError('Missing500-volume history')
+            width=prev['high']-prev['low'];ibs=(prev['close']-prev['low'])/width if width>0 else None
+            median=statistics.median(b['volume'] for b in base[i-501:i-1])
+            state=ibs is not None and ibs<=.2 and prev['volume']>median
+        elif key=='tom':
+            days=calendar_months[month]
+            if day not in days:raise ValueError('Calendar mismatch')
+            state=day==days[-1] or day in days[:3]
+        elif key=='faber' and month!=last_month:
+            if prev['date'][:7]==month:raise ValueError('Monthly study must initialize at first session of a month')
+            for s in assets:
+                pm=prev['date'][:7];past=sorted(m for m in monthends[s] if m<=pm)
+                if len(past)<10:raise ValueError('Insufficient monthly warmup')
+                level=monthends[s][pm];avg=statistics.fmean(monthends[s][m] for m in past[-10:])
+                if level!=avg:sleeves[s]=level>avg
+            weights={s:.2 if sleeves[s] else 0 for s in assets};weights['BIL']=1-sum(weights.values())
+        elif key=='moreira' and month!=last_month:
+            if prev['date'][:7]==month:raise ValueError('Monthly study must initialize at first session of a month')
+            pm=prev['date'][:7]
+            w=min(1.,max(0.,c/vol[pm]['rv']));weights={assets[0]:w,'BIL':1-w}
+        elif key=='buyhold' and last_month is None:weights={'BIL':1.} if assets[0]=='BIL' else {assets[0]:1.,'BIL':0.}
+        elif key=='basket' and (last_month is None or (month!=last_month and month.endswith('-01'))):weights={s:1/len(assets) for s in assets};weights['BIL']=0.
+        if key in ['connors','ibs','tom'] and (state!=old_state or last_month is None):weights={assets[0]:float(state),'BIL':1-float(state)}
+        if weights is not None:result[day]={'weights':weights,'signal_date':prev['date'],'reason':key,'calibration_c':c}
+        last_month=month
+    return result
+
+def simulate(data,spec,start,end,bps,initial=10000.):
+    events=desired_schedule(data,spec,start,end);symbols=spec['assets']+(['BIL'] if 'BIL' not in spec['assets'] else [])
+    bars={s:{r['date']:r for r in data[s]} for s in symbols};days=[r['date'] for r in data[symbols[0]] if start<=r['date']<=end]
+    if not days:raise ValueError('Empty period')
+    q={s:0. for s in symbols};cash=initial;ledger=[];navs=[];previous=initial;year_base={};year_final={};exposure=[];overnight=[]
+    for day in days:
+        if any(day not in bars[s] for s in symbols):raise ValueError('Missing aligned session')
+        prices={s:bars[s][day]['open'] for s in symbols};quotes={s:bars[s][day]['quote_open'] for s in symbols}
+        before=cash+sum(q[s]*prices[s] for s in symbols)
+        overnight.append(sum(q[s]*prices[s] for s in spec['assets'] if s!='BIL')/before)
+        if day in events:
+            ev=events[day];q,cash,trades=rebalance(q,cash,ev['weights'],prices,quotes,bps,day,ev['reason']);ledger.extend({**t,'signal_date':ev['signal_date']} for t in trades)
+        closing={s:bars[s][day]['close'] for s in symbols};nav=cash+sum(q[s]*closing[s] for s in symbols)
+        exposure.append(sum(q[s]*closing[s] for s in spec['assets'] if s!='BIL')/nav)
+        year_base.setdefault(day[:4],previous);year_final[day[:4]]=nav
+        navs.append({'date':day,'nav':nav,'cash':cash,'risk_weight_close':exposure[-1]});previous=nav
+    # Explicit terminal liquidation at final close, matching all comparators.
+    final=days[-1]
+    for s in symbols:
+        notional=q[s]*bars[s][final]['close']
+        if abs(notional)>1e-8:
+            cost=fee(notional,bars[s][final]['quote_close'],True,bps);cash+=notional-cost;ledger.append({'date':final,'symbol':s,'signed_notional':-notional,'cost':cost,'reason':'terminal_liquidation','signal_date':None});q[s]=0
+    navs[-1]['nav']=cash;year_final[final[:4]]=cash
+    peak=initial;mdd=0
+    for r in navs:peak=max(peak,r['nav']);mdd=min(mdd,r['nav']/peak-1)
+    elapsed=(dt.date.fromisoformat(days[-1])-dt.date.fromisoformat(days[0])).days/365.25
+    return {'metrics':{'total_return_pct':(cash/initial-1)*100,'cagr_pct':((cash/initial)**(1/elapsed)-1)*100 if elapsed else None,'max_drawdown_pct':mdd*100,'cost_usd':sum(t['cost'] for t in ledger),'orders':len(ledger),'risk_exposure_close_pct':statistics.fmean(exposure)*100,'risk_exposure_overnight_pct':statistics.fmean(overnight)*100,'annual_returns_pct':{y:(year_final[y]/year_base[y]-1)*100 for y in year_base},'initial':initial,'final':cash,'first':days[0],'last':days[-1]},'ledger':ledger,'nav':navs,'schedule':events}
+
+
+FILE: quantconnect_tests/research_kernels.py
+SHA256: 045d5708c20cb28b979c0b46133dda85b0085320e6a77fcda9e53959d2ec2027
+"""Source-constrained rule kernels; no broker API or automatic trading.
+
+These are tested components, not a complete portfolio backtest. Explicit roll,
+session, funding and full-universe data gates are specified in PLAN.json.
+"""
+import datetime as dt,math
+from dataclasses import dataclass
+
+class MissingData(ValueError):pass
+
+@dataclass(frozen=True)
+class DailyBar:
+    contract: str
+    available_at: dt.datetime
+    high: float
+    low: float
+    close: float
+
+def wilder_n(bars):
+    if len(bars)<21:raise MissingData('Need previous close plus20TR observations')
+    tr=[]
+    for previous,current in zip(bars,bars[1:]):
+        if not (0<current.low<=current.close<=current.high):raise MissingData('Invalid daily OHLC')
+        tr.append(max(current.high-current.low,abs(current.high-previous.close),abs(current.low-previous.close)))
+    n=sum(tr[:20])/20
+    for value in tr[20:]:n=(19*n+value)/20
+    return n
+
+def turtle_levels(bars,decision_at,tick):
+    if tick<=0:raise ValueError('Positive tick required')
+    if len(bars)<55:raise MissingData('Need55complete source-session bars')
+    if len({b.contract for b in bars})!=1:raise MissingData('Do not join different raw contracts silently')
+    if any(b.available_at>=decision_at for b in bars):raise MissingData('Unavailable/future daily bar')
+    if any(a.available_at>=b.available_at for a,b in zip(bars,bars[1:])):raise MissingData('Unordered/duplicate daily bars')
+    if any(not (0<b.low<=b.close<=b.high) for b in bars):raise MissingData('Invalid daily prices')
+    return {'contract':bars[-1].contract,'available_at':decision_at,
+        'buy':max(b.high for b in bars[-55:])+tick,
+        'sell_short':min(b.low for b in bars[-55:])-tick,
+        'exit_long':min(b.low for b in bars[-20:])-tick,
+        'exit_short':max(b.high for b in bars[-20:])+tick,
+        'n':wilder_n(bars)}
+
+def contracts_per_unit(notional,n,point_value):
+    if min(notional,n,point_value)<=0:raise ValueError('Positive notional,N,multiplier required')
+    return math.floor(.01*notional/(n*point_value))
+
+@dataclass
+class Unit:
+    entry: float
+    stop: float
+    contracts: int
+
+class TurtleCampaign:
+    """One actual contract/campaign, standard2N only. N fixed per declared convention.
+
+    Decisions use sequenced trade+bid/ask events, not a guessed path insideOHLC.
+    Portfolio correlation/reset/rolling are outside this component and remain gates.
+    """
+    def __init__(self,levels,notional,point_value,margin_per_contract,fee_per_side):
+        if margin_per_contract<=0 or fee_per_side<0:raise MissingData('Explicit margin and fee scenario required')
+        self.levels=levels;self.point=point_value;self.margin=margin_per_contract
+        self.notional=notional;self.fee=fee_per_side
+        self.quantity=contracts_per_unit(notional,levels['n'],point_value)
+        self.units=[];self.direction=0;self.ledger=[];self.realized=0.;self.fees=0.
+        self.last_time=None
+
+    def _enter(self,price,time,direction):
+        if self.quantity==0 or len(self.units)>=4:return
+        if (len(self.units)+1)*self.quantity*self.margin>self.notional:return
+        for unit in self.units:unit.stop+=direction*.5*self.levels['n']
+        self.units.append(Unit(price,price-direction*2*self.levels['n'],self.quantity))
+        self.direction=direction;fee=self.quantity*self.fee;self.fees+=fee
+        self.ledger.append({'at':time.isoformat(),'side':'buy' if direction>0 else 'sell_short',
+            'price':price,'contracts':self.quantity,'fee_scenario':fee})
+
+    def event(self,contract,time,last,bid,ask):
+        if contract!=self.levels['contract']:raise MissingData('Explicit roll/closing old contract required')
+        if time<self.levels['available_at'] or (self.last_time and time<=self.last_time):
+            raise MissingData('Future information or unordered quote event')
+        if not all(math.isfinite(x) for x in [last,bid,ask]) or min(last,bid)<=0 or ask<bid:
+            raise MissingData('Valid synchronous two-sided quote required')
+        self.last_time=time
+        if self.units:
+            # Stops/exit first; no favourable within-tick ordering assumption or same-event re-entry.
+            channel=last<=self.levels['exit_long'] if self.direction>0 else last>=self.levels['exit_short']
+            exited=[]
+            for unit in self.units:
+                stopped=last<=unit.stop if self.direction>0 else last>=unit.stop
+                if stopped or channel:
+                    fill=bid if self.direction>0 else ask
+                    self.realized+=self.direction*(fill-unit.entry)*unit.contracts*self.point
+                    fee=unit.contracts*self.fee;self.fees+=fee
+                    self.ledger.append({'at':time.isoformat(),'side':'sell' if self.direction>0 else 'cover',
+                        'price':fill,'contracts':unit.contracts,'fee_scenario':fee,'reason':'channel' if channel else '2N'})
+                    exited.append(unit)
+            if exited:
+                self.units=[u for u in self.units if u not in exited]
+                if not self.units:self.direction=0
+                return
+            threshold=self.units[-1].entry+self.direction*.5*self.levels['n']
+            add=last>=threshold if self.direction>0 else last<=threshold
+            if add:self._enter(ask if self.direction>0 else bid,time,self.direction)
+        elif last>=self.levels['buy']:self._enter(ask,time,1)
+        elif last<=self.levels['sell_short']:self._enter(bid,time,-1)
+
+    def closed_campaign_pnl(self):
+        if self.units:raise MissingData('Open positions require explicit marking/final exit')
+        return self.realized-self.fees
+
+def lehmann_weights(signal_returns,available_at,decision_at):
+    if set(signal_returns)!=set(available_at) or len(signal_returns)<2:
+        raise MissingData('Complete point-in-time signal cross-section required')
+    if any(t>decision_at for t in available_at.values()):raise MissingData('Future signal data')
+    if any(not isinstance(r,(int,float)) or not math.isfinite(r) for r in signal_returns.values()):
+        raise MissingData('Unknown signal return; do not silently remove an issuer')
+    if min(signal_returns.values())==max(signal_returns.values()):return {k:0. for k in signal_returns}
+    mean=math.fsum(signal_returns.values())/len(signal_returns)
+    deviations={k:r-mean for k,r in signal_returns.items()}
+    denominator=sum(max(d,0) for d in deviations.values())
+    if denominator==0:return {k:0. for k in deviations}
+    return {k:-d/denominator for k,d in deviations.items()}
+
+def lehmann_profit(weights,holding_returns):
+    # A subsequent delisting never authorizes deletion from the already fixed universe.
+    if any(k not in holding_returns or holding_returns[k] is None for k in weights):
+        raise MissingData('Terminal/holding return missing for a selected security')
+    if any(not math.isfinite(holding_returns[k]) or holding_returns[k]<-1 for k in weights):
+        raise MissingData('Invalid total return')
+    return sum(w*holding_returns[k] for k,w in weights.items())
+
+def lehmann_turnover_cost(target_dollars,existing_dollars,one_way_rate):
+    if one_way_rate<0:raise ValueError('Negative cost')
+    # Existing exposures must already include price drift. Old target weights alone are insufficient.
+    return one_way_rate*sum(abs(target_dollars.get(k,0)-existing_dollars.get(k,0))
+        for k in set(target_dollars)|set(existing_dollars))
+
+def daily_borrow_cost(short_notional,quantity,available_quantity,annual_fee_rate,day_basis=360):
+    if available_quantity is None or annual_fee_rate is None:raise MissingData('Borrow observation absent; not fee0')
+    if min(short_notional,quantity,available_quantity,annual_fee_rate)<0 or day_basis<=0:raise ValueError('Invalid borrow terms')
+    if quantity>available_quantity:raise MissingData('Insufficient borrow inventory')
+    return short_notional*annual_fee_rate/day_basis
+
+def source_J26(weekly_profits):
+    if len(weekly_profits)!=26:raise MissingData('Need26weekly rebalanced profit observations')
+    return sum(weekly_profits)  # Source arithmetic profit; not compounded funded-account return.
+
+
+FILE: qc_audit_log.py
+SHA256: f048e6a84a3eba72e0bd6436aa1c5227b595a3f24bb0c2fb803260beff9bfdd3
+"""Extract the bounded research JSON from a downloaded QC log, never infer P&L."""
+import argparse
+import json
+from pathlib import Path
+
+
+def extract(text):
+    decoder = json.JSONDecoder()
+    unique = {}
+    for fragment in text.split('RESEARCH_AUDIT_JSON ')[1:]:
+        # raw_decode tolerates the next timestamp/message after the JSON object.
+        value, _ = decoder.raw_decode(fragment.lstrip())
+        unique[json.dumps(value, sort_keys=True)] = value
+    if len(unique) != 1:
+        raise ValueError('Expected one unique complete audit JSON; missing/truncated/conflicting logs are not a result')
+    audit = next(iter(unique.values()))
+    if audit.get('orders_allowed') is not False or audit.get('strategy_return_calculated') is not False:
+        raise ValueError('Not the frozen read-only data audit')
+    expected = {'T003_QC_DATA_AUDIT_V1': 'AUDIT_FINISHED_FULL_DATA_GATES_STILL_REQUIRED',
+                'T010_QC_DATA_AUDIT_V1': 'AUDIT_FINISHED_NOT_A_STRATEGY_RESULT',
+                'T010_QC_DATA_AUDIT_SCHEMA_TRACE_V2': 'AUDIT_FINISHED_NOT_A_STRATEGY_RESULT',
+                'T010_QC_DATA_AUDIT_EXCHANGE_V3': 'AUDIT_FINISHED_NOT_A_STRATEGY_RESULT',
+                'T010_QC_DATA_AUDIT_ACCESSOR_V2': 'AUDIT_FINISHED_NOT_A_STRATEGY_RESULT'}
+    if audit.get('protocol') not in expected or audit.get('runtime_status') != expected[audit['protocol']]:
+        raise ValueError('Audit completion not confirmed')
+    if audit['protocol'].startswith('T010_') and audit.get('case') not in [
+            'panel_2021', 'ene_2001', 'leh_2008', 'borrow_2021']:
+        raise ValueError('Unexpected unfrozen case')
+    return audit
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('log', type=Path)
+    args = parser.parse_args()
+    print(json.dumps(extract(args.log.read_text()), ensure_ascii=False, indent=2))
+
+
+FILE: close_probe.py
+SHA256: 928716a3edf69e9227795177645e003b570f34d8668d83c991690e88eb85aaf8
+#!/usr/bin/env python3
+"""Bounded public-data arrival measurement. No strategy, account or order API."""
+import argparse, concurrent.futures, datetime as dt, fcntl, gzip, hashlib, json
+import math, time, urllib.parse, urllib.request
+from pathlib import Path
+from zoneinfo import ZoneInfo
+
+ROOT = Path(__file__).resolve().parent
+UTC = dt.timezone.utc
+NY = ZoneInfo('America/New_York')
+SYMBOLS = ('SPY', 'IWM', 'QQQ', 'FXI', 'BIL')
+SESSION = '2026-10-29'
+SLOTS = ('15:35:05','15:39:55','15:40:05','15:41:05','15:42:05',
+         '15:43:05','15:44:05','15:45:05','15:46:05','15:50:05',
+         '15:55:05','16:00:30','16:05:30')
+
+def now(): return dt.datetime.now(UTC)
+def at(session, hhmmss):
+    return dt.datetime.fromisoformat(session+'T'+hhmmss).replace(tzinfo=NY)
+def stamp(value): return dt.datetime.fromisoformat(value.replace('Z','+00:00'))
+def sha(data): return hashlib.sha256(data).hexdigest()
+def save_json(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix+'.tmp')
+    tmp.write_text(json.dumps(value, ensure_ascii=False, indent=2)+'\n')
+    tmp.replace(path)
+
+def evaluate_response(body, requested_at, received_at, session, clock_jump_seconds=0):
+    """Only fully closed bars at REQUEST time; crossing a boundary cannot help."""
+    request, received = stamp(requested_at), stamp(received_at)
+    if request.tzinfo is None or received.tzinfo is None:
+        raise ValueError('Timezone required')
+    out = {'complete_prefix':False, 'available_before_1545':False,
+           'clock_jump_seconds':clock_jump_seconds, 'errors':[], 'bars':[]}
+    try:
+        result = body['chart']['result'][0]
+        ts = result['timestamp']; q = result['indicators']['quote'][0]
+        if len(ts) != len(set(ts)): raise ValueError('Duplicate bar timestamps')
+        if ts != sorted(ts): raise ValueError('Unsorted bar timestamps')
+        expected = [int(at(session,'09:30:00').timestamp())+300*i for i in range(74)]
+        accepted = {}
+        for i, epoch in enumerate(ts):
+            # A response may contain the currently forming bar. Preserve raw; exclude it.
+            if epoch+300 > request.timestamp(): continue
+            if epoch not in expected: continue
+            vals = {k:q[k][i] for k in ('open','high','low','close','volume')}
+            valid = all(isinstance(v,(int,float)) and math.isfinite(v) for v in vals.values())
+            valid = valid and min(vals[k] for k in ('open','high','low','close')) > 0
+            valid = valid and vals['low'] <= min(vals['open'],vals['close']) <= max(vals['open'],vals['close']) <= vals['high'] and vals['volume'] >= 0
+            if not valid:
+                out['errors'].append('Invalid OHLCV at '+str(epoch)); continue
+            accepted[epoch] = vals
+        out['bars'] = [{'timestamp':t,**accepted[t]} for t in sorted(accepted)]
+        out['missing_prefix_bars'] = [t for t in expected if t not in accepted]
+        out['complete_prefix'] = len(accepted) == 74 and not out['errors']
+        same_day = request.astimezone(NY).date().isoformat() == session == received.astimezone(NY).date().isoformat()
+        chronology = received >= request and abs(clock_jump_seconds) <= 2
+        out['available_before_1545'] = out['complete_prefix'] and same_day and chronology and received < at(session,'15:45:00')
+        out['received_after_prefix_end_seconds'] = (received-at(session,'15:40:00')).total_seconds()
+    except (KeyError,TypeError,ValueError,IndexError) as exc:
+        out['errors'].append(type(exc).__name__+': '+str(exc))
+    return out
+
+def capture(symbol, session, slot, folder, diagnostic=False):
+    sent = now(); mono = time.monotonic()
+    params = {'period1':int(at(session,'09:30:00').timestamp()),
+              'period2':int(sent.timestamp()), 'interval':'5m', 'includePrePost':'false'}
+    url = 'https://query1.finance.yahoo.com/v8/finance/chart/'+symbol+'?'+urllib.parse.urlencode(params)
+    receipt = {'symbol':symbol, 'session':session, 'slot_ny':slot,
+               'diagnostic_only':diagnostic, 'requested_at_utc':sent.isoformat(),
+               'url':url, 'status':'error', 'paid_api_calls':0, 'model_calls':0}
+    raw = b''
+    try:
+        req = urllib.request.Request(url, headers={'User-Agent':'Mozilla/5.0 StrategyResearchReadOnly/1.0'})
+        with urllib.request.urlopen(req, timeout=12) as response:
+            raw = response.read(2_000_001)
+            receipt.update(http_status=response.status, http_date=response.headers.get('Date'),
+                           http_age=response.headers.get('Age'))
+        if len(raw)>2_000_000: raise ValueError('Response size limit exceeded')
+        body = json.loads(raw)
+        receipt['status'] = 'ok'
+    except Exception as exc:
+        receipt['error'] = type(exc).__name__+': '+str(exc)
+        body = None
+    received = now(); elapsed = time.monotonic()-mono
+    receipt.update(received_at_utc=received.isoformat(), duration_seconds=elapsed,
+                   clock_jump_seconds=(received-sent).total_seconds()-elapsed,
+                   raw_sha256=sha(raw), raw_bytes=len(raw))
+    prefix = symbol+'_'+slot.replace(':','')+'_'+sent.strftime('%H%M%S%f')
+    folder.mkdir(parents=True, exist_ok=True)
+    raw_path = folder/(prefix+'.json.gz')
+    with raw_path.open('xb') as handle: handle.write(gzip.compress(raw,mtime=0))
+    receipt['raw_file'] = raw_path.name
+    if body is not None:
+        receipt['assessment'] = evaluate_response(body, sent.isoformat(), received.isoformat(), session, receipt['clock_jump_seconds'])
+    save_json(folder/(prefix+'.receipt.json'),receipt)
+    return {'symbol':symbol,'status':receipt['status'],
+            'available_before_1545':receipt.get('assessment',{}).get('available_before_1545',False),
+            'error':receipt.get('error')}
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--session',default=SESSION,choices=[SESSION])
+    ap.add_argument('--diagnostic',action='store_true')
+    args = ap.parse_args()
+    base = ROOT/'research_round4'/args.session
+    base.mkdir(parents=True, exist_ok=True)
+    if args.diagnostic:
+        # Connection check only, never evidence of timely arrival during the planned slot.
+        print(json.dumps(capture('SPY',args.session,'DIAGNOSTIC',base/'diagnostic',True)))
+        return
+    if now().astimezone(NY).date().isoformat() != args.session:
+        raise SystemExit('Wrong date: refusing reconstruction or annual rerun')
+    with (base/'probe.lock').open('a') as handle:
+        try: fcntl.flock(handle,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        except BlockingIOError: raise SystemExit('Probe already running')
+        outcomes=[]
+        for slot in SLOTS:
+            target=at(args.session,slot)
+            # A late start never substitutes historical bars for an on-time capture.
+            remaining=(target-now()).total_seconds()
+            if remaining < -20:
+                outcomes.append({'slot':slot,'status':'missed_window'});continue
+            while remaining > 0:
+                time.sleep(min(remaining,30)); remaining=(target-now()).total_seconds()
+            if now()>target+dt.timedelta(seconds=20):
+                outcomes.append({'slot':slot,'status':'missed_window_after_sleep'});continue
+            # Bound request count, concurrency, timeout and body size; no retries.
+            with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+                rows=list(pool.map(lambda s:capture(s,args.session,slot,base/'yahoo'),SYMBOLS))
+            outcomes.append({'slot':slot,'status':'captured','results':rows})
+            save_json(base/'probe_run.json',{'session':args.session,'protocol':'CLOSE_EXECUTION_READONLY_20261029_V1','outcomes':outcomes,'finished':False})
+        save_json(base/'probe_run.json',{'session':args.session,'outcomes':outcomes,'finished':True,'ended_at_utc':now().isoformat()})
+
+if __name__=='__main__': main()
+
+
+FILE: close_evidence.py
+SHA256: 33a0c92a35089c443f124a78c0fb5cfc41bc8678039969d68a69df90a3a2b254
+#!/usr/bin/env python3
+"""Measured data arrival and quoted costs, deliberately not a trading backtest."""
+import argparse, copy, datetime as dt, gzip, hashlib, json, math
+from pathlib import Path
+from close_probe import ROOT, SYMBOLS, at, now, stamp, sha, save_json, evaluate_response
+
+MAP={'T001':['SPY','BIL'],'T004':['IWM','FXI','BIL'],
+     'T005':['SPY','IWM','QQQ','BIL'],'T007':['SPY','BIL'],'T009':['SPY','BIL']}
+LIMITS=[
+    'Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.',
+    'IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.',
+    'Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.',
+    'Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L.'
+]
+
+def quote_payloads(value):
+    """Unwrap MCP text/structured responses, including retained tool failures."""
+    if isinstance(value,str):
+        try: yield from quote_payloads(json.loads(value))
+        except (ValueError,TypeError): pass
+    elif isinstance(value,list):
+        for part in value: yield from quote_payloads(part)
+    elif isinstance(value,dict):
+        if isinstance(value.get('quotes'),dict): yield value
+        else:
+            for v in value.values(): yield from quote_payloads(v)
+
+def commission(qty, price):
+    # Same IBKR Pro Fixed US model as the frozen execution study, not a receipt.
+    return min(max(qty*.005,1.0),qty*price*.01)
+
+def assess_quote(q, target, received=None, live=False):
+    r={'symbol':q.get('symbol'),'timestamp':q.get('timestamp'),'valid':False,
+       'errors':[],'size_units':'provider units, not verified as shares/lot or executable capacity'}
+    try:
+        bid,ask=float(q['bid_price']),float(q['ask_price'])
+        sizes=[float(q['bid_size']),float(q['ask_size'])]
+        if not all(math.isfinite(v) for v in [bid,ask,*sizes]) or bid<=0 or ask<bid or min(sizes)<=0:
+            raise ValueError('Invalid/one-sided/crossed/nonpositive quote')
+        t=stamp(q['timestamp'])
+        if t.tzinfo is None: raise ValueError('Timezone missing')
+        age=(target-t).total_seconds()
+        if age<0: raise ValueError('Quote after target; cannot backfill earlier decision')
+        if age>60 and not live: raise ValueError('No valid quote in declared pre-target minute')
+        mid=(bid+ask)/2
+        r.update(valid=True,bid=bid,ask=ask,spread_bps=(ask-bid)/mid*10000,
+                 half_spread_bps=(ask-bid)/mid*5000,age_at_target_seconds=age)
+        qty=math.floor(10000/ask)
+        while qty>0 and qty*ask+commission(qty,ask)>10000: qty-=1
+        if qty<=0: raise ValueError('No whole share fits model budget')
+        buyfee,sellfee=commission(qty,ask),commission(qty,bid)
+        spread=qty*(ask-bid); reserve=qty*bid*.0001
+        r['hypothetical_immediate_roundtrip_10000USD']={
+            'whole_shares':qty,'observed_spread_usd':spread,
+            'model_commissions_usd':buyfee+sellfee,'assumed_sell_fee_reserve_usd':reserve,
+            'modeled_total_cost_usd':spread+buyfee+sellfee+reserve,
+            'actual_trade':False,'market_move_assumed_zero':True,'slippage_unknown':True}
+        if live:
+            if received is None: raise ValueError('Actual received time missing')
+            rec=stamp(received)
+            receive_age=(rec-t).total_seconds()
+            r['age_at_receive_seconds']=receive_age
+            r['fresh_at_receive']=0<=receive_age<=2
+            r['inside_target_window']=abs((rec-target).total_seconds())<=30
+            r['live_gate_pass']=r['fresh_at_receive'] and r['inside_target_window']
+    except (KeyError,TypeError,ValueError,OverflowError) as exc:
+        r['valid']=False;r['errors'].append(str(exc))
+    return r
+
+def historical_quotes(session):
+    target=at(session,'15:45:00')
+    if session=='2026-10-28':
+        path=ROOT/'research_round4/preflight/alpaca_responses.json'
+        data=json.loads(path.read_text())
+        payloads=list(quote_payloads(data))
+        record_errors=[]
+    else:
+        path=ROOT/'research_round4'/session/'sip_historical_capture.json'
+        if not path.exists(): return {'status':'missing_capture','rows':[], 'errors':['No historical SIP receipt']}
+        data=json.loads(path.read_text());payloads=[];record_errors=[]
+        for req in data.get('requests',[]):
+            if req.get('feed')!='sip' or not req.get('received_at_utc'):
+                record_errors.append('Missing explicit SIP feed or receipt time');continue
+            # Free historical access only; never accept a claim based on a live SIP request.
+            if stamp(req['received_at_utc']) < target+dt.timedelta(minutes=15):
+                record_errors.append('Historical quote retrieved too early for declared delayed route');continue
+            payloads.extend(quote_payloads(req.get('response')))
+    candidates={s:[] for s in SYMBOLS}
+    for p in payloads:
+        if p.get('request',{}).get('feed')!='sip': continue
+        for symbol,quotes in p['quotes'].items():
+            if symbol not in candidates: continue
+            for q in quotes if isinstance(quotes,list) else [quotes]:
+                try:
+                    if stamp(q['timestamp'])<=target: candidates[symbol].append(q)
+                except (KeyError,TypeError,ValueError): pass
+    rows=[]
+    for s in SYMBOLS:
+        qs=sorted(candidates[s],key=lambda q:stamp(q['timestamp']),reverse=True)
+        rows.append(assess_quote({**qs[0],'symbol':s},target) if qs else
+                    {'symbol':s,'valid':False,'errors':['No quote returned; not proof of absence of liquidity']})
+    return {'status':'historical_snapshot_only','target_ny':target.isoformat(),
+            'feed':'sip','rows':rows,'errors':record_errors,
+            'receipt':str(path.relative_to(ROOT)),'receipt_sha256':sha(path.read_bytes())}
+
+def arrival(session):
+    folder=ROOT/'research_round4'/session/'yahoo'
+    receipts=[];errors=[];first={}
+    for p in sorted(folder.glob('*.receipt.json')):
+        try:
+            r=json.loads(p.read_text())
+            if r.get('diagnostic_only') or r.get('session')!=session: continue
+            raw=gzip.decompress((p.parent/r['raw_file']).read_bytes())
+            if sha(raw)!=r['raw_sha256']: raise ValueError('Raw hash mismatch')
+            if r.get('status')!='ok':
+                errors.append({'receipt':p.name,'error':r.get('error')});continue
+            a=evaluate_response(json.loads(raw),r['requested_at_utc'],r['received_at_utc'],session,r['clock_jump_seconds'])
+            receipts.append({'symbol':r['symbol'],'received_at_utc':r['received_at_utc'],
+                             'complete_prefix':a['complete_prefix'],
+                             'available_before_1545':a['available_before_1545'],
+                             'errors':a['errors'],'receipt':str(p.relative_to(ROOT)),
+                             'receipt_sha256':sha(p.read_bytes()),'raw_sha256':r['raw_sha256']})
+            if a['available_before_1545']:
+                old=first.get(r['symbol'])
+                if old is None or stamp(r['received_at_utc'])<stamp(old): first[r['symbol']]=r['received_at_utc']
+        except (KeyError,OSError,ValueError,TypeError) as exc:
+            errors.append({'receipt':p.name,'error':str(exc)})
+    return {'status':'measured' if receipts else 'no_valid_receipts',
+            'rows':[{'symbol':s,'on_time_complete_prefix':s in first,
+                     'first_complete_received_at_utc':first.get(s)} for s in SYMBOLS],
+            'receipts':receipts,'errors':errors,
+            'meaning':'First received complete 09:30–15:40 NY prefix, upper bound on data publication time; no hindsight backfill'}
+
+def iex_capture(session):
+    p=ROOT/'research_round4'/session/'iex_live_capture.json'
+    if not p.exists():return {'status':'missing_capture','rows':[]}
+    data=json.loads(p.read_text());rows=[];errors=[]
+    target=at(session,'15:45:00')
+    for request in data.get('requests',[]):
+        if request.get('feed')!='iex':errors.append('Missing explicit IEX feed');continue
+        for payload in quote_payloads(request.get('response')):
+            for symbol,q in payload['quotes'].items():
+                if symbol in SYMBOLS and isinstance(q,dict):
+                    # Future relative to 15:45 is kept as outside-window, not priced retrospectively.
+                    receive=request.get('received_at_utc')
+                    assessed=assess_quote({**q,'symbol':symbol},stamp(receive) if receive else target,receive,True)
+                    if receive:assessed['inside_target_window']=abs((stamp(receive)-target).total_seconds())<=30
+                    assessed['live_gate_pass']=bool(assessed.get('valid') and assessed.get('fresh_at_receive') and assessed.get('inside_target_window'))
+                    rows.append(assessed)
+    return {'status':'single_venue_live_measurement','rows':rows,'errors':errors,
+            'receipt':str(p.relative_to(ROOT)),'receipt_sha256':sha(p.read_bytes())}
+
+def analyze(session, prepare=False):
+    if session=='2026-10-28':
+        return {'protocol':'EXPLORATORY_20261028_QUOTE_PREFLIGHT','session':session,
+                'phase':'exploratory_preflight_already_seen','historical_sip':historical_quotes(session),
+                'limitations':LIMITS,'original_theory_verdict_changed':False}
+    if not prepare and now()<at(session,'16:15:00'):
+        raise ValueError('Final measurement analysis is only allowed after the planned capture window')
+    return {'protocol':'CLOSE_EXECUTION_READONLY_20261029_V1','session':session,
+            'phase':'scheduled_pending_capture' if prepare else 'measurement_complete_with_explicit_missingness',
+            'arrival':arrival(session),'live_iex':iex_capture(session),
+            'historical_sip':{'status':'pending','rows':[]} if prepare else historical_quotes(session),
+            'actual_orders':0,'new_strategy_pnl_calculated':False,
+            'limitations':LIMITS,'review_status':'provisional_no_Claude_consensus',
+            'original_theory_verdict_changed':False}
+
+def publish(result):
+    from pilot import lock, report, backup
+    from registry import Registry
+    session=result['session'];outpath=ROOT/'results'/('close_execution_'+session+'.json')
+    # Immutable older measurement revisions stay in the append-only registry and hash-named files.
+    digest=sha(json.dumps(result,sort_keys=True,separators=(',',':')).encode())
+    archive=ROOT/'research_round4'/session/('analysis_'+digest+'.json')
+    if not archive.exists():save_json(archive,result)
+    save_json(outpath,result)
+    with lock():
+        db=Registry(ROOT/'registry.sqlite')
+        progress=copy.deepcopy(json.loads((ROOT/'results/research_progress_round3.json').read_text()))
+        previous=ROOT/'results/close_execution_2026-10-28.json'
+        preflight=json.loads(previous.read_text()) if previous.exists() else None
+        todayfile=ROOT/'results/close_execution_2026-10-29.json'
+        today=json.loads(todayfile.read_text()) if todayfile.exists() else None
+        for item in progress['items']:
+            tid=item['id'];symbols=MAP.get(tid,[]);item['round']=4
+            observations=[];findings=list(item['findings'])
+            if symbols and preflight:
+                qs=[q for q in preflight['historical_sip']['rows'] if q['symbol'] in symbols]
+                observations.append({'id':'QUOTE_PREFLIGHT_20261028_'+tid,
+                    'title':'Rzeczywiste kwotowania przed zamknięciem · 28.10.2026',
+                    'summary':'Historyczne SIP o 15:45 NY: zmierzony spread; osobno model kosztu zakupu i natychmiastowej sprzedaży dla budżetu 10 000 USD, bez ruchu rynku.',
+                    'columns':['ETF','Spread bps','Połowa spreadu bps','Model kosztu pełnego obrotu USD'],
+                    'rows':[[q['symbol'],round(q['spread_bps'],4),round(q['half_spread_bps'],4),round(q['hypothetical_immediate_roundtrip_10000USD']['modeled_total_cost_usd'],4)] if q['valid'] else [q['symbol'],'brak','brak','brak'] for q in qs],
+                    'limitations':LIMITS+(['To nie jest pełny koszyk pięciu ETF-ów Fabera; zmierzono tylko kontekst SPY i BIL.'] if tid=='T001' else []),
+                    'evidence_report':'WYKONANIE_20261028.json'})
+                findings.append('Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla '+', '.join(symbols)+'. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.')
+            if today:
+                pending=today['phase']=='scheduled_pending_capture'
+                ar={r['symbol']:r for r in today['arrival']['rows']}
+                observations.append({'id':'ARRIVAL_20261029_'+tid,
+                    'title':'Dzisiejsza kontrola wykonania · 29.10.2026',
+                    'summary':('Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.' if pending else 'Zakończono pomiar dostarczenia danych i kwotowań. Brak odczytu pozostaje brakiem, bez odtwarzania po fakcie.'),
+                    'columns':['Zakres','Stan'],
+                    'rows':[[s,'oczekuje' if pending else ('pełny prefiks odebrany przed 15:45 NY' if ar.get(s,{}).get('on_time_complete_prefix') else 'brak dowodu odebrania prefiksu na czas')] for s in symbols] if symbols else [['Oryginał','nadal blokowany przez braki reguł lub danych wskazane przy karcie; dzisiejsze ETF-y tego nie zastępują']],
+                    'limitations':LIMITS,'evidence_report':f'WYKONANIE_DZISIAJ/{tid}.json'})
+                findings.append(('Zaplanowano' if pending else 'Zapisano')+' dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.' if symbols else 'Dzisiejszy pomiar ETF-ów nie usuwa braków tej teorii. Zachowano wymagania źródłowe i dotychczasowy konkretny plan zdobycia danych/reguł.')
+            item['observations']=observations+item.get('observations',[])
+            item['findings']=findings;item['execution_evidence_file']=f'WYKONANIE_DZISIAJ/{tid}.json'
+            item['observation_ids']=[o['id'] for o in item['observations']]
+            if symbols:
+                item['next_action']='Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. '+item['next_action']
+                for gap in item['gap_updates']:
+                    if gap['gap_id'].endswith('E1') or '-EXEC-' in gap['gap_id']:
+                        gap['criteria_met'].append('Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/'+tid+'.json')
+                        gap['next_action']=item['next_action']
+            percard={'theory_id':tid,'scope_symbols':symbols,'evidence_hash':digest,
+                     'preflight':preflight if symbols else None,'today':today,
+                     'applicability':'data/quoted-cost check only; not original source reproduction' if symbols else 'ETF capture does not supply missing original theory inputs',
+                     'gap_updates':item['gap_updates'],'next_action':item['next_action']}
+            save_json(ROOT/'reports/WYKONANIE_DZISIAJ'/f'{tid}.json',percard)
+            db.research_update(tid,item,'results/research_progress_round4.json')
+        progress['round']=4;progress['at_utc']=now().isoformat()
+        save_json(ROOT/'results/research_progress_round4.json',progress)
+        acq=json.loads((ROOT/'config/acquisition_plan.json').read_text());by={i['id']:i for i in progress['items']}
+        for card in acq['items']:
+            gaps={g['gap_id']:g for g in by[card['id']]['gap_updates']}
+            for gap in card['gaps']:gap['progress']=gaps[gap['gap_id']];gap['next_action']=gaps[gap['gap_id']]['next_action']
+        save_json(ROOT/'config/acquisition_plan.json',acq)
+        if preflight:save_json(ROOT/'reports/WYKONANIE_20261028.json',preflight)
+        if today:save_json(ROOT/'reports/WYKONANIE_20261029.json',today)
+        report(db);backup(db)
+        print(json.dumps({'published':True,'phase':result['phase'],'evidence_hash':digest,'cards_updated':10,'strategy_trials_added':0,'theory_verdicts_changed':0}))
+
+def main():
+    ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--session',choices=['2026-10-28','2026-10-29'],required=True)
+    ap.add_argument('--prepare',action='store_true')
+    ap.add_argument('--publish',action='store_true')
+    args=ap.parse_args();result=analyze(args.session,args.prepare)
+    if args.publish:publish(result)
+    else:print(json.dumps(result,ensure_ascii=False,indent=2))
+
+if __name__=='__main__':main()

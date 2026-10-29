@@ -1,0 +1,59 @@
+"""QC free-cloud DATA AUDIT ONLY. No orders; default QC profit0 is not a result."""
+from AlgorithmImports import *
+import json
+
+class TurtleDataAudit(QCAlgorithm):
+    def initialize(self):
+        if self.live_mode:raise ValueError('Historical read-only audit only')
+        self.set_start_date(2024,1,2);self.set_end_date(2024,1,12)
+        self.set_cash(500000)
+        self.future=self.add_future(Futures.Metals.GOLD,Resolution.MINUTE,
+            fill_forward=False,extended_market_hours=True,
+            data_normalization_mode=DataNormalizationMode.RAW,
+            data_mapping_mode=DataMappingMode.OPEN_INTEREST,contract_depth_offset=0)
+        self.future.set_filter(20,120)
+        self.report={'protocol':'T003_QC_DATA_AUDIT_V1','strategy_return_calculated':False,
+            'orders_allowed':False,'universe':'GC contracts, audit only, not completeTurtleportfolio',
+            'chain_events':0,'trade_bars':0,'quote_bars':0,'bad_quotes':0,
+            'contracts':{},'runtime_status':'STARTED_NOT_VALIDATED'}
+        self.history_requested=False
+
+    def on_data(self,data):
+        chain=data.future_chains.get(self.future.symbol)
+        if chain is not None:
+            self.report['chain_events']+=1
+            # Choose at most two audit contracts using information present NOW, not future volume.
+            candidates=sorted(list(chain),key=lambda c:(-float(c.open_interest),str(c.symbol.id)))[:2]
+            for contract in candidates:
+                sid=str(contract.symbol.id)
+                if sid not in self.report['contracts'] and len(self.report['contracts'])<4:
+                    self.add_future_contract(contract.symbol,Resolution.MINUTE,fill_forward=False,extended_market_hours=True)
+                    security=self.securities[contract.symbol]
+                    self.report['contracts'][sid]={'value':contract.symbol.value,'expiry':str(contract.expiry),
+                        'first_seen_engine_time':str(self.time),'open_interest_as_observed':float(contract.open_interest),
+                        'multiplier':float(security.symbol_properties.contract_multiplier),
+                        'minimum_price_variation':float(security.symbol_properties.minimum_price_variation),
+                        'exchange_timezone':str(security.exchange.time_zone)}
+                    if not self.history_requested:
+                        self.history_requested=True
+                        # This checks coverage only. QCdaily bars must still be reconciled to CME sessions.
+                        history=list(self.history[TradeBar](contract.symbol,100,Resolution.DAILY,fill_forward=False))
+                        ends=[str(b.end_time) for b in history]
+                        self.report['history']={'sid':sid,'count':len(history),'first_end':min(ends) if ends else None,
+                            'last_end':max(ends) if ends else None,'daily_session_definition_verified':False,
+                            'invalid_ohlc':sum(not (0<float(b.low)<=float(b.close)<=float(b.high)) for b in history)}
+        for symbol,bar in data.bars.items():
+            if str(symbol.id) in self.report['contracts']:
+                self.report['trade_bars']+=1
+        for symbol,bar in data.quote_bars.items():
+            if str(symbol.id) not in self.report['contracts']:continue
+            self.report['quote_bars']+=1
+            if bar.bid is None or bar.ask is None or bar.bid.close<=0 or bar.ask.close<bar.bid.close:
+                self.report['bad_quotes']+=1
+
+    def on_end_of_algorithm(self):
+        self.report['runtime_status']='AUDIT_FINISHED_FULL_DATA_GATES_STILL_REQUIRED'
+        self.report['remaining_gates']=['55complete declared CME sessions per chosen contract',
+            'full study coverage and roll overlap','sequencing inside minute/quote freshness',
+            'margin/fees/funding','portfolio conventions and independent review']
+        self.debug('RESEARCH_AUDIT_JSON '+json.dumps(self.report,sort_keys=True))

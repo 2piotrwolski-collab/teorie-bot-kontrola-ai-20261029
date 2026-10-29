@@ -1,0 +1,107 @@
+"""QC free-cloud DATA AUDIT ONLY; bounded schema/delisting/borrow controls, no orders."""
+from AlgorithmImports import *
+import json,hashlib
+
+class LehmannDataAudit(QCAlgorithm):
+    def initialize(self):
+        if self.live_mode:raise ValueError('Historical read-only audit only')
+        case=self.get_parameter('probe_case') or 'panel_2021'
+        cases={'panel_2021':((2021,1,4),(2021,1,15),None),
+               'ene_2001':((2001,11,20),(2001,12,20),'ENE'),
+               'leh_2008':((2008,9,1),(2008,10,10),'LEH'),
+               'borrow_2021':((2021,1,20),(2021,2,5),'GME')}
+        if case not in cases:raise ValueError('Unfrozen probe_case')
+        start,end,control=cases[case]
+        self.set_start_date(*start);self.set_end_date(*end);self.set_cash(100000)
+        self.report={'protocol':'T010_QC_DATA_AUDIT_EXCHANGE_V3','case':case,
+            'strategy_return_calculated':False,'orders_allowed':False,
+            'universe_days':[],'schema_trace':[],'schema_errors':0,'sample_history':[],
+            'delistings':[],'symbol_changes':[],'borrow_checks':[],'bar_count':0,
+            'terminal_recovery_verified':False,'full_PIT_panel_acquired':False}
+        self.checked=set();self.control=None;self.borrow_date=None
+        self.universe_settings.resolution=Resolution.DAILY
+        self.universe_settings.fill_forward=False
+        self.universe_settings.asynchronous=False
+        if case=='panel_2021':self.add_universe(self.select_audit_sample)
+        else:
+            security=self.add_equity(control,Resolution.DAILY,fill_forward=False,
+                                     data_normalization_mode=DataNormalizationMode.RAW)
+            self.control=security.symbol
+            self.report['control_identity']={'requested':control,'resolved_symbol':security.symbol.value,
+                'sid':str(security.symbol.id),'time':str(self.time)}
+            if case=='borrow_2021':security.set_shortable_provider(InteractiveBrokersShortableProvider())
+
+    def select_audit_sample(self,fundamentals):
+        eligible=[];unknown=0;exchanges={};classes={};total=0
+        for f in fundamentals:
+            total+=1
+            if len(self.report['schema_trace'])<3:
+                probe={'python_type':str(type(f)),'time':str(self.time)}
+                for label,refname,exname,stname in [('snake','security_reference','exchange_id','security_type'),('pascal','SecurityReference','ExchangeId','SecurityType')]:
+                    try:
+                        ref=getattr(f,refname)
+                        probe[label]={'reference_type':str(type(ref)),'exchange':str(getattr(ref,exname)),'security_type':str(getattr(ref,stname))}
+                    except Exception as exc:probe[label]={'error_type':type(exc).__name__,'error':str(exc)[:700]}
+                self.report['schema_trace'].append(probe)
+            try:
+                reference=f.security_reference
+                exchange=reference.exchange_id
+                security_type=reference.security_type
+                exchanges[str(exchange)]=exchanges.get(str(exchange),0)+1
+                classes[str(security_type)]=classes.get(str(security_type),0)+1
+                if not exchange or not security_type:
+                    unknown+=1;continue
+                if exchange in ('NYS','NYSE','ASE') and security_type=='ST00000001':eligible.append(f)
+            except (AttributeError,TypeError):unknown+=1
+        self.report['schema_errors']+=unknown
+        # The8-security cap is for a DATAformat probe, NEVER a Lehmann portfolio/universe.
+        sample=sorted(eligible,key=lambda f:str(f.symbol.id))[:8]
+        self.report['universe_days'].append({'time':str(self.time),'eligible_count':len(eligible),
+            'unknown_exchange_or_type':unknown,'input_count':total,
+            'exchange_value_counts':exchanges,'security_type_counts':classes,
+            'mapping_scope':'NYSE and legacy NYS verified; legacy ASE retained; modern AMEX code not yet verified','sample_sids':[str(f.symbol.id) for f in sample],
+            'all_eligible_sid_hash':hashlib.sha256('|'.join(sorted(str(f.symbol.id) for f in eligible)).encode()).hexdigest(),
+            'asof_end_times':sorted(set(str(f.end_time) for f in sample)),
+            'exchange_classification_still_requires_source_review':True})
+        return [f.symbol for f in sample]
+
+    def on_securities_changed(self,changes):
+        for security in changes.added_securities:
+            sid=str(security.symbol.id)
+            if sid in self.checked or len(self.checked)>=8:continue
+            self.checked.add(sid)
+            bars=list(self.history[TradeBar](security.symbol,10,Resolution.DAILY,fill_forward=False))
+            self.report['sample_history'].append({'sid':sid,'count':len(bars),
+                'first_end':str(bars[0].end_time) if bars else None,
+                'last_end':str(bars[-1].end_time) if bars else None,
+                'normalization':'as subscribed; not yet reconciled to source totalreturn'})
+
+    def on_data(self,data):
+        self.report['bar_count']+=len(data.bars)
+        for symbol,event in data.delistings.items():
+            self.report['delistings'].append({'sid':str(symbol.id),'time':str(event.end_time),
+                'type':str(event.type),'price':float(event.price),
+                'is_terminal_payment_proof':False})
+        for symbol,event in data.symbol_changed_events.items():
+            self.report['symbol_changes'].append({'sid':str(symbol.id),'time':str(event.end_time),
+                'old':event.old_symbol,'new':event.new_symbol})
+        if self.report['case']=='borrow_2021' and self.borrow_date!=self.time.date():
+            self.borrow_date=self.time.date()
+            provider=self.securities[self.control].shortable_provider
+            try:
+                q=provider.shortable_quantity(self.control,self.time)
+                fee=provider.fee_rate(self.control,self.time)
+                rebate=provider.rebate_rate(self.control,self.time)
+                self.report['borrow_checks'].append({'time':str(self.time),'quantity':float(q) if q is not None else None,
+                    'fee_rate':float(fee) if fee is not None else None,
+                    'rebate_rate':float(rebate) if rebate is not None else None,
+                    'default_zero_or_stale_status_still_requires_verification':True})
+            except Exception as exc:self.report['borrow_checks'].append({'time':str(self.time),'error':str(exc)})
+
+    def on_end_of_algorithm(self):
+        self.report['runtime_status']='AUDIT_FINISHED_NOT_A_STRATEGY_RESULT'
+        self.report['remaining_gates']=['whole eligible cross-section, not8sample symbols',
+            'asof exchange/shareclass completeness incl missing fundamental rows',
+            'terminal totalreturns incl OTC/recovery','known-at-time borrow coverage and default semantics',
+            'four-day signal timing, turnover, restricted short proceeds, funding/fees']
+        self.debug('RESEARCH_AUDIT_JSON '+json.dumps(self.report,sort_keys=True))

@@ -1,0 +1,427 @@
+Snapshot: 2026-10-29T18:43:35.427389+00:00
+T009 · Archiwalny v1: Test nieadekwatny do źródła
+
+Moreira–Muir: portfele zarządzane zmiennością
+
+NIEROZSTRZYGNIĘTA — WYNIKI OGRANICZONEGO BADANIA
+
+Rynek / instrumenty
+Portfele/faktory akcyjne i currency carry z badaniaMoreiry iMuira.
+
+Segment
+Wysoka/niską zmienność prognozowana z lagowanych danych, źródłowa ciągła ekspozycja odwrotna do wariancji.
+
+Reżim i horyzont
+Wiele reżimów, w tym recesje i kryzysy; mechanizm zmienia ryzyko, nie wycina po fakcie lat bessy. · Miesięczny portfel z estymacją zmienności z minionych danych dziennych; sizing i normalizacja muszą być odtworzone.
+
+Co rzeczywiście twierdzi źródło
+Autorzy badają zmienną ekspozycję odwrotną do oszacowanej wariancji, co zmniejsza ryzyko przy wysokiej zmienności. Nie proponują tu progu 20% ani reguły zero-jedynkowej.
+
+Cel oryginalnego badania
+Poprawa alpha, Sharpe i użyteczności przez zarządzanie ekspozycją przy zmienności, a nie konkretna binarna granica20%.
+
+Właściwe porównanie
+Ten sam nieskalowany faktor/portfel przy jasno określonym ryzyku i finansowaniu; SPY osobno jako cel projektu.
+
+Archiwalny wariant v1: Filtr zmienności: SPY tylko przy zmienności <=20%
+
+Dlaczego v1 nie rozstrzyga tej teorii
+
+Odwrotne do wariancji skalowanie ekspozycji portfeli/faktorów zastąpiono binarnym filtrem SPY z arbitralnym progiem 20%, oknem20 i maksymalną ekspozycją1. Usunięto ciągłe sizing, normalizację ryzyka i portfele/faktory źródłowe. Poprawa alpha/Sharpe w źródle nie jest tożsama z większym surowym CAGR niż pełne SPY; bramka pilotażu nie bada jej bezpośrednio.
+
+Co pozwala ocenić stary wynik
+
+Tylko nasz filtr 0/1 przy progu20%, nie strategię volatility-managed autora ani zależność ryzyka i oczekiwanego zwrotu.
+
+Jak zaprojektować właściwy test
+
+Dla źródłowego pytania statystycznego należy skalować miesięczny excess return odwrotnością RV z poprzedniego miesiąca i porównywać go z tym samym nieskalowanym czynnikiem. Pełnopróbkowe c jest jawną normalizacją ex post publikacji. Osobny wariant wykonywalnego bota wymaga przyczynowego sizingu, limitu dźwigni, dochodu gotówki i kosztów; nie należy przypisywać mu obecnej alfy brutto.
+
+Pytanie falsyfikujące: Czy source-defined ciągłevolatility sizing poprawia wynik skorygowany o ryzyko względem identycznego bazowego portfela?
+
+Brakujące dane: Oryginalny vintage i dokładne granice miesięcy Table I, źródłowa implementacja RV dla zmiennej liczby sesji, pozostałe czynniki oraz warunki wykonania i finansowania osobnego wariantu bota.
+
+Uzupełnianie braków · runda 4
+
+Wykonano nowy przyczynowy wariant SPY/BIL: c ustalone wyłącznie na danych 2008–2009, następnie zamrożone, ekspozycja 0–1 i miesięczny sygnał z poprzedniego miesiąca. Nie używa przyszłego c z całej próby ani kredytu.
+
+W latach 2024–28.10.2026 wynik przy 5 bps to +62,49%, SPY +68,71%. To ograniczony wariant wdrożeniowy, a nie ponowne odtworzenie źródłowych dziesięciu czynników.
+
+Kalibracja i limit 1 dały w najnowszym okresie około 97,6% średniej ekspozycji. Ta wersja zachowuje się więc blisko SPY i nie testuje całego źródłowego efektu przy dźwigni. c nie będzie dopasowywane po wyniku.
+
+Dodatkowo pobrano cztery darmowe archiwa: French 5 Factors i Momentum w częstotliwości dziennej i miesięcznej. Sprawdzono daty i unikalność; nie liczono jeszcze nowych kontrastów tych czynników.
+
+Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.
+
+Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.
+T009-RULE-01 · Częściowo uzupełniony
+Odtworzono źródłowy mechanizm inverse variance, miesięczny horyzont i benchmark tego samego czynnika; wykonano ograniczone badanie Mkt. Dokładna numeryczna reprodukcjaTableI pozostaje otwarta.
+
+Potwierdzone:
+
+Źródłowe równania1–3 i pytanie alpha/Sharpe ustalone.
+
+Trzy konwencjeRV zapisane przed wynikiem; raportujemy wszystkie6porównań.
+
+Niezależny source/plan/code review i synthetic testyPASS przed freeze.
+
+Pozostało:
+
+Dokładny source-vintage, granice miesięcy źródłowej próby i implementacja zmiennej długości miesiąca.
+
+Pozostałe czynniki nie są zbadane.
+
+I.A–C, Eq1–3, TableI (https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf) · Miesięczne excess returns skalowane lagged realized variance, źródłowe porównanie do tego samego czynnika.
+
+Następny krok: Pozyskać źródłowy kod/InternetAppendix i matching dailyvintage; nie dopasowywać dat doN1065 po wyniku.
+T009-DATA-02 · Częściowo uzupełniony
+Pobrano i zamrożono publiczne dzienne oraz miesięczneFrench factors; dane spójne i kompletne na poziomie miesięcy. To current2026vintage, nie oryginalny2015.
+
+Potwierdzone:
+
+26338dailyrows1926-07-01–2026-09-30 i1203monthlyrows192607–202609.
+
+Brak duplikatów i brakujących całych miesięcy; jawne15–27sesji miesięcznie, w tym historyczne soboty.
+
+Sygnał z miesiąca t łączony tylko z t+1calendar, nie z następnym dostępnym wierszem.
+
+Pozostało:
+
+Identyczny historyczny vintage autorów.
+
+Sprawdzenie korekt CRSPFIZ/CIZ; monthly nie zastąpiono złożonym dailyexcess.
+
+FF3Daily/Monthly officialfiles (https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html) · Darmowe official factor returns dostępne.
+
+Następny krok: Zestawić monthlyarchivesJuly2016 z bieżącymi danymi i poszukać odpowiadającego dailyarchive; zachować osobne vintage.
+T009-RULE-03 · Uzupełniony w opisanym zakresie
+Rozdział statystycznego c ex post od przyczynowego sizingu jest jawny w planie, kodzie, wyniku i ograniczeniach. Rozwiązano definicję, nie sizing wykonywalnego bota.
+
+Potwierdzone:
+
+Każdy wynik oznacza normalization_uses_future=true i net_profit_tested=false.
+
+c równa unconditionalSDw obrębie każdego okresu wyłącznie na potrzeby źródłowej statystyki.
+
+Nie wyliczonoCAGR/NAV ani wykonywalnej pozycji z c pełnopróbkowego.
+
+Pozostało:
+
+I.A–C, Eq1–3, TableI (https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf) · Miesięczne excess returns skalowane lagged realized variance, źródłowe porównanie do tego samego czynnika.
+
+Następny krok: Ewentualny sizingPIT wymaga osobnego zamrożonego planu, limitów dźwigni i kosztów; obecnego wyniku nie wdrażać jako gotowej reguły kapitału.
+T009-EXEC-04 · Częściowo uzupełniony
+Wykonano i zapisano jawny wariant po modelowanych kosztach; rzeczywiste fille, pełne koszty osobiste i wierna egzekucja źródła pozostają niepotwierdzone.
+
+Potwierdzone:
+
+Cel statystyczny został oddzielony od wyniku netto.
+
+Osobny zamrożony plan, ledger, model aktualnej taryfy i scenariusze spreadu/poślizgu, kontrole przyczynowości i rachunków.
+
+Zmierzono SIP bid/ask 28.10 przed 15:45; rozpoczęto osobny prospective protocol dostępności danych 29.10. Zakres opisany w WYKONANIE_DZISIAJ/T009.json
+
+Pozostało:
+
+Historyczne bid/ask, financing/borrow, replikacja portfela, dostępne limity i podatki.
+
+Bid/ask, partial fills, rozliczenie i kolejność sprzedaży/zakupu, realny poślizg, podatki, FX oraz KID/uprawnienia UE. Brak paper forward i partner consensus.
+
+I.A–C, Eq1–3, TableI (https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf) · Miesięczne excess returns skalowane lagged realized variance, źródłowe porównanie do tego samego czynnika.
+
+Następny krok: Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki.
+T009-DATA-05 · Częściowo uzupełniony
+Źródłowy zestaw i dostawcy są potwierdzeni; obecnie policzono tylkoMkt, nie10czynników.
+
+Potwierdzone:
+
+French udostępnia daily/monthlyMkt,SMB,HML,Mom,RMW,CMA; dostępność pierwotnie zweryfikowana.
+
+Pobrano 4 publiczne ZIP: FF5 daily15918/monthly759, Momentum daily26237/monthly1197; daty unikalne, koniec202609. Nowe wyniki czynników jeszcze nie są policzone.
+
+Pozostało:
+
+Zamrożone i sprawdzone dzienne/miesięczneMom,RMW,CMA orazHXZIA/ROE,BAB/FX do osobnych testów.
+
+Source-vintage i samplebounds każdego czynnika.
+
+I.A–C, Eq1–3, TableI (https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf) · Miesięczne excess returns skalowane lagged realized variance, źródłowe porównanie do tego samego czynnika.
+
+Round3boundedsourcecheck (https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html) · FouradditionalcurrentvintageFF5/Momdaily/monthlyZIPs acquired and dateQA; no newfactor contrasts.
+
+Następny krok: Pobrać pozostałeFrenchdaily/monthly, sprawdzić dopasowanie dat/wariantówSMB; następnie osobno sprawdzić bezpłatne authorfilesHXZ/BAB/FX.
+
+Rzeczywiste kwotowania przed zamknięciem · 28.10.2026
+
+Historyczne SIP o 15:45 NY: zmierzony spread; osobno model kosztu zakupu i natychmiastowej sprzedaży dla budżetu 10 000 USD, bez ruchu rynku.
+
+ETFSpread bpsPołowa spreadu bpsModel kosztu pełnego obrotu USD
+
+SPY0.3890.19453.2855
+
+BIL1.09090.54554.0891
+
+Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.
+
+IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.
+
+Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.
+
+Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L.
+
+Dane wyniku i ograniczenia
+
+Dzisiejsza kontrola wykonania · 29.10.2026
+
+Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.
+
+ZakresStan
+
+SPYoczekuje
+
+BILoczekuje
+
+Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.
+
+IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.
+
+Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.
+
+Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L.
+
+Dane wyniku i ograniczenia
+
+Warianty strategii po modelowanych kosztach transakcyjnych
+
+Decyzja na zamknięciu → najwcześniej następne otwarcie. Wynik w USD po modelowanej prowizji IBKR Pro Fixed USA, spreadzie/poślizgu i założonej rezerwie 1 bps przy sprzedaży, przed podatkiem i FX. Skala 10 000 USD służy policzeniu minimalnych prowizji; nie jest założeniem o kapitale użytkownika. BIL jest kupowany/sprzedawany z kosztami. 0/5/20 bps oznacza dodatkowy scenariusz spreadu i poślizgu na stronę; prowizje są zawsze naliczane.
+
+Wersja wykonaniaOkresDodatkowe bps/stronęZwrot (%)SPY (%)Własny benchmark (%)Max DD (%)Koszty USDŚr. ekspozycja ryzykowna (%)
+
+T009_SPY_PIT_RV_CAP12010–28.10.20265639.24822.10822.10-32.70458.2595.97
+
+T009_SPY_PIT_RV_CAP12010–20195243.09249.41249.41-19.38142.2397.11
+
+T009_SPY_PIT_RV_CAP12020–2023532.0956.2556.25-32.7193.3691.92
+
+T009_SPY_PIT_RV_CAP12024–28.10.2026062.9268.8868.88-18.769.5897.62
+
+T009_SPY_PIT_RV_CAP12024–28.10.2026562.4968.7168.71-18.7642.1997.62
+
+T009_SPY_PIT_RV_CAP12024–28.10.20262061.2368.2068.20-18.76139.4797.62
+
+To jawne warianty wykonania, nie pełne reprodukcje publikacji. Szczegółowa macierz zgodności, wszystkie scenariusze, NAV, roczne wyniki i transakcje są zachowane.
+
+Żaden z ośmiu wariantów dziennych nie spełnił bramki przewagi nad SPY w obu okresach 2020–2023 oraz 2024–2026 przy 5 i 20 bps. To wynik tych portfeli; nie obalenie teorii lub rzadkiego modułu wejścia.
+
+Dla Fabera własny benchmark to ten sam koszyk pięciu ETF-ów, dla pozostałych — ten sam bazowy ETF. Ochrona ryzyka i cel pobicia pełnego SPY są oddzielnymi pytaniami.
+
+Cena otwarcia OHLC, jednoczesne wykonanie koszyka, kolejność sprzedaży/zakupu i pełne fille pozostają przybliżeniami. Faktyczny spread, poślizg, rozliczenie, podatki, FX i dostępność ETF/KID dla inwestora UE nie zostały potwierdzone.
+
+Wszystkie okresy są retrospektywne i częściowo nakładają się. Brak nietkniętego OOS, paper forward i konsensusu z Claude’em. Kontrola rachunkowa inną implementacją: PASS dla 168 ścieżek.
+
+Dane wyniku i ograniczenia
+
+Wynik: miesięczne skalowanie zmiennością na Mkt-RF
+
+Ten sam czynnik rynkowy, te same miesiące i równa zmienność w porównaniu. Alpha to roczny intercept regresji względem tego czynnika; nie CAGR ani zysk rachunku. Konwencja sum_squares jest główna, pozostałe dwie zapisano przed wynikiem jako analizę wrażliwości.
+
+Miesiące wynikuRVN miesięcySharpe rynkuSharpe skalowanyAlpha roczna (%)95% CI alpha, HC1Maks. mnożnik ex post
+
+192608–201512sum_squares10730.420.514.88[1.82; 7.93]16.85
+
+201601–202609sum_squares1290.830.591.45[-7.42; 10.32]4.26
+
+192608–201512sample_variance10730.420.514.79[1.76; 7.82]14.46
+
+201601–202609sample_variance1290.830.631.94[-6.71; 10.59]4.19
+
+192608–201512population_variance10730.420.514.79[1.76; 7.82]14.58
+
+201601–202609population_variance1290.830.631.92[-6.74; 10.58]4.17
+
+Current French vintage, nie pełna numeryczna reprodukcja publikacji. Dokładne granice źródłowej Table I pozostają nieustalone.
+
+c wyznaczono ex post osobno w każdym okresie. Mnożniki powyżej 1 wymagają dźwigni; nie są sprawdzonym sizingiem ani finansowaniem bota.
+
+Wynik brutto; bez kosztów wykonania i finansowania. Późniejszy okres jest retrospektywny.
+
+Przedziały HC1 są punktowe i nie uwzględniają ogólnej autokorelacji. Sześć powiązanych porównań nie jest sześcioma niezależnymi potwierdzeniami.
+
+Niezależne przeliczenie primary w obu okresach zgodne z dokładnością poniżej 6×10⁻¹⁵.
+
+Dane wyniku i ograniczenia
+
+Następne działanie dla karty: Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki.
+
+Pełny zapis ustaleń, dowodów i braków tej rundy
+
+Braki i sposób ich zdobycia
+
+Uzyskanie pliku nie zamyka braku automatycznie. Musi on spełnić poniższe warunki kontroli; przybliżenie nie staje się danymi oryginalnymi.
+T009-RULE-01 · Jednoznaczna specyfikacja oryginalnej metody odwrotnej wariancji i właściwego pytania
+Dlaczego potrzebne: Obecne0/1SPY przy progu20% nie testuje równania źródła; pytanie o alpha/Sharpe czynnika różni się od pobiciaSPY bogactwem w każdym okresie.
+
+Dostępność: Dostępne bezpłatnie — trzeba pozyskać i zweryfikować
+
+Jak zdobyć:
+
+Z przepisuI.B zapisać f_managed[t+1]=(c/RV[t])*f[t+1], gdzie f to excess return.
+
+Rozdzielić miesięczny sygnał z dziennych obserwacji poprzedniego miesiąca od miesięcznego zwrotu przyszłego; uzgodnić liczbę dni, centrowanie, jednostki i próbę z konkretną tabelą.
+
+Zamrozić osobno replikację statystyczną jednego wskazanego czynnika oraz ewentualny wykonywalny wariant portfelowy; nie zastępować oryginału progiem20%, long-only lub nową bramkąSPY.
+
+Źródła i zakres:
+
+Moreira–Muir: publikacja na stronie autora (https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf) · dostęp sprawdzonyPełny PDF: równania strategii i opis danych; sekcjaI.B oraz przypis6 o normalizacji c.Nie dostarcza: Kod wykonawczy PIT, zmierzone koszty konkretnego brokera ani pewność zgodności bieżącej wersji danych z publikacją.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+W karcie są równania, indeksy czasowe, źródłowa tabela/próba i definicja benchmarku; każdy własny limit ma osobną wersję.
+
+Nie ma źródłowej sugestii, że wybrane posthoc okresy hossy są obowiązkowym filtrem; reżim do oceny wdrożenia musi być określony przed wynikiem.
+
+Próby syntetyczne potwierdzają, że zmiana zwrotu miesiąca[t+1] nie zmienia ekspozycji ustalonej po[t].
+
+Gdy nie uda się zdobyć: PozostawićNIEZBADANA. Można opisać własny filtrSPY jako osobną adaptację, bez werdyktu oMoreira–Muir.
+
+Następne działanie: Pozyskać źródłowy kod/InternetAppendix i matching dailyvintage; nie dopasowywać dat doN1065 po wyniku.
+T009-DATA-02 · Dzienne czynniki iRF oraz zgodne miesięczne zwroty; zamrożony vintage danych
+Dlaczego potrzebne: DoRV potrzebne są dzienne excess returns, a do oceny miesięczne zwroty iRF; nie wolno potraktować procentów jak ułamków lub odjąćRF dwukrotnie.
+
+Dostępność: Bezpłatnie dostępna część lub przybliżenie
+
+Jak zdobyć:
+
+Zachować już zweryfikowane ZIPyFrench i ichSHA, datę pobrania oraz znacznikCRSP202609.
+
+Wyodrębnić dzienne i miesięczne sekcjeCSV, odrzucić roczne tabele i sentinele braków; dzielić wartości procentowe przez100.
+
+Sprawdzić kalendarz/grain/unikalność i kompletność miesięcy; dla pełnego zestawu publikacji osobno pozyskaćHXZ, BAB iFXcarry, których te ZIPy nie dostarczają.
+
+Rozstrzygnąć czy celem jest bieżący-vintage statistical rerun czy dosłowna replikacja publikacji; darmowe bieżące dane nie dowodzą zgodności historycznej wersjiFIZ/CIZ.
+
+Źródła i zakres:
+
+Kenneth French: dzienne czynniki3 i RF (https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip) · dostęp sprawdzonySprawdzony ZIP200: Mkt-RF,SMB,HML,RF;26338 rekordów1926-07-01–2026-09-30, plik z bazyCRSP202609; dane w procentach.Nie dostarcza: Indywidualne akcje, historyczne składy/obroty portfeli, rzeczywiste prowizje, borrow i automatycznie historyczny vintage2017.
+
+Kenneth French: miesięczne czynniki3 i RF (https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_CSV.zip) · dostęp sprawdzonySprawdzony ZIP200:1203 miesięcy1926-07–2026-09; czynniki excess oraz RF, przydatne do miesięcznej nogi równania.Nie dostarcza: Nie gwarantuje tożsamości miesięcznych czynników z prostym składaniem dziennych excess returns ani dawnej wersjiFIZ.
+
+Kenneth French: dzienne czynniki5 (https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_5_Factors_2x3_daily_CSV.zip) · dostęp sprawdzonySprawdzony ZIP200:Mkt-RF,SMB,HML,RMW,CMA,RF;15918 dni1963-07-01–2026-09-30.Nie dostarcza: CzynnikówHXZ, BAB, FX carry ani indywidualnych pozycji i egzekucji.
+
+Kenneth French: dzienny momentum factor (https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Momentum_Factor_daily_CSV.zip) · dostęp sprawdzonySprawdzony ZIP200:26237 dni1926-11-03–2026-09-30.Nie dostarcza: Pełnego zestawu dziewięciu czynników źródła i historii wykonalnych cen każdej nogi.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+HTTP200, poprawneZIPy i oczekiwane kolumny są już sprawdzone; dane nie kończą się w październiku2026 lecz2026-09-30.
+
+RF i excess return mają jawne jednostki oraz oddzielne role; na każdym RV używane są wyłącznie dni poprzedniego miesiąca.
+
+Wersja testu wymienia rzeczywiście dostępny czynnik/próbę; nie nazywa testuMktRF pełną replikacją wszystkich czynników.
+
+Vintage i późniejsze rewizje są udokumentowane; statystyczny rerun nie jest uznany za nietkniętyPIT/OOS.
+
+Gdy nie uda się zdobyć: Wykonać w przyszłości wyłącznie jawnie ograniczone odtworzenie statystyczne dostępnego czynnika; pozostałe czynnikiNIEZBADANE.
+
+Następne działanie: Zestawić monthlyarchivesJuly2016 z bieżącymi danymi i poszukać odpowiadającego dailyarchive; zachować osobne vintage.
+T009-RULE-03 · Rozdzielenie pełnopróbkowej normalizacji c od przyczynowej wielkości pozycjiPIT
+Dlaczego potrzebne: Przypis6 źródła dobiera c do równej zmienności w całej próbie. To normalizacja porównania statystycznego, a nie dostępny wstecz plan wielkości pozycji dla bota.
+
+Dostępność: Dostępne bezpłatnie — trzeba pozyskać i zweryfikować
+
+Jak zdobyć:
+
+W odtworzeniu statystycznym jawnie oznaczyć ex-post/fullsample c i jego nieprzyczynowość jako sizingu.
+
+Dla przyszłego wykonywalnego wariantu ustalić c wyłącznie z okresu treningowego lub z góry określonej regułyPIT; zapisać gross exposure, maksymalną dźwignię i postępowanie przy małymRV.
+
+Trzymać dwa wyniki/protokoły odrębnie; nie dobierać c, capu lub okresu tak, żeby po obejrzeniu wyników uzyskać zwycięstwo.
+
+Źródła i zakres:
+
+Moreira–Muir: publikacja na stronie autora (https://amoreira2.github.io/alan-moreira.github.io/VolPortfolios_published.pdf) · dostęp sprawdzonyPełny PDF: równania strategii i opis danych; sekcjaI.B oraz przypis6 o normalizacji c.Nie dostarcza: Kod wykonawczy PIT, zmierzone koszty konkretnego brokera ani pewność zgodności bieżącej wersji danych z publikacją.
+
+Kenneth French: dzienne czynniki3 i RF (https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/F-F_Research_Data_Factors_daily_CSV.zip) · dostęp sprawdzonySprawdzony ZIP200: Mkt-RF,SMB,HML,RF;26338 rekordów1926-07-01–2026-09-30, plik z bazyCRSP202609; dane w procentach.Nie dostarcza: Indywidualne akcje, historyczne składy/obroty portfeli, rzeczywiste prowizje, borrow i automatycznie historyczny vintage2017.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Statystyczna replikacja z c_fullsample jest wyraźnie oddzielona od causal deployment.
+
+Przyszły c_PIT jest zamrożony przed oceną, a jego wyliczenie nie odwołuje się do całego okresu testowego.
+
+Zapisano, że niezmienniczośćSharpe względem dodatniego stałego c w idealnym modelu nie przenosi się automatycznie na koszty, capy i financing.
+
+Gdy nie uda się zdobyć: Pozostać przy analizie źródłowego równania i danych. BrakPITsizingu nie jest obaleniem wyniku statystycznego autorów.
+
+Następne działanie: Ewentualny sizingPIT wymaga osobnego zamrożonego planu, limitów dźwigni i kosztów; obecnego wyniku nie wdrażać jako gotowej reguły kapitału.
+T009-EXEC-04 · Historyczne koszty finansowania/dźwigni, odwzorowanie czynników i rzeczywiste koszty wykonania
+Dlaczego potrzebne: Ekspozycja c/RV może przekraczać1, a czynniki long-short nie są pojedynczymETF. RF z biblioteki nie jest potwierdzoną stopą pożyczki brokera; bez tego nie ma netto wykonywalnego testu.
+
+Dostępność: Dostępność jeszcze nieustalona
+
+Jak zdobyć:
+
+Najpierw wyznaczyć instrument i strukturę ekspozycji odpowiadającą badanemu czynnikowi; nie zakładać, żeMktRF/SMB/HML można wykonać jednym zleceniemSPY.
+
+Zebrać z właściwego brokera historyczne finansowanie, collateral, borrow/availability dla shortów oraz transakcyjne bid/ask i opłaty. Publiczne strony bieżących stawek służą jedynie identyfikacji wymaganych pól.
+
+Sprawdzić legalnie posiadane wyciągi/eksporty. Nie otwierać kont, nie składać zleceń i nie kupować baz w ramach tej pracy; niczego nie dopowiadać jako0.
+
+Źródła i zakres:
+
+IBKR: opisSLB i danych o pożyczaniu akcji (https://www.interactivebrokers.com/en/trading/short-securities-availability.php) · dostęp sprawdzonyPubliczna dokumentacja narzędzia klienta opisuje bieżącą dostępność i bieżące oraz historyczne stawki indicative borrow.Nie dostarcza: Nie pobrano kontaSLB, danych per-akcja/per-dzień ani potwierdzenia pełnego zakresu historycznego; indicative nie oznacza wykonanego borrow.
+
+IBKR: publikowane stawki finansowania (https://www.interactivebrokers.com/en/trading/pricing-margin-rates.php) · dostęp sprawdzonyPubliczna strona bieżących warunków finansowania i zastrzeżeń brokerowych.Nie dostarcza: Pełnej historii kosztu właściwego dla rachunku Piotra, kwoty, waluty i dat1962–1986 lub całego okresu replikacji.
+
+IBKR: opis wyciągu rzeczywistych borrow fees (https://www.ibkrguides.com/reportingreference/reportguide/borrowfeedetails_default.htm) · dostęp sprawdzonyDokumentacja pól dziennych opłat, stawek i kwot w activity statement.Nie dostarcza: Rzeczywistych wyciągów Piotra ani kosztów hipotetycznych historycznych transakcji, które nigdy nie zaszły.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Każdy koszt ma właściwy rachunek, walutę, datę i podstawę naliczania albo jawny status brak danych.
+
+Dostęp do dokumentacji nie jest przedstawiany jako dostęp do historycznychSLB ani posiadanie rachunkuIBKR.
+
+Brak tych danych blokuje netto deployment-validation; teoretyczna replikacja factor-return pozostaje odrębnym, odpowiednio oznaczonym zadaniem.
+
+Gdy nie uda się zdobyć: Możliwy późniejszy gross/statistical rerun, wyraźnie bez potwierdzenia wykonalności i bez werdyktuWYGRANA.
+
+Następne działanie: Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Uzgodnić definicje i vintage nowych French plików przed osobnym planem testu czynników. Dla wersji wdrożeniowej zbadać koszty i dostępność bez zmiany c pod nowe wyniki.
+T009-DATA-05 · Pozostałe czynnikiHXZ/BAB/FX i ich zgodność z oryginalnym zestawem
+Dlaczego potrzebne: ZweryfikowaneZIPyFrench nie pokrywają całego zestawu źródła; pojedynczyMktRF nie może reprezentować pełnego badania.
+
+Dostępność: Bezpłatnie dostępna część lub przybliżenie
+
+Jak zdobyć:
+
+Z oficjalnegoGlobal-q pobrać dopiero po kwalifikacji konkretne dzienne i miesięczne plikiR_IA/R_ROE, zachowaćhash i dokumentację.
+
+Na stronieAQR rozwiązać linkBABdaily/monthly, sprawdzić darmowy dostęp, zakres i definicję; nie utożsamiać dostępnej strony z pobraną serią.
+
+Na stronieVerdelhana sprawdzić faktyczne pliki i dzienne zmiany kursów dla skrajnych portfeliFX. Jeśli nie są publicznie dostępne, zapisać brak; nie kontaktować autorów i nie kupować danych bez odrębnej autoryzacji.
+
+Zbudować macierz czynnik→źródło→zakres→częstotliwość→vintage przed jakimkolwiek wspólnym testem.
+
+Źródła i zakres:
+
+Global-q: oficjalne czynnikiHXZ (https://global-q.org/factors.html) · dostęp sprawdzonyPubliczna strona opisuje dzienne i miesięczne CSV z investmentR_IA i return-on-equityR_ROE; sam plikCSV nie został jeszcze pobrany ani zwalidowany.Nie dostarcza: Nie potwierdzono tożsamości bieżącegoq-factor vintage z próbką publikacji ani danych wykonawczych.
+
+AQR: oficjalnyBABdaily dataset (https://www.aqr.com/Insights/Datasets/Betting-Against-Beta-Equity-Factors-Daily) · dostęp sprawdzonyDostępna publiczna strona oferuje dziennyBABequity factor i opis konstrukcji; nie sprawdzono jeszcze binarnego pliku danych ani jego zakresu.Nie dostarcza: Nie jest to pobrana/zatwierdzona seria, skład portfela, historyczna dostępność short ani indywidualne stawki finansowania.
+
+AdrienVerdelhanMIT: oficjalna biblioteka danych (https://web.mit.edu/adrienv/www/Data.html) · dostęp sprawdzonyPubliczna strona prowadzi do plików miesięcznych currency excess returns i innych FXserii.Nie dostarcza: Nie potwierdza dziennej historii high/lowcurrency exchange-rate changes potrzebnej w oryginalnymRVani kompletnego aktualnego zestawuMoreira–Muir.
+
+Jak sprawdzimy, że brak uzupełniono:
+
+Każda użyta seria ma pobrany plik,hash,kolumny,częstotliwość,zakres i zweryfikowane jednostki.
+
+Nie stosowaćETFproxy do brakującego czynnika bez nowej jawnej adaptacji.
+
+Tylko rzeczywiście zweryfikowane czynniki wchodzą do nazwanego zakresu replikacji;FXpozostajeNIEZBADANY przy braku dziennegoRV.
+
+Gdy nie uda się zdobyć: Ograniczone i nazwane odtworzenie dostępnego podzbioru, nigdy pełna replikacja publikacji.
+
+Następne działanie: Pobrać pozostałeFrenchdaily/monthly, sprawdzić dopasowanie dat/wariantówSMB; następnie osobno sprawdzić bezpłatne authorfilesHXZ/BAB/FX.
+
+Krótka karta dla AI · Źródło (https://www.nber.org/papers/w22208) · Pełna karta, audyt i stare wyniki
+
+Evidence and code: ../code/index.json, ../evidence/.
+This is a logic-review package; raw licensed market datasets are not included.

@@ -1,0 +1,1668 @@
+{
+  "snapshot_at_utc": "2026-10-29T18:43:35.427389+00:00",
+  "scope": "Research snapshot. No full original-theory verification; no live orders.",
+  "card": {
+    "id": "T003",
+    "round": 9,
+    "findings": [
+      "Rozróżniono dzienne settlementy od intraday potrzebnego dla luk, stopów 2N i dokładania jednostek. Publiczna strona settlementu nie naprawia brakujących filli i tożsamości kontraktu.",
+      "Zachowano pełny source-spec System 2. Nie uruchomiono ponownie samego kanału cenowego jako rzekomego Turtle.",
+      "Nowy krok wymaga jednego jawnie wybranego rynku kontraktowego, historii wygasań/rolowania i danych intraday przed rozszerzeniem systemu.",
+      "Dzisiejszy pomiar ETF-ów nie usuwa braków tej teorii. Zachowano wymagania źródłowe i dotychczasowy konkretny plan zdobycia danych/reguł.",
+      "Pobrano156942rzeczywiste rekordy z publicznego pliku10sekund MES. Sprawdzono format, daty i OHLC; nie ma duplikatów ani przyszłych świec w pobranym pliku.",
+      "Próbka nie ma contractID,OI,bidask i55sesji rozgrzewki; nie daje pełnego testu System2. Wieloletnie CSV z samymi marks również nie odtwarzają zakresów high/low i TrueRange.",
+      "Darmowy backtest w chmurze QuantConnect jest realną ścieżką do współczesnych kontraktów z OHLCV/OI/expiry. Sprawdzono dokumentację, nie wykonano jeszcze zapytania na koncie.",
+      "Dalsze samodzielne pobrania bez konta dały trzy historie konkretnych kontraktówGC, w tym wygasłyGCZ25. Są dzienne; nie dostarczają pełnego intraday/roll i wykonania do testu.",
+      "Publiczne próbkiLEAN pobrano z cenami, contractID, bidask iOI. Dzienne pliki mają maksymalnie5sesji na kontrakt, więc nie wolno zrobić z nich55dni rozgrzewki przez sumowanie różnych kontraktów.",
+      "Przygotowano source-constrained rdzeń standard2N/55–20/0.5N/max4units i9testów. Sprawdzono gapfill, różne stopy po dokładaniu przez lukę, całe kontrakty i margin; to komponentkampanii, nie cały portfelTurtle.",
+      "Dopiero po niepełnym wyniku pobrań bez konta przygotowano darmowyQCaudit. Potrzebne zalogowanieFree, potem faktyczny odczyt kontraktów; nie zakup.",
+      "Turtle: istniejąca próba cdab25dae0a3ea8ada1f18fa0fb08c11 Completed; 0 duplikatów. Kod z wyniku zgodny AST z wysłanym i zamrożonym kodem.",
+      "GC 02–12.01.2024: 4 kontrakty, 18 990 świec transakcji, 24 540 świec kwotowań, 24 niepoprawne/niepełne kwotowania.",
+      "Dla jednego kontraktu: 100 świec dziennych 10.08–29.12.2023, 0 naruszeń sprawdzonego warunku 0<low≤close≤high; ceny open nie sprawdzano. Pierwsze obserwowane OI wszystkich 4 kontraktów wynoszą 0; to nie dowód poprawnego wyboru kontraktu według OI.",
+      "Niezależny przegląd Claude wskazał kontrole wymagane przed pełnym backtestem: kroczące kanały55/20, pełny kalendarz sesji i kotwica inicjalizacjiN. To uwagi do przygotowanego komponentu, nie nowy wynik strategii. Pełna opinia oraz ocena zarzutów są zapisane; brak pełnego adaptera pozostaje jawny."
+    ],
+    "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+    "overall_status": "source_gap_still_blocks_original_test",
+    "gap_updates": [
+      {
+        "gap_id": "T003-R1",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "FullSystem2 source core is specified, includingN formula,integerUnits,pyramiding,2N stops,20day exits,limits and account sizing.",
+          "Independent source review found eight mechanical choices not fixed by text.",
+          "Gap-stop counterexample prevents an erroneous common newest−2N stop.",
+          "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+          "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
+          "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
+          "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
+          "Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.",
+          "Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu."
+        ],
+        "criteria_unmet": [
+          "Exact weekly N cutoff,resizing,annual discretionary equity,complete correlation map and simultaneous ordering remain unspecified.",
+          "A machine-ready reconstruction still needs declared conventions and independent implementation review.",
+          "Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.",
+          "KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.",
+          "Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.",
+          "55pełnych sesji i pełne intraday/osobne kontrakty, rolloverlap, CMEday/DST oraz zweryfikowane kwotowania.",
+          "Następnie zaimplementować i sprawdzić pełne reset/notional/margin/funding/roll. JednoGC nie jest oryginalnym wielorynkowym portfelem.",
+          "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+          "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+          "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+          "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+          "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+          "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+          "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne.",
+          "Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/turtle.pdf",
+            "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+            "sha256": "54910d0f55398a1974839473cc6d59f9fd2b1db7a34627ad3987e256d0a72fee",
+            "locator": "PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/T003_independent_source_review.json",
+            "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+            "sha256": "45bbf76cf5c40044abb0ed33ec1470ca1206883521e986f3e261b9a6c22348dc",
+            "locator": "Eight source-derived unresolved implementation choices; independently reviewed against PDF",
+            "evidence_kind": "independent_source_review",
+            "what_verified": ""
+          },
+          {
+            "url": "https://www.quantconnect.com/pricing/",
+            "evidence_path": "quantconnect_tests/PLAN.json",
+            "locator": "PreparationV1, no marketstrategyresult",
+            "what_verified": "Główne reguły Turtle przeszły9kontroli. Gotowy projekt kontroli danychGC; pełny wynik rynkowy czeka na weryfikację danych i dokończenie adaptera."
+          },
+          {
+            "url": "https://www.quantconnect.com/project/38621926",
+            "evidence_path": "research_round7/qc_cloud_attempt.json",
+            "locator": "Actual authenticated UI attempt; no verified data result",
+            "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38621926: kod kontroli Turtle wgrany, wysłano zapis i jedną próbę uruchomienia. UI zatrzymał się na inicjalizacji; brak zweryfikowanego wykonania, logu danych i runID. Trwałość kodu po odświeżeniu wymaga potwierdzenia."
+          },
+          {
+            "url": "https://www.quantconnect.com/project/38621926",
+            "evidence_path": "research_round8/session_journal.json",
+            "locator": "Completed bounded QC data controls; no strategy return",
+            "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+          },
+          {
+            "url": "https://www.quantconnect.com/project/38621926",
+            "evidence_path": "research_round9/session_journal.json",
+            "locator": "Completed bounded QC data controls; no strategy return",
+            "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+          }
+        ],
+        "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+        "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
+      },
+      {
+        "gap_id": "T003-D1",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "Original permitted market list,liquidity restrictions,contract-month selection and roll constraints are extracted with page locators.",
+          "Round5: Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps.",
+          "Round5: Downloaded35,898marks,1982-09-14..2024-03-28, PRICE/CARRY/FORWARD plus contract IDs.",
+          "Round5: 274roll rows with current/next/carry contract IDs,1975..2020.",
+          "Round5: Downloaded and parsed156,942bars,2026-10-01..10-28UTC; zero duplicate timestamps/invalidOHLC/futurebars in checked file.",
+          "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+          "Round5: Free plan advertises backtesting across asset classes; one backtest-node limit.",
+          "Round5: Distinguishes cloud use from local data licensing; most price data free in cloud.",
+          "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+          "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
+          "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
+          "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
+          "Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.",
+          "Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu."
+        ],
+        "criteria_unmet": [
+          "Historical individual-contract prices,open interest,volume,ticks,multipliers and expiry histories have not been acquired.",
+          "Several original markets no longer exist in original form; no complete lawful free history was verified.",
+          "Round5: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel.",
+          "Round5: 1537missing PRICE/7842missing FORWARD; not OHLCV, volume, OI, quotes or exact paper inputs.",
+          "Round5: Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll.",
+          "Round5: No contractID,OI,bidask or55sessionwarmup; 10s bars do not resolve within-bar sequencing. MES is not the literal1980s S&P contract; upstream independently unconfirmed.",
+          "Round5: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+          "Round5: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data.",
+          "Round5: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified.",
+          "Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.",
+          "KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.",
+          "Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.",
+          "55pełnych sesji i pełne intraday/osobne kontrakty, rolloverlap, CMEday/DST oraz zweryfikowane kwotowania.",
+          "Następnie zaimplementować i sprawdzić pełne reset/notional/margin/funding/roll. JednoGC nie jest oryginalnym wielorynkowym portfelem.",
+          "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+          "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+          "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+          "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+          "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+          "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+          "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne.",
+          "Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/turtle.pdf",
+            "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+            "sha256": "54910d0f55398a1974839473cc6d59f9fd2b1db7a34627ad3987e256d0a72fee",
+            "locator": "PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "url": "https://www.cmegroup.com/trading/about-settlements.html",
+            "evidence_path": "sources/round3/gap_receipts.json",
+            "locator": "Round3boundedsourcecheck",
+            "what_verified": "Settlementdefinition is not intradaystop/fill data; no fulloriginalcontracthistory acquired."
+          },
+          {
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+            "evidence_path": "sources/round5/pst_GOLD_multiple.csv",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps. LIMIT: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel."
+          },
+          {
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/SP500.csv",
+            "evidence_path": "sources/round5/pst_SP500_multiple.csv",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Downloaded35,898marks,1982-09-14..2024-03-28, PRICE/CARRY/FORWARD plus contract IDs. LIMIT: 1537missing PRICE/7842missing FORWARD; not OHLCV, volume, OI, quotes or exact paper inputs."
+          },
+          {
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+            "evidence_path": "sources/round5/pst_GOLD_rolls.csv",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "274roll rows with current/next/carry contract IDs,1975..2020. LIMIT: Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll."
+          },
+          {
+            "url": "https://historicalfuturesdata.com/samples/MES/10s/cme.mes.bars.10s.2026-10.parquet",
+            "evidence_path": "sources/round5/hfd_MES_10s_sample.parquet",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Downloaded and parsed156,942bars,2026-10-01..10-28UTC; zero duplicate timestamps/invalidOHLC/futurebars in checked file. LIMIT: No contractID,OI,bidask or55sessionwarmup; 10s bars do not resolve within-bar sequencing. MES is not the literal1980s S&P contract; upstream independently unconfirmed."
+          },
+          {
+            "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+            "evidence_path": "sources/round5/qc_futures.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting. LIMIT: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate."
+          },
+          {
+            "url": "https://www.quantconnect.com/pricing/",
+            "evidence_path": "sources/round5/qc_pricing.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Free plan advertises backtesting across asset classes; one backtest-node limit. LIMIT: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data."
+          },
+          {
+            "url": "https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing",
+            "evidence_path": "sources/round5/qc_licensing.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Distinguishes cloud use from local data licensing; most price data free in cloud. LIMIT: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified."
+          },
+          {
+            "url": "https://www.quantconnect.com/pricing/",
+            "evidence_path": "quantconnect_tests/PLAN.json",
+            "locator": "PreparationV1, no marketstrategyresult",
+            "what_verified": "Główne reguły Turtle przeszły9kontroli. Gotowy projekt kontroli danychGC; pełny wynik rynkowy czeka na weryfikację danych i dokończenie adaptera."
+          },
+          {
+            "url": "https://www.quantconnect.com/project/38621926",
+            "evidence_path": "research_round7/qc_cloud_attempt.json",
+            "locator": "Actual authenticated UI attempt; no verified data result",
+            "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38621926: kod kontroli Turtle wgrany, wysłano zapis i jedną próbę uruchomienia. UI zatrzymał się na inicjalizacji; brak zweryfikowanego wykonania, logu danych i runID. Trwałość kodu po odświeżeniu wymaga potwierdzenia."
+          },
+          {
+            "url": "https://www.quantconnect.com/project/38621926",
+            "evidence_path": "research_round8/session_journal.json",
+            "locator": "Completed bounded QC data controls; no strategy return",
+            "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+          },
+          {
+            "url": "https://www.quantconnect.com/project/38621926",
+            "evidence_path": "research_round9/session_journal.json",
+            "locator": "Completed bounded QC data controls; no strategy return",
+            "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+          }
+        ],
+        "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+        "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
+      },
+      {
+        "gap_id": "T003-E1",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "Intraday breakouts,gap-open entries,per-unit stops and discretionary limit-order tactics are source documented.",
+          "Unknown daily OHLC ordering and fast-market execution are explicit blockers,not favorable assumed fills.",
+          "Round5: Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps.",
+          "Round5: 274roll rows with current/next/carry contract IDs,1975..2020.",
+          "Round5: Downloaded and parsed156,942bars,2026-10-01..10-28UTC; zero duplicate timestamps/invalidOHLC/futurebars in checked file.",
+          "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+          "Round5: Free plan advertises backtesting across asset classes; one backtest-node limit.",
+          "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+          "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
+          "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
+          "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
+          "Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.",
+          "Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu."
+        ],
+        "criteria_unmet": [
+          "Intraday event order,quotes and executable fills are absent.",
+          "Deterministic collision/stop/addition priority is not uniquely given by source.",
+          "Round5: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel.",
+          "Round5: Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll.",
+          "Round5: No contractID,OI,bidask or55sessionwarmup; 10s bars do not resolve within-bar sequencing. MES is not the literal1980s S&P contract; upstream independently unconfirmed.",
+          "Round5: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+          "Round5: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data.",
+          "Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.",
+          "KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.",
+          "Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.",
+          "55pełnych sesji i pełne intraday/osobne kontrakty, rolloverlap, CMEday/DST oraz zweryfikowane kwotowania.",
+          "Następnie zaimplementować i sprawdzić pełne reset/notional/margin/funding/roll. JednoGC nie jest oryginalnym wielorynkowym portfelem.",
+          "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+          "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+          "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+          "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+          "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+          "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+          "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne.",
+          "Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/turtle.pdf",
+            "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+            "sha256": "54910d0f55398a1974839473cc6d59f9fd2b1db7a34627ad3987e256d0a72fee",
+            "locator": "PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/T003_independent_source_review.json",
+            "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+            "sha256": "45bbf76cf5c40044abb0ed33ec1470ca1206883521e986f3e261b9a6c22348dc",
+            "locator": "Eight source-derived unresolved implementation choices; independently reviewed against PDF",
+            "evidence_kind": "independent_source_review",
+            "what_verified": ""
+          },
+          {
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+            "evidence_path": "sources/round5/pst_GOLD_multiple.csv",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps. LIMIT: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel."
+          },
+          {
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+            "evidence_path": "sources/round5/pst_GOLD_rolls.csv",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "274roll rows with current/next/carry contract IDs,1975..2020. LIMIT: Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll."
+          },
+          {
+            "url": "https://historicalfuturesdata.com/samples/MES/10s/cme.mes.bars.10s.2026-10.parquet",
+            "evidence_path": "sources/round5/hfd_MES_10s_sample.parquet",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Downloaded and parsed156,942bars,2026-10-01..10-28UTC; zero duplicate timestamps/invalidOHLC/futurebars in checked file. LIMIT: No contractID,OI,bidask or55sessionwarmup; 10s bars do not resolve within-bar sequencing. MES is not the literal1980s S&P contract; upstream independently unconfirmed."
+          },
+          {
+            "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+            "evidence_path": "sources/round5/qc_futures.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting. LIMIT: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate."
+          },
+          {
+            "url": "https://www.quantconnect.com/pricing/",
+            "evidence_path": "sources/round5/qc_pricing.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Free plan advertises backtesting across asset classes; one backtest-node limit. LIMIT: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data."
+          },
+          {
+            "url": "https://www.quantconnect.com/pricing/",
+            "evidence_path": "quantconnect_tests/PLAN.json",
+            "locator": "PreparationV1, no marketstrategyresult",
+            "what_verified": "Główne reguły Turtle przeszły9kontroli. Gotowy projekt kontroli danychGC; pełny wynik rynkowy czeka na weryfikację danych i dokończenie adaptera."
+          },
+          {
+            "url": "https://www.quantconnect.com/project/38621926",
+            "evidence_path": "research_round7/qc_cloud_attempt.json",
+            "locator": "Actual authenticated UI attempt; no verified data result",
+            "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38621926: kod kontroli Turtle wgrany, wysłano zapis i jedną próbę uruchomienia. UI zatrzymał się na inicjalizacji; brak zweryfikowanego wykonania, logu danych i runID. Trwałość kodu po odświeżeniu wymaga potwierdzenia."
+          },
+          {
+            "url": "https://www.quantconnect.com/project/38621926",
+            "evidence_path": "research_round8/session_journal.json",
+            "locator": "Completed bounded QC data controls; no strategy return",
+            "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+          },
+          {
+            "url": "https://www.quantconnect.com/project/38621926",
+            "evidence_path": "research_round9/session_journal.json",
+            "locator": "Completed bounded QC data controls; no strategy return",
+            "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+          }
+        ],
+        "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+        "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
+      },
+      {
+        "gap_id": "T003-E2",
+        "status": "partial",
+        "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+        "criteria_met": [
+          "Dollar-per-point risk,integer contracts,unit/group/directional limits and notional drawdown adjustment are recovered.",
+          "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+          "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+          "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
+          "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
+          "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
+          "Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.",
+          "Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu."
+        ],
+        "criteria_unmet": [
+          "Historical fees,margin,cash collateral funding and full account reset decisions are missing.",
+          "Round5: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+          "Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.",
+          "KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.",
+          "Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.",
+          "55pełnych sesji i pełne intraday/osobne kontrakty, rolloverlap, CMEday/DST oraz zweryfikowane kwotowania.",
+          "Następnie zaimplementować i sprawdzić pełne reset/notional/margin/funding/roll. JednoGC nie jest oryginalnym wielorynkowym portfelem.",
+          "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+          "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+          "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+          "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+          "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+          "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+          "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne.",
+          "Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli."
+        ],
+        "evidence": [
+          {
+            "evidence_path": "sources/turtle.pdf",
+            "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+            "sha256": "54910d0f55398a1974839473cc6d59f9fd2b1db7a34627ad3987e256d0a72fee",
+            "locator": "PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror",
+            "evidence_kind": "raw_source",
+            "what_verified": ""
+          },
+          {
+            "evidence_path": "sources/round2/T003_independent_source_review.json",
+            "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+            "sha256": "45bbf76cf5c40044abb0ed33ec1470ca1206883521e986f3e261b9a6c22348dc",
+            "locator": "Eight source-derived unresolved implementation choices; independently reviewed against PDF",
+            "evidence_kind": "independent_source_review",
+            "what_verified": ""
+          },
+          {
+            "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+            "evidence_path": "sources/round5/qc_futures.html",
+            "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+            "what_verified": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting. LIMIT: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate."
+          },
+          {
+            "url": "https://www.quantconnect.com/pricing/",
+            "evidence_path": "quantconnect_tests/PLAN.json",
+            "locator": "PreparationV1, no marketstrategyresult",
+            "what_verified": "Główne reguły Turtle przeszły9kontroli. Gotowy projekt kontroli danychGC; pełny wynik rynkowy czeka na weryfikację danych i dokończenie adaptera."
+          },
+          {
+            "url": "https://www.quantconnect.com/project/38621926",
+            "evidence_path": "research_round7/qc_cloud_attempt.json",
+            "locator": "Actual authenticated UI attempt; no verified data result",
+            "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38621926: kod kontroli Turtle wgrany, wysłano zapis i jedną próbę uruchomienia. UI zatrzymał się na inicjalizacji; brak zweryfikowanego wykonania, logu danych i runID. Trwałość kodu po odświeżeniu wymaga potwierdzenia."
+          },
+          {
+            "url": "https://www.quantconnect.com/project/38621926",
+            "evidence_path": "research_round8/session_journal.json",
+            "locator": "Completed bounded QC data controls; no strategy return",
+            "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+          },
+          {
+            "url": "https://www.quantconnect.com/project/38621926",
+            "evidence_path": "research_round9/session_journal.json",
+            "locator": "Completed bounded QC data controls; no strategy return",
+            "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+          }
+        ],
+        "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+        "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
+      }
+    ],
+    "source_urls_verified": [
+      "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf"
+    ],
+    "observations": [
+      {
+        "id": "QC_DATA_CONTROLS_20261029_V5_T003",
+        "title": "QuantConnect: kontrole danych · 29.10.2026",
+        "summary": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte.",
+        "columns": [
+          "Kontrola",
+          "Wynik / ograniczenie"
+        ],
+        "rows": [
+          [
+            "Próba",
+            "cdab25dae0a3ea8ada1f18fa0fb08c11 · Completed · bez duplikatu"
+          ],
+          [
+            "Zakres",
+            "GC · 02–12.01.2024 · kontrola danych"
+          ],
+          [
+            "Kontrakty / transakcje / kwotowania",
+            "4 / 18 990 / 24 540 świec"
+          ],
+          [
+            "Historia dzienna",
+            "100 rekordów jednego kontraktu; 0 naruszeń 0<low≤close≤high, open nie sprawdzano"
+          ],
+          [
+            "Wady kwotowań",
+            "24; wymagają sprawdzenia przed symulacją wykonania"
+          ],
+          [
+            "OI / sesje",
+            "Pierwsze OI=0; definicja sesji CME i pełny warmup wszystkich kontraktów niepotwierdzone"
+          ],
+          [
+            "Wynik strategii",
+            "Nie liczono; werdykt bez zmiany"
+          ],
+          [
+            "Przegląd logiki przez Claude",
+            "Opinia zapisana; kontrole kanałów/kalendarza/N do wykonania. Provenance logu i AST uzgodnione. Nie jest to niezależne przeliczeniePnL ani wspólny werdykt."
+          ]
+        ],
+        "limitations": [
+          "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+          "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+          "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+          "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+          "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+          "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+          "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne.",
+          "Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli."
+        ],
+        "evidence_report": "TESTY_QC/DANE/T003.json"
+      },
+      {
+        "id": "QC_T003_T010_PREPARATION_20261029_V1_T003",
+        "title": "Przygotowane testy i kontrola QuantConnect · 29.10.2026",
+        "summary": "Główne reguły Turtle przeszły9kontroli. Gotowy projekt kontroli danychGC; pełny wynik rynkowy czeka na weryfikację danych i dokończenie adaptera.",
+        "columns": [
+          "Element",
+          "Stan"
+        ],
+        "rows": [
+          [
+            "Reguły",
+            "9syntetycznych kontroliPASS"
+          ],
+          [
+            "Bez konta",
+            "3dzienne historieGC i próbkiLEAN; za małe/innegozakresu do pełnego testu"
+          ],
+          [
+            "ProjektQC",
+            "T003_TURTLE_DATA/main.py; bez zleceń"
+          ],
+          [
+            "Pełny backtest",
+            "Jeszcze niegotowy: wymagane dane, roll, sesje, pełny ledger i finansowanie"
+          ],
+          [
+            "Następny krok",
+            "ZalogowanieFree, później1kontrola danych02–12.01.2024"
+          ]
+        ],
+        "limitations": [
+          "Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.",
+          "KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.",
+          "Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.",
+          "55pełnych sesji i pełne intraday/osobne kontrakty, rolloverlap, CMEday/DST oraz zweryfikowane kwotowania.",
+          "Następnie zaimplementować i sprawdzić pełne reset/notional/margin/funding/roll. JednoGC nie jest oryginalnym wielorynkowym portfelem."
+        ],
+        "evidence_report": "TESTY_QC/T003.json"
+      },
+      {
+        "id": "FREE_SOURCE_GAP_REVIEW_20261029_V2_T003",
+        "title": "Co blokuje test i co pozyskano za darmo · 29.10.2026",
+        "summary": "Turtle System2 ma znane główne reguły, ale wymaga konkretnych kontraktów, OHLC i kolejności zdarzeń dla stopów/dokładania oraz jawnych konwencji dla uznaniowych części źródła.",
+        "columns": [
+          "Darmowa ścieżka",
+          "Co rzeczywiście mamy",
+          "Co nadal trzeba sprawdzić"
+        ],
+        "rows": [
+          [
+            "Reguły źródłowe",
+            "PełnyPDF:55/20, standardowy2N, dokładanie0.5N, sizing i limity",
+            "Uznaniowe reset/roll/correlation i cutoff wymagają jawnych konwencji"
+          ],
+          [
+            "Darmowy plik MES10s",
+            "156942bars z października2026; podstawoweQA",
+            "Brak55sesji/contractID/quotes; do kontroli formatu, nie pełnego testu"
+          ],
+          [
+            "QuantConnect Cloud",
+            "Darmowy plan; dokumentacja157futures odMay2009",
+            "Wymagane konto i faktyczny odczyt. Lokalny eksport nie został potwierdzony jako darmowy"
+          ]
+        ],
+        "limitations": [
+          "Nie mieszać standard2N z Whipsaw0.5N i nie zastępować całego systemu prostym kanałem55/20 na ETF.",
+          "RAW minute i OHLC nie gwarantują kolejności ticków wewnątrz baru. Przy kolizji stop/dokładanie zachować obie dopuszczalne ścieżki lub użyć ticków; nie wybierać korzystniejszej po wyniku.",
+          "Sama karta danych lub darmowe konto nie jest dowodem kompletnej historii. Brak bidask/finansowania pozostawia netjako scenariusz."
+        ],
+        "evidence_report": "BRAKI_5_TEORII/T003.json"
+      },
+      {
+        "id": "ARRIVAL_20261029_T003",
+        "title": "Dzisiejsza kontrola wykonania · 29.10.2026",
+        "summary": "Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.",
+        "columns": [
+          "Zakres",
+          "Stan"
+        ],
+        "rows": [
+          [
+            "Oryginał",
+            "nadal blokowany przez braki reguł lub danych wskazane przy karcie; dzisiejsze ETF-y tego nie zastępują"
+          ]
+        ],
+        "limitations": [
+          "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
+          "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
+          "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+        ],
+        "evidence_report": "WYKONANIE_DZISIAJ/T003.json"
+      }
+    ],
+    "source_detail": {
+      "variant": "Turtle System 2, standard 2N stop, full source core; not System1 and not optional Whipsaw.",
+      "market_scope": {
+        "source": "Liquid US-exchange futures; grains excluded due to account limits and meats excluded. Source permits a consistently excluded market, not opportunistic switching.",
+        "markets": [
+          "30Y US Treasury bond",
+          "10Y US Treasury note",
+          "coffee",
+          "cocoa",
+          "sugar",
+          "cotton",
+          "Swiss franc",
+          "Deutschmark",
+          "British pound",
+          "French franc",
+          "Japanese yen",
+          "Canadian dollar",
+          "S&P500",
+          "Eurodollar",
+          "90-day US Treasury bill",
+          "gold",
+          "silver",
+          "copper",
+          "crude oil",
+          "heating oil",
+          "unleaded gasoline"
+        ],
+        "locator": "PDF15–16 / printed11–12; some contracts no longer exist in their original form."
+      },
+      "rules": [
+        {
+          "rule": "TR=max(H−L, abs(H−previous_close), abs(L−previous_close)); N=(19*previous_N+current_TR)/20, first N initialized by simple average of 20 TR values. This is Wilder-style alpha1/20 smoothing, not generic EMA alpha2/21.",
+          "locator": "PDF18 / printed14"
+        },
+        {
+          "rule": "Dollar volatility=N*dollars_per_price_point; contracts per Unit=floor(1% notional account / dollar volatility). Units were supplied on Monday weekly sheets.",
+          "locator": "PDF19–20 / printed15–16"
+        },
+        {
+          "rule": "Enter one Unit long one tick above prior55-session high, or short one tick below prior55-session low, intraday. Opening gap through threshold enters at open. Take every System2 breakout; no System1 prior-winner skip filter.",
+          "locator": "PDF23–24 / printed19–20"
+        },
+        {
+          "rule": "Add a Unit every0.5N favorable move from previous actual fill, until max4 Units, subject to portfolio limits. Multiple units may be added one day.",
+          "locator": "PDF24–25 / printed20–21"
+        },
+        {
+          "rule": "Standard initial stop2N from each fill. When adding units, earlier stops advance0.5N favorably. With ordinary equal spacing this tends to align stops at newest−2N (long), but gap/skid exceptions retain different stops; do not blindly align all stops to newest.",
+          "locator": "PDF27–28 / printed23–24; gap example new30.80/newstop28.40, earlier three stops27.70"
+        },
+        {
+          "rule": "Exit all Units on adverse20-day channel breakout: long below prior20-day low, short above prior20-day high, intraday; do not wait for close.",
+          "locator": "PDF31 / printed27"
+        },
+        {
+          "rule": "Maximum Units:4 per market,6 per closely correlated group per direction,10 per loosely correlated group per direction,12 total per direction. Source gives examples, not complete fixed group membership.",
+          "locator": "PDF21 / printed17"
+        },
+        {
+          "rule": "Notional account reset annually by discretionary evaluation, approximately prior gains/losses. Reduce notional by20% when losses reach10% of current notional, then repeat; recover toward yearly starting equity. Exact re-expansion mechanics need a declared convention.",
+          "locator": "PDF22 / printed18"
+        },
+        {
+          "rule": "Simultaneous signals choose strongest longs/weakest shorts and one liquid contract month per market; source offers visual and N-normalized alternatives. Roll only into a contract that independently supports existing position; generally a few weeks before expiry while liquid, with exceptions for stronger near contract.",
+          "locator": "PDF34–35 / printed30–31"
+        },
+        {
+          "rule": "Actual traders watched thresholds and often used limits/near-market discretion; fast-market waiting/stabilization is not a deterministic daily-bar fill rule.",
+          "locator": "PDF26–27 and32–33 / printed22–23 and28–29"
+        }
+      ],
+      "explicit_exclusion": "Optional Whipsaw0.5N stop/reentry is described PDF28–29; it is a separate strategy and is not silently mixed into standard2N.",
+      "unresolved_for_mechanical_exact_test": [
+        "Weekly N/unit publication cutoff and treatment within an existing pyramid.",
+        "Annual subjective notional reset and complete recovery/resizing algorithm.",
+        "Complete correlation groups and deterministic simultaneous ranking.",
+        "Original individual-contract data, tick/multiplier history and currencies.",
+        "Deterministic contract selection/roll policy and volume/open-interest thresholds; the source gives discretionary constraints.",
+        "Intraday event order, execution quotes, limit fills and gaps; daily OHLC alone cannot establish favorable sequencing.",
+        "Historical transaction costs, margin, funding and capital treatment."
+      ],
+      "acceptance": "A machine test may be a source-constrained reconstruction once these choices are declared and reviewed. It cannot be called exact Turtle performance replication, and a SPY55/20 long/cash channel test is not evidence against the Turtle system.",
+      "ready_for_exact_original_test": false,
+      "ready_for_mechanical_reconstruction_design": true
+    },
+    "source_update_artifact": "research_round2/source_updates_T001_T004.json",
+    "source_update_sha256": "2953f6d2229cc4cc35f01b17b0ed374572ae1805eabdeaa991755a222392c6e2",
+    "observation_ids": [
+      "QC_DATA_CONTROLS_20261029_V5_T003",
+      "QC_T003_T010_PREPARATION_20261029_V1_T003",
+      "FREE_SOURCE_GAP_REVIEW_20261029_V2_T003",
+      "ARRIVAL_20261029_T003"
+    ],
+    "previous_findings_round2": [
+      "Pełny podręcznik potwierdza System 2: wybicie 55 dni, wyjście 20 dni, ATR/N, stop, dokładanie jednostek i limity skorelowanych pozycji.",
+      "Odtworzenie przykładu z luką cenową ujawniło, że stare stopy nie zawsze przesuwają się mechanicznie do poziomu ostatniej jednostki minus 2N.",
+      "Dokładny system nie jest samym kanałem na SPY. Brakuje kontraktów intraday, historycznych arkuszy N i pełnych konwencji rolowania oraz egzekucji."
+    ],
+    "strategy_result_file": "NET_STRATEGIE/T003.json",
+    "execution_evidence_file": "WYKONANIE_DZISIAJ/T003.json",
+    "free_source_review_id": "FREE_SOURCE_GAP_REVIEW_20261029_V2",
+    "qc_preparation_id": "QC_T003_T010_PREPARATION_20261029_V1",
+    "qc_cloud_review_id": "QC_AUTHENTICATED_EDITOR_BLOCKER_20261029_V1",
+    "qc_data_review_id": "QC_DATA_CONTROLS_20261029_V5"
+  },
+  "source_qualification": {
+    "id": "T003",
+    "intended_market": "Płynne i zdywersyfikowane rynki kontraktów objęte zasadami Turtle.",
+    "segment": "Długie i krótkie pozycje z limitem ryzyka na rynek i korelację.",
+    "regime": "Kierunkowe trendy wzrostowe i spadkowe; okresy bez trendu są częścią oceny kosztu fałszywych wybić, nie usuwamy ich po fakcie.",
+    "horizon": "Wybicia55 i wyjścia20 sesji, wejście/wyjście intraday; utrzymywanie do reguły wyjścia lub stopu.",
+    "universe": [
+      "Źródłowe zdywersyfikowane kontrakty Turtle; uniwersum wymaga jawnego ustalenia przed testem."
+    ],
+    "original_objective": "Pełna systematyczna metoda trend following z kontrolą ryzyka; dokument reguł nie definiuje obowiązku wyższego CAGR niż SPY.",
+    "correct_benchmark": "Z góry określony benchmark właściwy dla użytego uniwersum i budżetu ryzyka oraz osobno matched SPY jako cel projektu. Nie wolno wybrać benchmarku po poznaniu wyniku.",
+    "falsification_question": "Czy kompletny System2, ze sizingiemN, stopami i dywersyfikacją, spełnia zamrożone kryteria danego testu?",
+    "missing_data": [
+      "Intraday lub konserwatywny model kolejności zleceń breakout/stop.",
+      "Historia kontraktów, rolli, tick sizes, kosztów i płynności.",
+      "Pełna specyfikacjaN/ATR, limitów jednostek i korelacji."
+    ],
+    "ready_for_valid_test": false,
+    "readiness_reason": "Usunięcie większości kontroli ryzyka i intraday wykonania w v1 uniemożliwia ocenę pełnegoSystem2.",
+    "qualification_status": "requires_redesign_and_futures_data",
+    "source_fit": "adaptation",
+    "exact_mismatch": "Zachowano kanał wejścia 55 i wyjścia 20, ale Turtle wykonuje przebicie intraday, a nie czeka na close i następny open. Pominięto ATR/N sizing, 2N stop, dodawanie jednostek, short i dywersyfikację rynków. Jedna pozycja 100% SPY ma inną charakterystykę ryzyka i ekspozycji niż oryginał.",
+    "correction_needed": "Odtworzyć komplet reguł System 2 jako osobną wersję z odpowiednimi danymi intraday lub ostrożnym modelem zleceń stop. Jeśli pozostajemy przy daily close, nadać nazwę własnego wariantu kanałowego i nie używać go do obalania Turtle.",
+    "source_url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+    "applies_to_theory_version": 1
+  },
+  "acquisition_plan": {
+    "id": "T003",
+    "gaps": [
+      {
+        "gap_id": "T003-R1",
+        "missing_item": "PełnySystem2 zamiastsamegokanału55/20.",
+        "category": "rule",
+        "why_needed": "Stop2N,volatilitysizing,unitlimits i dywersyfikacja są rdzeniemsystemu.",
+        "acquisition_steps": [
+          "WydobyćzarchiwizowaneregułyEntries,Stops,Exits,PositionSizing.",
+          "ZdefiniowaćN/ATR,unitrisk,pyramiding i limitykorelacji.",
+          "Zamrozićodrębnąwersję; nie poprawiaćv1."
+        ],
+        "candidate_sources": [
+          {
+            "name": "OriginalTurtleRules — dokument reguł",
+            "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+            "access_verified": true,
+            "what_available": "Pobrana kopia autorskiegoPDF: rynki, pozycjonowanie,N,entry,stop,exit,limits.",
+            "does_not_supply": "Danych kontraktowych, ticków, rolli i rzeczywistychwykonań; host jest wtórny."
+          }
+        ],
+        "free_feasibility": "available_free",
+        "verification_acceptance": [
+          "Każda reguła macytatstrony.",
+          "Wyjściastop/channel mają jednoznacznypriorytet.",
+          "Niezależna kontrola kompletnościzanimrun."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Uproszczonykanał55/20 nadal może istnieć jako własnateza, bezTurtlereproduction.",
+        "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+        "initial_next_action": "Sporządzić pełnąkartęSystem2 i listęreguł doimplementacji.",
+        "progress": {
+          "gap_id": "T003-R1",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "FullSystem2 source core is specified, includingN formula,integerUnits,pyramiding,2N stops,20day exits,limits and account sizing.",
+            "Independent source review found eight mechanical choices not fixed by text.",
+            "Gap-stop counterexample prevents an erroneous common newest−2N stop.",
+            "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+            "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
+            "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
+            "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
+            "Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.",
+            "Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu."
+          ],
+          "criteria_unmet": [
+            "Exact weekly N cutoff,resizing,annual discretionary equity,complete correlation map and simultaneous ordering remain unspecified.",
+            "A machine-ready reconstruction still needs declared conventions and independent implementation review.",
+            "Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.",
+            "KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.",
+            "Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.",
+            "55pełnych sesji i pełne intraday/osobne kontrakty, rolloverlap, CMEday/DST oraz zweryfikowane kwotowania.",
+            "Następnie zaimplementować i sprawdzić pełne reset/notional/margin/funding/roll. JednoGC nie jest oryginalnym wielorynkowym portfelem.",
+            "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+            "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+            "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+            "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+            "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+            "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+            "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne.",
+            "Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/turtle.pdf",
+              "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+              "sha256": "54910d0f55398a1974839473cc6d59f9fd2b1db7a34627ad3987e256d0a72fee",
+              "locator": "PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/T003_independent_source_review.json",
+              "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+              "sha256": "45bbf76cf5c40044abb0ed33ec1470ca1206883521e986f3e261b9a6c22348dc",
+              "locator": "Eight source-derived unresolved implementation choices; independently reviewed against PDF",
+              "evidence_kind": "independent_source_review",
+              "what_verified": ""
+            },
+            {
+              "url": "https://www.quantconnect.com/pricing/",
+              "evidence_path": "quantconnect_tests/PLAN.json",
+              "locator": "PreparationV1, no marketstrategyresult",
+              "what_verified": "Główne reguły Turtle przeszły9kontroli. Gotowy projekt kontroli danychGC; pełny wynik rynkowy czeka na weryfikację danych i dokończenie adaptera."
+            },
+            {
+              "url": "https://www.quantconnect.com/project/38621926",
+              "evidence_path": "research_round7/qc_cloud_attempt.json",
+              "locator": "Actual authenticated UI attempt; no verified data result",
+              "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38621926: kod kontroli Turtle wgrany, wysłano zapis i jedną próbę uruchomienia. UI zatrzymał się na inicjalizacji; brak zweryfikowanego wykonania, logu danych i runID. Trwałość kodu po odświeżeniu wymaga potwierdzenia."
+            },
+            {
+              "url": "https://www.quantconnect.com/project/38621926",
+              "evidence_path": "research_round8/session_journal.json",
+              "locator": "Completed bounded QC data controls; no strategy return",
+              "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+            },
+            {
+              "url": "https://www.quantconnect.com/project/38621926",
+              "evidence_path": "research_round9/session_journal.json",
+              "locator": "Completed bounded QC data controls; no strategy return",
+              "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+            }
+          ],
+          "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+          "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
+        }
+      },
+      {
+        "gap_id": "T003-D1",
+        "missing_item": "Historyczneseparatecontract futures i jawne źródłoweuniwersum.",
+        "category": "data",
+        "why_needed": "JednoseryjnySPY usuwaźródłowe rynki,short i dywersyfikację.",
+        "acquisition_steps": [
+          "Zmapowaćlistęrynków zrozdziałuWhattotrade i określićuczciwy zakres przedwynikiem.",
+          "Sprawdzić lokalne kontraktowe dane,notowania i specs.",
+          "WkataloguCMEocenić bezpłatnepróbki tylko jako daneodbiorcze, nie pełnepokrycie."
+        ],
+        "candidate_sources": [
+          {
+            "name": "OriginalTurtleRules — dokument reguł",
+            "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+            "access_verified": true,
+            "what_available": "Pobrana kopia autorskiegoPDF: rynki, pozycjonowanie,N,entry,stop,exit,limits.",
+            "does_not_supply": "Danych kontraktowych, ticków, rolli i rzeczywistychwykonań; host jest wtórny."
+          },
+          {
+            "name": "CME — DataMine",
+            "url": "https://www.cmegroup.com/datamine.html",
+            "access_verified": true,
+            "what_available": "Publiczny katalog historycznych danych giełdowych; bezpłatnie dostępny opis możliwości.",
+            "does_not_supply": "Nie potwierdzono bezpłatnego pobrania potrzebnej pełnejhistorii; dostęp do katalogu nie oznacza uprawnień do danych."
+          },
+          {
+            "name": "pysystemtrade: public GOLD prices, pinned commit",
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+            "access_verified": true,
+            "verification": {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+              "file": "sources/round5/pst_GOLD_multiple.csv",
+              "at_utc": "2026-10-29T12:42:58.213303+00:00",
+              "http_status": 200,
+              "content_type": "text/plain; charset=utf-8",
+              "final_url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+              "bytes": 3379539,
+              "sha256": "5e02e932c5c17aa7e5807e942866a6a0f6f867c1bdca6698acf3609d05af6bdd",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps.",
+            "does_not_supply": "Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel.",
+            "access_scope": "public raw file acquired; research provenance and underlying redistribution rights still require review",
+            "relevant_gaps": [
+              "T002-D1",
+              "T002-R1",
+              "T003-D1",
+              "T003-E1"
+            ]
+          },
+          {
+            "name": "pysystemtrade: public S&P futures marks",
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/SP500.csv",
+            "access_verified": true,
+            "verification": {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/SP500.csv",
+              "file": "sources/round5/pst_SP500_multiple.csv",
+              "at_utc": "2026-10-29T12:42:58.213870+00:00",
+              "http_status": 200,
+              "content_type": "text/plain; charset=utf-8",
+              "final_url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/SP500.csv",
+              "bytes": 2377012,
+              "sha256": "3373bd1e83a6d1297e7e56f543fe2df1397d9bfb67b276a7befbaa5c8b5aa670",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Downloaded35,898marks,1982-09-14..2024-03-28, PRICE/CARRY/FORWARD plus contract IDs.",
+            "does_not_supply": "1537missing PRICE/7842missing FORWARD; not OHLCV, volume, OI, quotes or exact paper inputs.",
+            "access_scope": "public raw file acquired",
+            "relevant_gaps": [
+              "T002-D1",
+              "T003-D1"
+            ]
+          },
+          {
+            "name": "pysystemtrade: GOLD roll calendar",
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+            "access_verified": true,
+            "verification": {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+              "file": "sources/round5/pst_GOLD_rolls.csv",
+              "at_utc": "2026-10-29T12:42:58.214004+00:00",
+              "http_status": 200,
+              "content_type": "text/plain; charset=utf-8",
+              "final_url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+              "bytes": 12934,
+              "sha256": "b455c0b8594b3ded7d4aa56cd8abd8252ec3f411075cdefb69fc7379724d4887",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "274roll rows with current/next/carry contract IDs,1975..2020.",
+            "does_not_supply": "Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll.",
+            "access_scope": "public file acquired and date coverage checked",
+            "relevant_gaps": [
+              "T002-D1",
+              "T003-D1",
+              "T003-E1"
+            ]
+          },
+          {
+            "name": "HistoricalFuturesData: actual public MES10second sample",
+            "url": "https://historicalfuturesdata.com/samples/MES/10s/cme.mes.bars.10s.2026-10.parquet",
+            "access_verified": true,
+            "verification": {
+              "url": "https://historicalfuturesdata.com/samples/MES/10s/cme.mes.bars.10s.2026-10.parquet",
+              "file": "sources/round5/hfd_MES_10s_sample.parquet",
+              "at_utc": "2026-10-29T12:43:00.415488+00:00",
+              "http_status": 200,
+              "content_type": "application/vnd.apache.parquet",
+              "final_url": "https://historicalfuturesdata.com/samples/MES/10s/cme.mes.bars.10s.2026-10.parquet",
+              "bytes": 2421415,
+              "sha256": "59f38f6aec265dde263dd433e6af3a9d83eb4c7f5ef9850337981c30112bbfd0",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Downloaded and parsed156,942bars,2026-10-01..10-28UTC; zero duplicate timestamps/invalidOHLC/futurebars in checked file.",
+            "does_not_supply": "No contractID,OI,bidask or55sessionwarmup; 10s bars do not resolve within-bar sequencing. MES is not the literal1980s S&P contract; upstream independently unconfirmed.",
+            "access_scope": "actual public Parquet acquired; QA scope only, not validated original-contract data",
+            "relevant_gaps": [
+              "T003-D1",
+              "T003-E1"
+            ]
+          },
+          {
+            "name": "QuantConnect/AlgoSeek: futures documentation",
+            "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+            "access_verified": true,
+            "verification": {
+              "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "file": "sources/round5/qc_futures.html",
+              "at_utc": "2026-10-29T12:45:47.678443+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "bytes": 475880,
+              "sha256": "46003d0334c947d8628c996f121c7f3d177e2dced5fe2e95c9d05fa4f3113cd5",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+            "does_not_supply": "Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T002-D1",
+              "T002-E1",
+              "T003-D1",
+              "T003-E1",
+              "T003-E2"
+            ]
+          },
+          {
+            "name": "QuantConnect current free-plan pricing",
+            "url": "https://www.quantconnect.com/pricing/",
+            "access_verified": true,
+            "verification": {
+              "url": "https://www.quantconnect.com/pricing/",
+              "file": "sources/round5/qc_pricing.html",
+              "at_utc": "2026-10-29T12:42:59.564817+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://www.quantconnect.com/pricing/",
+              "bytes": 403798,
+              "sha256": "ce508c2de419acb4684d6741307e9e74c609d2c266de917f29bbdd95b27e7cb6",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Free plan advertises backtesting across asset classes; one backtest-node limit.",
+            "does_not_supply": "No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T003-D1",
+              "T003-E1",
+              "T010-DATA-02",
+              "T010-DATA-03"
+            ]
+          },
+          {
+            "name": "QuantConnect licensing",
+            "url": "https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing",
+            "access_verified": true,
+            "verification": {
+              "url": "https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing",
+              "file": "sources/round5/qc_licensing.html",
+              "at_utc": "2026-10-29T12:43:00.006157+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing",
+              "bytes": 166032,
+              "sha256": "eb872f3ef01bc1ea99ade376b767521a1e08c410481f1338788d902a86938bf5",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Distinguishes cloud use from local data licensing; most price data free in cloud.",
+            "does_not_supply": "Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T002-D1",
+              "T003-D1",
+              "T010-DATA-02",
+              "T010-DATA-03"
+            ]
+          }
+        ],
+        "free_feasibility": "unresolved",
+        "verification_acceptance": [
+          "ContractIDs,currency,multipliers,tickvalue,expiry iroll są jawne.",
+          "Nie ma cichegozastępowania brakującychkontraktów ETFami.",
+          "Wersja zpodzbiorem jest oznaczona osobno."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Jawny source-incomplete subset lub własnokanałowyETFwariant; oryginał pozostaje requiresdata.",
+        "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+        "initial_next_action": "Zbudować inventorykontraktów i istniejącychplików, bez nowychzakupów.",
+        "progress": {
+          "gap_id": "T003-D1",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "Original permitted market list,liquidity restrictions,contract-month selection and roll constraints are extracted with page locators.",
+            "Round5: Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps.",
+            "Round5: Downloaded35,898marks,1982-09-14..2024-03-28, PRICE/CARRY/FORWARD plus contract IDs.",
+            "Round5: 274roll rows with current/next/carry contract IDs,1975..2020.",
+            "Round5: Downloaded and parsed156,942bars,2026-10-01..10-28UTC; zero duplicate timestamps/invalidOHLC/futurebars in checked file.",
+            "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+            "Round5: Free plan advertises backtesting across asset classes; one backtest-node limit.",
+            "Round5: Distinguishes cloud use from local data licensing; most price data free in cloud.",
+            "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+            "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
+            "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
+            "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
+            "Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.",
+            "Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu."
+          ],
+          "criteria_unmet": [
+            "Historical individual-contract prices,open interest,volume,ticks,multipliers and expiry histories have not been acquired.",
+            "Several original markets no longer exist in original form; no complete lawful free history was verified.",
+            "Round5: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel.",
+            "Round5: 1537missing PRICE/7842missing FORWARD; not OHLCV, volume, OI, quotes or exact paper inputs.",
+            "Round5: Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll.",
+            "Round5: No contractID,OI,bidask or55sessionwarmup; 10s bars do not resolve within-bar sequencing. MES is not the literal1980s S&P contract; upstream independently unconfirmed.",
+            "Round5: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+            "Round5: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data.",
+            "Round5: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified.",
+            "Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.",
+            "KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.",
+            "Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.",
+            "55pełnych sesji i pełne intraday/osobne kontrakty, rolloverlap, CMEday/DST oraz zweryfikowane kwotowania.",
+            "Następnie zaimplementować i sprawdzić pełne reset/notional/margin/funding/roll. JednoGC nie jest oryginalnym wielorynkowym portfelem.",
+            "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+            "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+            "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+            "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+            "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+            "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+            "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne.",
+            "Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/turtle.pdf",
+              "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+              "sha256": "54910d0f55398a1974839473cc6d59f9fd2b1db7a34627ad3987e256d0a72fee",
+              "locator": "PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "url": "https://www.cmegroup.com/trading/about-settlements.html",
+              "evidence_path": "sources/round3/gap_receipts.json",
+              "locator": "Round3boundedsourcecheck",
+              "what_verified": "Settlementdefinition is not intradaystop/fill data; no fulloriginalcontracthistory acquired."
+            },
+            {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+              "evidence_path": "sources/round5/pst_GOLD_multiple.csv",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps. LIMIT: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel."
+            },
+            {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/SP500.csv",
+              "evidence_path": "sources/round5/pst_SP500_multiple.csv",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Downloaded35,898marks,1982-09-14..2024-03-28, PRICE/CARRY/FORWARD plus contract IDs. LIMIT: 1537missing PRICE/7842missing FORWARD; not OHLCV, volume, OI, quotes or exact paper inputs."
+            },
+            {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+              "evidence_path": "sources/round5/pst_GOLD_rolls.csv",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "274roll rows with current/next/carry contract IDs,1975..2020. LIMIT: Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll."
+            },
+            {
+              "url": "https://historicalfuturesdata.com/samples/MES/10s/cme.mes.bars.10s.2026-10.parquet",
+              "evidence_path": "sources/round5/hfd_MES_10s_sample.parquet",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Downloaded and parsed156,942bars,2026-10-01..10-28UTC; zero duplicate timestamps/invalidOHLC/futurebars in checked file. LIMIT: No contractID,OI,bidask or55sessionwarmup; 10s bars do not resolve within-bar sequencing. MES is not the literal1980s S&P contract; upstream independently unconfirmed."
+            },
+            {
+              "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "evidence_path": "sources/round5/qc_futures.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting. LIMIT: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate."
+            },
+            {
+              "url": "https://www.quantconnect.com/pricing/",
+              "evidence_path": "sources/round5/qc_pricing.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Free plan advertises backtesting across asset classes; one backtest-node limit. LIMIT: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data."
+            },
+            {
+              "url": "https://www.quantconnect.com/docs/v2/cloud-platform/datasets/licensing",
+              "evidence_path": "sources/round5/qc_licensing.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Distinguishes cloud use from local data licensing; most price data free in cloud. LIMIT: Not a license to extract/redistribute the entire underlying panel; no local free entitlement verified."
+            },
+            {
+              "url": "https://www.quantconnect.com/pricing/",
+              "evidence_path": "quantconnect_tests/PLAN.json",
+              "locator": "PreparationV1, no marketstrategyresult",
+              "what_verified": "Główne reguły Turtle przeszły9kontroli. Gotowy projekt kontroli danychGC; pełny wynik rynkowy czeka na weryfikację danych i dokończenie adaptera."
+            },
+            {
+              "url": "https://www.quantconnect.com/project/38621926",
+              "evidence_path": "research_round7/qc_cloud_attempt.json",
+              "locator": "Actual authenticated UI attempt; no verified data result",
+              "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38621926: kod kontroli Turtle wgrany, wysłano zapis i jedną próbę uruchomienia. UI zatrzymał się na inicjalizacji; brak zweryfikowanego wykonania, logu danych i runID. Trwałość kodu po odświeżeniu wymaga potwierdzenia."
+            },
+            {
+              "url": "https://www.quantconnect.com/project/38621926",
+              "evidence_path": "research_round8/session_journal.json",
+              "locator": "Completed bounded QC data controls; no strategy return",
+              "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+            },
+            {
+              "url": "https://www.quantconnect.com/project/38621926",
+              "evidence_path": "research_round9/session_journal.json",
+              "locator": "Completed bounded QC data controls; no strategy return",
+              "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+            }
+          ],
+          "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+          "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
+        }
+      },
+      {
+        "gap_id": "T003-E1",
+        "missing_item": "Kolejność intradayprzebicia,stopu i gapów oraz realnośćfilla.",
+        "category": "execution",
+        "why_needed": "Dailyclose→nextopen nie odtwarza źródłowego wejścia w trakcieprzebicia.",
+        "acquisition_steps": [
+          "Pozyskać jużdostępnąintradayhistorię dla zakwalifikowanychrynków.",
+          "GdyjesttylkodailyOHLC, opisać konfliktgdyjednabaradotyka kilku poziomów i użyćkonserwatywnegowariantu.",
+          "Nie twierdzićże taki wariant jesttickexactreproduction."
+        ],
+        "candidate_sources": [
+          {
+            "name": "OriginalTurtleRules — dokument reguł",
+            "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+            "access_verified": true,
+            "what_available": "Pobrana kopia autorskiegoPDF: rynki, pozycjonowanie,N,entry,stop,exit,limits.",
+            "does_not_supply": "Danych kontraktowych, ticków, rolli i rzeczywistychwykonań; host jest wtórny."
+          },
+          {
+            "name": "CME — DataMine",
+            "url": "https://www.cmegroup.com/datamine.html",
+            "access_verified": true,
+            "what_available": "Publiczny katalog historycznych danych giełdowych; bezpłatnie dostępny opis możliwości.",
+            "does_not_supply": "Nie potwierdzono bezpłatnego pobrania potrzebnej pełnejhistorii; dostęp do katalogu nie oznacza uprawnień do danych."
+          },
+          {
+            "name": "pysystemtrade: public GOLD prices, pinned commit",
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+            "access_verified": true,
+            "verification": {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+              "file": "sources/round5/pst_GOLD_multiple.csv",
+              "at_utc": "2026-10-29T12:42:58.213303+00:00",
+              "http_status": 200,
+              "content_type": "text/plain; charset=utf-8",
+              "final_url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+              "bytes": 3379539,
+              "sha256": "5e02e932c5c17aa7e5807e942866a6a0f6f867c1bdca6698acf3609d05af6bdd",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps.",
+            "does_not_supply": "Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel.",
+            "access_scope": "public raw file acquired; research provenance and underlying redistribution rights still require review",
+            "relevant_gaps": [
+              "T002-D1",
+              "T002-R1",
+              "T003-D1",
+              "T003-E1"
+            ]
+          },
+          {
+            "name": "pysystemtrade: GOLD roll calendar",
+            "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+            "access_verified": true,
+            "verification": {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+              "file": "sources/round5/pst_GOLD_rolls.csv",
+              "at_utc": "2026-10-29T12:42:58.214004+00:00",
+              "http_status": 200,
+              "content_type": "text/plain; charset=utf-8",
+              "final_url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+              "bytes": 12934,
+              "sha256": "b455c0b8594b3ded7d4aa56cd8abd8252ec3f411075cdefb69fc7379724d4887",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "274roll rows with current/next/carry contract IDs,1975..2020.",
+            "does_not_supply": "Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll.",
+            "access_scope": "public file acquired and date coverage checked",
+            "relevant_gaps": [
+              "T002-D1",
+              "T003-D1",
+              "T003-E1"
+            ]
+          },
+          {
+            "name": "HistoricalFuturesData: actual public MES10second sample",
+            "url": "https://historicalfuturesdata.com/samples/MES/10s/cme.mes.bars.10s.2026-10.parquet",
+            "access_verified": true,
+            "verification": {
+              "url": "https://historicalfuturesdata.com/samples/MES/10s/cme.mes.bars.10s.2026-10.parquet",
+              "file": "sources/round5/hfd_MES_10s_sample.parquet",
+              "at_utc": "2026-10-29T12:43:00.415488+00:00",
+              "http_status": 200,
+              "content_type": "application/vnd.apache.parquet",
+              "final_url": "https://historicalfuturesdata.com/samples/MES/10s/cme.mes.bars.10s.2026-10.parquet",
+              "bytes": 2421415,
+              "sha256": "59f38f6aec265dde263dd433e6af3a9d83eb4c7f5ef9850337981c30112bbfd0",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Downloaded and parsed156,942bars,2026-10-01..10-28UTC; zero duplicate timestamps/invalidOHLC/futurebars in checked file.",
+            "does_not_supply": "No contractID,OI,bidask or55sessionwarmup; 10s bars do not resolve within-bar sequencing. MES is not the literal1980s S&P contract; upstream independently unconfirmed.",
+            "access_scope": "actual public Parquet acquired; QA scope only, not validated original-contract data",
+            "relevant_gaps": [
+              "T003-D1",
+              "T003-E1"
+            ]
+          },
+          {
+            "name": "QuantConnect/AlgoSeek: futures documentation",
+            "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+            "access_verified": true,
+            "verification": {
+              "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "file": "sources/round5/qc_futures.html",
+              "at_utc": "2026-10-29T12:45:47.678443+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "bytes": 475880,
+              "sha256": "46003d0334c947d8628c996f121c7f3d177e2dced5fe2e95c9d05fa4f3113cd5",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+            "does_not_supply": "Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T002-D1",
+              "T002-E1",
+              "T003-D1",
+              "T003-E1",
+              "T003-E2"
+            ]
+          },
+          {
+            "name": "QuantConnect current free-plan pricing",
+            "url": "https://www.quantconnect.com/pricing/",
+            "access_verified": true,
+            "verification": {
+              "url": "https://www.quantconnect.com/pricing/",
+              "file": "sources/round5/qc_pricing.html",
+              "at_utc": "2026-10-29T12:42:59.564817+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://www.quantconnect.com/pricing/",
+              "bytes": 403798,
+              "sha256": "ce508c2de419acb4684d6741307e9e74c609d2c266de917f29bbdd95b27e7cb6",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Free plan advertises backtesting across asset classes; one backtest-node limit.",
+            "does_not_supply": "No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T003-D1",
+              "T003-E1",
+              "T010-DATA-02",
+              "T010-DATA-03"
+            ]
+          }
+        ],
+        "free_feasibility": "unresolved",
+        "verification_acceptance": [
+          "Braknieznanej kolejności traktowanejkorzystnie.",
+          "Opóźnienia,gapy i błędynotowań mają jawnezasady.",
+          "Sourceintraday i naszeclose są porównywane tylko w odrębnychwersjach."
+        ],
+        "blocking_original_test": true,
+        "fallback_if_unavailable": "Konserwatywny testzwidełkami możliwy po nowymplanie; brak rozstrzygnięciaoryginału przy nierozwiązanejkolejności.",
+        "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+        "initial_next_action": "Ustalićdostępnośćintraday oraz rozpisaćniejednoznacznebary.",
+        "progress": {
+          "gap_id": "T003-E1",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "Intraday breakouts,gap-open entries,per-unit stops and discretionary limit-order tactics are source documented.",
+            "Unknown daily OHLC ordering and fast-market execution are explicit blockers,not favorable assumed fills.",
+            "Round5: Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps.",
+            "Round5: 274roll rows with current/next/carry contract IDs,1975..2020.",
+            "Round5: Downloaded and parsed156,942bars,2026-10-01..10-28UTC; zero duplicate timestamps/invalidOHLC/futurebars in checked file.",
+            "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+            "Round5: Free plan advertises backtesting across asset classes; one backtest-node limit.",
+            "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+            "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
+            "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
+            "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
+            "Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.",
+            "Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu."
+          ],
+          "criteria_unmet": [
+            "Intraday event order,quotes and executable fills are absent.",
+            "Deterministic collision/stop/addition priority is not uniquely given by source.",
+            "Round5: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel.",
+            "Round5: Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll.",
+            "Round5: No contractID,OI,bidask or55sessionwarmup; 10s bars do not resolve within-bar sequencing. MES is not the literal1980s S&P contract; upstream independently unconfirmed.",
+            "Round5: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+            "Round5: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data.",
+            "Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.",
+            "KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.",
+            "Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.",
+            "55pełnych sesji i pełne intraday/osobne kontrakty, rolloverlap, CMEday/DST oraz zweryfikowane kwotowania.",
+            "Następnie zaimplementować i sprawdzić pełne reset/notional/margin/funding/roll. JednoGC nie jest oryginalnym wielorynkowym portfelem.",
+            "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+            "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+            "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+            "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+            "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+            "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+            "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne.",
+            "Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/turtle.pdf",
+              "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+              "sha256": "54910d0f55398a1974839473cc6d59f9fd2b1db7a34627ad3987e256d0a72fee",
+              "locator": "PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/T003_independent_source_review.json",
+              "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+              "sha256": "45bbf76cf5c40044abb0ed33ec1470ca1206883521e986f3e261b9a6c22348dc",
+              "locator": "Eight source-derived unresolved implementation choices; independently reviewed against PDF",
+              "evidence_kind": "independent_source_review",
+              "what_verified": ""
+            },
+            {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/multiple_prices_csv/GOLD.csv",
+              "evidence_path": "sources/round5/pst_GOLD_multiple.csv",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps. LIMIT: Not OHLCV/full individual-contract history, unknown original-vendor lineage,2140missing PRICE/10717missing FORWARD; no live quotes or full58-market panel."
+            },
+            {
+              "url": "https://raw.githubusercontent.com/pst-group/pysystemtrade/164328bd76d2937d3dd61491377704c488283bc2/data/futures/roll_calendars_csv/GOLD.csv",
+              "evidence_path": "sources/round5/pst_GOLD_rolls.csv",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "274roll rows with current/next/carry contract IDs,1975..2020. LIMIT: Ends2020-11-23 while prices end2024; not automatically synchronized. S&P rollfile ends2022-05-03. No forward-fill or assumed costless roll."
+            },
+            {
+              "url": "https://historicalfuturesdata.com/samples/MES/10s/cme.mes.bars.10s.2026-10.parquet",
+              "evidence_path": "sources/round5/hfd_MES_10s_sample.parquet",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Downloaded and parsed156,942bars,2026-10-01..10-28UTC; zero duplicate timestamps/invalidOHLC/futurebars in checked file. LIMIT: No contractID,OI,bidask or55sessionwarmup; 10s bars do not resolve within-bar sequencing. MES is not the literal1980s S&P contract; upstream independently unconfirmed."
+            },
+            {
+              "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "evidence_path": "sources/round5/qc_futures.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting. LIMIT: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate."
+            },
+            {
+              "url": "https://www.quantconnect.com/pricing/",
+              "evidence_path": "sources/round5/qc_pricing.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Free plan advertises backtesting across asset classes; one backtest-node limit. LIMIT: No paid download/local CLI or subscription purchased. A free cloud test is not free local bulk data."
+            },
+            {
+              "url": "https://www.quantconnect.com/pricing/",
+              "evidence_path": "quantconnect_tests/PLAN.json",
+              "locator": "PreparationV1, no marketstrategyresult",
+              "what_verified": "Główne reguły Turtle przeszły9kontroli. Gotowy projekt kontroli danychGC; pełny wynik rynkowy czeka na weryfikację danych i dokończenie adaptera."
+            },
+            {
+              "url": "https://www.quantconnect.com/project/38621926",
+              "evidence_path": "research_round7/qc_cloud_attempt.json",
+              "locator": "Actual authenticated UI attempt; no verified data result",
+              "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38621926: kod kontroli Turtle wgrany, wysłano zapis i jedną próbę uruchomienia. UI zatrzymał się na inicjalizacji; brak zweryfikowanego wykonania, logu danych i runID. Trwałość kodu po odświeżeniu wymaga potwierdzenia."
+            },
+            {
+              "url": "https://www.quantconnect.com/project/38621926",
+              "evidence_path": "research_round8/session_journal.json",
+              "locator": "Completed bounded QC data controls; no strategy return",
+              "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+            },
+            {
+              "url": "https://www.quantconnect.com/project/38621926",
+              "evidence_path": "research_round9/session_journal.json",
+              "locator": "Completed bounded QC data controls; no strategy return",
+              "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+            }
+          ],
+          "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+          "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
+        }
+      },
+      {
+        "gap_id": "T003-E2",
+        "missing_item": "Kosztyfutures, margin,borrow/finansowanie i limityportfela.",
+        "category": "execution",
+        "why_needed": "Oryginalneriskunits nie przeliczająsięna100%kapitałuSPY.",
+        "acquisition_steps": [
+          "Zebraćspecyfikacjekontraktów i historyczne opłaty zposiadanych źródeł.",
+          "Oddzielić notional,margincash i riskcapital.",
+          "Przedpaper ustalićosobnyresearchledger."
+        ],
+        "candidate_sources": [
+          {
+            "name": "OriginalTurtleRules — dokument reguł",
+            "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+            "access_verified": true,
+            "what_available": "Pobrana kopia autorskiegoPDF: rynki, pozycjonowanie,N,entry,stop,exit,limits.",
+            "does_not_supply": "Danych kontraktowych, ticków, rolli i rzeczywistychwykonań; host jest wtórny."
+          },
+          {
+            "name": "CME — DataMine",
+            "url": "https://www.cmegroup.com/datamine.html",
+            "access_verified": true,
+            "what_available": "Publiczny katalog historycznych danych giełdowych; bezpłatnie dostępny opis możliwości.",
+            "does_not_supply": "Nie potwierdzono bezpłatnego pobrania potrzebnej pełnejhistorii; dostęp do katalogu nie oznacza uprawnień do danych."
+          },
+          {
+            "name": "QuantConnect/AlgoSeek: futures documentation",
+            "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+            "access_verified": true,
+            "verification": {
+              "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "file": "sources/round5/qc_futures.html",
+              "at_utc": "2026-10-29T12:45:47.678443+00:00",
+              "http_status": 200,
+              "content_type": "text/html; charset=UTF-8",
+              "final_url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "bytes": 475880,
+              "sha256": "46003d0334c947d8628c996f121c7f3d177e2dced5fe2e95c9d05fa4f3113cd5",
+              "status": "downloaded_not_yet_validated"
+            },
+            "what_available": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+            "does_not_supply": "Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+            "access_scope": "public document only",
+            "relevant_gaps": [
+              "T002-D1",
+              "T002-E1",
+              "T003-D1",
+              "T003-E1",
+              "T003-E2"
+            ]
+          }
+        ],
+        "free_feasibility": "partial_free",
+        "verification_acceptance": [
+          "Kosztunit,contractmultiplier i margin są wewłaściwychjednostkach.",
+          "Braksumowania różnychkontpaper.",
+          "Braktradeorders podczasreprodukcji."
+        ],
+        "blocking_original_test": false,
+        "fallback_if_unavailable": "Wyłącznie statystykisygnału/grossscenario, beznetprofitclaim.",
+        "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+        "blocking_trading_validation": true,
+        "initial_next_action": "Przygotować kontraktowątabelę jednostek ioznaczyćnieznane.",
+        "progress": {
+          "gap_id": "T003-E2",
+          "status": "partial",
+          "status_reason": "Potwierdzone elementy i pozostałe warunki podano poniżej.",
+          "criteria_met": [
+            "Dollar-per-point risk,integer contracts,unit/group/directional limits and notional drawdown adjustment are recovered.",
+            "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
+            "16syntetycznych kontroli głównychregułPASS; nie są wynikami rynkowymi.",
+            "Pozyskano rzeczywiste dzienne plikiGCZ26/GCG27/GCZ25 i oficjalne publicznefixturesLEAN zhashami; zakres i braki sprawdzono.",
+            "29.10.2026: użytkownik zalogowany w Chrome; aktywna organizacja FREE potwierdzona. Konto nie wymaga dalszej akcji użytkownika.",
+            "Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i hash zachowane.",
+            "Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.",
+            "Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu."
+          ],
+          "criteria_unmet": [
+            "Historical fees,margin,cash collateral funding and full account reset decisions are missing.",
+            "Round5: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate.",
+            "Pełne adaptery portfelowe i bramki danych nie są jeszcze gotowym backtestem strategii.",
+            "KontrolaQC beztransakcji pokaże0%wUI; to nie wynik teorii i nie wolno dopisać jej jako strategy_trial.",
+            "Płatne usługi, AIagent, dataexport/CLI, brokerzy i live są poza zakresem. Przy żądaniu płatności zatrzymać się.",
+            "55pełnych sesji i pełne intraday/osobne kontrakty, rolloverlap, CMEday/DST oraz zweryfikowane kwotowania.",
+            "Następnie zaimplementować i sprawdzić pełne reset/notional/margin/funding/roll. JednoGC nie jest oryginalnym wielorynkowym portfelem.",
+            "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+            "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+            "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+            "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+            "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+            "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+            "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne.",
+            "Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli."
+          ],
+          "evidence": [
+            {
+              "evidence_path": "sources/turtle.pdf",
+              "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+              "sha256": "54910d0f55398a1974839473cc6d59f9fd2b1db7a34627ad3987e256d0a72fee",
+              "locator": "PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror",
+              "evidence_kind": "raw_source",
+              "what_verified": ""
+            },
+            {
+              "evidence_path": "sources/round2/T003_independent_source_review.json",
+              "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf",
+              "sha256": "45bbf76cf5c40044abb0ed33ec1470ca1206883521e986f3e261b9a6c22348dc",
+              "locator": "Eight source-derived unresolved implementation choices; independently reviewed against PDF",
+              "evidence_kind": "independent_source_review",
+              "what_verified": ""
+            },
+            {
+              "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+              "evidence_path": "sources/round5/qc_futures.html",
+              "locator": "29.10.2026 free-source check; archived HTTP/hash receipt",
+              "what_verified": "Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting. LIMIT: Documentation read, no authenticated data query/backtest performed. Not the original58-market1985–2009 panel; data export rights/download pricing separate."
+            },
+            {
+              "url": "https://www.quantconnect.com/pricing/",
+              "evidence_path": "quantconnect_tests/PLAN.json",
+              "locator": "PreparationV1, no marketstrategyresult",
+              "what_verified": "Główne reguły Turtle przeszły9kontroli. Gotowy projekt kontroli danychGC; pełny wynik rynkowy czeka na weryfikację danych i dokończenie adaptera."
+            },
+            {
+              "url": "https://www.quantconnect.com/project/38621926",
+              "evidence_path": "research_round7/qc_cloud_attempt.json",
+              "locator": "Actual authenticated UI attempt; no verified data result",
+              "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38621926: kod kontroli Turtle wgrany, wysłano zapis i jedną próbę uruchomienia. UI zatrzymał się na inicjalizacji; brak zweryfikowanego wykonania, logu danych i runID. Trwałość kodu po odświeżeniu wymaga potwierdzenia."
+            },
+            {
+              "url": "https://www.quantconnect.com/project/38621926",
+              "evidence_path": "research_round8/session_journal.json",
+              "locator": "Completed bounded QC data controls; no strategy return",
+              "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+            },
+            {
+              "url": "https://www.quantconnect.com/project/38621926",
+              "evidence_path": "research_round9/session_journal.json",
+              "locator": "Completed bounded QC data controls; no strategy return",
+              "what_verified": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte."
+            }
+          ],
+          "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+          "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
+        }
+      }
+    ]
+  },
+  "quantconnect_data_review": {
+    "id": "T003",
+    "gap_ids": [
+      "T003-R1",
+      "T003-D1",
+      "T003-E1",
+      "T003-E2"
+    ],
+    "project_url": "https://www.quantconnect.com/project/38621926",
+    "summary": "Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte.",
+    "findings": [
+      "Turtle: istniejąca próba cdab25dae0a3ea8ada1f18fa0fb08c11 Completed; 0 duplikatów. Kod z wyniku zgodny AST z wysłanym i zamrożonym kodem.",
+      "GC 02–12.01.2024: 4 kontrakty, 18 990 świec transakcji, 24 540 świec kwotowań, 24 niepoprawne/niepełne kwotowania.",
+      "Dla jednego kontraktu: 100 świec dziennych 10.08–29.12.2023, 0 naruszeń sprawdzonego warunku 0<low≤close≤high; ceny open nie sprawdzano. Pierwsze obserwowane OI wszystkich 4 kontraktów wynoszą 0; to nie dowód poprawnego wyboru kontraktu według OI.",
+      "Niezależny przegląd Claude wskazał kontrole wymagane przed pełnym backtestem: kroczące kanały55/20, pełny kalendarz sesji i kotwica inicjalizacjiN. To uwagi do przygotowanego komponentu, nie nowy wynik strategii. Pełna opinia oraz ocena zarzutów są zapisane; brak pełnego adaptera pozostaje jawny."
+    ],
+    "scoped_met": [
+      "Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.",
+      "Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu."
+    ],
+    "remaining": [
+      "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+      "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+      "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+      "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+      "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+      "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+      "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne.",
+      "Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli."
+    ],
+    "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
+    "rows": [
+      [
+        "Próba",
+        "cdab25dae0a3ea8ada1f18fa0fb08c11 · Completed · bez duplikatu"
+      ],
+      [
+        "Zakres",
+        "GC · 02–12.01.2024 · kontrola danych"
+      ],
+      [
+        "Kontrakty / transakcje / kwotowania",
+        "4 / 18 990 / 24 540 świec"
+      ],
+      [
+        "Historia dzienna",
+        "100 rekordów jednego kontraktu; 0 naruszeń 0<low≤close≤high, open nie sprawdzano"
+      ],
+      [
+        "Wady kwotowań",
+        "24; wymagają sprawdzenia przed symulacją wykonania"
+      ],
+      [
+        "OI / sesje",
+        "Pierwsze OI=0; definicja sesji CME i pełny warmup wszystkich kontraktów niepotwierdzone"
+      ],
+      [
+        "Wynik strategii",
+        "Nie liczono; werdykt bez zmiany"
+      ],
+      [
+        "Przegląd logiki przez Claude",
+        "Opinia zapisana; kontrole kanałów/kalendarza/N do wykonania. Provenance logu i AST uzgodnione. Nie jest to niezależne przeliczeniePnL ani wspólny werdykt."
+      ]
+    ],
+    "replaces_findings": [
+      "Turtle: istniejąca próba cdab25dae0a3ea8ada1f18fa0fb08c11 Completed; 0 duplikatów. Kod z wyniku zgodny AST z wysłanym i zamrożonym kodem.",
+      "GC 02–12.01.2024: 4 kontrakty, 18 990 świec transakcji, 24 540 świec kwotowań, 24 niepoprawne/niepełne kwotowania.",
+      "Dla jednego kontraktu: 100 świec dziennych 10.08–29.12.2023, kontrola OHLC bez błędów. Pierwsze obserwowane OI wszystkich 4 kontraktów wynoszą 0; to nie dowód poprawnego wyboru kontraktu według OI.",
+      "Dla jednego kontraktu: 100 świec dziennych 10.08–29.12.2023, 0 naruszeń sprawdzonego warunku 0<low≤close≤high; ceny open nie sprawdzano. Pierwsze obserwowane OI wszystkich 4 kontraktów wynoszą 0; to nie dowód poprawnego wyboru kontraktu według OI."
+    ],
+    "replaces_remaining": [
+      "Zero observed OI at first-seen times does not prove valid OI-based contract selection; verify timestamps and later observations.",
+      "24 invalid/incomplete/crossed quote bars need inspection/exclusion before execution modelling.",
+      "100 daily bars for ONE contract pass a scoped count check, not 55 validated CME sessions for every chosen contract.",
+      "QC reports America/New_York; source Chicago session boundaries/DST must be explicitly reconciled.",
+      "First notice, all roll overlaps, full-period contracts, fees/margin/funding and portfolio adapter still missing.",
+      "To kontrola danych; nie wynik rentowności Turtle i nie pełny wielorynkowy portfel.",
+      "Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie sprawdza open, duplikatów ani pełnej poprawności sesji; te kontrole nadal potrzebne."
+    ]
+  }
+}

@@ -1,0 +1,145 @@
+"""Source-constrained rule kernels; no broker API or automatic trading.
+
+These are tested components, not a complete portfolio backtest. Explicit roll,
+session, funding and full-universe data gates are specified in PLAN.json.
+"""
+import datetime as dt,math
+from dataclasses import dataclass
+
+class MissingData(ValueError):pass
+
+@dataclass(frozen=True)
+class DailyBar:
+    contract: str
+    available_at: dt.datetime
+    high: float
+    low: float
+    close: float
+
+def wilder_n(bars):
+    if len(bars)<21:raise MissingData('Need previous close plus20TR observations')
+    tr=[]
+    for previous,current in zip(bars,bars[1:]):
+        if not (0<current.low<=current.close<=current.high):raise MissingData('Invalid daily OHLC')
+        tr.append(max(current.high-current.low,abs(current.high-previous.close),abs(current.low-previous.close)))
+    n=sum(tr[:20])/20
+    for value in tr[20:]:n=(19*n+value)/20
+    return n
+
+def turtle_levels(bars,decision_at,tick):
+    if tick<=0:raise ValueError('Positive tick required')
+    if len(bars)<55:raise MissingData('Need55complete source-session bars')
+    if len({b.contract for b in bars})!=1:raise MissingData('Do not join different raw contracts silently')
+    if any(b.available_at>=decision_at for b in bars):raise MissingData('Unavailable/future daily bar')
+    if any(a.available_at>=b.available_at for a,b in zip(bars,bars[1:])):raise MissingData('Unordered/duplicate daily bars')
+    if any(not (0<b.low<=b.close<=b.high) for b in bars):raise MissingData('Invalid daily prices')
+    return {'contract':bars[-1].contract,'available_at':decision_at,
+        'buy':max(b.high for b in bars[-55:])+tick,
+        'sell_short':min(b.low for b in bars[-55:])-tick,
+        'exit_long':min(b.low for b in bars[-20:])-tick,
+        'exit_short':max(b.high for b in bars[-20:])+tick,
+        'n':wilder_n(bars)}
+
+def contracts_per_unit(notional,n,point_value):
+    if min(notional,n,point_value)<=0:raise ValueError('Positive notional,N,multiplier required')
+    return math.floor(.01*notional/(n*point_value))
+
+@dataclass
+class Unit:
+    entry: float
+    stop: float
+    contracts: int
+
+class TurtleCampaign:
+    """One actual contract/campaign, standard2N only. N fixed per declared convention.
+
+    Decisions use sequenced trade+bid/ask events, not a guessed path insideOHLC.
+    Portfolio correlation/reset/rolling are outside this component and remain gates.
+    """
+    def __init__(self,levels,notional,point_value,margin_per_contract,fee_per_side):
+        if margin_per_contract<=0 or fee_per_side<0:raise MissingData('Explicit margin and fee scenario required')
+        self.levels=levels;self.point=point_value;self.margin=margin_per_contract
+        self.notional=notional;self.fee=fee_per_side
+        self.quantity=contracts_per_unit(notional,levels['n'],point_value)
+        self.units=[];self.direction=0;self.ledger=[];self.realized=0.;self.fees=0.
+        self.last_time=None
+
+    def _enter(self,price,time,direction):
+        if self.quantity==0 or len(self.units)>=4:return
+        if (len(self.units)+1)*self.quantity*self.margin>self.notional:return
+        for unit in self.units:unit.stop+=direction*.5*self.levels['n']
+        self.units.append(Unit(price,price-direction*2*self.levels['n'],self.quantity))
+        self.direction=direction;fee=self.quantity*self.fee;self.fees+=fee
+        self.ledger.append({'at':time.isoformat(),'side':'buy' if direction>0 else 'sell_short',
+            'price':price,'contracts':self.quantity,'fee_scenario':fee})
+
+    def event(self,contract,time,last,bid,ask):
+        if contract!=self.levels['contract']:raise MissingData('Explicit roll/closing old contract required')
+        if time<self.levels['available_at'] or (self.last_time and time<=self.last_time):
+            raise MissingData('Future information or unordered quote event')
+        if not all(math.isfinite(x) for x in [last,bid,ask]) or min(last,bid)<=0 or ask<bid:
+            raise MissingData('Valid synchronous two-sided quote required')
+        self.last_time=time
+        if self.units:
+            # Stops/exit first; no favourable within-tick ordering assumption or same-event re-entry.
+            channel=last<=self.levels['exit_long'] if self.direction>0 else last>=self.levels['exit_short']
+            exited=[]
+            for unit in self.units:
+                stopped=last<=unit.stop if self.direction>0 else last>=unit.stop
+                if stopped or channel:
+                    fill=bid if self.direction>0 else ask
+                    self.realized+=self.direction*(fill-unit.entry)*unit.contracts*self.point
+                    fee=unit.contracts*self.fee;self.fees+=fee
+                    self.ledger.append({'at':time.isoformat(),'side':'sell' if self.direction>0 else 'cover',
+                        'price':fill,'contracts':unit.contracts,'fee_scenario':fee,'reason':'channel' if channel else '2N'})
+                    exited.append(unit)
+            if exited:
+                self.units=[u for u in self.units if u not in exited]
+                if not self.units:self.direction=0
+                return
+            threshold=self.units[-1].entry+self.direction*.5*self.levels['n']
+            add=last>=threshold if self.direction>0 else last<=threshold
+            if add:self._enter(ask if self.direction>0 else bid,time,self.direction)
+        elif last>=self.levels['buy']:self._enter(ask,time,1)
+        elif last<=self.levels['sell_short']:self._enter(bid,time,-1)
+
+    def closed_campaign_pnl(self):
+        if self.units:raise MissingData('Open positions require explicit marking/final exit')
+        return self.realized-self.fees
+
+def lehmann_weights(signal_returns,available_at,decision_at):
+    if set(signal_returns)!=set(available_at) or len(signal_returns)<2:
+        raise MissingData('Complete point-in-time signal cross-section required')
+    if any(t>decision_at for t in available_at.values()):raise MissingData('Future signal data')
+    if any(not isinstance(r,(int,float)) or not math.isfinite(r) for r in signal_returns.values()):
+        raise MissingData('Unknown signal return; do not silently remove an issuer')
+    if min(signal_returns.values())==max(signal_returns.values()):return {k:0. for k in signal_returns}
+    mean=math.fsum(signal_returns.values())/len(signal_returns)
+    deviations={k:r-mean for k,r in signal_returns.items()}
+    denominator=sum(max(d,0) for d in deviations.values())
+    if denominator==0:return {k:0. for k in deviations}
+    return {k:-d/denominator for k,d in deviations.items()}
+
+def lehmann_profit(weights,holding_returns):
+    # A subsequent delisting never authorizes deletion from the already fixed universe.
+    if any(k not in holding_returns or holding_returns[k] is None for k in weights):
+        raise MissingData('Terminal/holding return missing for a selected security')
+    if any(not math.isfinite(holding_returns[k]) or holding_returns[k]<-1 for k in weights):
+        raise MissingData('Invalid total return')
+    return sum(w*holding_returns[k] for k,w in weights.items())
+
+def lehmann_turnover_cost(target_dollars,existing_dollars,one_way_rate):
+    if one_way_rate<0:raise ValueError('Negative cost')
+    # Existing exposures must already include price drift. Old target weights alone are insufficient.
+    return one_way_rate*sum(abs(target_dollars.get(k,0)-existing_dollars.get(k,0))
+        for k in set(target_dollars)|set(existing_dollars))
+
+def daily_borrow_cost(short_notional,quantity,available_quantity,annual_fee_rate,day_basis=360):
+    if available_quantity is None or annual_fee_rate is None:raise MissingData('Borrow observation absent; not fee0')
+    if min(short_notional,quantity,available_quantity,annual_fee_rate)<0 or day_basis<=0:raise ValueError('Invalid borrow terms')
+    if quantity>available_quantity:raise MissingData('Insufficient borrow inventory')
+    return short_notional*annual_fee_rate/day_basis
+
+def source_J26(weekly_profits):
+    if len(weekly_profits)!=26:raise MissingData('Need26weekly rebalanced profit observations')
+    return sum(weekly_profits)  # Source arithmetic profit; not compounded funded-account return.

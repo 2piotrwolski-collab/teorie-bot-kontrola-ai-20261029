@@ -1,0 +1,22 @@
+{
+  "id": "T003_REVIEW_PROVENANCE_V1",
+  "purpose": "Evidence for exact code and completed data audit. Not a strategy result.",
+  "run_id": "cdab25dae0a3ea8ada1f18fa0fb08c11",
+  "project_name": "Sleepy Sky Blue Bison",
+  "lean_version": "2.5.0.0.18215",
+  "files_sha256": {
+    "quantconnect_tests/T003_TURTLE_DATA/main.py": "437df335e23dcea42d12c7be5a6b83322c0501ad497b7c5d7342fbec4b1cad6d",
+    "research_round7/T003_uploaded.py": "789f959430b8b8fc0e49967f2ad8c555817b4367668e4a13eed308dccd542501",
+    "research_round8/T003_run_code.py": "3a2edfa08fb960d013ee7b1d0c6f3a22c8bde5f1af16a1cb5ec639185214991a",
+    "research_round8/T003_cdab25dae0a3ea8ada1f18fa0fb08c11_logs.txt": "7ddb05702f2d797f82a686a053f12464c9e42ccb45db86855478564428f97fdf",
+    "research_round8/T003_audit.json": "24f3d9db9c7143e5814f65153da1c0c3cc4c8a671419398ed57a67fe9bde049a"
+  },
+  "local_uploaded_and_run_code_AST_equal": true,
+  "log_metadata_and_aggregate_json_lines": [
+    "2024-01-02 00:00:00 Launching analysis for cdab25dae0a3ea8ada1f18fa0fb08c11 with LEAN Engine v2.5.0.0.18215",
+    "2024-01-13 00:00:00 RESEARCH_AUDIT_JSON {\"bad_quotes\": 24, \"chain_events\": 12061, \"contracts\": {\"GC YFJVX61NK3A5\": {\"exchange_timezone\": \"America/New_York\", \"expiry\": \"2024-01-29 00:00:00\", \"first_seen_engine_time\": \"2024-01-02 03:20:00\", \"minimum_price_variation\": 0.1, \"multiplier\": 100.0, \"open_interest_as_observed\": 0.0, \"value\": \"GC29F24\"}, \"GC YGCFVVNJRYXP\": {\"exchange_timezone\": \"America/New_York\", \"expiry\": \"2024-02-27 00:00:00\", \"first_seen_engine_time\": \"2024-01-02 00:00:00\", \"minimum_price_variation\": 0.1, \"multiplier\": 100.0, \"open_interest_as_observed\": 0.0, \"value\": \"GC27G24\"}, \"GC YH40EHW9X3FH\": {\"exchange_timezone\": \"America/New_York\", \"expiry\": \"2024-03-26 00:00:00\", \"first_seen_engine_time\": \"2024-01-02 00:13:00\", \"minimum_price_variation\": 0.1, \"multiplier\": 100.0, \"open_interest_as_observed\": 0.0, \"value\": \"GC26H24\"}, \"GC YHYJ9E8IAHEL\": {\"exchange_timezone\": \"America/New_York\", \"expiry\": \"2024-04-26 00:00:00\", \"first_seen_engine_time\": \"2024-01-02 00:03:00\", \"minimum_price_variation\": 0.1, \"multiplier\": 100.0, \"open_interest_as_observed\": 0.0, \"value\": \"GC26J24\"}}, \"history\": {\"count\": 100, \"daily_session_definition_verified\": false, \"first_end\": \"2023-08-10 17:00:00\", \"invalid_ohlc\": 0, \"last_end\": \"2023-12-29 17:00:00\", \"sid\": \"GC YGCFVVNJRYXP\"}, \"orders_allowed\": false, \"protocol\": \"T003_QC_DATA_AUDIT_V1\", \"quote_bars\": 24540, \"remaining_gates\": [\"55complete declared CME sessions per chosen contract\", \"full study coverage and roll overlap\", \"sequencing inside minute/quote freshness\", \"margin/fees/funding\", \"portfolio conventions and independent review\"], \"runtime_status\": \"AUDIT_FINISHED_FULL_DATA_GATES_STILL_REQUIRED\", \"strategy_return_calculated\": false, \"trade_bars\": 18990, \"universe\": \"GC contracts, audit only, not completeTurtleportfolio\"}",
+    "2024-01-13 00:00:00 Algorithm Id:(cdab25dae0a3ea8ada1f18fa0fb08c11) completed in 2.41 seconds at 38k data points per second. Processing total of 92,140 data points."
+  ],
+  "quote": "Audit checks low<=close<=high, not the OPEN field; zero failures is not full OHLC validation.",
+  "peer_review_scope": "Claude received selected artifacts, not the full original log or all unit tests. Missing-in-review-package is not missing-in-local-project."
+}
