@@ -106,5 +106,35 @@
     "url": "code/test_capture_operations.py.txt",
     "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
     "sha256": "257a60bf11c151e499ca811c8a4c12917eca31a94d6e199d604c06ab74f6183c"
+  },
+  {
+    "source_file": "engine.py",
+    "url": "code/engine.py.txt",
+    "stage": "ARCHIVED_V1_ENGINE_EXACT_BASELINE_CONTROL",
+    "sha256": "c2aa02065a545a1e6e11fe5e1b927b103738182cc443036b2b4de9388ef91d41"
+  },
+  {
+    "source_file": "t003_sensitivity_review.py",
+    "url": "code/t003_sensitivity_review.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "4c6915ebb075cd204c26a97f343baed8098c01928564e15a06a8590ed787ee0e"
+  },
+  {
+    "source_file": "audit_sensitivity_20261029/independent_check_v2/recalculate.py",
+    "url": "code/audit_sensitivity_20261029__independent_check_v2__recalculate.py.txt",
+    "stage": "COMPLETED_ARCHIVAL_SENSITIVITY_NOT_ORIGINAL_TURTLE",
+    "sha256": "62ac32f5c8d291a7025ffe0bf0a1a5f43ccc8e35180b750586a25318c1454751"
+  },
+  {
+    "source_file": "audit_sensitivity_20261029/independent_check_v2/test_recalculate.py",
+    "url": "code/audit_sensitivity_20261029__independent_check_v2__test_recalculate.py.txt",
+    "stage": "COMPLETED_ARCHIVAL_SENSITIVITY_NOT_ORIGINAL_TURTLE",
+    "sha256": "024322c353ab44a77be2d91e6b9d19e71d8ba7da7425b533eeb20f8699818abf"
+  },
+  {
+    "source_file": "audit_sensitivity_20261029/independent_check_v2/finish_audit.py",
+    "url": "code/audit_sensitivity_20261029__independent_check_v2__finish_audit.py.txt",
+    "stage": "COMPLETED_ARCHIVAL_SENSITIVITY_NOT_ORIGINAL_TURTLE",
+    "sha256": "70f5b4bd13e6a65423a952a51f80dc5c73b54d0ec8d8e3567d339132389fec25"
   }
 ]

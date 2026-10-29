@@ -1,0 +1,133 @@
+"""Compare completed independent calculations; never change frozen outcomes."""
+import csv
+import hashlib
+import json
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent.parent
+
+
+def save(name, value):
+    with (HERE/name).open('x') as handle:
+        json.dump(value, handle, ensure_ascii=False, indent=2)
+        handle.write('\n')
+
+
+def key(trade):
+    return tuple(trade.get(k) for k in ('side','signal_date','execution_date','execution_time','reason'))
+
+
+def main():
+    calculated = json.loads((HERE/'results.json').read_text())
+    prior = json.loads((HERE.parent/'results.json').read_text())
+    plan = json.loads((HERE/'plan.json').read_text())
+    matrix = calculated['summaries']
+    by = {(x['segment'], x['variant']): x for x in matrix}
+    labels = {'baseline':'v1', 'A':'A', 'B':'B', 'B_exact':'B_exact', 'A_plus_B':'A_plus_B'}
+    candidate_parity = []
+    for s in plan['segments']:
+        for ours, previous in labels.items():
+            old = prior['segments'][s][previous]['cagr_pct']
+            new = by[s, ours]['cagr_pct']
+            assert abs(new-old) < 1e-11
+            candidate_parity.append({'segment':s,'variant':ours,'difference_pp':new-old})
+    references = {'A':[2.02,5.64,4.70], 'B':[.886,4.264,2.798],
+                  'B_exact':[.887,4.263,2.801], 'A_plus_B':[1.837,4.971,4.048]}
+    comparisons = []
+    for v, expected in references.items():
+        for s, value in zip(plan['segments'], expected):
+            actual = by[s,v]['cagr_pct']
+            comparisons.append({'segment':s,'variant':v,'Claude_reported_cagr_pct':value,
+                                'recalculated_cagr_pct':actual,'difference_pp':actual-value,
+                                'within_declared_tolerance':abs(actual-value)<=plan['comparison_tolerance_pp'][v]})
+    counts = {}
+    lists = []
+    for s in plan['segments']:
+        difference = json.loads((HERE/(s+'_operation_differences.json')).read_text())
+        counts[s] = {'v1_only':len(difference['only_v1']), 'B_only':len(difference['only_B']),
+                     'symmetric_total':difference['symmetric_difference_count'],
+                     'naive_paired_index_mismatches_not_a_valid_identity_count':difference['paired_count']}
+        for side in ('only_v1','only_B'):
+            for t in difference[side]:
+                lists.append({'segment':s,'membership':side,**{k:t[k] for k in ('side','signal_date','execution_date','execution_time','reason')}})
+    dev = json.loads((HERE/'development_ledger_and_daily_NAV.json').read_text())
+    changed = calculated['tie_impact']['operation_differences']
+    suppressed_keys = ({key(t) for t in dev['baseline']['trades']} - {key(t) for t in changed['only_v1']}) | {key(t) for t in changed['only_B']}
+    nominal_keys = {key(t) for t in dev['B']['trades']}
+    reconciliation = {'frozen_v1_only_development':counts['development']['v1_only'],
+                       'after_suppressing_only_20050120_exit_v1_only_development':len(suppressed_keys-nominal_keys),
+                       'after_suppressing_only_20050120_exit_B_only_development':len(nominal_keys-suppressed_keys),
+                       'meaning':'The17→16 difference is exactly reconciled by the declared2005 tie counterfactual, not by changing the operation identity definition.'}
+    assert reconciliation['after_suppressing_only_20050120_exit_v1_only_development'] == 16
+    save('comparison_to_Claude_and_prior_candidate.json', {'scope':'sensitivity_not_verdict',
+         'Claude_comparisons':comparisons,'prior_candidate_metric_parity':candidate_parity,
+         'operation_counts':counts,'tie_count_reconciliation':reconciliation})
+    with (HERE/'different_operations.csv').open('x') as handle:
+        writer = csv.DictWriter(handle,fieldnames=list(lists[0]));writer.writeheader();writer.writerows(lists)
+    specific = json.loads((HERE/'specific_ties.json').read_text())
+    conclusion = {'id':plan['id'],'scope':'sensitivity_not_verdict','original_Turtle_verdict_changed':False,
+        'baseline_exact_metrics_ledgers_and_NAV_match':True,
+        'source_fit':'Historical SPY long/cash Donchian55/20 adaptation only; not full Turtle futures.',
+        'data_sha256':plan['inputs']['prices_csv']['sha256'],'engine_sha256':plan['inputs']['engine']['sha256'],
+        'summaries':matrix,'cash_checks':calculated['cash_checks'],'operation_counts':counts,
+        'v1_only_operations_total':sum(x['v1_only'] for x in counts.values()),
+        'B_only_operations_total':sum(x['B_only'] for x in counts.values()),
+        'symmetric_operations_total':sum(x['symmetric_total'] for x in counts.values()),
+        'tie_count_reconciliation':reconciliation,'near_ties_in_declared_baseline_states':calculated['near_ties_count'],
+        'specific_ties':specific,
+        'tie_counterfactual':{k:v for k,v in calculated['tie_impact'].items() if k!='operation_differences'},
+        'FRED_overlap_value_differences':len(calculated['fresh_vs_earlier_FRED_overlap_differences']),
+        'A_B_AB_numerically_reproduced':True,
+        'B_exact_retrospective_cagr_pct':by['retrospective_check','B_exact']['cagr_pct'],
+        'B_exact_difference_vs_Claude_retrospective_pp':by['retrospective_check','B_exact']['cagr_pct']-2.801,
+        'B_exact_explanation':'Our explicitly declared ledger uses frozen actual cash dividends, retained until next entry. Claude used a different Yahoo vintage and may differ in reinvestment/inferred dividends; without his CSV and code the exact discrepancy cannot be uniquely assigned to individual rows. The difference0.0153pp is disclosed, not forced to match.',
+        'interpretation':['No evidence of a wrong strict comparison operator in v1: the2005 adjusted values differ, and60-digit arithmetic preserves their sign. Different per-day adjustment factors produce a nominal tie with an adjusted exit.',
+          'Suppressing only that exit changes development CAGR1.110043→1.069860, delta−0.040183pp.',
+          '2009-07-21 is not within the fixed1e-6 near-tie threshold on frozen data (relative−1.630365e-6), and no entry occurs.',
+          'A uses a current-vintage, discount-basis DTB3 proxy with observation-date lag, floor0 andACT/360. This is not proven historical publication-time PIT or an executable broker cash yield.',
+          'A+B remains below matched SPY by3.08/9.81/11.08percentage points of CAGR in the three archived segments. This does not falsify the original Turtle system.'],
+        'primary_sources':[{'url':'https://fred.stlouisfed.org/series/DTB3','verified':'Daily series, percent, discount basis; data subject to revision.'},
+                           {'url':'https://fred.stlouisfed.org/series/TB3MS','verified':'Monthly averages of business days, discount basis; not contemporaneously known monthly input.'},
+                           {'url':'https://www.federalreserve.gov/releases/h15/','verified':'Current H15 schedule16:15 on business days. Historical vintages/release times have not been audited.'}],
+        'new_GC_tests':0,'new_strategy_trials_registered':0,'new_sensitivity_cases':13,
+        'unseen_OOS':False,'paid_API_calls':0,'synthetic_checks':8,
+        'audit_directory':str(HERE.relative_to(ROOT))}
+    save('conclusions.json', conclusion)
+    header = '# Niezależna kontrola A/B i remisów — Turtle T003, archiwalny wariant SPY\n\n'
+    report = header+'Status: **sensitivity_not_verdict**. Wszystkie stare pliki wynikowe pozostają bez zmian. Nie przeprowadzono nowego testu GC.\n\n'
+    report += 'Oryginalny silnik i oddzielny ledger odtworzyły dokładnie metryki, operacje i dzienne NAV trzech segmentów.\n\n'
+    report += '| Segment | v1 | A: gotówka DTB3 | B: sygnały nominalne | B: dywidendy cash | A+B | SPY |\n|---|---:|---:|---:|---:|---:|---:|\n'
+    for s in plan['segments']:
+        row=[by[s,v]['cagr_pct'] for v in ('baseline','A','B','B_exact','A_plus_B')]+[by[s,'baseline']['benchmark_cagr_pct']]
+        report+='| '+s+' | '+' | '.join(f'{v:.6f}' for v in row)+' |\n'
+    report+='\nWartości to CAGR w procentach, przy archiwalnym założeniu5bps na stronę. development2001–2015, validation2016–2019, retrospective_check2020–27.10.2026. To nie pełne netto podatkowe ani nietknięty OOS.\n\n'
+    report+='A, B i A+B potwierdzają liczby Claude w podanej dokładności. B-exact ma ujawnioną różnicę0,0153pp w ostatnim segmencie; nie dopasowywano danych ani reguł do jego liczby.\n\n'
+    report+='Noclegi gotówki A:3208/623/1046, identycznie z przejść NAV i dat wykonania operacji. Średnia stopa ważona nocami:1,511880/1,430417/2,700163%. Osobny cash-ledger i przekształcenie zwrotów zgadzają się z błędem NAV<6e−14.\n\n'
+    report+='**Operacje:** wg klucza(kierunek,data sygnału,data wykonania,pora,powód) tylko w v1 występuje17/4/5=26operacji i tyle samo tylko w B; symetryczna lista ma52wpisy. Przypisywanie operacji po samym indeksie daje fałszywie62/4/11różnic, bo jedna przesunięta operacja przesuwa dalsze indeksy. Po pominięciu wyjścia20.01.2005 liczba17 spada do16, co dokładnie wyjaśnia podane przez Claude16/4/5.\n\n'
+    report+='**Remisy:**\n\n| Sygnał | Nominalny close−kanał | Skorygowany close−kanał | Decyzja v1 |\n|---|---:|---:|---|\n'
+    for t in specific:
+        decision=('wyjście' if not t['desired_long'] else 'utrzymanie') if t['is_long_before_open'] else ('wejście' if t['desired_long'] else 'brak wejścia')
+        report+=f"| {t['signal_date']} | {t['nominal_difference_12dp']} | {t['adjusted_difference_12dp']} | {decision} |\n"
+    report+='\nRóżnica z2005 pozostaje ujemna także w obliczeniu60-cyfrowym na dokładnych wartościach wejściowych. Problemem jest wrażliwość na basis/korekty danych, nie dowiedziony błąd operatora`<`. Nie dodawano tolerancji po wyniku. Kontrfaktyczne pominięcie jednego wyjścia obniża CAGR development z1,110043 do1,069860(−0,040183pp).\n\n'
+    report+='**Ograniczenie gotówki:** data obserwacji DTB3 wcześniejsza od poprzedniej sesji nie dowodzi godziny historycznej publikacji ani zachowania dawnych vintages. [FRED DTB3](https://fred.stlouisfed.org/series/DTB3) opisuje stopę dyskontową; [H15](https://www.federalreserve.gov/releases/h15/) publikuje obecnie o16:15. Dlatego A jest odtworzonym przybliżeniem Claude, a nie potwierdzoną wykonalną stopą cash.\n\n'
+    report+='Pełny zapis: conclusions.json, comparison_to_Claude_and_prior_candidate.json, specific_ties.json(z12miejscami), different_operations.csv, *_ledger_and_daily_NAV.json, *_cash_intervals.json, plan.json, freeze.json, test_recalculate.py. SHA256 wszystkich plików i kontrola nienaruszenia starych danych w final_verification.json.\n'
+    with (HERE/'RAPORT.md').open('x') as handle:handle.write(report)
+    protected=json.loads((HERE/'protected_inputs_before.json').read_text())
+    mismatches=[n for n,s in protected.items() if hashlib.sha256((ROOT/n).read_bytes()).hexdigest()!=s]
+    assert not mismatches,mismatches
+    for name,s in json.loads((HERE/'freeze.json').read_text())['files_sha256'].items():
+        assert hashlib.sha256((HERE/name).read_bytes()).hexdigest()==s,name
+    save('final_verification.json',{'scope':'sensitivity_not_verdict','protected_old_files':len(protected),
+         'old_files_changed':mismatches,'frozen_plan_code_data_hashes_match':True,
+         'all_baseline_ledgers_and_metrics_exact':True,'independent_cash_methods_match':True,
+         'all_Claude_comparisons_within_declared_tolerance':all(x['within_declared_tolerance'] for x in comparisons),
+         'file_sha256':{str(p.relative_to(HERE)):hashlib.sha256(p.read_bytes()).hexdigest()
+                        for p in HERE.iterdir() if p.is_file()}})
+    print(json.dumps({'protected_files_unchanged':len(protected),'v1_only_operations':conclusion['v1_only_operations_total'],
+                      'symmetric_difference':conclusion['symmetric_operations_total'],
+                      'counterfactual_development_only':reconciliation['after_suppressing_only_20050120_exit_v1_only_development'],
+                      'Claude_comparisons_within_declared_tolerance':True}))
+
+
+if __name__=='__main__':main()

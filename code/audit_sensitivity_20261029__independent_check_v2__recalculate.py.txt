@@ -1,0 +1,374 @@
+"""Separate ledger reconstruction of the frozen SPY-v1 audit. sensitivity_not_verdict.
+
+Does not import the earlier audit's implementation. Uses the original engine only
+as the exact baseline control and for its predeclared metric definitions.
+"""
+import bisect
+import csv
+import datetime as dt
+from decimal import Decimal, localcontext
+import hashlib
+import json
+import math
+from pathlib import Path
+import sys
+import time
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent.parent
+sys.path.insert(0, str(ROOT))
+import engine
+
+RATE = .0005
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def save(name, value):
+    with (HERE/name).open('x') as handle:
+        json.dump(value, handle, ensure_ascii=False, indent=2, allow_nan=False)
+        handle.write('\n')
+
+
+def day(value):
+    return dt.date.fromisoformat(value)
+
+
+def read_rates(path):
+    values = []
+    for row in csv.DictReader(path.open()):
+        if row['DTB3'] not in ('', '.'):
+            value = float(row['DTB3'])
+            if not math.isfinite(value):
+                raise ValueError('Nonfinite rate')
+            values.append((row['observation_date'], value))
+    if [x[0] for x in values] != sorted({x[0] for x in values}):
+        raise ValueError('Duplicate/unordered rate observations')
+    return values
+
+
+class Rates:
+    def __init__(self, values):
+        self.values = values
+        self.dates = [x[0] for x in values]
+
+    def before(self, previous_session):
+        i = bisect.bisect_left(self.dates, previous_session)-1
+        if i < 0:
+            raise ValueError('No strictly earlier rate')
+        date, raw_rate = self.values[i]
+        assert date < previous_session
+        return date, max(0., raw_rate)
+
+
+def adjusted(raw):
+    # Preserve v1's arithmetic order, including multiplying close by its factor.
+    return [{'date': b['date'], **{k: b[k]*(b['adj_close']/b['close'])
+                                 for k in ('open', 'high', 'low', 'close')}} for b in raw]
+
+
+def features(bars, index, held):
+    n = 20 if held else 55
+    if index < n:
+        return None
+    field = 'low' if held else 'high'
+    previous = bars[index-n:index]
+    level = (min if held else max)(b[field] for b in previous)
+    dates = [b['date'] for b in previous if b[field] == level]
+    close = bars[index]['close']
+    triggered = close < level if held else close > level
+    return {'close': close, 'level': level, 'level_dates': dates,
+            'difference': close-level, 'relative_difference': (close-level)/level,
+            'triggered': triggered, 'window': n, 'field': field}
+
+
+def simulate(raw, start, end, *, nominal_signals=False, cash_dividends=None,
+             cash_rates=None, suppress_exit=None):
+    total_return = adjusted(raw)
+    signals = raw if nominal_signals else total_return
+    prices = raw if cash_dividends is not None else total_return
+    selected = [i for i, b in enumerate(raw) if start <= b['date'] <= end]
+    if not selected:
+        raise ValueError('Empty segment')
+    cash, quantity, previous_equity = 1., 0., 1.
+    previous_long = False
+    previous_selected_day = None
+    held_sessions = exposed = 0
+    costs = turnover = 0.
+    path, trades, trace, accruals, dividends = [], [], [], [], []
+    for i in selected:
+        date = raw[i]['date']
+        # Cash accrues before any current-open transaction, on actual cash nights.
+        if previous_selected_day is not None and not previous_long and cash_rates is not None:
+            nights = (day(date)-day(previous_selected_day)).days
+            rate_day, r = cash_rates.before(previous_selected_day)
+            interest = cash*r/100*nights/360
+            accruals.append({'from': previous_selected_day, 'to': date, 'nights': nights,
+                             'rate_date': rate_day, 'rate_pct': r, 'cash_before': cash,
+                             'interest': interest})
+            cash += interest
+        # Previous-close holder entitlement, including a sale at ex-date open.
+        if cash_dividends is not None and date in cash_dividends and quantity:
+            credit = quantity*cash_dividends[date]
+            cash += credit
+            dividends.append({'date': date, 'shares_entitled': quantity,
+                              'dividend_per_share': cash_dividends[date], 'credit': credit})
+        held_before = quantity > 0
+        signal_i = i-1
+        feature = features(signals, signal_i, held_before)
+        desired = held_before if feature is None else (
+            not feature['triggered'] if held_before else feature['triggered'])
+        suppressed = held_before and raw[signal_i]['date'] == suppress_exit
+        if suppressed:
+            desired = True
+        trace.append({'signal_date': raw[signal_i]['date'], 'execution_date': date,
+                      'is_long_before_open': held_before, 'desired_long': desired,
+                      'suppressed': suppressed, 'actual_feature': feature,
+                      'adjusted': features(total_return, signal_i, held_before),
+                      'nominal': features(raw, signal_i, held_before)})
+        price = prices[i]
+        reason = 'prior_channel_exit' if held_before else 'prior_channel_entry'
+        if desired and not held_before:
+            equity_open = cash
+            quantity = cash/(price['open']*(1+RATE))
+            notional = quantity*price['open']
+            cost = notional*RATE
+            cash = 0.
+            costs += cost
+            turnover += notional/equity_open
+            held_sessions = 0
+            trades.append({'side': 'buy', 'signal_date': raw[signal_i]['date'],
+                           'execution_date': date, 'execution_time': 'open',
+                           'execution_price': price['open'], 'quantity': quantity,
+                           'cost': cost, 'cost_bps': 5., 'reason': reason})
+        elif not desired and held_before:
+            notional = quantity*price['open']
+            cost = notional*RATE
+            cash += notional-cost
+            costs += cost
+            turnover += 1.
+            trades.append({'side': 'sell', 'signal_date': raw[signal_i]['date'],
+                           'execution_date': date, 'execution_time': 'open',
+                           'execution_price': price['open'], 'quantity': quantity,
+                           'cost': cost, 'cost_bps': 5., 'held_sessions': held_sessions,
+                           'reason': reason})
+            quantity = 0.
+            held_sessions = 0
+        is_long = quantity > 0
+        if is_long:
+            held_sessions += 1
+            exposed += 1
+        equity = cash+quantity*price['close']
+        if i == selected[-1] and quantity:
+            notional = quantity*price['close']
+            cost = notional*RATE
+            cash += notional-cost
+            costs += cost
+            turnover += 1.
+            trades.append({'side': 'sell', 'signal_date': None, 'execution_date': date,
+                           'execution_time': 'close', 'execution_price': price['close'],
+                           'quantity': quantity, 'cost': cost, 'cost_bps': 5.,
+                           'held_sessions': held_sessions, 'reason': 'terminal_liquidation'})
+            quantity = 0.
+            equity = cash
+        path.append({'date': date, 'equity': equity, 'long_during_session': is_long,
+                     'daily_return': equity/previous_equity-1})
+        previous_equity, previous_long, previous_selected_day = equity, is_long, date
+    metrics = engine._metrics([x['equity'] for x in path], [x['date'] for x in path],
+                              exposure_days=exposed, turnover=turnover,
+                              trade_count=len(trades), total_cost=costs)
+    return {'scope': 'sensitivity_not_verdict', 'metrics': metrics, 'equity': path,
+            'trades': trades, 'decision_trace': trace, 'cash_accruals': accruals,
+            'dividend_credits': dividends}
+
+
+def cash_transform(base, rates):
+    equity = base['equity'][0]['equity']
+    path = [{**base['equity'][0], 'equity': equity}]
+    intervals = []
+    for previous, current in zip(base['equity'], base['equity'][1:]):
+        multiplier = 1.
+        if not previous['long_during_session']:
+            nights = (day(current['date'])-day(previous['date'])).days
+            date, r = rates.before(previous['date'])
+            multiplier += r/100*nights/360
+            intervals.append({'from': previous['date'], 'to': current['date'],
+                              'nights': nights, 'rate_date': date, 'rate_pct': r,
+                              'multiplier': multiplier})
+        old = equity
+        equity *= (1+current['daily_return'])*multiplier
+        path.append({**current, 'equity': equity, 'daily_return': equity/old-1})
+    return path, intervals
+
+
+def cash_nights_from_trades(base):
+    start = base['equity'][0]['date']
+    end = base['equity'][-1]['date']
+    total = 0
+    for trade in base['trades']:
+        if trade['side'] == 'buy':
+            total += (day(trade['execution_date'])-day(start)).days
+            start = None
+        else:
+            start = trade['execution_date']
+    if start is not None:
+        total += (day(end)-day(start)).days
+    return total
+
+
+def operation_key(trade):
+    return tuple(trade.get(k) for k in ('side', 'signal_date', 'execution_date', 'execution_time', 'reason'))
+
+
+def operation_differences(base, other):
+    paired = []
+    for i in range(max(len(base), len(other))):
+        a = base[i] if i < len(base) else None
+        b = other[i] if i < len(other) else None
+        if a is None or b is None or operation_key(a) != operation_key(b):
+            paired.append({'operation_index': i, 'v1': a, 'B': b})
+    keys_a = {operation_key(x) for x in base}
+    keys_b = {operation_key(x) for x in other}
+    return {'paired_index_differences': paired, 'paired_count': len(paired),
+            'only_v1': [x for x in base if operation_key(x) not in keys_b],
+            'only_B': [x for x in other if operation_key(x) not in keys_a],
+            'symmetric_difference_count': len(keys_a ^ keys_b)}
+
+
+def compare_paths(a, b):
+    assert len(a) == len(b)
+    return max(abs(x['equity']-y['equity']) for x, y in zip(a, b))
+
+
+def main():
+    started, mono = dt.datetime.now(dt.timezone.utc), time.monotonic()
+    plan = json.loads((HERE/'plan.json').read_text())
+    for meta in plan['inputs'].values():
+        assert sha(ROOT/meta['path']) == meta['sha256'], meta['path']
+    raw = []
+    for row in csv.DictReader((ROOT/'data/processed/SPY.csv').open()):
+        raw.append({'date': row['date'], **{k: float(row[k]) for k in row if k != 'date'}})
+    assert len({b['date'] for b in raw}) == len(raw)
+    assert [b['date'] for b in raw] == sorted(b['date'] for b in raw)
+    values = read_rates(HERE/'DTB3_fresh.csv')
+    rates = Rates(values)
+    old_rates = dict(read_rates(ROOT/'audit_sensitivity_20261029/DTB3.original.csv'))
+    overlap_diffs = [{'date': d, 'old': old_rates[d], 'fresh': r}
+                     for d, r in values if d in old_rates and old_rates[d] != r]
+    old_data = json.loads((ROOT/'data/raw/SPY_yahoo.json').read_text())['chart']['result'][0]
+    assert not old_data.get('events', {}).get('splits'), 'Split handling must be explicit'
+    dividends = {dt.datetime.fromtimestamp(x['date'], dt.timezone.utc).date().isoformat(): x['amount']
+                 for x in old_data.get('events', {}).get('dividends', {}).values()}
+    all_results, baseline_checks = {}, []
+    # Gate every segment before computing any new sensitivity result.
+    for segment, (start, end) in plan['segments'].items():
+        archive_path = next((ROOT/'results/T003').glob(segment+'_5bps_*.json'))
+        archive = json.loads(archive_path.read_text())
+        original = engine.run_strategy(raw, 'donchian', start, end, 5)
+        independent = simulate(raw, start, end)
+        assert original['trades'] == archive['trades'] == independent['trades']
+        assert original['metrics'] == archive['metrics'] == independent['metrics']
+        assert compare_paths(original['equity'], archive['equity']) < 1e-12
+        assert compare_paths(independent['equity'], archive['equity']) < 1e-12
+        baseline_checks.append({'segment': segment, 'archive_sha256': sha(archive_path),
+                                'exact_metrics_match': True, 'exact_ledger_match': True,
+                                'daily_NAV_max_difference': compare_paths(independent['equity'], archive['equity'])})
+        all_results[segment] = {'baseline': independent, 'benchmark': original['benchmark']}
+    save('baseline_control.json', {'scope': 'sensitivity_not_verdict', 'checks': baseline_checks})
+    summaries, near_ties, specific = [], [], []
+    for segment, (start, end) in plan['segments'].items():
+        result = all_results[segment]
+        base = result['baseline']
+        a = simulate(raw, start, end, cash_rates=rates)
+        b = simulate(raw, start, end, nominal_signals=True)
+        exact = simulate(raw, start, end, nominal_signals=True, cash_dividends=dividends)
+        ab = simulate(raw, start, end, nominal_signals=True, cash_rates=rates)
+        assert [operation_key(x) for x in a['trades']] == [operation_key(x) for x in base['trades']]
+        assert [operation_key(x) for x in exact['trades']] == [operation_key(x) for x in b['trades']]
+        assert [operation_key(x) for x in ab['trades']] == [operation_key(x) for x in b['trades']]
+        for label, reconstructed, untreated in [('A', a, base), ('A_plus_B', ab, b)]:
+            transformed, intervals = cash_transform(untreated, rates)
+            delta = compare_paths(transformed, reconstructed['equity'])
+            assert delta < 1e-11, (segment, label, delta)
+            nights = sum(x['nights'] for x in intervals)
+            assert nights == cash_nights_from_trades(untreated)
+            result[label+'_cash_checks'] = {'nights_from_transitions': nights,
+                'nights_from_transactions': cash_nights_from_trades(untreated),
+                'night_weighted_rate_pct': sum(x['nights']*x['rate_pct'] for x in intervals)/nights,
+                'transform_vs_funded_ledger_max_NAV_difference': delta}
+            save(segment+'_'+label+'_cash_intervals.json', intervals)
+        result.update(A=a, B=b, B_exact=exact, A_plus_B=ab)
+        result['operation_differences'] = operation_differences(base['trades'], b['trades'])
+        save(segment+'_operation_differences.json', result['operation_differences'])
+        for label in ('baseline', 'A', 'B', 'B_exact', 'A_plus_B'):
+            study = result[label]
+            m = study['metrics']
+            summaries.append({'segment': segment, 'variant': label, 'scope': 'sensitivity_not_verdict',
+                              'cagr_pct': m['cagr_pct'], 'operations': len(study['trades']),
+                              'roundtrips': m['completed_trades'], 'exposure_pct': m['exposure_pct'],
+                              'delta_vs_v1_pp': m['cagr_pct']-base['metrics']['cagr_pct'],
+                              'benchmark_cagr_pct': result['benchmark']['metrics']['cagr_pct'],
+                              'delta_vs_SPY_pp': m['cagr_pct']-result['benchmark']['metrics']['cagr_pct']})
+        for entry in base['decision_trace']:
+            adj, nominal = entry['adjusted'], entry['nominal']
+            if adj and (abs(adj['relative_difference']) < 1e-6 or nominal['difference'] == 0):
+                near_ties.append({'segment': segment, **entry})
+            if entry['signal_date'] in ('2005-01-20', '2009-07-21', '2017-08-10'):
+                j = next(i for i, bar in enumerate(raw) if bar['date'] == entry['signal_date'])
+                with localcontext() as context:
+                    context.prec = 60
+                    close = Decimal.from_float(raw[j]['adj_close'])
+                    field = adj['field']
+                    prior = raw[j-adj['window']:j]
+                    dlevels = [Decimal.from_float(x[field])*Decimal.from_float(x['adj_close'])/Decimal.from_float(x['close']) for x in prior]
+                    level = (min if entry['is_long_before_open'] else max)(dlevels)
+                specific.append({'segment': segment, **entry,
+                    'adjusted_close_12dp': f"{adj['close']:.12f}",
+                    'adjusted_level_12dp': f"{adj['level']:.12f}",
+                    'adjusted_difference_12dp': f"{adj['difference']:.12f}",
+                    'nominal_close_12dp': f"{nominal['close']:.12f}",
+                    'nominal_level_12dp': f"{nominal['level']:.12f}",
+                    'nominal_difference_12dp': f"{nominal['difference']:.12f}",
+                    'decimal_exact_input_adjustment_difference': str(close-level),
+                    'close_factor': raw[j]['adj_close']/raw[j]['close'],
+                    'adjusted_level_factors': [{'date': x['date'], 'factor': x['adj_close']/x['close']}
+                                               for x in raw if x['date'] in adj['level_dates']]})
+        save(segment+'_ledger_and_daily_NAV.json', {k: result[k] for k in ('baseline','A','B','B_exact','A_plus_B')})
+    counterfactual = simulate(raw, *plan['segments']['development'], suppress_exit='2005-01-20')
+    tie_impact = {'scope': 'sensitivity_not_verdict',
+                  'original_cagr_pct': all_results['development']['baseline']['metrics']['cagr_pct'],
+                  'suppress_20050120_exit_cagr_pct': counterfactual['metrics']['cagr_pct'],
+                  'delta_pp': counterfactual['metrics']['cagr_pct']-all_results['development']['baseline']['metrics']['cagr_pct'],
+                  'operation_differences': operation_differences(all_results['development']['baseline']['trades'], counterfactual['trades'])}
+    save('tie_counterfactual.json', tie_impact)
+    save('near_ties.json', near_ties)
+    save('specific_ties.json', specific)
+    save('results.json', {'scope': 'sensitivity_not_verdict', 'baseline_controls': baseline_checks,
+         'summaries': summaries, 'cash_checks': {s:{k:v for k,v in r.items() if k.endswith('_cash_checks')} for s,r in all_results.items()},
+         'operation_difference_counts': {s:{k:v for k,v in r['operation_differences'].items() if k.endswith('count')} for s,r in all_results.items()},
+         'fresh_vs_earlier_FRED_overlap_differences': overlap_diffs, 'near_ties_count': len(near_ties),
+         'tie_impact': tie_impact, 'review_status': 'independently_recalculated_not_original_Turtle_validation',
+         'duration_seconds': time.monotonic()-mono, 'started_at_utc': started.isoformat(),
+         'finished_at_utc': dt.datetime.now(dt.timezone.utc).isoformat()})
+    with (HERE/'summary.csv').open('x') as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(summaries[0]))
+        writer.writeheader(); writer.writerows(summaries)
+    with (HERE/'near_ties.csv').open('x') as handle:
+        fields = ['segment', 'signal_date', 'execution_date', 'is_long_before_open', 'adjusted_close',
+                  'adjusted_level', 'adjusted_difference', 'adjusted_relative_difference', 'nominal_close',
+                  'nominal_level', 'nominal_difference', 'v1_desired_long']
+        writer = csv.DictWriter(handle, fieldnames=fields);writer.writeheader()
+        for x in near_ties:
+            writer.writerow({'segment': x['segment'], 'signal_date': x['signal_date'],
+                'execution_date': x['execution_date'], 'is_long_before_open': x['is_long_before_open'],
+                **{'adjusted_'+k: x['adjusted'][k] for k in ('close','level','difference','relative_difference')},
+                **{'nominal_'+k: x['nominal'][k] for k in ('close','level','difference')},
+                'v1_desired_long': x['desired_long']})
+    print(json.dumps({'baseline_exact': True, 'summaries': summaries,
+                      'near_ties': len(near_ties), 'tie_delta_pp': tie_impact['delta_pp']}, ensure_ascii=False))
+
+
+if __name__ == '__main__':
+    main()

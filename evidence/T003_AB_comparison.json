@@ -1,0 +1,204 @@
+{
+  "scope": "sensitivity_not_verdict",
+  "Claude_comparisons": [
+    {
+      "segment": "development",
+      "variant": "A",
+      "Claude_reported_cagr_pct": 2.02,
+      "recalculated_cagr_pct": 2.0224657245024424,
+      "difference_pp": 0.0024657245024424235,
+      "within_declared_tolerance": true
+    },
+    {
+      "segment": "validation",
+      "variant": "A",
+      "Claude_reported_cagr_pct": 5.64,
+      "recalculated_cagr_pct": 5.635419695501542,
+      "difference_pp": -0.004580304498457366,
+      "within_declared_tolerance": true
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "A",
+      "Claude_reported_cagr_pct": 4.7,
+      "recalculated_cagr_pct": 4.700172092662114,
+      "difference_pp": 0.00017209266211359875,
+      "within_declared_tolerance": true
+    },
+    {
+      "segment": "development",
+      "variant": "B",
+      "Claude_reported_cagr_pct": 0.886,
+      "recalculated_cagr_pct": 0.8861468429013142,
+      "difference_pp": 0.00014684290131417033,
+      "within_declared_tolerance": true
+    },
+    {
+      "segment": "validation",
+      "variant": "B",
+      "Claude_reported_cagr_pct": 4.264,
+      "recalculated_cagr_pct": 4.263947199344731,
+      "difference_pp": -5.280065526935829e-05,
+      "within_declared_tolerance": true
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "B",
+      "Claude_reported_cagr_pct": 2.798,
+      "recalculated_cagr_pct": 2.798228578715656,
+      "difference_pp": 0.00022857871565573618,
+      "within_declared_tolerance": true
+    },
+    {
+      "segment": "development",
+      "variant": "B_exact",
+      "Claude_reported_cagr_pct": 0.887,
+      "recalculated_cagr_pct": 0.8874325737331601,
+      "difference_pp": 0.00043257373316007985,
+      "within_declared_tolerance": true
+    },
+    {
+      "segment": "validation",
+      "variant": "B_exact",
+      "Claude_reported_cagr_pct": 4.263,
+      "recalculated_cagr_pct": 4.265007286782452,
+      "difference_pp": 0.002007286782451878,
+      "within_declared_tolerance": true
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "B_exact",
+      "Claude_reported_cagr_pct": 2.801,
+      "recalculated_cagr_pct": 2.7857132858845945,
+      "difference_pp": -0.015286714115405609,
+      "within_declared_tolerance": true
+    },
+    {
+      "segment": "development",
+      "variant": "A_plus_B",
+      "Claude_reported_cagr_pct": 1.837,
+      "recalculated_cagr_pct": 1.8374582133178663,
+      "difference_pp": 0.00045821331786632946,
+      "within_declared_tolerance": true
+    },
+    {
+      "segment": "validation",
+      "variant": "A_plus_B",
+      "Claude_reported_cagr_pct": 4.971,
+      "recalculated_cagr_pct": 4.970559025989907,
+      "difference_pp": -0.00044097401009324244,
+      "within_declared_tolerance": true
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "A_plus_B",
+      "Claude_reported_cagr_pct": 4.048,
+      "recalculated_cagr_pct": 4.047799629705473,
+      "difference_pp": -0.00020037029452701915,
+      "within_declared_tolerance": true
+    }
+  ],
+  "prior_candidate_metric_parity": [
+    {
+      "segment": "development",
+      "variant": "baseline",
+      "difference_pp": 0.0
+    },
+    {
+      "segment": "development",
+      "variant": "A",
+      "difference_pp": 1.7763568394002505e-13
+    },
+    {
+      "segment": "development",
+      "variant": "B",
+      "difference_pp": 0.0
+    },
+    {
+      "segment": "development",
+      "variant": "B_exact",
+      "difference_pp": -2.220446049250313e-14
+    },
+    {
+      "segment": "development",
+      "variant": "A_plus_B",
+      "difference_pp": 2.4424906541753444e-13
+    },
+    {
+      "segment": "validation",
+      "variant": "baseline",
+      "difference_pp": 0.0
+    },
+    {
+      "segment": "validation",
+      "variant": "A",
+      "difference_pp": -6.661338147750939e-14
+    },
+    {
+      "segment": "validation",
+      "variant": "B",
+      "difference_pp": 0.0
+    },
+    {
+      "segment": "validation",
+      "variant": "B_exact",
+      "difference_pp": 0.0
+    },
+    {
+      "segment": "validation",
+      "variant": "A_plus_B",
+      "difference_pp": -2.220446049250313e-14
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "baseline",
+      "difference_pp": 0.0
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "A",
+      "difference_pp": -2.220446049250313e-14
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "B",
+      "difference_pp": 0.0
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "B_exact",
+      "difference_pp": 0.0
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "A_plus_B",
+      "difference_pp": 6.661338147750939e-14
+    }
+  ],
+  "operation_counts": {
+    "development": {
+      "v1_only": 17,
+      "B_only": 17,
+      "symmetric_total": 34,
+      "naive_paired_index_mismatches_not_a_valid_identity_count": 62
+    },
+    "validation": {
+      "v1_only": 4,
+      "B_only": 4,
+      "symmetric_total": 8,
+      "naive_paired_index_mismatches_not_a_valid_identity_count": 4
+    },
+    "retrospective_check": {
+      "v1_only": 5,
+      "B_only": 5,
+      "symmetric_total": 10,
+      "naive_paired_index_mismatches_not_a_valid_identity_count": 11
+    }
+  },
+  "tie_count_reconciliation": {
+    "frozen_v1_only_development": 17,
+    "after_suppressing_only_20050120_exit_v1_only_development": 16,
+    "after_suppressing_only_20050120_exit_B_only_development": 16,
+    "meaning": "The17→16 difference is exactly reconciled by the declared2005 tie counterfactual, not by changing the operation identity definition."
+  }
+}

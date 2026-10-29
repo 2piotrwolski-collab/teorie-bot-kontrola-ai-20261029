@@ -1,4 +1,4 @@
-Snapshot: 2026-10-29T20:15:15.296437+00:00
+Snapshot: 2026-10-29T21:09:02.683283+00:00
 T009 · Archiwalny v1: Test nieadekwatny do źródła
 
 Moreira–Muir: portfele zarządzane zmiennością
@@ -53,7 +53,7 @@ Dodatkowo pobrano cztery darmowe archiwa: French 5 Factors i Momentum w częstot
 
 Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.
 
-Zaplanowano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.
+Zapisano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.
 
 Automat pomiaru IEX: 29.10 wysłanie 46,512 s po celu i dwa błędy konektora. Naprawa: bezpośredni darmowy REST, lokalny timer macOS, rozgrzewka połączenia i zapis rzeczywistych czasów. Następny pomiar: 30.10 o 20:45 Warszawa, gdy Mac jest włączony. Stan: scheduled.
 T009-RULE-01 · Częściowo uzupełniony
@@ -193,17 +193,19 @@ Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; p
 
 Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L.
 
+29.10: odczyt IEX wysłano 46,512 s po celu; dwa błędy konektora, brak terminowych kwotowań. Historyczny SIP tego nie zastępuje.
+
 Dane wyniku i ograniczenia
 
 Dzisiejsza kontrola wykonania · 29.10.2026
 
-Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.
+Zakończono pomiar dostarczenia danych i kwotowań. Brak odczytu pozostaje brakiem, bez odtwarzania po fakcie.
 
 ZakresStan
 
-SPYoczekuje
+SPYpełny prefiks odebrany przed 15:45 NY
 
-BILoczekuje
+BILpełny prefiks odebrany przed 15:45 NY
 
 Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.
 
@@ -212,6 +214,8 @@ IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezp
 Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.
 
 Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L.
+
+29.10: odczyt IEX wysłano 46,512 s po celu; dwa błędy konektora, brak terminowych kwotowań. Historyczny SIP tego nie zastępuje.
 
 Dane wyniku i ograniczenia
 

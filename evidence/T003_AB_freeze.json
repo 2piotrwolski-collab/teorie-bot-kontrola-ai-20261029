@@ -1,0 +1,12 @@
+{
+  "frozen_at_utc": "2026-10-29T20:55:33.673987+00:00",
+  "scope": "sensitivity_not_verdict",
+  "files_sha256": {
+    "plan.json": "3f94d6f17a42d4ba0bc6eff6c3015f2d561f7d1aba419ca0587a768b091aa28f",
+    "recalculate.py": "62ac32f5c8d291a7025ffe0bf0a1a5f43ccc8e35180b750586a25318c1454751",
+    "test_recalculate.py": "024322c353ab44a77be2d91e6b9d19e71d8ba7da7425b533eeb20f8699818abf",
+    "DTB3_fresh.csv": "c95a32b4e43adb08afa507d8d693d2b541e3c4559882aada116bd2e5f03032af"
+  },
+  "synthetic_checks_passed": 8,
+  "new_sensitivity_results_computed": false
+}

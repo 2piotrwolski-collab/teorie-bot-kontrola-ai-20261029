@@ -1,0 +1,62 @@
+"""Append a scoped sensitivity audit to T003; retain all original market outcomes."""
+import copy
+import hashlib
+import json
+from pathlib import Path
+from data_io import atomic_json
+
+
+def merge(progress, review, audit):
+    out = copy.deepcopy(progress)
+    item = next(i for i in out['items'] if i['id'] == 'T003')
+    if item.get('t003_sensitivity_audit_sha256') == review['audit_sha256']:
+        return out
+    item['t003_sensitivity_audit_sha256'] = review['audit_sha256']
+    item['findings'] = [s for s in item['findings'] if not s.startswith(('Kontrola uwag Claude:', 'Niezależna kontrola A/B:'))]
+    item['findings'] += [
+        'Niezależna kontrola A/B: dokładnie odtworzono archiwalne metryki, operacje i dzienne NAV v1 na zamrożonym SPY. A, B i A+B potwierdzają liczby Claude w podanej dokładności. To sensitivity_not_verdict, nie pełny test Turtle na kontraktach.',
+        'Wariant A+B: CAGR1,8375%/4,9706%/4,0478% wobec matchedSPY4,9181%/14,7847%/15,1274% w okresach2001–2015/2016–2019/2020–27.10.2026 przy5bps na stronę. Historyczna wykonalność cash i pełne netto niepotwierdzone.',
+        'Remis20.01.2005: nominalnie117,5=117,5, lecz w skorygowanych danych close jest niżej o0,000006564834; ścisły operator wyjścia działa poprawnie. Pominięcie tylko tego wyjścia zmienia CAGR development1,110043→1,069860% (−0,040183pp). Nie dopasowywano tolerancji.',
+        'Różnice operacji: tylko v1 ma17/4/5=26wpisów, tylko B również26 (symetrycznie52). Po pominięciu wyjścia20.01.2005 jest16/4/5, co uzgadnia liczbę25Claude. Parowanie po samym indeksie jest mylące.',
+        'B-exact na rzeczywistych zamrożonych dywidendach cash daje0,887433%/4,265007%/2,785713%; ostatnia liczba jest o0,015287pp niższa od2,801%Claude. Dokładna przyczyna wymaga jego CSV i kodu. A używa stopy dyskontowej DTB3 z opóźnieniem daty, co nie dowodzi historycznej godziny publikacji/vintages ani odsetek wykonalnego rachunku cash.'
+    ]
+    rows = []
+    for segment in ('development','validation','retrospective_check'):
+        values = {x['variant']:x for x in audit['summaries'] if x['segment']==segment}
+        rows.append([segment]+[round(values[v]['cagr_pct'],6) for v in ('baseline','A','B','B_exact','A_plus_B')]+[round(values['baseline']['benchmark_cagr_pct'],6)])
+    item['observations'] = [o for o in item.get('observations',[]) if not o['id'].startswith('T003_AB_SENSITIVITY_')]
+    item['observations'].insert(0, {'id':'T003_AB_SENSITIVITY_'+review['audit_sha256'][:12],
+        'title':'Niezależna kontrola A/B i remisów · 29.10.2026',
+        'summary':'CAGR% rocznie; zamrożony wariant SPY-v1,5bps na stronę. To analiza wrażliwości, bez nowego werdyktu Turtle.',
+        'columns':['Okres','v1','A: cash DTB3','B: sygnały nominalne','B: dywidendy cash','A+B','matchedSPY'],
+        'rows':rows,'limitations':[
+            'Opóźnienie daty DTB3 nie jest pełnym dowodem historycznej dostępności publikacji/vintages; stopa dyskontowa nie jest automatycznie stopą broker cash.',
+            'B-exact zachowuje dywidendy cash do kolejnego wejścia, bez natychmiastowej reinwestycji. Różnica wobec Claude pozostaje jawna.',
+            'Pozostają braki pełnego portfela futures, sesji/roll/FND/OI i rzeczywistego wykonania. Wynik SPY nie rozstrzyga oryginalnego Turtle.'],
+        'evidence_report':review['public_report_url']})
+    item['observation_ids']=[o['id'] for o in item['observations']]
+    item['sensitivity_audit_next_action']=review['next_action']
+    return out
+
+
+def refresh(root, db):
+    root=Path(root)
+    pointer=root/'config/t003_sensitivity_current.json'
+    if not pointer.exists():
+        return
+    p=json.loads(pointer.read_text())
+    review_file=root/p['review_file']
+    if hashlib.sha256(review_file.read_bytes()).hexdigest()!=p['review_sha256']:
+        raise ValueError('Sensitivity review identity mismatch')
+    review=json.loads(review_file.read_text())
+    audit_file=root/review['audit_file']
+    if hashlib.sha256(audit_file.read_bytes()).hexdigest()!=review['audit_sha256']:
+        raise ValueError('Sensitivity audit identity mismatch')
+    audit=json.loads(audit_file.read_text())
+    path=root/'results/research_progress_round4.json'
+    old=json.loads(path.read_text())
+    progress=merge(old,review,audit)
+    if progress!=old:
+        atomic_json(path,progress)
+        db.research_update('T003',next(i for i in progress['items'] if i['id']=='T003'),p['review_file'])
+    atomic_json(root/'reports/AUDYT_T003_AB.json',audit)

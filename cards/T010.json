@@ -1,5 +1,5 @@
 {
-  "snapshot_at_utc": "2026-10-29T20:15:15.296437+00:00",
+  "snapshot_at_utc": "2026-10-29T21:09:02.683283+00:00",
   "scope": "Research snapshot. No full original-theory verification; no live orders.",
   "card": {
     "id": "T010",
@@ -18,14 +18,14 @@
       "Kontrola borrow odmawia uznania brakującej dostępności lub stawki za darmowyshort. Zdarzenie delistingu i ostatnia cena nie potwierdzają jeszcze terminalnej wypłaty.",
       "GotowyQCprojekt ma4stałe kontrolki: panel2021,ENE2001,LEH2008,GMEborrow2021. Osiem symboli wsondzie służy tylko sprawdzeniu pól; wynik strategii wymaga całego uniwersum.",
       "Odzyskano pełne logi ENE, LEH i GME z istniejących prób, bez ich powtarzania. Wszystkie 5 oryginalnych kontroli razem z Turtle mają pełny zapis.",
+      "Błąd naszego filtra potwierdzony w chmurze: ExchangeId zwraca NYSE, a kod oczekiwał NYS. Obie pisownie właściwości działają; przygotowanej poprawki samych accessorów nie uruchamiano.",
       "Po rozpoznaniu NYSE: pierwsze 5 kompletnie zapisanych dat wybiera 1689–1691 akcji; 80 barów i 8 historii po 10 rekordów. To ograniczona kontrola dostępu, nie portfel8 akcji ani pełny panel Lehmanna.",
       "04.01.2021: 8923 wejściowe rekordy, 4256 bez klasyfikacji giełdy/typu; 198 ma kod AMEX, którego V3 jeszcze nie włącza. Nie wolno nazwać tego pełnym NYSE/AMEX ani ukryć braków filtrem has_fundamental_data.",
       "ENE: 22 bary i0 zdarzeń delisting. Nasze okno kończyło się 20.12.2001, przed zawieszeniem NYSE 15.01.2002 według CRS; był to błędny zakres kontroli delistingu, nie dowód braku danych.",
       "LEH: 12 barów; WARNING 17.09.2008 z ceną 0.19 i DELISTED 18.09 z ceną 0.14. Komunikat delistingu nie dowodzi końcowej wypłaty ani wyceny OTC.",
       "GME: 13 odczytów; 9 z ilością, 4 bez ilości z zerową stawką 28–29.01 i1–2.02.2021. Publiczny kod dostawcy potwierdza null/0 jako wartości dla brakującego rekordu. Nie zakładać darmowego ani nieograniczonego short.",
-      "Ostatni log został ucięty po 8192 znakach wiersza JSON. Zachowano surowy plik i jawny PARTIAL; pełny parser odmawia uznania go za kompletny. Łącznie7 kontroli danych; budżetu nie rozszerzano, zysku strategii nie liczono.",
-      "Błąd naszego filtra potwierdzony w chmurze: ExchangeId zwraca NYSE, a kod oczekiwał NYS. Obie pisownie właściwości działają; przygotowanej poprawki samych accessorów nie uruchamiano.",
-      "Wyniki otwierają się po odłączeniu podglądu diagnostycznego Chrome i użyciu natywnego GUI. Nie rozstrzygnięto trwałej przyczyny wcześniejszych pustych widoków."
+      "Wyniki otwierają się po odłączeniu podglądu diagnostycznego Chrome i użyciu natywnego GUI. Nie rozstrzygnięto trwałej przyczyny wcześniejszych pustych widoków.",
+      "Ostatni log został ucięty po 8192 znakach wiersza JSON. Zachowano surowy plik i jawny PARTIAL; pełny parser odmawia uznania go za kompletny. Łącznie7 kontroli danych; budżetu nie rozszerzano, zysku strategii nie liczono."
     ],
     "next_action": "Na podstawie zachowanych logów przygotować kolejną odrębną kontrolę danych: uzgodnić AMEX/ASE i brakujące klasyfikacje, poprawić oknoENE na styczeń 2002 oraz dzielić audyt na komunikaty poniżej limitu8192 znaków. Najpierw zamrozić nowy ograniczony plan; obecny budżet 7 wykorzystany. Równolegle źródła terminalnych zwrotów i czasu publikacji borrow; dopiero po domknięciu danych pełny test strategii po kosztach.",
     "overall_status": "source_gap_still_blocks_original_test",
@@ -44,9 +44,6 @@
           "Drugi projekt utworzony po przełączeniu pojedynczej darmowej sesji; kod lokalny zachowany.",
           "Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.",
           "Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.",
-          "Pełne logi i JSON wszystkich4 oryginalnych sond T010 odczytane; runID,LEAN18215 i hashe plików zachowane.",
-          "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i8historycznych próbek.",
-          "Semantyka nullilości i zerowych stawek dla brakującego rekordu potwierdzona wpublicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.",
           "Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.",
           "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.",
           "Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday."
@@ -60,9 +57,9 @@
           "Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.",
           "Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.",
           "QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.",
+          "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
           "Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.",
           "ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.",
-          "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
           "LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.",
           "Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.",
           "Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii."
@@ -113,18 +110,6 @@
           },
           {
             "url": "https://www.quantconnect.com/project/38622173",
-            "evidence_path": "research_round8/session_journal.json",
-            "locator": "Completed bounded QC data controls; no strategy return",
-            "what_verified": "Wykonano 4 zaplanowane kontrole Lehmanna na FREE. Pełny log panel_2021 potwierdza problem klasyfikacji: 42 641 nieodczytanych rekordów, 0 zakwalifikowanych akcji. Trzy pozostałe próby zakończyły obliczenia; pełne logi są jeszcze do odczytu z zawieszających się widoków QC."
-          },
-          {
-            "url": "https://www.quantconnect.com/project/38622173",
-            "evidence_path": "research_round9/session_journal.json",
-            "locator": "Completed bounded QC data controls; no strategy return",
-            "what_verified": "Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około1690 zakwalifikowanych akcji i80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii."
-          },
-          {
-            "url": "https://www.quantconnect.com/project/38622173",
             "evidence_path": "research_round9/session_journal.json",
             "locator": "Completed bounded QC data controls; no strategy return",
             "what_verified": "Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około 1690 zakwalifikowanych akcji i 80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii."
@@ -150,9 +135,6 @@
           "Drugi projekt utworzony po przełączeniu pojedynczej darmowej sesji; kod lokalny zachowany.",
           "Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.",
           "Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.",
-          "Pełne logi i JSON wszystkich4 oryginalnych sond T010 odczytane; runID,LEAN18215 i hashe plików zachowane.",
-          "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i8historycznych próbek.",
-          "Semantyka nullilości i zerowych stawek dla brakującego rekordu potwierdzona wpublicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.",
           "Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.",
           "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.",
           "Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday."
@@ -170,9 +152,9 @@
           "Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.",
           "Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.",
           "QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.",
+          "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
           "Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.",
           "ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.",
-          "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
           "LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.",
           "Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.",
           "Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii."
@@ -248,18 +230,6 @@
           },
           {
             "url": "https://www.quantconnect.com/project/38622173",
-            "evidence_path": "research_round8/session_journal.json",
-            "locator": "Completed bounded QC data controls; no strategy return",
-            "what_verified": "Wykonano 4 zaplanowane kontrole Lehmanna na FREE. Pełny log panel_2021 potwierdza problem klasyfikacji: 42 641 nieodczytanych rekordów, 0 zakwalifikowanych akcji. Trzy pozostałe próby zakończyły obliczenia; pełne logi są jeszcze do odczytu z zawieszających się widoków QC."
-          },
-          {
-            "url": "https://www.quantconnect.com/project/38622173",
-            "evidence_path": "research_round9/session_journal.json",
-            "locator": "Completed bounded QC data controls; no strategy return",
-            "what_verified": "Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około1690 zakwalifikowanych akcji i80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii."
-          },
-          {
-            "url": "https://www.quantconnect.com/project/38622173",
             "evidence_path": "research_round9/session_journal.json",
             "locator": "Completed bounded QC data controls; no strategy return",
             "what_verified": "Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około 1690 zakwalifikowanych akcji i 80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii."
@@ -285,9 +255,6 @@
           "Drugi projekt utworzony po przełączeniu pojedynczej darmowej sesji; kod lokalny zachowany.",
           "Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.",
           "Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.",
-          "Pełne logi i JSON wszystkich4 oryginalnych sond T010 odczytane; runID,LEAN18215 i hashe plików zachowane.",
-          "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i8historycznych próbek.",
-          "Semantyka nullilości i zerowych stawek dla brakującego rekordu potwierdzona wpublicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.",
           "Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.",
           "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.",
           "Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday."
@@ -305,9 +272,9 @@
           "Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.",
           "Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.",
           "QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.",
+          "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
           "Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.",
           "ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.",
-          "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
           "LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.",
           "Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.",
           "Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii."
@@ -373,18 +340,6 @@
           },
           {
             "url": "https://www.quantconnect.com/project/38622173",
-            "evidence_path": "research_round8/session_journal.json",
-            "locator": "Completed bounded QC data controls; no strategy return",
-            "what_verified": "Wykonano 4 zaplanowane kontrole Lehmanna na FREE. Pełny log panel_2021 potwierdza problem klasyfikacji: 42 641 nieodczytanych rekordów, 0 zakwalifikowanych akcji. Trzy pozostałe próby zakończyły obliczenia; pełne logi są jeszcze do odczytu z zawieszających się widoków QC."
-          },
-          {
-            "url": "https://www.quantconnect.com/project/38622173",
-            "evidence_path": "research_round9/session_journal.json",
-            "locator": "Completed bounded QC data controls; no strategy return",
-            "what_verified": "Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około1690 zakwalifikowanych akcji i80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii."
-          },
-          {
-            "url": "https://www.quantconnect.com/project/38622173",
             "evidence_path": "research_round9/session_journal.json",
             "locator": "Completed bounded QC data controls; no strategy return",
             "what_verified": "Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około 1690 zakwalifikowanych akcji i 80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii."
@@ -408,9 +363,6 @@
           "Drugi projekt utworzony po przełączeniu pojedynczej darmowej sesji; kod lokalny zachowany.",
           "Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.",
           "Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.",
-          "Pełne logi i JSON wszystkich4 oryginalnych sond T010 odczytane; runID,LEAN18215 i hashe plików zachowane.",
-          "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i8historycznych próbek.",
-          "Semantyka nullilości i zerowych stawek dla brakującego rekordu potwierdzona wpublicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.",
           "Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.",
           "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.",
           "Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday."
@@ -425,9 +377,9 @@
           "Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.",
           "Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.",
           "QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.",
+          "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
           "Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.",
           "ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.",
-          "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
           "LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.",
           "Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.",
           "Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii."
@@ -490,18 +442,6 @@
             "evidence_path": "research_round7/qc_cloud_attempt.json",
             "locator": "Actual authenticated UI attempt; no verified data result",
             "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38622173 utworzony; edytor pozostaje na Loading coding environment. Kod Lehmanna gotowy lokalnie, import i cztery kontrole danych jeszcze niewykonane."
-          },
-          {
-            "url": "https://www.quantconnect.com/project/38622173",
-            "evidence_path": "research_round8/session_journal.json",
-            "locator": "Completed bounded QC data controls; no strategy return",
-            "what_verified": "Wykonano 4 zaplanowane kontrole Lehmanna na FREE. Pełny log panel_2021 potwierdza problem klasyfikacji: 42 641 nieodczytanych rekordów, 0 zakwalifikowanych akcji. Trzy pozostałe próby zakończyły obliczenia; pełne logi są jeszcze do odczytu z zawieszających się widoków QC."
-          },
-          {
-            "url": "https://www.quantconnect.com/project/38622173",
-            "evidence_path": "research_round9/session_journal.json",
-            "locator": "Completed bounded QC data controls; no strategy return",
-            "what_verified": "Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około1690 zakwalifikowanych akcji i80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii."
           },
           {
             "url": "https://www.quantconnect.com/project/38622173",
@@ -656,7 +596,7 @@
       {
         "id": "ARRIVAL_20261029_T010",
         "title": "Dzisiejsza kontrola wykonania · 29.10.2026",
-        "summary": "Zaplanowano pomiar 20:35–21:06 Warszawa; analiza około 21:20. Wymagany włączony Mac i Codex.",
+        "summary": "Zakończono pomiar dostarczenia danych i kwotowań. Brak odczytu pozostaje brakiem, bez odtwarzania po fakcie.",
         "columns": [
           "Zakres",
           "Stan"
@@ -671,7 +611,8 @@
           "Pomiar dostępności danych i kwotowań nie jest testem przewagi ani potwierdzeniem rzeczywistych filli. Nie składano zleceń.",
           "IEX jest pojedynczym rynkiem. Historyczne SIP pobrane po sesji nie dowodzą bezpłatnej dostępności SIP w czasie decyzji.",
           "Spread jest zmierzony w jednym punkcie. Prowizja i rezerwa opłat są modelem; poślizg, częściowe wykonanie, FX, podatki i uprawnienia instrumentu pozostają niepotwierdzone.",
-          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L."
+          "Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika korekty. Dzisiejsza próba bada dostarczenie prefiksu danych, bez zmiany reguł i bez nowego P&L.",
+          "29.10: odczyt IEX wysłano 46,512 s po celu; dwa błędy konektora, brak terminowych kwotowań. Historyczny SIP tego nie zastępuje."
         ],
         "evidence_report": "WYKONANIE_DZISIAJ/T010.json"
       }
@@ -780,9 +721,6 @@
             "Drugi projekt utworzony po przełączeniu pojedynczej darmowej sesji; kod lokalny zachowany.",
             "Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.",
             "Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.",
-            "Pełne logi i JSON wszystkich4 oryginalnych sond T010 odczytane; runID,LEAN18215 i hashe plików zachowane.",
-            "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i8historycznych próbek.",
-            "Semantyka nullilości i zerowych stawek dla brakującego rekordu potwierdzona wpublicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.",
             "Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.",
             "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.",
             "Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday."
@@ -796,9 +734,9 @@
             "Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.",
             "Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.",
             "QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.",
+            "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
             "Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.",
             "ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.",
-            "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
             "LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.",
             "Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.",
             "Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii."
@@ -846,18 +784,6 @@
               "evidence_path": "research_round7/qc_cloud_attempt.json",
               "locator": "Actual authenticated UI attempt; no verified data result",
               "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38622173 utworzony; edytor pozostaje na Loading coding environment. Kod Lehmanna gotowy lokalnie, import i cztery kontrole danych jeszcze niewykonane."
-            },
-            {
-              "url": "https://www.quantconnect.com/project/38622173",
-              "evidence_path": "research_round8/session_journal.json",
-              "locator": "Completed bounded QC data controls; no strategy return",
-              "what_verified": "Wykonano 4 zaplanowane kontrole Lehmanna na FREE. Pełny log panel_2021 potwierdza problem klasyfikacji: 42 641 nieodczytanych rekordów, 0 zakwalifikowanych akcji. Trzy pozostałe próby zakończyły obliczenia; pełne logi są jeszcze do odczytu z zawieszających się widoków QC."
-            },
-            {
-              "url": "https://www.quantconnect.com/project/38622173",
-              "evidence_path": "research_round9/session_journal.json",
-              "locator": "Completed bounded QC data controls; no strategy return",
-              "what_verified": "Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około1690 zakwalifikowanych akcji i80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii."
             },
             {
               "url": "https://www.quantconnect.com/project/38622173",
@@ -1052,9 +978,6 @@
             "Drugi projekt utworzony po przełączeniu pojedynczej darmowej sesji; kod lokalny zachowany.",
             "Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.",
             "Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.",
-            "Pełne logi i JSON wszystkich4 oryginalnych sond T010 odczytane; runID,LEAN18215 i hashe plików zachowane.",
-            "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i8historycznych próbek.",
-            "Semantyka nullilości i zerowych stawek dla brakującego rekordu potwierdzona wpublicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.",
             "Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.",
             "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.",
             "Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday."
@@ -1072,9 +995,9 @@
             "Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.",
             "Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.",
             "QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.",
+            "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
             "Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.",
             "ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.",
-            "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
             "LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.",
             "Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.",
             "Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii."
@@ -1147,18 +1070,6 @@
               "evidence_path": "research_round7/qc_cloud_attempt.json",
               "locator": "Actual authenticated UI attempt; no verified data result",
               "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38622173 utworzony; edytor pozostaje na Loading coding environment. Kod Lehmanna gotowy lokalnie, import i cztery kontrole danych jeszcze niewykonane."
-            },
-            {
-              "url": "https://www.quantconnect.com/project/38622173",
-              "evidence_path": "research_round8/session_journal.json",
-              "locator": "Completed bounded QC data controls; no strategy return",
-              "what_verified": "Wykonano 4 zaplanowane kontrole Lehmanna na FREE. Pełny log panel_2021 potwierdza problem klasyfikacji: 42 641 nieodczytanych rekordów, 0 zakwalifikowanych akcji. Trzy pozostałe próby zakończyły obliczenia; pełne logi są jeszcze do odczytu z zawieszających się widoków QC."
-            },
-            {
-              "url": "https://www.quantconnect.com/project/38622173",
-              "evidence_path": "research_round9/session_journal.json",
-              "locator": "Completed bounded QC data controls; no strategy return",
-              "what_verified": "Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około1690 zakwalifikowanych akcji i80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii."
             },
             {
               "url": "https://www.quantconnect.com/project/38622173",
@@ -1357,9 +1268,6 @@
             "Drugi projekt utworzony po przełączeniu pojedynczej darmowej sesji; kod lokalny zachowany.",
             "Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.",
             "Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.",
-            "Pełne logi i JSON wszystkich4 oryginalnych sond T010 odczytane; runID,LEAN18215 i hashe plików zachowane.",
-            "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i8historycznych próbek.",
-            "Semantyka nullilości i zerowych stawek dla brakującego rekordu potwierdzona wpublicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.",
             "Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.",
             "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.",
             "Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday."
@@ -1377,9 +1285,9 @@
             "Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.",
             "Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.",
             "QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.",
+            "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
             "Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.",
             "ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.",
-            "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
             "LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.",
             "Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.",
             "Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii."
@@ -1442,18 +1350,6 @@
               "evidence_path": "research_round7/qc_cloud_attempt.json",
               "locator": "Actual authenticated UI attempt; no verified data result",
               "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38622173 utworzony; edytor pozostaje na Loading coding environment. Kod Lehmanna gotowy lokalnie, import i cztery kontrole danych jeszcze niewykonane."
-            },
-            {
-              "url": "https://www.quantconnect.com/project/38622173",
-              "evidence_path": "research_round8/session_journal.json",
-              "locator": "Completed bounded QC data controls; no strategy return",
-              "what_verified": "Wykonano 4 zaplanowane kontrole Lehmanna na FREE. Pełny log panel_2021 potwierdza problem klasyfikacji: 42 641 nieodczytanych rekordów, 0 zakwalifikowanych akcji. Trzy pozostałe próby zakończyły obliczenia; pełne logi są jeszcze do odczytu z zawieszających się widoków QC."
-            },
-            {
-              "url": "https://www.quantconnect.com/project/38622173",
-              "evidence_path": "research_round9/session_journal.json",
-              "locator": "Completed bounded QC data controls; no strategy return",
-              "what_verified": "Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około1690 zakwalifikowanych akcji i80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii."
             },
             {
               "url": "https://www.quantconnect.com/project/38622173",
@@ -1587,9 +1483,6 @@
             "Drugi projekt utworzony po przełączeniu pojedynczej darmowej sesji; kod lokalny zachowany.",
             "Import zamrożonego kodu T010 i zapis w chmurze potwierdzone. Cztery różne parametry przypadków uruchomione pojedynczo; wersja LEAN2.5.0.0.18215.",
             "Odczytano pełny JSON pierwszej kontroli panelu i zachowano ujawniony brak zamiast dopuszczać wszystkie akcje.",
-            "Pełne logi i JSON wszystkich4 oryginalnych sond T010 odczytane; runID,LEAN18215 i hashe plików zachowane.",
-            "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i8historycznych próbek.",
-            "Semantyka nullilości i zerowych stawek dla brakującego rekordu potwierdzona wpublicznym LocalDiskShortableProvider; nie oznacza danych asofintraday.",
             "Pełne logi i JSON wszystkich 4 oryginalnych sond T010 odczytane; runID, LEAN18215 i hashe plików zachowane.",
             "Osobna sonda typu obiektów potwierdziła prawidłowe accessory i faktyczny kodNYSE; V3 potwierdza dostęp80barów i 8historycznych próbek.",
             "Semantyka null ilości i zerowych stawek dla brakującego rekordu potwierdzona w publicznym LocalDiskShortableProvider; nie oznacza danych asofintraday."
@@ -1604,9 +1497,9 @@
             "Pełny zbiórNYSE/AMEXasof, uwzględniający później wycofane akcje, źródłowo uzgodnione totalreturns i terminalną wycenę.",
             "Faktyczne sparse/defaultsemantics borrow i historyczne stawki; następnie pełne finansowanie/restrictedproceeds/ledger.",
             "QCpóźniejsze dane nie są oryginalnym panelem1962–1986. Nie stosować filtra przyszłego przetrwania.",
+            "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
             "Ostatni JSON ucięty na 8192 znakach: tylko5 kompletnych dat i kompletne wcześniejsze pola; brak pełnego raportu 10 dat. Przed dalszą osobno zaplanowaną kontrolą dzielić raport na krótkie numerowane komunikaty, bez zwiększania zakresu danych.",
             "ENE wymaga kontroli obejmującej styczeń 2002 oraz historii tickerów/OTC. Pierwotne złe okno zachowane; nie powtarzano go.",
-            "Pełne pokrycie historycznego NYSE/AMEX: uzgodnić AMEX/ASE i sklasyfikować brakujące rekordy bez survivorshipbias; nie zastępować oryginału samymi spółkami posiadającymi fundamenty.",
             "LEH/ENE: końcowe totalreturn, OTC i odzyski po upadłości nadal niepotwierdzone; ceny zdarzeń nie wystarczają.",
             "Borrow: ustalić godzinę publikacji, faktyczną dostępność przy wejściu, recall i zakres pełnego uniwersum. Dni bez danych nie są darmową pożyczką.",
             "Brak pełnego adaptera finansowania, kosztów i ledger; to kontrole danych, żadnego wyniku rentowności ani potwierdzonej strategii."
@@ -1669,18 +1562,6 @@
               "evidence_path": "research_round7/qc_cloud_attempt.json",
               "locator": "Actual authenticated UI attempt; no verified data result",
               "what_verified": "Konto Free potwierdzone w Chrome. Projekt 38622173 utworzony; edytor pozostaje na Loading coding environment. Kod Lehmanna gotowy lokalnie, import i cztery kontrole danych jeszcze niewykonane."
-            },
-            {
-              "url": "https://www.quantconnect.com/project/38622173",
-              "evidence_path": "research_round8/session_journal.json",
-              "locator": "Completed bounded QC data controls; no strategy return",
-              "what_verified": "Wykonano 4 zaplanowane kontrole Lehmanna na FREE. Pełny log panel_2021 potwierdza problem klasyfikacji: 42 641 nieodczytanych rekordów, 0 zakwalifikowanych akcji. Trzy pozostałe próby zakończyły obliczenia; pełne logi są jeszcze do odczytu z zawieszających się widoków QC."
-            },
-            {
-              "url": "https://www.quantconnect.com/project/38622173",
-              "evidence_path": "research_round9/session_journal.json",
-              "locator": "Completed bounded QC data controls; no strategy return",
-              "what_verified": "Odczytano pełne logi wszystkich 4 oryginalnych kontroli Lehmanna. Dwie dodatkowe kontrole wykryły błąd naszego filtra NYS/NYSE; po poprawce odczytano około1690 zakwalifikowanych akcji i80 barów próbki. Nadal brak kompletnego panelu źródłowego i wyniku strategii."
             },
             {
               "url": "https://www.quantconnect.com/project/38622173",

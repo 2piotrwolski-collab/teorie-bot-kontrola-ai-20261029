@@ -1,0 +1,71 @@
+import datetime as dt
+import unittest
+from .recalculate import Rates, cash_transform, cash_nights_from_trades, features, adjusted, simulate
+
+
+def bars():
+    start = dt.date(2000, 1, 1)
+    out = [{'date': (start+dt.timedelta(days=i)).isoformat(), 'open': 100., 'high': 100.,
+            'low': 100., 'close': 100., 'adj_close': 100., 'volume': 10.} for i in range(60)]
+    out[55].update(close=101., high=101., adj_close=101.)
+    out[57].update(close=97., low=97., adj_close=97.)
+    return out
+
+
+class ReconstructionChecks(unittest.TestCase):
+    def test_weekend_cash_interest_hand_calculated(self):
+        rates = Rates([('2024-01-04', 3.6), ('2024-01-05', 99.)])
+        base = {'equity': [{'date': '2024-01-05', 'equity': 1., 'long_during_session': False, 'daily_return': 0.},
+                           {'date': '2024-01-08', 'equity': 1.1, 'long_during_session': True, 'daily_return': .1}]}
+        path, intervals = cash_transform(base, rates)
+        self.assertAlmostEqual(path[-1]['equity'], 1.10033)
+        self.assertEqual(intervals[0]['rate_date'], '2024-01-04')
+        self.assertEqual(intervals[0]['nights'], 3)
+
+    def test_future_rate_does_not_change_previous_accrual(self):
+        one = Rates([('2024-01-04', 3.6), ('2024-01-05', 99.)])
+        two = Rates([('2024-01-04', 3.6), ('2024-01-05', -99.)])
+        self.assertEqual(one.before('2024-01-05'), two.before('2024-01-05'))
+
+    def test_rate_floor_is_explicit(self):
+        self.assertEqual(Rates([('2024-01-04', -.1)]).before('2024-01-05')[1], 0.)
+
+    def test_channel_excludes_current_bar(self):
+        raw = bars()
+        self.assertTrue(features(raw, 55, False)['triggered'])
+        raw[55]['high'] = 1000.
+        self.assertEqual(features(raw, 55, False)['level'], 100.)
+
+    def test_nominal_tie_and_adjustment_precision_are_separate(self):
+        raw = bars()[:22]
+        for b in raw:
+            b['adj_close'] = 100.00002
+        raw[-1]['adj_close'] = 100.00001
+        self.assertFalse(features(raw, 21, True)['triggered'])
+        self.assertTrue(features(adjusted(raw), 21, True)['triggered'])
+
+    def test_buy_on_exdate_not_entitled(self):
+        raw = bars()
+        result = simulate(raw, raw[56]['date'], raw[-1]['date'], nominal_signals=True,
+                          cash_dividends={raw[56]['date']: 2.})
+        self.assertEqual(result['dividend_credits'], [])
+        self.assertEqual(result['trades'][0]['execution_date'], raw[56]['date'])
+
+    def test_sell_on_exdate_remains_entitled(self):
+        raw = bars()
+        result = simulate(raw, raw[56]['date'], raw[-1]['date'], nominal_signals=True,
+                          cash_dividends={raw[58]['date']: 2.})
+        self.assertEqual(result['trades'][1]['execution_date'], raw[58]['date'])
+        self.assertAlmostEqual(result['dividend_credits'][0]['credit'], 2/(100*1.0005))
+
+    def test_trade_calendar_counts_weekend_not_terminal_future(self):
+        data = {'equity': [{'date': '2024-01-02'}, {'date': '2024-01-09'}],
+                'trades': [{'side': 'buy', 'execution_date': '2024-01-02'},
+                           {'side': 'sell', 'execution_date': '2024-01-05'},
+                           {'side': 'buy', 'execution_date': '2024-01-08'},
+                           {'side': 'sell', 'execution_date': '2024-01-09'}]}
+        self.assertEqual(cash_nights_from_trades(data), 3)
+
+
+if __name__ == '__main__':
+    unittest.main()

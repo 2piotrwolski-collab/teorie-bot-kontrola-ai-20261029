@@ -1,0 +1,13 @@
+test_buy_on_exdate_not_entitled (audit_sensitivity_20261029.independent_check_v2.test_recalculate.ReconstructionChecks.test_buy_on_exdate_not_entitled) ... ok
+test_channel_excludes_current_bar (audit_sensitivity_20261029.independent_check_v2.test_recalculate.ReconstructionChecks.test_channel_excludes_current_bar) ... ok
+test_future_rate_does_not_change_previous_accrual (audit_sensitivity_20261029.independent_check_v2.test_recalculate.ReconstructionChecks.test_future_rate_does_not_change_previous_accrual) ... ok
+test_nominal_tie_and_adjustment_precision_are_separate (audit_sensitivity_20261029.independent_check_v2.test_recalculate.ReconstructionChecks.test_nominal_tie_and_adjustment_precision_are_separate) ... ok
+test_rate_floor_is_explicit (audit_sensitivity_20261029.independent_check_v2.test_recalculate.ReconstructionChecks.test_rate_floor_is_explicit) ... ok
+test_sell_on_exdate_remains_entitled (audit_sensitivity_20261029.independent_check_v2.test_recalculate.ReconstructionChecks.test_sell_on_exdate_remains_entitled) ... ok
+test_trade_calendar_counts_weekend_not_terminal_future (audit_sensitivity_20261029.independent_check_v2.test_recalculate.ReconstructionChecks.test_trade_calendar_counts_weekend_not_terminal_future) ... ok
+test_weekend_cash_interest_hand_calculated (audit_sensitivity_20261029.independent_check_v2.test_recalculate.ReconstructionChecks.test_weekend_cash_interest_hand_calculated) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.002s
+
+OK

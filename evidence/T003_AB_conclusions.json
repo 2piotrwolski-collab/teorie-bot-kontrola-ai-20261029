@@ -1,0 +1,480 @@
+{
+  "id": "T003_V1_AB_INDEPENDENT_CHECK_20261029_V2",
+  "scope": "sensitivity_not_verdict",
+  "original_Turtle_verdict_changed": false,
+  "baseline_exact_metrics_ledgers_and_NAV_match": true,
+  "source_fit": "Historical SPY long/cash Donchian55/20 adaptation only; not full Turtle futures.",
+  "data_sha256": "638ceaafe7de04e32e8214fe227bc060e94d437bd7c97cf0bd6993572333e6ba",
+  "engine_sha256": "c2aa02065a545a1e6e11fe5e1b927b103738182cc443036b2b4de9388ef91d41",
+  "summaries": [
+    {
+      "segment": "development",
+      "variant": "baseline",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 1.1100433487335692,
+      "operations": 74,
+      "roundtrips": 37,
+      "exposure_pct": 41.39941690962099,
+      "delta_vs_v1_pp": 0.0,
+      "benchmark_cagr_pct": 4.9180727341182395,
+      "delta_vs_SPY_pp": -3.8080293853846703
+    },
+    {
+      "segment": "development",
+      "variant": "A",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 2.0224657245024424,
+      "operations": 74,
+      "roundtrips": 37,
+      "exposure_pct": 41.39941690962099,
+      "delta_vs_v1_pp": 0.9124223757688732,
+      "benchmark_cagr_pct": 4.9180727341182395,
+      "delta_vs_SPY_pp": -2.895607009615797
+    },
+    {
+      "segment": "development",
+      "variant": "B",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 0.8861468429013142,
+      "operations": 74,
+      "roundtrips": 37,
+      "exposure_pct": 39.46461701563743,
+      "delta_vs_v1_pp": -0.22389650583225507,
+      "benchmark_cagr_pct": 4.9180727341182395,
+      "delta_vs_SPY_pp": -4.031925891216925
+    },
+    {
+      "segment": "development",
+      "variant": "B_exact",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 0.8874325737331601,
+      "operations": 74,
+      "roundtrips": 37,
+      "exposure_pct": 39.46461701563743,
+      "delta_vs_v1_pp": -0.22261077500040916,
+      "benchmark_cagr_pct": 4.9180727341182395,
+      "delta_vs_SPY_pp": -4.030640160385079
+    },
+    {
+      "segment": "development",
+      "variant": "A_plus_B",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 1.8374582133178663,
+      "operations": 74,
+      "roundtrips": 37,
+      "exposure_pct": 39.46461701563743,
+      "delta_vs_v1_pp": 0.727414864584297,
+      "benchmark_cagr_pct": 4.9180727341182395,
+      "delta_vs_SPY_pp": -3.0806145208003732
+    },
+    {
+      "segment": "validation",
+      "variant": "baseline",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 4.982419791683657,
+      "operations": 18,
+      "roundtrips": 9,
+      "exposure_pct": 57.45526838966203,
+      "delta_vs_v1_pp": 0.0,
+      "benchmark_cagr_pct": 14.784654529188623,
+      "delta_vs_SPY_pp": -9.802234737504968
+    },
+    {
+      "segment": "validation",
+      "variant": "A",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 5.635419695501542,
+      "operations": 18,
+      "roundtrips": 9,
+      "exposure_pct": 57.45526838966203,
+      "delta_vs_v1_pp": 0.6529999038178858,
+      "benchmark_cagr_pct": 14.784654529188623,
+      "delta_vs_SPY_pp": -9.149234833687082
+    },
+    {
+      "segment": "validation",
+      "variant": "B",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 4.263947199344731,
+      "operations": 18,
+      "roundtrips": 9,
+      "exposure_pct": 53.87673956262425,
+      "delta_vs_v1_pp": -0.7184725923389257,
+      "benchmark_cagr_pct": 14.784654529188623,
+      "delta_vs_SPY_pp": -10.520707329843892
+    },
+    {
+      "segment": "validation",
+      "variant": "B_exact",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 4.265007286782452,
+      "operations": 18,
+      "roundtrips": 9,
+      "exposure_pct": 53.87673956262425,
+      "delta_vs_v1_pp": -0.7174125049012048,
+      "benchmark_cagr_pct": 14.784654529188623,
+      "delta_vs_SPY_pp": -10.519647242406172
+    },
+    {
+      "segment": "validation",
+      "variant": "A_plus_B",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 4.970559025989907,
+      "operations": 18,
+      "roundtrips": 9,
+      "exposure_pct": 53.87673956262425,
+      "delta_vs_v1_pp": -0.01186076569374972,
+      "benchmark_cagr_pct": 14.784654529188623,
+      "delta_vs_SPY_pp": -9.814095503198716
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "baseline",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 3.502802038933739,
+      "operations": 40,
+      "roundtrips": 20,
+      "exposure_pct": 57.70128354725787,
+      "delta_vs_v1_pp": 0.0,
+      "benchmark_cagr_pct": 15.127449409355819,
+      "delta_vs_SPY_pp": -11.62464737042208
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "A",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 4.700172092662114,
+      "operations": 40,
+      "roundtrips": 20,
+      "exposure_pct": 57.70128354725787,
+      "delta_vs_v1_pp": 1.197370053728375,
+      "benchmark_cagr_pct": 15.127449409355819,
+      "delta_vs_SPY_pp": -10.427277316693704
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "B",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 2.798228578715656,
+      "operations": 40,
+      "roundtrips": 20,
+      "exposure_pct": 56.009334889148185,
+      "delta_vs_v1_pp": -0.7045734602180831,
+      "benchmark_cagr_pct": 15.127449409355819,
+      "delta_vs_SPY_pp": -12.329220830640164
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "B_exact",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 2.7857132858845945,
+      "operations": 40,
+      "roundtrips": 20,
+      "exposure_pct": 56.009334889148185,
+      "delta_vs_v1_pp": -0.7170887530491443,
+      "benchmark_cagr_pct": 15.127449409355819,
+      "delta_vs_SPY_pp": -12.341736123471225
+    },
+    {
+      "segment": "retrospective_check",
+      "variant": "A_plus_B",
+      "scope": "sensitivity_not_verdict",
+      "cagr_pct": 4.047799629705473,
+      "operations": 40,
+      "roundtrips": 20,
+      "exposure_pct": 56.009334889148185,
+      "delta_vs_v1_pp": 0.5449975907717342,
+      "benchmark_cagr_pct": 15.127449409355819,
+      "delta_vs_SPY_pp": -11.079649779650346
+    }
+  ],
+  "cash_checks": {
+    "development": {
+      "A_cash_checks": {
+        "nights_from_transitions": 3208,
+        "nights_from_transactions": 3208,
+        "night_weighted_rate_pct": 1.5118796758104738,
+        "transform_vs_funded_ledger_max_NAV_difference": 3.752553823233029e-14
+      },
+      "A_plus_B_cash_checks": {
+        "nights_from_transitions": 3316,
+        "nights_from_transactions": 3316,
+        "night_weighted_rate_pct": 1.5280579010856454,
+        "transform_vs_funded_ledger_max_NAV_difference": 5.040412531798211e-14
+      }
+    },
+    "validation": {
+      "A_cash_checks": {
+        "nights_from_transitions": 623,
+        "nights_from_transactions": 623,
+        "night_weighted_rate_pct": 1.4304173354735152,
+        "transform_vs_funded_ledger_max_NAV_difference": 4.6629367034256575e-15
+      },
+      "A_plus_B_cash_checks": {
+        "nights_from_transitions": 671,
+        "nights_from_transactions": 671,
+        "night_weighted_rate_pct": 1.4466318926974664,
+        "transform_vs_funded_ledger_max_NAV_difference": 3.3306690738754696e-15
+      }
+    },
+    "retrospective_check": {
+      "A_cash_checks": {
+        "nights_from_transitions": 1046,
+        "nights_from_transactions": 1046,
+        "night_weighted_rate_pct": 2.7001625239005733,
+        "transform_vs_funded_ledger_max_NAV_difference": 6.217248937900877e-15
+      },
+      "A_plus_B_cash_checks": {
+        "nights_from_transitions": 1087,
+        "nights_from_transactions": 1087,
+        "night_weighted_rate_pct": 2.729383624655014,
+        "transform_vs_funded_ledger_max_NAV_difference": 9.103828801926284e-15
+      }
+    }
+  },
+  "operation_counts": {
+    "development": {
+      "v1_only": 17,
+      "B_only": 17,
+      "symmetric_total": 34,
+      "naive_paired_index_mismatches_not_a_valid_identity_count": 62
+    },
+    "validation": {
+      "v1_only": 4,
+      "B_only": 4,
+      "symmetric_total": 8,
+      "naive_paired_index_mismatches_not_a_valid_identity_count": 4
+    },
+    "retrospective_check": {
+      "v1_only": 5,
+      "B_only": 5,
+      "symmetric_total": 10,
+      "naive_paired_index_mismatches_not_a_valid_identity_count": 11
+    }
+  },
+  "v1_only_operations_total": 26,
+  "B_only_operations_total": 26,
+  "symmetric_operations_total": 52,
+  "tie_count_reconciliation": {
+    "frozen_v1_only_development": 17,
+    "after_suppressing_only_20050120_exit_v1_only_development": 16,
+    "after_suppressing_only_20050120_exit_B_only_development": 16,
+    "meaning": "The17→16 difference is exactly reconciled by the declared2005 tie counterfactual, not by changing the operation identity definition."
+  },
+  "near_ties_in_declared_baseline_states": 2,
+  "specific_ties": [
+    {
+      "segment": "development",
+      "signal_date": "2005-01-20",
+      "execution_date": "2005-01-21",
+      "is_long_before_open": true,
+      "desired_long": false,
+      "suppressed": false,
+      "actual_feature": {
+        "close": 79.0888671875,
+        "level": 79.08887375233424,
+        "level_dates": [
+          "2005-01-13"
+        ],
+        "difference": -6.564834237110517e-06,
+        "relative_difference": -8.300578735851276e-08,
+        "triggered": true,
+        "window": 20,
+        "field": "low"
+      },
+      "adjusted": {
+        "close": 79.0888671875,
+        "level": 79.08887375233424,
+        "level_dates": [
+          "2005-01-13"
+        ],
+        "difference": -6.564834237110517e-06,
+        "relative_difference": -8.300578735851276e-08,
+        "triggered": true,
+        "window": 20,
+        "field": "low"
+      },
+      "nominal": {
+        "close": 117.5,
+        "level": 117.5,
+        "level_dates": [
+          "2005-01-13"
+        ],
+        "difference": 0.0,
+        "relative_difference": 0.0,
+        "triggered": false,
+        "window": 20,
+        "field": "low"
+      },
+      "adjusted_close_12dp": "79.088867187500",
+      "adjusted_level_12dp": "79.088873752334",
+      "adjusted_difference_12dp": "-0.000006564834",
+      "nominal_close_12dp": "117.500000000000",
+      "nominal_level_12dp": "117.500000000000",
+      "nominal_difference_12dp": "0.000000000000",
+      "decimal_exact_input_adjustment_difference": "-0.000006564834239861749821897555305",
+      "close_factor": 0.6730967420212766,
+      "adjusted_level_factors": [
+        {
+          "date": "2005-01-13",
+          "factor": 0.6730967978922063
+        }
+      ]
+    },
+    {
+      "segment": "development",
+      "signal_date": "2009-07-21",
+      "execution_date": "2009-07-22",
+      "is_long_before_open": false,
+      "desired_long": false,
+      "suppressed": false,
+      "actual_feature": {
+        "close": 70.43101501464844,
+        "level": 70.43112984307952,
+        "level_dates": [
+          "2009-06-11"
+        ],
+        "difference": -0.0001148284310801273,
+        "relative_difference": -1.6303647454749756e-06,
+        "triggered": false,
+        "window": 55,
+        "field": "high"
+      },
+      "adjusted": {
+        "close": 70.43101501464844,
+        "level": 70.43112984307952,
+        "level_dates": [
+          "2009-06-11"
+        ],
+        "difference": -0.0001148284310801273,
+        "relative_difference": -1.6303647454749756e-06,
+        "triggered": false,
+        "window": 55,
+        "field": "high"
+      },
+      "nominal": {
+        "close": 95.56999969482422,
+        "level": 96.11000061035156,
+        "level_dates": [
+          "2009-06-11"
+        ],
+        "difference": -0.5400009155273438,
+        "relative_difference": -0.005618571554448443,
+        "triggered": false,
+        "window": 55,
+        "field": "high"
+      },
+      "adjusted_close_12dp": "70.431015014648",
+      "adjusted_level_12dp": "70.431129843080",
+      "adjusted_difference_12dp": "-0.000114828431",
+      "nominal_close_12dp": "95.569999694824",
+      "nominal_level_12dp": "96.110000610352",
+      "nominal_difference_12dp": "-0.540000915527",
+      "decimal_exact_input_adjustment_difference": "-0.0001148284310833198408834327158",
+      "close_factor": 0.7369573636031179,
+      "adjusted_level_factors": [
+        {
+          "date": "2009-06-11",
+          "factor": 0.7328179106836226
+        }
+      ]
+    },
+    {
+      "segment": "validation",
+      "signal_date": "2017-08-10",
+      "execution_date": "2017-08-11",
+      "is_long_before_open": true,
+      "desired_long": true,
+      "suppressed": false,
+      "actual_feature": {
+        "close": 211.33348083496094,
+        "level": 211.33347967466187,
+        "level_dates": [
+          "2017-07-13"
+        ],
+        "difference": 1.1602990639403288e-06,
+        "relative_difference": 5.490370317691998e-09,
+        "triggered": false,
+        "window": 20,
+        "field": "low"
+      },
+      "adjusted": {
+        "close": 211.33348083496094,
+        "level": 211.33347967466187,
+        "level_dates": [
+          "2017-07-13"
+        ],
+        "difference": 1.1602990639403288e-06,
+        "relative_difference": 5.490370317691998e-09,
+        "triggered": false,
+        "window": 20,
+        "field": "low"
+      },
+      "nominal": {
+        "close": 243.75999450683594,
+        "level": 243.75999450683594,
+        "level_dates": [
+          "2017-07-13"
+        ],
+        "difference": 0.0,
+        "relative_difference": 0.0,
+        "triggered": false,
+        "window": 20,
+        "field": "low"
+      },
+      "adjusted_close_12dp": "211.333480834961",
+      "adjusted_level_12dp": "211.333479674662",
+      "adjusted_difference_12dp": "0.000001160299",
+      "nominal_close_12dp": "243.759994506836",
+      "nominal_level_12dp": "243.759994506836",
+      "nominal_difference_12dp": "0.000000000000",
+      "decimal_exact_input_adjustment_difference": "0.000001160299071065140209244309122",
+      "close_factor": 0.8669736035337594,
+      "adjusted_level_factors": [
+        {
+          "date": "2017-07-13",
+          "factor": 0.8669735987737532
+        }
+      ]
+    }
+  ],
+  "tie_counterfactual": {
+    "scope": "sensitivity_not_verdict",
+    "original_cagr_pct": 1.1100433487335692,
+    "suppress_20050120_exit_cagr_pct": 1.069860046790061,
+    "delta_pp": -0.040183301943508276
+  },
+  "FRED_overlap_value_differences": 0,
+  "A_B_AB_numerically_reproduced": true,
+  "B_exact_retrospective_cagr_pct": 2.7857132858845945,
+  "B_exact_difference_vs_Claude_retrospective_pp": -0.015286714115405609,
+  "B_exact_explanation": "Our explicitly declared ledger uses frozen actual cash dividends, retained until next entry. Claude used a different Yahoo vintage and may differ in reinvestment/inferred dividends; without his CSV and code the exact discrepancy cannot be uniquely assigned to individual rows. The difference0.0153pp is disclosed, not forced to match.",
+  "interpretation": [
+    "No evidence of a wrong strict comparison operator in v1: the2005 adjusted values differ, and60-digit arithmetic preserves their sign. Different per-day adjustment factors produce a nominal tie with an adjusted exit.",
+    "Suppressing only that exit changes development CAGR1.110043→1.069860, delta−0.040183pp.",
+    "2009-07-21 is not within the fixed1e-6 near-tie threshold on frozen data (relative−1.630365e-6), and no entry occurs.",
+    "A uses a current-vintage, discount-basis DTB3 proxy with observation-date lag, floor0 andACT/360. This is not proven historical publication-time PIT or an executable broker cash yield.",
+    "A+B remains below matched SPY by3.08/9.81/11.08percentage points of CAGR in the three archived segments. This does not falsify the original Turtle system."
+  ],
+  "primary_sources": [
+    {
+      "url": "https://fred.stlouisfed.org/series/DTB3",
+      "verified": "Daily series, percent, discount basis; data subject to revision."
+    },
+    {
+      "url": "https://fred.stlouisfed.org/series/TB3MS",
+      "verified": "Monthly averages of business days, discount basis; not contemporaneously known monthly input."
+    },
+    {
+      "url": "https://www.federalreserve.gov/releases/h15/",
+      "verified": "Current H15 schedule16:15 on business days. Historical vintages/release times have not been audited."
+    }
+  ],
+  "new_GC_tests": 0,
+  "new_strategy_trials_registered": 0,
+  "new_sensitivity_cases": 13,
+  "unseen_OOS": false,
+  "paid_API_calls": 0,
+  "synthetic_checks": 8,
+  "audit_directory": "audit_sensitivity_20261029/independent_check_v2"
+}

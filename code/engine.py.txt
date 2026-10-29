@@ -1,0 +1,328 @@
+"""Deterministic daily SPY long/cash SCREENING engine (stdlib only).
+
+This is a historical screening proxy, not an execution-quality backtest. OHLC
+are multiplied by Yahoo's adj_close/close factor as a total-return proxy.
+Signals observed at session t close execute at session t+1 open. Calendar-only
+rules use dates, not t+1 prices. Trading cost is an explicit scenario in bps
+per side; actual bid/ask, taxes, FX, market impact and cash interest are absent.
+No strategy in this module may produce a live order.
+"""
+from __future__ import annotations
+
+import math
+import statistics
+from datetime import date
+from typing import Any
+
+
+ENGINE_VERSION = "1.0.0"
+STRATEGY_KEYS = (
+    "sma200", "momentum252", "donchian", "rsi2", "ibs", "bollinger",
+    "turn_month", "monday", "lowvol", "reversal5",
+)
+DEFAULT_PARAMETERS = {
+    "sma200": {"window": 200},
+    "momentum252": {"lookback": 252},
+    "donchian": {"entry_window": 55, "exit_window": 20},
+    "rsi2": {"rsi_period": 2, "entry_rsi": 5.0, "trend_window": 200, "exit_window": 5},
+    "ibs": {"entry_ibs": 0.2, "exit_ibs": 0.8, "max_hold": 10},
+    "bollinger": {"window": 20, "sigma": 2.0, "max_hold": 20},
+    "turn_month": {"first_sessions": 3, "last_sessions": 1},
+    "monday": {},
+    "lowvol": {"window": 20, "annual_threshold": 0.20, "ddof": 1},
+    "reversal5": {"lookback": 5, "entry_return": -0.03, "hold_sessions": 5},
+}
+LIMITATIONS = [
+    "SCREENING ONLY: no actual bid/ask, executable fills or broker reconciliation.",
+    "Adjusted OHLC = raw OHLC * adj_close/close: total-return proxy, not tradable historical quotes.",
+    "Costs in bps are assumed scenarios; taxes, FX, market impact and cash interest are not modeled.",
+    "Calendar rules use realized session dates; extraordinary unscheduled closures are not modeled point-in-time.",
+    "Single preselected surviving ETF SPY; findings do not generalize to a point-in-time equity universe.",
+    "Terminal position is forcibly liquidated at final close; this differs from ongoing live management.",
+]
+
+
+def _finite(value: Any, label: str) -> float:
+    x = float(value)
+    if not math.isfinite(x):
+        raise ValueError(f"Non-finite {label}")
+    return x
+
+
+def _prepare(bars: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    out = []
+    previous = ""
+    for bar in bars:
+        day = str(bar["date"])[:10]
+        date.fromisoformat(day)
+        if day <= previous:
+            raise ValueError("Bars must have strictly increasing unique session dates")
+        previous = day
+        raw = {k: _finite(bar[k], f"{day} {k}") for k in ("open", "high", "low", "close", "adj_close")}
+        if min(raw.values()) <= 0:
+            raise ValueError(f"Non-positive price at {day}")
+        tolerance = max(raw.values()) * 1e-8
+        if raw["high"] + tolerance < max(raw["open"], raw["close"], raw["low"]) or raw["low"] - tolerance > min(raw["open"], raw["close"], raw["high"]):
+            raise ValueError(f"Invalid OHLC at {day}")
+        factor = raw["adj_close"] / raw["close"]
+        out.append({"date": day, **{k: raw[k] * factor for k in ("open", "high", "low", "close")}, "factor": factor})
+    return out
+
+
+def _mean(values: list[float], index: int, window: int) -> float | None:
+    if index < window - 1:
+        return None
+    return statistics.fmean(values[index - window + 1:index + 1])
+
+
+def _wilder_rsi(values: list[float], period: int) -> list[float | None]:
+    out: list[float | None] = [None] * len(values)
+    if len(values) <= period:
+        return out
+    delta = [values[j] - values[j - 1] for j in range(1, len(values))]
+    gain = sum(max(x, 0.0) for x in delta[:period]) / period
+    loss = sum(max(-x, 0.0) for x in delta[:period]) / period
+
+    def score(g: float, l: float) -> float:
+        if g == 0 and l == 0:
+            return 50.0
+        if l == 0:
+            return 100.0
+        return 100.0 - 100.0 / (1.0 + g / l)
+
+    out[period] = score(gain, loss)
+    for j in range(period + 1, len(values)):
+        d = values[j] - values[j - 1]
+        gain = (gain * (period - 1) + max(d, 0.0)) / period
+        loss = (loss * (period - 1) + max(-d, 0.0)) / period
+        out[j] = score(gain, loss)
+    return out
+
+
+class _Signals:
+    def __init__(self, bars: list[dict[str, Any]], key: str, parameters: dict[str, Any]):
+        self.bars, self.key, self.p = bars, key, parameters
+        self.close = [b["close"] for b in bars]
+        self.rsi = _wilder_rsi(self.close, int(parameters.get("rsi_period", 2))) if key == "rsi2" else []
+        self.month_sessions: dict[str, list[int]] = {}
+        if key == "turn_month":
+            for i, b in enumerate(bars):
+                self.month_sessions.setdefault(b["date"][:7], []).append(i)
+
+    def desired(self, signal_i: int, execute_i: int, is_long: bool, held_sessions: int) -> tuple[bool, str]:
+        key, p, bars, c = self.key, self.p, self.bars, self.close
+        if key == "buyhold":
+            return True, "buy_and_hold"
+        if key == "cash":
+            return False, "cash_control"
+        if key == "monday":
+            return date.fromisoformat(bars[execute_i]["date"]).weekday() == 0, "predeclared_weekday"
+        if key == "turn_month":
+            group = self.month_sessions[bars[execute_i]["date"][:7]]
+            # Full month context is supplied by the frozen source dataset. An
+            # incomplete trailing month cannot be treated as its final session.
+            month = bars[execute_i]["date"][:7]
+            trailing_month = bars[-1]["date"][:7]
+            first = execute_i in group[:int(p["first_sessions"])]
+            last = month != trailing_month and execute_i in group[-int(p["last_sessions"]):]
+            return first or last, "predeclared_month_calendar"
+        if signal_i < 0:
+            return False, "no_prior_close"
+        i = signal_i
+        if key == "sma200":
+            mean = _mean(c, i, int(p["window"]))
+            return mean is not None and c[i] > mean, "close_vs_sma"
+        if key == "momentum252":
+            n = int(p["lookback"])
+            return i >= n and c[i] > c[i - n], "positive_time_series_momentum"
+        if key == "lowvol":
+            n = int(p["window"])
+            if i < n:
+                return False, "insufficient_warmup"
+            returns = [math.log(c[j] / c[j - 1]) for j in range(i - n + 1, i + 1)]
+            vol = (statistics.stdev(returns) if int(p["ddof"]) == 1 else statistics.pstdev(returns)) * math.sqrt(252)
+            return vol <= float(p["annual_threshold"]), "trailing_volatility_filter"
+        if key == "donchian":
+            n = int(p["exit_window"] if is_long else p["entry_window"])
+            if i < n:
+                return is_long, "insufficient_warmup"
+            prior = bars[i - n:i]
+            if is_long:
+                return not (c[i] < min(b["low"] for b in prior)), "prior_channel_exit"
+            return c[i] > max(b["high"] for b in prior), "prior_channel_entry"
+        if key == "rsi2":
+            if is_long:
+                mean = _mean(c, i, int(p["exit_window"]))
+                return not (mean is not None and c[i] > mean), "close_above_exit_average"
+            trend = _mean(c, i, int(p["trend_window"]))
+            rsi = self.rsi[i]
+            return trend is not None and rsi is not None and c[i] > trend and rsi < float(p["entry_rsi"]), "rsi_pullback_in_uptrend"
+        if key == "ibs":
+            width = bars[i]["high"] - bars[i]["low"]
+            ibs = (c[i] - bars[i]["low"]) / width if width > 0 else 0.5
+            if is_long:
+                return not (ibs > float(p["exit_ibs"]) or held_sessions >= int(p["max_hold"])), "ibs_exit_or_max_hold"
+            return ibs < float(p["entry_ibs"]), "ibs_entry"
+        if key == "bollinger":
+            n = int(p["window"])
+            mean = _mean(c, i, n)
+            if mean is None:
+                return is_long, "insufficient_warmup"
+            if is_long:
+                return not (c[i] >= mean or held_sessions >= int(p["max_hold"])), "bollinger_mean_or_max_hold"
+            sigma = statistics.pstdev(c[i - n + 1:i + 1])
+            return c[i] < mean - float(p["sigma"]) * sigma, "bollinger_lower_band_entry"
+        if key == "reversal5":
+            if is_long:
+                return held_sessions < int(p["hold_sessions"]), "fixed_holding_period"
+            n = int(p["lookback"])
+            return i >= n and c[i] / c[i - n] - 1 < float(p["entry_return"]), "short_horizon_reversal"
+        raise ValueError(f"Unknown strategy: {key}")
+
+
+def _metrics(equities: list[float], dates: list[str], *, initial: float = 1.0, exposure_days: int = 0, turnover: float = 0.0, trade_count: int = 0, total_cost: float = 0.0) -> dict[str, Any]:
+    peak = initial
+    dd = 0.0
+    previous = initial
+    returns = []
+    for v in equities:
+        peak = max(peak, v)
+        dd = min(dd, v / peak - 1.0)
+        returns.append(v / previous - 1.0)
+        previous = v
+    years = ((date.fromisoformat(dates[-1]) - date.fromisoformat(dates[0])).days + 1) / 365.2425
+    sd = statistics.stdev(returns) if len(returns) > 1 else 0.0
+    return {
+        "total_return_pct": (equities[-1] / initial - 1.0) * 100,
+        "cagr_pct": ((equities[-1] / initial) ** (1 / years) - 1) * 100,
+        "max_drawdown_pct": dd * 100,
+        "sharpe": statistics.fmean(returns) / sd * math.sqrt(252) if sd > 0 else None,
+        "exposure_pct": exposure_days / len(equities) * 100,
+        "turnover": turnover,
+        "trade_count": trade_count,
+        "completed_trades": trade_count // 2,
+        "costs_pct_initial": total_cost / initial * 100,
+        "session_count": len(equities),
+        "start_date": dates[0],
+        "end_date": dates[-1],
+    }
+
+
+def _annual(equities: list[float], dates: list[str]) -> dict[str, float]:
+    out = {}
+    base = 1.0
+    for i, day in enumerate(dates):
+        if i == len(dates) - 1 or dates[i + 1][:4] != day[:4]:
+            out[day[:4]] = (equities[i] / base - 1.0) * 100
+            base = equities[i]
+    return out
+
+
+def run_strategy(bars: list[dict[str, Any]], strategy_key: str, start_date: str, end_date: str, cost_bps: float = 5, parameters: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Run a frozen parameter scenario, with full-history indicator warmup.
+
+    start_date/end_date delimit the evaluated segment (inclusive); the account
+    starts in cash, independently of all preceding results. ``buyhold`` and
+    ``cash`` are test controls, not extra searched pilot theories.
+    """
+    if strategy_key not in (*STRATEGY_KEYS, "buyhold", "cash"):
+        raise ValueError(f"Unknown strategy: {strategy_key}")
+    date.fromisoformat(start_date)
+    date.fromisoformat(end_date)
+    if end_date < start_date:
+        raise ValueError("end_date precedes start_date")
+    bps = _finite(cost_bps, "cost_bps")
+    if not 0 <= bps < 10000:
+        raise ValueError("cost_bps must be in [0, 10000)")
+    p = dict(DEFAULT_PARAMETERS.get(strategy_key, {}))
+    if parameters:
+        unknown = set(parameters) - set(p)
+        if unknown:
+            raise ValueError(f"Unknown parameters for {strategy_key}: {sorted(unknown)}")
+        p.update(parameters)
+    for k, value in p.items():
+        if not isinstance(value, (int, float)) or not math.isfinite(value):
+            raise ValueError(f"Invalid numeric parameter {k}")
+        if k in ("window", "lookback", "entry_window", "exit_window", "rsi_period", "trend_window", "max_hold", "hold_sessions", "first_sessions", "last_sessions") and (value < 1 or int(value) != value):
+            raise ValueError(f"Invalid positive integer parameter {k}")
+    prepared = _prepare(bars)
+    selected = [i for i, bar in enumerate(prepared) if start_date <= bar["date"] <= end_date]
+    if not selected:
+        raise ValueError("No sessions in evaluation segment")
+    signals = _Signals(prepared, strategy_key, p)
+    rate = bps / 10000.0
+    cash = 1.0
+    shares = 0.0
+    held = 0
+    exposed = 0
+    turnover = total_cost = 0.0
+    trades: list[dict[str, Any]] = []
+    path: list[dict[str, Any]] = []
+    previous_close_equity = 1.0
+    # Same executable scenario for the matched buy-and-hold comparator.
+    first_open = prepared[selected[0]]["open"]
+    benchmark_shares = 1.0 / (first_open * (1 + rate))
+    benchmark_buy_cost = benchmark_shares * first_open * rate
+    for i in selected:
+        bar = prepared[i]
+        desired, reason = signals.desired(i - 1, i, shares > 0, held)
+        signal_date = prepared[i - 1]["date"] if i > 0 and strategy_key not in ("monday", "turn_month") else None
+        if desired and shares == 0:
+            equity_at_open = cash
+            shares = cash / (bar["open"] * (1 + rate))
+            notional = shares * bar["open"]
+            cost = notional * rate
+            cash = 0.0
+            held = 0
+            turnover += notional / equity_at_open
+            total_cost += cost
+            trades.append({"side": "buy", "signal_date": signal_date, "execution_date": bar["date"], "execution_time": "open", "execution_price": bar["open"], "quantity": shares, "cost": cost, "cost_bps": bps, "reason": reason})
+        elif not desired and shares > 0:
+            notional = shares * bar["open"]
+            cost = notional * rate
+            cash = notional - cost
+            total_cost += cost
+            turnover += 1.0
+            trades.append({"side": "sell", "signal_date": signal_date, "execution_date": bar["date"], "execution_time": "open", "execution_price": bar["open"], "quantity": shares, "cost": cost, "cost_bps": bps, "held_sessions": held, "reason": reason})
+            shares = 0.0
+            held = 0
+        is_long = shares > 0
+        if is_long:
+            held += 1
+            exposed += 1
+        equity = cash + shares * bar["close"]
+        benchmark_equity = benchmark_shares * bar["close"]
+        if i == selected[-1]:
+            benchmark_equity *= 1 - rate
+            if shares > 0:
+                notional = shares * bar["close"]
+                cost = notional * rate
+                cash = notional - cost
+                total_cost += cost
+                turnover += 1.0
+                trades.append({"side": "sell", "signal_date": None, "execution_date": bar["date"], "execution_time": "close", "execution_price": bar["close"], "quantity": shares, "cost": cost, "cost_bps": bps, "held_sessions": held, "reason": "terminal_liquidation"})
+                shares = 0.0
+                equity = cash
+        path.append({"date": bar["date"], "equity": equity, "benchmark": benchmark_equity, "long_during_session": is_long, "daily_return": equity / previous_close_equity - 1.0})
+        previous_close_equity = equity
+    dates = [r["date"] for r in path]
+    eq = [r["equity"] for r in path]
+    beq = [r["benchmark"] for r in path]
+    benchmark_sell_cost = benchmark_shares * prepared[selected[-1]]["close"] * rate
+    metrics = _metrics(eq, dates, exposure_days=exposed, turnover=turnover, trade_count=len(trades), total_cost=total_cost)
+    benchmark_metrics = _metrics(beq, dates, exposure_days=len(path), turnover=1 / (1 + rate) + 1, trade_count=2, total_cost=benchmark_buy_cost + benchmark_sell_cost)
+    return {
+        "engine_version": ENGINE_VERSION,
+        "strategy_key": strategy_key,
+        "parameters": p,
+        "cost_bps": bps,
+        "metrics": metrics,
+        "benchmark": {"strategy": "SPY_buy_and_hold_matched", "metrics": benchmark_metrics, "annual_returns": _annual(beq, dates)},
+        "excess_return_pp": metrics["total_return_pct"] - benchmark_metrics["total_return_pct"],
+        "excess_cagr_pp": metrics["cagr_pct"] - benchmark_metrics["cagr_pct"],
+        "trades": trades,
+        "equity": path,
+        "annual_returns": _annual(eq, dates),
+        "limitations": list(LIMITATIONS),
+        "status": "SCREENING_COMPLETED_NOT_VALIDATED_ALPHA",
+    }

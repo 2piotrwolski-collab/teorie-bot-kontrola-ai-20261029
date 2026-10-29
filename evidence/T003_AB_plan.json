@@ -1,0 +1,72 @@
+{
+  "id": "T003_V1_AB_INDEPENDENT_CHECK_20261029_V2",
+  "frozen_at_utc": "2026-10-29T20:53:13.058300+00:00",
+  "scope": "sensitivity_not_verdict",
+  "source_fit": {
+    "market": "Archived SPY long/cash adaptation v1 only, not original Turtle System2 futures",
+    "execution": "Prior daily close signal, next open fill; segment end forced liquidation",
+    "cost": "Archived5bps per side; no actual spread/slippage/taxes/FX",
+    "source_data": "Exactly frozen nominalOHLC plus adj_close CSV; no Yahoo refresh",
+    "cash_A": "Literal Claude prior-observation-date DTB3 formula, floor0, ACT/360; historical publication/vintage availability NOT proven",
+    "B": "Strict nominal55/20 signals, same adjustedOHLC total-return proxy PnL",
+    "B_exact": "NominalOHLC ledger, actual cached Yahoo dividends credited before ex-date open only to previous-close holders; cash dividends not reinvested until next entry, no splits allowed",
+    "A_plus_B": "Apply A to B total-return proxy account, not B_exact",
+    "tie_counterfactual": "Suppress only the adjusted exit signal on2005-01-20, no fitted tolerance"
+  },
+  "inputs": {
+    "prices_csv": {
+      "path": "data/processed/SPY.csv",
+      "sha256": "638ceaafe7de04e32e8214fe227bc060e94d437bd7c97cf0bd6993572333e6ba"
+    },
+    "raw_prices_dividends": {
+      "path": "data/raw/SPY_yahoo.json",
+      "sha256": "4b413dce7ed42892f672d66e1fad00c51a6ccc1fdf8d188b32bf875be53e1bad"
+    },
+    "engine": {
+      "path": "engine.py",
+      "sha256": "c2aa02065a545a1e6e11fe5e1b927b103738182cc443036b2b4de9388ef91d41"
+    },
+    "rates": {
+      "path": "audit_sensitivity_20261029/independent_check_v2/DTB3_fresh.csv",
+      "sha256": "c95a32b4e43adb08afa507d8d693d2b541e3c4559882aada116bd2e5f03032af"
+    }
+  },
+  "segments": {
+    "development": [
+      "2001-01-02",
+      "2015-12-31"
+    ],
+    "validation": [
+      "2016-01-04",
+      "2019-12-31"
+    ],
+    "retrospective_check": [
+      "2020-01-02",
+      "2026-10-27"
+    ]
+  },
+  "baseline_stop_rule": "All dailyNAVs and trade ledgers must match archive v1 within1e-12 before sensitivity calculations",
+  "budget": {
+    "baseline_cases": 3,
+    "derived_sensitivity_cases": 13,
+    "parameter_tuning": 0,
+    "new_GC_backtests": 0,
+    "paid_calls": 0
+  },
+  "checks": [
+    "cash multiplier vs separate funded ledger",
+    "cash nights from equity transitions vs transaction calendar",
+    "all baseline near ties at adjusted relative margin<1e-6 or exact nominal equality",
+    "explicit paired-index vs symmetric-set operation differences",
+    "dividend entitlement buy/sell on exdate",
+    "original file hashes unchanged"
+  ],
+  "known_prior_outcomes": "User provided Claude results; this is an audit, not unseenOOS. Existing sibling audit artifacts are retained and inspected for output comparison only after our computation.",
+  "comparison_tolerance_pp": {
+    "A": 0.05,
+    "B": 0.1,
+    "B_exact": 0.1,
+    "A_plus_B": 0.1
+  },
+  "historical_verdict_changed": false
+}
