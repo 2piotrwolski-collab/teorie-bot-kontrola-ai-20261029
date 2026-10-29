@@ -59,12 +59,13 @@
     "evidence/turtle_review_provenance.json": "d93410f49b1a3a12a222956f05427caf4992f7190803835ebedd49ec7bdcde07",
     "implementation.txt": "db718eec08f7e8139d3096a7bbf08cca139c58fc09df0eba1c4799ae75c8a819",
     "index.html": "d6eb4dfabdb778e14643442b73a742f6b138841f7d874dd66957425b1bcfc381",
-    "llms.txt": "d1100b40a4c14b4fcb1c0d43020f4f450a84d0dfda970ae36bd71f2d03764a83",
+    "llms.txt": "e23eb1e668b948e8012735373d2dc0ee4fd44a4ead2d9bb3cd48a750f45e62e0",
     "review.json": "32f091735d18d8191348135055b50deba2983308067099ae48fe4e5749c852ff",
     "robots.txt": "e5c4b84484ee4216e9373be99380320c25dd94805f99f0a805846f087636553f"
   },
   "raw_market_data_exported": false,
   "server_security_data_exported": false,
   "new_market_backtests_run_by_packager": 0,
-  "publication_is_static_snapshot": true
+  "publication_is_static_snapshot": true,
+  "distribution": "GitHub Pages; only the llms.txt URL prefix differs from the equivalent Sites snapshot."
 }
