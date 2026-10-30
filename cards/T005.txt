@@ -1,4 +1,4 @@
-Snapshot: 2026-10-30T15:51:06.077413+00:00
+Snapshot: 2026-10-30T15:53:23.255807+00:00
 T005 · Archiwalny v1: Zmienione reguły / adaptacja
 
 IBS: warunkowe zwroty ETF-ów akcyjnych
