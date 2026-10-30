@@ -1,0 +1,94 @@
+{
+  "id": "T003_GC_RANGE_ARTIFACT_RECONCILIATION_20261030_V1",
+  "all_passed": true,
+  "raw_minute_bars_including_warmup": 4917897,
+  "study_2019_2025_raw_minute_bars": 4635018,
+  "warmup_raw_minute_bars": 282879,
+  "observed_contracts_including_warmup": 103,
+  "dated_model_changes_including_warmup": 52,
+  "source_model_spotchecks": [
+    {
+      "day": "2019-02-16",
+      "model": [
+        3740.0,
+        3400.0
+      ],
+      "source": [
+        3740,
+        3400
+      ],
+      "source_scope": "RJO authoredsnapshot readviaWeb; rawdownloadfailedcertificate, samepublisherasApril"
+    },
+    {
+      "day": "2019-04-05",
+      "model": [
+        3740.0,
+        3400.0
+      ],
+      "source": [
+        3740,
+        3400
+      ],
+      "source_scope": "ArchivedRJO PDF1d3584...; snapshotnotdailyhistory"
+    },
+    {
+      "day": "2020-01-10",
+      "model": [
+        5500.0,
+        5000.0
+      ],
+      "source": [
+        5500,
+        5000
+      ],
+      "source_scope": "CMEauthorarticlepoint-in-date; effectivityseparate20-014afterJan9close"
+    },
+    {
+      "day": "2020-03-24",
+      "model": [
+        7700.0,
+        7000.0
+      ],
+      "source": [
+        7700,
+        7000
+      ],
+      "source_scope": "CMEauthorarticlepoint-in-date; notannouncementclockproof"
+    },
+    {
+      "day": "2020-06-19",
+      "model": [
+        9020.0,
+        8200.0
+      ],
+      "source": [
+        9020,
+        8200
+      ],
+      "source_scope": "CME20-247, NEW pair validonlyAFTERclose19Jun; same-daymorningcomparisonpendingtimingcontrol"
+    },
+    {
+      "day": "2024-03-22",
+      "model": [
+        9680.0,
+        8800.0
+      ],
+      "source": [
+        9680,
+        8800
+      ],
+      "source_scope": "8800CMEminimumrow; initial9680 remains declared1.1modelprofile, notseparateCMEhouseproof"
+    }
+  ],
+  "model_margin_observations": 18160,
+  "code_sha_verified": "b5d8735917cd793588b87ce7660fa8044495259c7caa1ebf6a04253cf4f3098e",
+  "code_normalization": "Exactfilematches cloudSHAwithoneadditionalterminalLF; ASTequal",
+  "no_orders_or_strategy_PnL": true,
+  "not_verified": [
+    "Rawproviderrowsnotindependentlyfrozen/recomputedfromlocalCSV",
+    "Clockdatesnotfullsourcecalendar; nofullsessioncompletenessproof",
+    "0..400dayfilter notwholequalifiedliquidlisteduniverse",
+    "AllCMEchangeeffectivity/personalhouse/settlement/holidaymetadata",
+    "FullsourceSystem2strategyperformance/execution,matchedSPY/OOS"
+  ]
+}

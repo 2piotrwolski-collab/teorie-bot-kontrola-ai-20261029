@@ -189,13 +189,13 @@
     "source_file": "t003_futures_review.py",
     "url": "code/t003_futures_review.py.txt",
     "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
-    "sha256": "6ce0a8cf0ebc354f54a1c3b8a9fbb2d9b200f944e83b2f98c9900d01c737d417"
+    "sha256": "7ae1ff0732cf2d463c3e2bda0e478f1c5a7f665827f7440330b7c28b8786744f"
   },
   {
     "source_file": "test_t003_futures_review.py",
     "url": "code/test_t003_futures_review.py.txt",
     "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
-    "sha256": "62d0d49db91a88ee6aca0a42c4d29184daf958d839336770d92e654ef4473a32"
+    "sha256": "06be7fd3ccdcf42f009da9fb18125b3368b21e782e58b0ec3df0ebbf5f970944"
   },
   {
     "source_file": "research_round12/T003_futures/session_audit_qc_v1.py",
@@ -406,5 +406,53 @@
     "url": "code/research_round14__T003_GC_roll__cloud_executed_source__shadow_system2.py.txt",
     "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
     "sha256": "a03dee5ac919fc7dc1fe9840719a0017112ae6a5452a6ad6125418f729686496"
+  },
+  {
+    "source_file": "research_round15/T003_GC_2019_2025/qc_gc_range_audit.py",
+    "url": "code/research_round15__T003_GC_2019_2025__qc_gc_range_audit.py.txt",
+    "stage": "GC_FULL_RANGE_DATA_AND_MARGIN_CLOCK_CONTROL_NOT_STRATEGY_RETURN",
+    "sha256": "90e728149cb7cc13f7d8927f9ccd202bbb95b9556977631eb41716ce9afeaab2"
+  },
+  {
+    "source_file": "research_round15/T003_GC_2019_2025/qc_gc_margin_timing.py",
+    "url": "code/research_round15__T003_GC_2019_2025__qc_gc_margin_timing.py.txt",
+    "stage": "GC_FULL_RANGE_DATA_AND_MARGIN_CLOCK_CONTROL_NOT_STRATEGY_RETURN",
+    "sha256": "c92a52c3a1bf3d13a08af3700bb6cd10de73a6175f79eb612ea5cbce47848439"
+  },
+  {
+    "source_file": "research_round15/T003_GC_2019_2025/cloud_executed_range_main.py",
+    "url": "code/research_round15__T003_GC_2019_2025__cloud_executed_range_main.py.txt",
+    "stage": "GC_FULL_RANGE_DATA_AND_MARGIN_CLOCK_CONTROL_NOT_STRATEGY_RETURN",
+    "sha256": "b5d8735917cd793588b87ce7660fa8044495259c7caa1ebf6a04253cf4f3098e"
+  },
+  {
+    "source_file": "research_round15/T003_GC_2019_2025/cloud_executed_timing_main.py",
+    "url": "code/research_round15__T003_GC_2019_2025__cloud_executed_timing_main.py.txt",
+    "stage": "GC_FULL_RANGE_DATA_AND_MARGIN_CLOCK_CONTROL_NOT_STRATEGY_RETURN",
+    "sha256": "3369159b14511d07db7c505644888eb7d0cb91e7915b4ffd91820bd8334445b4"
+  },
+  {
+    "source_file": "research_round15/T003_GC_2019_2025/dated_margin.py",
+    "url": "code/research_round15__T003_GC_2019_2025__dated_margin.py.txt",
+    "stage": "GC_FULL_RANGE_DATA_AND_MARGIN_CLOCK_CONTROL_NOT_STRATEGY_RETURN",
+    "sha256": "eb143f13ebbffe91c68e94af76aa630e5332670462f3ceffccca4b0d7fc99d50"
+  },
+  {
+    "source_file": "research_round15/T003_GC_2019_2025/test_dated_margin.py",
+    "url": "code/research_round15__T003_GC_2019_2025__test_dated_margin.py.txt",
+    "stage": "GC_FULL_RANGE_DATA_AND_MARGIN_CLOCK_CONTROL_NOT_STRATEGY_RETURN",
+    "sha256": "bbb4defe0670951a98dcb202ed37717b6df82c05270a56ec5a8c5c3a4526f378"
+  },
+  {
+    "source_file": "research_round15/T003_GC_2019_2025/verify_range.py",
+    "url": "code/research_round15__T003_GC_2019_2025__verify_range.py.txt",
+    "stage": "GC_FULL_RANGE_DATA_AND_MARGIN_CLOCK_CONTROL_NOT_STRATEGY_RETURN",
+    "sha256": "e008dde6c9191c4549dd9c826d09b7456aa51138c0e830529bb8844ae5c0ae16"
+  },
+  {
+    "source_file": "research_round15/T003_GC_2019_2025/verify_timing.py",
+    "url": "code/research_round15__T003_GC_2019_2025__verify_timing.py.txt",
+    "stage": "GC_FULL_RANGE_DATA_AND_MARGIN_CLOCK_CONTROL_NOT_STRATEGY_RETURN",
+    "sha256": "2463bac758da206f33d68617bc47f3ca37a928f1ade9bbcfb456c9c6573b49eb"
   }
 ]

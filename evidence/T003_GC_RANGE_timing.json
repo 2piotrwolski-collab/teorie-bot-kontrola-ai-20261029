@@ -1,0 +1,77 @@
+{
+  "CME_close_interpretation": "17NYnormalGCsession; noactualtrades17–18",
+  "CME_notice": "20-247 published18Jun2020; effectiveafterclose19Jun2020",
+  "errors": [],
+  "executed_main_sha256": "3369159b14511d07db7c505644888eb7d0cb91e7915b4ffd91820bd8334445b4",
+  "orders": 0,
+  "protocol": "T003_GC_MARGIN_EFFECTIVITY_20_247_V1",
+  "rate_new": [
+    9020,
+    8200
+  ],
+  "rate_old": [
+    10065,
+    9150
+  ],
+  "rows": [
+    {
+      "bar_end_NY": "2020-06-18T12:00:00",
+      "bar_fill_forward": false,
+      "bar_time_NY": "2020-06-18T11:59:00",
+      "model_initial": 10065.0,
+      "model_maintenance": 9150.0,
+      "query_at_NY": "2020-06-18T12:00:00"
+    },
+    {
+      "bar_end_NY": "2020-06-18T16:59:00",
+      "bar_fill_forward": false,
+      "bar_time_NY": "2020-06-18T16:58:00",
+      "model_initial": 10065.0,
+      "model_maintenance": 9150.0,
+      "query_at_NY": "2020-06-18T16:59:00"
+    },
+    {
+      "bar_end_NY": "2020-06-18T18:01:00",
+      "bar_fill_forward": false,
+      "bar_time_NY": "2020-06-18T18:00:00",
+      "model_initial": 10065.0,
+      "model_maintenance": 9150.0,
+      "query_at_NY": "2020-06-18T18:01:00"
+    },
+    {
+      "bar_end_NY": "2020-06-19T00:01:00",
+      "bar_fill_forward": false,
+      "bar_time_NY": "2020-06-19T00:00:00",
+      "model_initial": 9020.0,
+      "model_maintenance": 8200.0,
+      "query_at_NY": "2020-06-19T00:01:00"
+    },
+    {
+      "bar_end_NY": "2020-06-19T10:00:00",
+      "bar_fill_forward": false,
+      "bar_time_NY": "2020-06-19T09:59:00",
+      "model_initial": 9020.0,
+      "model_maintenance": 8200.0,
+      "query_at_NY": "2020-06-19T10:00:00"
+    },
+    {
+      "bar_end_NY": "2020-06-19T16:59:00",
+      "bar_fill_forward": false,
+      "bar_time_NY": "2020-06-19T16:58:00",
+      "model_initial": 9020.0,
+      "model_maintenance": 8200.0,
+      "query_at_NY": "2020-06-19T16:59:00"
+    },
+    {
+      "bar_end_NY": "2020-06-21T18:01:00",
+      "bar_fill_forward": false,
+      "bar_time_NY": "2020-06-21T18:00:00",
+      "model_initial": 9020.0,
+      "model_maintenance": 8200.0,
+      "query_at_NY": "2020-06-21T18:01:00"
+    }
+  ],
+  "strategy_PnL": false,
+  "symbol": "GC XHD34ASNX0NX",
+  "zone": "America/New_York"
+}

@@ -1,0 +1,15 @@
+test_EST_is_different_offset (test_dated_margin.DatedMarginTests.test_EST_is_different_offset) ... ok
+test_UTC_matches_EDT (test_dated_margin.DatedMarginTests.test_UTC_matches_EDT) ... ok
+test_after_close_is_strict_and_updates_on_next_actual_session (test_dated_margin.DatedMarginTests.test_after_close_is_strict_and_updates_on_next_actual_session) ... ok
+test_convention_is_not_silently_publication_evidence (test_dated_margin.DatedMarginTests.test_convention_is_not_silently_publication_evidence) ... ok
+test_coverage_end_not_extrapolated (test_dated_margin.DatedMarginTests.test_coverage_end_not_extrapolated) ... ok
+test_duplicate_effectivity_and_wrong_contract_rejected (test_dated_margin.DatedMarginTests.test_duplicate_effectivity_and_wrong_contract_rejected) ... ok
+test_future_extension_cannot_change_earlier_rate (test_dated_margin.DatedMarginTests.test_future_extension_cannot_change_earlier_rate) ... ok
+test_known_future_rate_not_used_at_midnight_or_during_day (test_dated_margin.DatedMarginTests.test_known_future_rate_not_used_at_midnight_or_during_day) ... ok
+test_no_first_future_row_fallback (test_dated_margin.DatedMarginTests.test_no_first_future_row_fallback) ... ok
+test_no_unannounced_margin_or_naive_clock (test_dated_margin.DatedMarginTests.test_no_unannounced_margin_or_naive_clock) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.001s
+
+OK

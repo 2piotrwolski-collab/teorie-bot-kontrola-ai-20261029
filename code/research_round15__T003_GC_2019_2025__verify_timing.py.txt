@@ -1,0 +1,55 @@
+"""Reconcile saved timing evidence against CME20-247, no provider calls."""
+import ast, hashlib, json
+from pathlib import Path
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+
+def verify(root):
+    root = Path(root)
+    r = json.loads((root/'QC_margin_timing_report.json').read_text())
+    result = json.loads((root/'QC_margin_timing_results.json').read_text())
+    logs = (root/'QC_margin_timing_logs.txt').read_text()
+    decoded = json.loads(next(l.split('GC_MARGIN_TIMING_JSON ',1)[1]
+        for l in logs.splitlines() if 'GC_MARGIN_TIMING_JSON ' in l))
+    assert decoded == r and len(r['rows']) == 7 and not r['errors']
+    assert not result['orders'] and not r['orders'] and r['strategy_PnL'] is False
+    assert result['runtimeStatistics']['Rows'] == '7'
+    raw = (root/'qc_gc_margin_timing.py').read_bytes()
+    exact = next(x for x in [raw,raw.rstrip(b'\r\n')+b'\n\n']
+        if hashlib.sha256(x).hexdigest() == r['executed_main_sha256'])
+    assert ast.dump(ast.parse(raw)) == ast.dump(ast.parse(exact))
+    out = root/'cloud_executed_timing_main.py'
+    if out.exists():
+        assert out.read_bytes() == exact
+    else:
+        out.write_bytes(exact)
+    close = datetime(2020,6,19,17,tzinfo=ZoneInfo('America/New_York'))
+    rows = []
+    for row in r['rows']:
+        at = datetime.fromisoformat(row['query_at_NY']).replace(tzinfo=close.tzinfo)
+        bar_end = datetime.fromisoformat(row['bar_end_NY']).replace(tzinfo=close.tzinfo)
+        assert bar_end <= at and not row['bar_fill_forward']
+        expected = r['rate_new'] if at > close else r['rate_old']
+        observed = [row['model_initial'],row['model_maintenance']]
+        rows.append({'at_NY':at.isoformat(),'model':observed,
+            'CME_after_close_interpretation':expected,'mismatch':observed!=expected})
+    mismatches = [x for x in rows if x['mismatch']]
+    assert len(mismatches) == 3
+    assert [x['at_NY'][11:16] for x in mismatches] == ['00:01','10:00','16:59']
+    return {'id':'T003_GC_MARGIN_EFFECTIVITY_VERIFIED_20261030_V1',
+        'technical_artifact_checks_passed':True,
+        'CME_temporal_model_match':False,'mismatching_samples':3,'samples':rows,
+        'finding':'QC uses9020/8200 by00:01NY19Jun2020; CME20-247 makes these newrates effectiveonlyafterclose19Jun. Do not feedcalendar-daymodeldirectlyintointradaymarginchecks.',
+        'repair':'Newdated_margin.py separatesknown_at/effective_after, strictcloseboundary, explicitcoverageandknowledgeassumption,10syntheticchecksPASS; fullhistoricaladapterstilltointegrate.',
+        'scope':'Oneverifiedtransition, not52fullyreconciledchanges;17NYisexplicitstandard-sessioncloseinterpretation; notactualbrokerreceipt/houseprofile.',
+        'prior_result_impact':'No fullGCstrategyPnL hasbeencomputed. Frozen22Mar2024roll hasno same-dayratechange and isnotrecomputed/replaced.',
+        'executed_code_sha256':r['executed_main_sha256'],'real_orders':0,'new_strategy_PnL':False}
+
+
+if __name__=='__main__':
+    p=Path(__file__).resolve().parent
+    x=verify(p);out=p/'timing_verification.json'
+    if out.exists():assert json.loads(out.read_text())==x
+    else:out.write_text(json.dumps(x,ensure_ascii=False,indent=2)+'\n')
+    print(json.dumps(x,ensure_ascii=False,indent=2))

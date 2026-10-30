@@ -1,0 +1,58 @@
+{
+  "at_utc": "2026-10-30T18:36:15.454311+00:00",
+  "CME_GC_margin_pdf": {
+    "url": "https://www.cmegroup.com/clearing/risk-management/files/GC-2020-to-present.pdf",
+    "web_read": true,
+    "web_reported_pages": 1009,
+    "web_reported_lines": 37325,
+    "first_business_date_in_descending_table": "2026-09-30",
+    "last_business_date_in_descending_table": "2020-09-30",
+    "header_not_full_2020_coverage": true,
+    "verified_spot": "2024-03-22 GC01..21 USD8800; matches QCmaintenance one-controlled-date only",
+    "direct_http": 403,
+    "raw_pdf_archived": false,
+    "IAB_browser": "blankrender, no content; no bypass",
+    "remaining": "2019 andJan-Sep2020/earlierwarmup requireotherdatednotices; rollrank mapping andinitial/maintenance/house/publicationclassification notclosed"
+  },
+  "official_annual_guides": [
+    {
+      "year": 2019,
+      "url": "https://www.cmegroup.com/education/files/metals-prod_guide_2019.pdf",
+      "read": "WebPDF104pages; GC100oz/tick.1, sourceGlobexNY18–17, listedmonths, holiday/LTDcalendar; notfullholidayhaltsegments orintent"
+    },
+    {
+      "year": 2020,
+      "url": "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2020.pdf",
+      "read": "Webfulltext, exactGCspecavailable; holiday/LTDcalendarrequires structuredextraction"
+    },
+    {
+      "year": 2021,
+      "url": "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2021.pdf",
+      "read": "Webfulltext, sourceGlobexhours/annualcalendaravailable; fullstructuredextractionpending"
+    },
+    {
+      "year": 2022,
+      "url": "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2022.pdf",
+      "read": "WebPDF92pages; annualholiday/LTDcalendaravailable, pendingextraction"
+    },
+    {
+      "year": 2023,
+      "url": "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2023.pdf",
+      "read": "Webfulltext annualcalendar; Juneteenth2023 markerpresent; Jan/Aug/Sep/otherLTDexamples read"
+    },
+    {
+      "year": 2024,
+      "url": "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2024.pdf",
+      "read": "ExistingR14guide available; boundedGCsamplepreviouslychecked"
+    }
+  ],
+  "bulletin_publication": {
+    "url": "https://www.cmegroup.com/market-data/daily-bulletin.html",
+    "web_read": true,
+    "current_stated_schedule": "Preliminary approx00:00CTfollowingbusinessday; Final10:00CTfollowingbusinessday",
+    "qualifies": "Supportsconservativecompleted-businessdaylagdesign, notactual2019–25receipt/vintagehistories; keepasofgap",
+    "raw_html_archived": false
+  },
+  "portfolio_not_started": true,
+  "performance_PnL_computed": false
+}

@@ -1,0 +1,19 @@
+{
+  "id": "T003_GC_MARGIN_CLOCK_20261030_V1",
+  "at_utc": "2026-10-30T18:49:06.470249+00:00",
+  "trigger": "FullrangeQCmodel usesbarTime.Date; CME20-247 statesafterclose19Jun2020. Test effectivity clock independentlybefore any strategyreturns.",
+  "source_notice": "https://www.cmegroup.com/notices/clearing/2020/06/Chadv20-247.pdf",
+  "header_checked": "20-247dated18Jun2020/effectiveafterclose19Jun;GCSpec10065/9150→9020/8200alltiers; no redirectedwrongdocumentused",
+  "standard_close": "17NY, explicitstandardGCsessioninterpretation, notgeneralholidayclock",
+  "cases": 7,
+  "cloud_run": 1,
+  "technical_repairs_max": 1,
+  "PnL": false,
+  "files_sha256": {
+    "qc_gc_margin_timing.py": "c92a52c3a1bf3d13a08af3700bb6cd10de73a6175f79eb612ea5cbce47848439",
+    "dated_margin.py": "eb143f13ebbffe91c68e94af76aa630e5332670462f3ceffccca4b0d7fc99d50",
+    "test_dated_margin.py": "bbb4defe0670951a98dcb202ed37717b6df82c05270a56ec5a8c5c3a4526f378"
+  },
+  "component_checks": "10causalboundarychecksPASS; fixturesnotmarketevidence",
+  "remaining": "Modelseriesisnotsourceeffectivitymetadata; fullhistoricaltimelineandholidayclosesmustremainqualifiedperperiod."
+}

@@ -1,0 +1,14 @@
+{
+  "at_utc": "2026-10-30T18:43:13.626635+00:00",
+  "project_id": 38666177,
+  "run_id": "ac1dc2adbff19bfdac2d7b928f14182e",
+  "run_name": "Creative Light Brown Sheep",
+  "engine": "2.5.0.0.18217",
+  "paid_services": 0,
+  "orders": 0,
+  "strategy_PnL": false,
+  "full_log_JSON_parsed": true,
+  "source_file": "[local path] Light Brown Sheep_logs.txt",
+  "logs_sha256": "50b92387194cf563968feaddadceccf4c282c7d963240dbb498fc272cccc3b67",
+  "results_sha256": "c4625d51115d608357a732948c9d8e40df831c9d1f147b34f317658f6e4238a2"
+}

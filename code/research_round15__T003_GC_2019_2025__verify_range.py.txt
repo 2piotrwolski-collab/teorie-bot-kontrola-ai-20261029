@@ -1,0 +1,88 @@
+"""Independent reconciliation of saved full-range audit artifacts, no network."""
+import ast, hashlib, json
+from pathlib import Path
+
+
+def verify(root):
+    root = Path(root)
+    report = json.loads((root/'QC_range_full_report.json').read_text())
+    result = json.loads((root/'QC_range_results.json').read_text())
+    logs = (root/'QC_range_logs.txt').read_text()
+    decoded = json.loads(next(line.split('GC_RANGE_AUDIT_JSON ', 1)[1]
+        for line in logs.splitlines() if 'GC_RANGE_AUDIT_JSON ' in line))
+    assert decoded == report
+    stats = result['runtimeStatistics']
+    years = report['years']
+    assert [r['year'] for r in years] == list(range(2018, 2026))
+    assert not report['errors'] and not report['error_samples']
+    assert report['strategy_PnL'] is False and report['orders_submitted'] == 0
+    assert not result['orders'] and stats['Orders/strategy result'] == '0 / NONE'
+    assert report['algorithm_zone'] == 'America/New_York'
+    assert report['exchange_zones'] == ['America/New_York']
+    bars = sum(r['minute_bars'] for r in years)
+    assert bars == int(stats['Raw minute bars']) == 4917897
+    study = sum(r['minute_bars'] for r in years if r['year'] >= 2019)
+    assert study == 4635018
+    for row in years:
+        assert row['minute_bars'] == row['minute_before_17'] + row['minute_17_to_18'] + row['minute_after_18']
+        assert row['minute_17_to_18'] == row['nonpositive_prices'] == 0
+        assert row['contracts'] > 0 and row['margin_observations'] > 0
+        assert len(row['raw_rows_sha256']) == 64
+        assert row['first_clock_date'].startswith(str(row['year']))
+        assert row['last_clock_date'].startswith(str(row['year']))
+    rates = report['margin_pair_changes_first_observed']
+    assert len(rates) == int(stats['Observed model changes']) == 52
+    assert all(a[0] < b[0] for a,b in zip(rates,rates[1:]))
+    assert all(0 < m <= i for day,i,m in rates)
+    assert all(abs(i - 1.1*m) < 1e-8 for day,i,m in rates)
+    raw = (root/'qc_gc_range_audit.py').read_bytes()
+    candidates = [raw, raw.rstrip(b'\r\n')+b'\n\n']
+    exact = next(b for b in candidates if hashlib.sha256(b).hexdigest() == report['executed_main_sha256'])
+    assert ast.dump(ast.parse(raw)) == ast.dump(ast.parse(exact))
+    out = root/'cloud_executed_range_main.py'
+    if out.exists():
+        assert out.read_bytes() == exact
+    else:
+        out.write_bytes(exact)
+    def at_day(day):
+        return [r for r in rates if r[0] <= day][-1][1:]
+    spotchecks = [
+        {'day':'2019-02-16','model':at_day('2019-02-16'),'source':[3740,3400],
+         'source_scope':'RJO authoredsnapshot readviaWeb; rawdownloadfailedcertificate, samepublisherasApril'},
+        {'day':'2019-04-05','model':at_day('2019-04-05'),'source':[3740,3400],
+         'source_scope':'ArchivedRJO PDF1d3584...; snapshotnotdailyhistory'},
+        {'day':'2020-01-10','model':at_day('2020-01-10'),'source':[5500,5000],
+         'source_scope':'CMEauthorarticlepoint-in-date; effectivityseparate20-014afterJan9close'},
+        {'day':'2020-03-24','model':at_day('2020-03-24'),'source':[7700,7000],
+         'source_scope':'CMEauthorarticlepoint-in-date; notannouncementclockproof'},
+        {'day':'2020-06-19','model':at_day('2020-06-19'),'source':[9020,8200],
+         'source_scope':'CME20-247, NEW pair validonlyAFTERclose19Jun; same-daymorningcomparisonpendingtimingcontrol'},
+        {'day':'2024-03-22','model':at_day('2024-03-22'),'source':[9680,8800],
+         'source_scope':'8800CMEminimumrow; initial9680 remains declared1.1modelprofile, notseparateCMEhouseproof'}]
+    assert all(x['model'] == x['source'] for x in spotchecks)
+    return {'id':'T003_GC_RANGE_ARTIFACT_RECONCILIATION_20261030_V1',
+        'all_passed':True,'raw_minute_bars_including_warmup':bars,
+        'study_2019_2025_raw_minute_bars':study,'warmup_raw_minute_bars':years[0]['minute_bars'],
+        'observed_contracts_including_warmup':report['distinct_contracts'],
+        'dated_model_changes_including_warmup':len(rates),
+        'source_model_spotchecks':spotchecks,
+        'model_margin_observations':sum(r['margin_observations'] for r in years),
+        'code_sha_verified':report['executed_main_sha256'],
+        'code_normalization':'Exactfilematches cloudSHAwithoneadditionalterminalLF; ASTequal',
+        'no_orders_or_strategy_PnL':True,
+        'not_verified':['Rawproviderrowsnotindependentlyfrozen/recomputedfromlocalCSV',
+            'Clockdatesnotfullsourcecalendar; nofullsessioncompletenessproof',
+            '0..400dayfilter notwholequalifiedliquidlisteduniverse',
+            'AllCMEchangeeffectivity/personalhouse/settlement/holidaymetadata',
+            'FullsourceSystem2strategyperformance/execution,matchedSPY/OOS']}
+
+
+if __name__ == '__main__':
+    root = Path(__file__).resolve().parent
+    result = verify(root)
+    out = root/'range_verification.json'
+    if out.exists():
+        assert json.loads(out.read_text()) == result
+    else:
+        out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+    print(json.dumps(result,ensure_ascii=False,indent=2))

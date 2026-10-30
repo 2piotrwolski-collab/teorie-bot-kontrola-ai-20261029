@@ -1,0 +1,99 @@
+{
+  "id": "T003_GC_MARGIN_EFFECTIVITY_VERIFIED_20261030_V1",
+  "technical_artifact_checks_passed": true,
+  "CME_temporal_model_match": false,
+  "mismatching_samples": 3,
+  "samples": [
+    {
+      "at_NY": "2020-06-18T12:00:00-04:00",
+      "model": [
+        10065.0,
+        9150.0
+      ],
+      "CME_after_close_interpretation": [
+        10065,
+        9150
+      ],
+      "mismatch": false
+    },
+    {
+      "at_NY": "2020-06-18T16:59:00-04:00",
+      "model": [
+        10065.0,
+        9150.0
+      ],
+      "CME_after_close_interpretation": [
+        10065,
+        9150
+      ],
+      "mismatch": false
+    },
+    {
+      "at_NY": "2020-06-18T18:01:00-04:00",
+      "model": [
+        10065.0,
+        9150.0
+      ],
+      "CME_after_close_interpretation": [
+        10065,
+        9150
+      ],
+      "mismatch": false
+    },
+    {
+      "at_NY": "2020-06-19T00:01:00-04:00",
+      "model": [
+        9020.0,
+        8200.0
+      ],
+      "CME_after_close_interpretation": [
+        10065,
+        9150
+      ],
+      "mismatch": true
+    },
+    {
+      "at_NY": "2020-06-19T10:00:00-04:00",
+      "model": [
+        9020.0,
+        8200.0
+      ],
+      "CME_after_close_interpretation": [
+        10065,
+        9150
+      ],
+      "mismatch": true
+    },
+    {
+      "at_NY": "2020-06-19T16:59:00-04:00",
+      "model": [
+        9020.0,
+        8200.0
+      ],
+      "CME_after_close_interpretation": [
+        10065,
+        9150
+      ],
+      "mismatch": true
+    },
+    {
+      "at_NY": "2020-06-21T18:01:00-04:00",
+      "model": [
+        9020.0,
+        8200.0
+      ],
+      "CME_after_close_interpretation": [
+        9020,
+        8200
+      ],
+      "mismatch": false
+    }
+  ],
+  "finding": "QC uses9020/8200 by00:01NY19Jun2020; CME20-247 makes these newrates effectiveonlyafterclose19Jun. Do not feedcalendar-daymodeldirectlyintointradaymarginchecks.",
+  "repair": "Newdated_margin.py separatesknown_at/effective_after, strictcloseboundary, explicitcoverageandknowledgeassumption,10syntheticchecksPASS; fullhistoricaladapterstilltointegrate.",
+  "scope": "Oneverifiedtransition, not52fullyreconciledchanges;17NYisexplicitstandard-sessioncloseinterpretation; notactualbrokerreceipt/houseprofile.",
+  "prior_result_impact": "No fullGCstrategyPnL hasbeencomputed. Frozen22Mar2024roll hasno same-dayratechange and isnotrecomputed/replaced.",
+  "executed_code_sha256": "3369159b14511d07db7c505644888eb7d0cb91e7915b4ffd91820bd8334445b4",
+  "real_orders": 0,
+  "new_strategy_PnL": false
+}

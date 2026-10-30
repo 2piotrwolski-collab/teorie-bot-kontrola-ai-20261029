@@ -4,6 +4,20 @@ from t003_futures_review import merge
 ROOT=Path(__file__).parent
 
 class FuturesProjectionTests(unittest.TestCase):
+    def test_fullrange_data_and_margin_clock_is_not_strategy_outcome(self):
+        before=json.loads((ROOT/'research_round15/T003_GC_2019_2025/current_view_before.json').read_text())
+        review=json.loads((ROOT/'results/t003_futures_review_20261030_v4.json').read_text())
+        after=merge(before,review)
+        self.assertEqual(merge(after,review),after)
+        for a,b in zip(before['items'],after['items']):
+            if a['id']!='T003':self.assertEqual(a,b)
+        card=next(c for c in after['items'] if c['id']=='T003')
+        self.assertEqual(card['dividend_reconciliation_status'],'closed_numerical_reconstruction_discrepancy')
+        self.assertIn('4 635 018',card['observations'][0]['summary'])
+        self.assertIn('margin',card['futures_original_test_status'].lower())
+        self.assertEqual(len(card['findings']),len(set(card['findings'])))
+        self.assertTrue(any('705,32' in s for s in card['findings']))
+        self.assertTrue(all(g['status']=='partial' for g in card['gap_updates']))
     def test_actual_roll_view_preserves_old_scope_and_other_cards(self):
         before=json.loads((ROOT/'results/research_progress_round4.json').read_text())
         review=json.loads((ROOT/'results/t003_futures_review_20261030_v3.json').read_text())

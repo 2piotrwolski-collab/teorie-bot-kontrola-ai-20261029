@@ -1,8 +1,8 @@
 # Teorie bot — review snapshot
-Snapshot: 2026-10-30T17:01:33.479193+00:00
-Start: /cards/T003.txt and /cards/T003.json
-Other cards: /cards/T001.txt through /cards/T010.txt
-Code and hashes: /code/index.json
-Task: /PROMPT_DO_KONTROLI.txt
-Full summary: /review.json
+Snapshot: 2026-10-30T19:02:28.543079+00:00
+Start: https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/cards/T003.txt and https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/cards/T003.json
+Other cards: https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/cards/T001.txt through https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/cards/T010.txt
+Code and hashes: https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/code/index.json
+Task: https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/PROMPT_DO_KONTROLI.txt
+Full summary: https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/review.json
 No confirmed original strategy. Prepared longer-history tests have no new market result.

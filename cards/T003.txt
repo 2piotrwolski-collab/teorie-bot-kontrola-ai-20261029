@@ -1,4 +1,4 @@
-Snapshot: 2026-10-30T17:01:33.479193+00:00
+Snapshot: 2026-10-30T19:02:28.543079+00:00
 T003 · Archiwalny v1: Zmienione reguły / adaptacja
 
 Turtle System 2: kompletny system wybicia
@@ -122,8 +122,20 @@ Turtle rolowanieGC30.10: dla 4 jednostek×4 kontrakty, czyli 16 przy założonym
 Turtle rolowanieGC30.10: osobny checker uzgodnił wszystkie ilości, prowizje 80,32USD/16 kontraktów, limity wielkości kwotowań, bilans z ruchem ceny między nogami oraz wszystkie 10 nowych lotów/stopów w każdym wariancie.4 hashe cloudcode odpowiadają lokalnym plikom z jedną dodatkową końcową pustą linią; AST identyczne.
 
 Turtle rolowanieGC30.10: pobrano 10 poprawnych tabelICE, z czego 9 nowych unikatowych i 1 wcześniejsza kopia zgodna bajtowo. Oficjalne komunikatyOCC potwierdziły przeniesienie handlu 15.01 i 19.02.2024 na następną datę giełdową. Starsza historia depozytów, pełne kalendarze i publikacjaOI nadal wymagają pracy.
+
+Turtle GC2019–2025: cały odczyt 2019–2025 z rozgrzewką od lipca2018 zakończony:4 635 018+282 879 minut,103 kontrakty łącznie,0 zgłoszonych błędów danych. To kontrola danych z filtra0–400dni; nie kompletne kwalifikowane uniwersum ani wynik strategii.
+
+Turtle GC2019–2025:52 pierwsze obserwowane zmiany modelu GC,18 160 datowanych odczytów modelu. Punktowe wartości RJO2019/CME2020/2024 zgodne; dwa dokumenty RJO są tym samym źródłem, nie niezależnym konsensusem.
+
+Turtle GC2019–2025: QC19.06.2020 stosuje initial9020/maintenance8200 już od00:01NY, a CME20-247 wprowadza te stawki dopiero po zamknięciu19czerwca.3/7 próbek potwierdzają różnicę czasu; wartości samej stawki się zgadzają. dated_margin.py oddziela wiedzę od obowiązywania;10 kontroli granic i strefczasowych PASS, integracja pełnej historii nadal przed nami.
+
+Turtle GC2019–2025: oficjalny PDF GC2020–present faktycznie kończy się wstecz na30.09.2020. Starszy zakres potrzebuje osobnych dokumentów. Kandydat20-309 przekierował do22-105 z2022, więc nie został przyjęty jako dowód2020.
+
+Turtle GC2019–2025: odczytano przewodniki CME2019–2024; pełny strukturalny kalendarz2018–2025/firstintent nadal otwarty. Obecny harmonogram biuletynu CME nie jest dowodem historycznych godzin odbioru OI.
+
+Turtle GC2019–2025:0 nowych wyników zysku i0 nowych werdyktów. Dawny roll22.03.2024 i zamknięte dywidendy pozostają zachowane. Najpierw GC, potem cały zadeklarowany portfel.
 T003-R1 · Częściowo uzupełniony
-Mechanika jednego rzeczywistego rolla GC i dwóch wariantów większej pozycji przeszła kontrolę. Pełna historia i koszyk pozostają do zbadania.
+Całookresowe dane minutowe odczytane, ale pełny adapter/kalendarze/efektywność depozytów nie są jeszcze kwalifikowane.
 
 Potwierdzone:
 
@@ -171,6 +183,10 @@ Onecontractbaseline40.02USD;16contractdelay250/1000ms bothcomplete, allpartialfi
 
 9newuniqueICEsnapshots+1knownsnapshotbyte-reconciled,0HTTP429in10pacedrequests; officialJan/Febholidaytradedatesread.
 
+Odczyt rzeczywistych minut GC2019–2025 plus rozgrzewka2018 i zapis pełnych wyników/hashów zakończony.
+
+Jedna temporalna rozbieżność modelu depozytów vs CME potwierdzona, komponent naprawczy sprawdzony.
+
 Pozostało:
 
 Exact weekly N cutoff,resizing,annual discretionary equity,complete correlation map and simultaneous ordering remain unspecified.
@@ -205,17 +221,19 @@ Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walida
 
 Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
 
-Zastosować zweryfikowany przebieg GC do pełnej historii i pozostałych zadeklarowanych rynków. Ten jeden roll i trzy warianty wykonania nie są pełnym testem zyskowności Turtle ani nowym OOS.
+GC 2019–2025: pełny adapter strategii, własne sygnały każdego kwalifikującego miesiąca, ticki zdarzeń, koszty, dzienne NAV i matched SPY pozostają do obliczenia po osobnym zamrożeniu planu. Audyt 4,64 mln minut nie jest wynikiem skuteczności.
 
-Pełne historyczne kalendarze i terminy dostawy wszystkich miesięcy/rynków 2019–2025: obecna kontrola obejmuje GC wrzesień2023–marzec2024 i termin April24. Styczniowe/lutowe daty giełdowe uzupełnione z oficjalnych komunikatów; pełne godziny każdego święta pozostają do kontroli.
+Kalendarz źródłowy GC 2018–2025: odczytano oficjalne przewodniki CME 2019–2024; trzeba ustrukturyzować daty i terminy, dopełnić rozgrzewkę 2018 i rok 2025 oraz zweryfikować segmenty świąteczne i first intent. Daty zegarowe i kalendarz NYSE nie zastępują dat giełdowych GC.
 
-OI: dwa dni źródłowe opóźnienia są jawną konwencją. Timestamp rekordu nie dowodzi godziny publicznej publikacji. Przed uznaniem realnej wykonalności nadal potrzebna kontrola publikacji OI/volume i płynności pełnej pozycji.
+Depozyty: zebrano 52 pierwsze obserwowane zmiany modelu wraz z rozgrzewką i punktowe potwierdzenia źródłowe. Trzeba uzgodnić obowiązywanie po zamknięciu, publikację i klasyfikację wszystkich używanych stawek. Jeden poprawiony przypadek nie kwalifikuje 52 zmian; nowy moduł dated_margin musi wejść do adaptera.
 
-Depozyty i SB: dodatni historyczny model QC dla GC potwierdzony w kontrolowanym punkcie; brak pełnej klasyfikacji historycznych narzutów brokera. ICE: 52 poprawne datowane tabele z serii archiwalnej, w tym9 nowych unikatowych w tej rundzie; starsza historia 2019–2021 i pozostałe 2022–2024 nadal niekompletne. Obowiązuje Retry-After i ograniczone pobieranie.
+Lista kontraktów i rolowanie: filtr 0–400 dni do wygaśnięcia służył kontroli danych, nie jest zatwierdzonym uniwersum strategii. Potrzebne pełne własne rozgrzewki 55 sesji, przyczynowy wybór miesiąca, płynność i kompletne terminy dostawy. Mechaniczny termin rolla i wyjątek silniejszego bliskiego miesiąca muszą być ustalone przed PnL.
 
-Skala portfela: 16 kontraktów wynika z założonego na moment kontrolny notional 1 mln USD i czterech jednostek po4; rzeczywista wcześniejsza ścieżka NAV/notional nie została odtworzona. Potrzeba pełnego rachunku wielorynkowego, resetów, settlement, finansowania, wyboru miesięcy i benchmarku SPY przed wynikiem strategii.
+Publikacja OI/volume: obecny harmonogram CME wskazuje finalny biuletyn o 10 CT następnego dnia roboczego. Nie dowodzi faktycznej dostępności ani vintage wszystkich danych 2019–2025; nie zamyka historycznej luki as-of.
 
-Wykonanie i koszty: to wypełnienia modelowe na rzeczywistym L1, z zadanym opóźnieniem i1tickiem poślizgu. Nie zmierzono rzeczywistego opóźnienia Maca, kolejki/marketimpact, brokerfilli, osobistej taryfy, historycznych opłat overnight, FX ani podatków. Nie nazywać pełnym netto.
+Wykonanie i rachunek: rzeczywiste historyczne kwotowania, opóźnienia i częściowe fille trzeba zastosować do wszystkich zdarzeń, z kosztem obu nóg. Prowizje obecnego scenariusza i 1 tick poślizgu pozostają założeniami. Brak osobistych filli, house margin, historycznych opłat, FX i podatków; nie nazywać pełnym netto.
+
+Portfel 12 rynków dopiero po GC, zgodnie z poleceniem Piotra. Historia i klasyfikacja SB pozostają niepełne; brak rynku nie upoważnia do jego cichego usunięcia.
 
 PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
 
@@ -233,9 +251,11 @@ Account component controls + actual historical margin-data qualification; no str
 
 ActualquoteGCroll control +independentledger/cost/stop checks; notfullstrategyPnL (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_ROLL_REPORT.html) · GC April→June,22.03.2024: oba miesiące mają własny long. Kontrola 1 kontraktu kosztuje modelowo 40,02USD. Przy 16 kontraktach i opóźnieniu 250 ms koszt 705,32USD; przy 1 s 610,32USD. Zamknięcie starego przed nowym, częściowe fille, depozyty, bilans i wszystkie stopy uzgodnione niezależnie. Jeden przypadek,3 warianty wykonania; brak pełnego wyniku strategii.
 
-Następny krok: Rozszerzyć ten sam zweryfikowany mechanizm na pełną historię GC i następnie stały koszyk12rynków, bez zmiany progów. Równolegle uzupełniać datowane depozyty i kalendarze; zamrozić pełny plan przed obliczeniem zwrotu strategii.
+Fullrange minute data audit plus seven timed margin cases, not strategy performance (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_RANGE_REPORT.html) · GC 2019–2025: odczytano 4 635 018 rzeczywistych świec minutowych i 282 879 z rozgrzewki 2018; 103 obserwowane kontrakty łącznie, bez zgłoszonych błędów technicznych. Zebrano 52 zmiany modelu depozytów. Osobny test wykazał przedwczesne stosowanie niższej stawki QC 19.06.2020: od północy zamiast po zamknięciu według CME. Nowy moduł rozdziela te momenty i przeszedł 10 kontroli; pełny adapter oraz wynik strategii po kosztach pozostają do ukończenia.
+
+Następny krok: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
 T003-D1 · Częściowo uzupełniony
-Mechanika jednego rzeczywistego rolla GC i dwóch wariantów większej pozycji przeszła kontrolę. Pełna historia i koszyk pozostają do zbadania.
+Całookresowe dane minutowe odczytane, ale pełny adapter/kalendarze/efektywność depozytów nie są jeszcze kwalifikowane.
 
 Potwierdzone:
 
@@ -293,6 +313,10 @@ Onecontractbaseline40.02USD;16contractdelay250/1000ms bothcomplete, allpartialfi
 
 9newuniqueICEsnapshots+1knownsnapshotbyte-reconciled,0HTTP429in10pacedrequests; officialJan/Febholidaytradedatesread.
 
+Odczyt rzeczywistych minut GC2019–2025 plus rozgrzewka2018 i zapis pełnych wyników/hashów zakończony.
+
+Jedna temporalna rozbieżność modelu depozytów vs CME potwierdzona, komponent naprawczy sprawdzony.
+
 Pozostało:
 
 Historical individual-contract prices,open interest,volume,ticks,multipliers and expiry histories have not been acquired.
@@ -341,17 +365,19 @@ Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walida
 
 Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
 
-Zastosować zweryfikowany przebieg GC do pełnej historii i pozostałych zadeklarowanych rynków. Ten jeden roll i trzy warianty wykonania nie są pełnym testem zyskowności Turtle ani nowym OOS.
+GC 2019–2025: pełny adapter strategii, własne sygnały każdego kwalifikującego miesiąca, ticki zdarzeń, koszty, dzienne NAV i matched SPY pozostają do obliczenia po osobnym zamrożeniu planu. Audyt 4,64 mln minut nie jest wynikiem skuteczności.
 
-Pełne historyczne kalendarze i terminy dostawy wszystkich miesięcy/rynków 2019–2025: obecna kontrola obejmuje GC wrzesień2023–marzec2024 i termin April24. Styczniowe/lutowe daty giełdowe uzupełnione z oficjalnych komunikatów; pełne godziny każdego święta pozostają do kontroli.
+Kalendarz źródłowy GC 2018–2025: odczytano oficjalne przewodniki CME 2019–2024; trzeba ustrukturyzować daty i terminy, dopełnić rozgrzewkę 2018 i rok 2025 oraz zweryfikować segmenty świąteczne i first intent. Daty zegarowe i kalendarz NYSE nie zastępują dat giełdowych GC.
 
-OI: dwa dni źródłowe opóźnienia są jawną konwencją. Timestamp rekordu nie dowodzi godziny publicznej publikacji. Przed uznaniem realnej wykonalności nadal potrzebna kontrola publikacji OI/volume i płynności pełnej pozycji.
+Depozyty: zebrano 52 pierwsze obserwowane zmiany modelu wraz z rozgrzewką i punktowe potwierdzenia źródłowe. Trzeba uzgodnić obowiązywanie po zamknięciu, publikację i klasyfikację wszystkich używanych stawek. Jeden poprawiony przypadek nie kwalifikuje 52 zmian; nowy moduł dated_margin musi wejść do adaptera.
 
-Depozyty i SB: dodatni historyczny model QC dla GC potwierdzony w kontrolowanym punkcie; brak pełnej klasyfikacji historycznych narzutów brokera. ICE: 52 poprawne datowane tabele z serii archiwalnej, w tym9 nowych unikatowych w tej rundzie; starsza historia 2019–2021 i pozostałe 2022–2024 nadal niekompletne. Obowiązuje Retry-After i ograniczone pobieranie.
+Lista kontraktów i rolowanie: filtr 0–400 dni do wygaśnięcia służył kontroli danych, nie jest zatwierdzonym uniwersum strategii. Potrzebne pełne własne rozgrzewki 55 sesji, przyczynowy wybór miesiąca, płynność i kompletne terminy dostawy. Mechaniczny termin rolla i wyjątek silniejszego bliskiego miesiąca muszą być ustalone przed PnL.
 
-Skala portfela: 16 kontraktów wynika z założonego na moment kontrolny notional 1 mln USD i czterech jednostek po4; rzeczywista wcześniejsza ścieżka NAV/notional nie została odtworzona. Potrzeba pełnego rachunku wielorynkowego, resetów, settlement, finansowania, wyboru miesięcy i benchmarku SPY przed wynikiem strategii.
+Publikacja OI/volume: obecny harmonogram CME wskazuje finalny biuletyn o 10 CT następnego dnia roboczego. Nie dowodzi faktycznej dostępności ani vintage wszystkich danych 2019–2025; nie zamyka historycznej luki as-of.
 
-Wykonanie i koszty: to wypełnienia modelowe na rzeczywistym L1, z zadanym opóźnieniem i1tickiem poślizgu. Nie zmierzono rzeczywistego opóźnienia Maca, kolejki/marketimpact, brokerfilli, osobistej taryfy, historycznych opłat overnight, FX ani podatków. Nie nazywać pełnym netto.
+Wykonanie i rachunek: rzeczywiste historyczne kwotowania, opóźnienia i częściowe fille trzeba zastosować do wszystkich zdarzeń, z kosztem obu nóg. Prowizje obecnego scenariusza i 1 tick poślizgu pozostają założeniami. Brak osobistych filli, house margin, historycznych opłat, FX i podatków; nie nazywać pełnym netto.
+
+Portfel 12 rynków dopiero po GC, zgodnie z poleceniem Piotra. Historia i klasyfikacja SB pozostają niepełne; brak rynku nie upoważnia do jego cichego usunięcia.
 
 PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
 
@@ -383,9 +409,11 @@ Account component controls + actual historical margin-data qualification; no str
 
 ActualquoteGCroll control +independentledger/cost/stop checks; notfullstrategyPnL (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_ROLL_REPORT.html) · GC April→June,22.03.2024: oba miesiące mają własny long. Kontrola 1 kontraktu kosztuje modelowo 40,02USD. Przy 16 kontraktach i opóźnieniu 250 ms koszt 705,32USD; przy 1 s 610,32USD. Zamknięcie starego przed nowym, częściowe fille, depozyty, bilans i wszystkie stopy uzgodnione niezależnie. Jeden przypadek,3 warianty wykonania; brak pełnego wyniku strategii.
 
-Następny krok: Rozszerzyć ten sam zweryfikowany mechanizm na pełną historię GC i następnie stały koszyk12rynków, bez zmiany progów. Równolegle uzupełniać datowane depozyty i kalendarze; zamrozić pełny plan przed obliczeniem zwrotu strategii.
+Fullrange minute data audit plus seven timed margin cases, not strategy performance (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_RANGE_REPORT.html) · GC 2019–2025: odczytano 4 635 018 rzeczywistych świec minutowych i 282 879 z rozgrzewki 2018; 103 obserwowane kontrakty łącznie, bez zgłoszonych błędów technicznych. Zebrano 52 zmiany modelu depozytów. Osobny test wykazał przedwczesne stosowanie niższej stawki QC 19.06.2020: od północy zamiast po zamknięciu według CME. Nowy moduł rozdziela te momenty i przeszedł 10 kontroli; pełny adapter oraz wynik strategii po kosztach pozostają do ukończenia.
+
+Następny krok: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
 T003-E1 · Częściowo uzupełniony
-Mechanika jednego rzeczywistego rolla GC i dwóch wariantów większej pozycji przeszła kontrolę. Pełna historia i koszyk pozostają do zbadania.
+Całookresowe dane minutowe odczytane, ale pełny adapter/kalendarze/efektywność depozytów nie są jeszcze kwalifikowane.
 
 Potwierdzone:
 
@@ -441,6 +469,10 @@ Onecontractbaseline40.02USD;16contractdelay250/1000ms bothcomplete, allpartialfi
 
 9newuniqueICEsnapshots+1knownsnapshotbyte-reconciled,0HTTP429in10pacedrequests; officialJan/Febholidaytradedatesread.
 
+Odczyt rzeczywistych minut GC2019–2025 plus rozgrzewka2018 i zapis pełnych wyników/hashów zakończony.
+
+Jedna temporalna rozbieżność modelu depozytów vs CME potwierdzona, komponent naprawczy sprawdzony.
+
 Pozostało:
 
 Intraday event order,quotes and executable fills are absent.
@@ -485,17 +517,19 @@ Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walida
 
 Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
 
-Zastosować zweryfikowany przebieg GC do pełnej historii i pozostałych zadeklarowanych rynków. Ten jeden roll i trzy warianty wykonania nie są pełnym testem zyskowności Turtle ani nowym OOS.
+GC 2019–2025: pełny adapter strategii, własne sygnały każdego kwalifikującego miesiąca, ticki zdarzeń, koszty, dzienne NAV i matched SPY pozostają do obliczenia po osobnym zamrożeniu planu. Audyt 4,64 mln minut nie jest wynikiem skuteczności.
 
-Pełne historyczne kalendarze i terminy dostawy wszystkich miesięcy/rynków 2019–2025: obecna kontrola obejmuje GC wrzesień2023–marzec2024 i termin April24. Styczniowe/lutowe daty giełdowe uzupełnione z oficjalnych komunikatów; pełne godziny każdego święta pozostają do kontroli.
+Kalendarz źródłowy GC 2018–2025: odczytano oficjalne przewodniki CME 2019–2024; trzeba ustrukturyzować daty i terminy, dopełnić rozgrzewkę 2018 i rok 2025 oraz zweryfikować segmenty świąteczne i first intent. Daty zegarowe i kalendarz NYSE nie zastępują dat giełdowych GC.
 
-OI: dwa dni źródłowe opóźnienia są jawną konwencją. Timestamp rekordu nie dowodzi godziny publicznej publikacji. Przed uznaniem realnej wykonalności nadal potrzebna kontrola publikacji OI/volume i płynności pełnej pozycji.
+Depozyty: zebrano 52 pierwsze obserwowane zmiany modelu wraz z rozgrzewką i punktowe potwierdzenia źródłowe. Trzeba uzgodnić obowiązywanie po zamknięciu, publikację i klasyfikację wszystkich używanych stawek. Jeden poprawiony przypadek nie kwalifikuje 52 zmian; nowy moduł dated_margin musi wejść do adaptera.
 
-Depozyty i SB: dodatni historyczny model QC dla GC potwierdzony w kontrolowanym punkcie; brak pełnej klasyfikacji historycznych narzutów brokera. ICE: 52 poprawne datowane tabele z serii archiwalnej, w tym9 nowych unikatowych w tej rundzie; starsza historia 2019–2021 i pozostałe 2022–2024 nadal niekompletne. Obowiązuje Retry-After i ograniczone pobieranie.
+Lista kontraktów i rolowanie: filtr 0–400 dni do wygaśnięcia służył kontroli danych, nie jest zatwierdzonym uniwersum strategii. Potrzebne pełne własne rozgrzewki 55 sesji, przyczynowy wybór miesiąca, płynność i kompletne terminy dostawy. Mechaniczny termin rolla i wyjątek silniejszego bliskiego miesiąca muszą być ustalone przed PnL.
 
-Skala portfela: 16 kontraktów wynika z założonego na moment kontrolny notional 1 mln USD i czterech jednostek po4; rzeczywista wcześniejsza ścieżka NAV/notional nie została odtworzona. Potrzeba pełnego rachunku wielorynkowego, resetów, settlement, finansowania, wyboru miesięcy i benchmarku SPY przed wynikiem strategii.
+Publikacja OI/volume: obecny harmonogram CME wskazuje finalny biuletyn o 10 CT następnego dnia roboczego. Nie dowodzi faktycznej dostępności ani vintage wszystkich danych 2019–2025; nie zamyka historycznej luki as-of.
 
-Wykonanie i koszty: to wypełnienia modelowe na rzeczywistym L1, z zadanym opóźnieniem i1tickiem poślizgu. Nie zmierzono rzeczywistego opóźnienia Maca, kolejki/marketimpact, brokerfilli, osobistej taryfy, historycznych opłat overnight, FX ani podatków. Nie nazywać pełnym netto.
+Wykonanie i rachunek: rzeczywiste historyczne kwotowania, opóźnienia i częściowe fille trzeba zastosować do wszystkich zdarzeń, z kosztem obu nóg. Prowizje obecnego scenariusza i 1 tick poślizgu pozostają założeniami. Brak osobistych filli, house margin, historycznych opłat, FX i podatków; nie nazywać pełnym netto.
+
+Portfel 12 rynków dopiero po GC, zgodnie z poleceniem Piotra. Historia i klasyfikacja SB pozostają niepełne; brak rynku nie upoważnia do jego cichego usunięcia.
 
 PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
 
@@ -523,9 +557,11 @@ Account component controls + actual historical margin-data qualification; no str
 
 ActualquoteGCroll control +independentledger/cost/stop checks; notfullstrategyPnL (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_ROLL_REPORT.html) · GC April→June,22.03.2024: oba miesiące mają własny long. Kontrola 1 kontraktu kosztuje modelowo 40,02USD. Przy 16 kontraktach i opóźnieniu 250 ms koszt 705,32USD; przy 1 s 610,32USD. Zamknięcie starego przed nowym, częściowe fille, depozyty, bilans i wszystkie stopy uzgodnione niezależnie. Jeden przypadek,3 warianty wykonania; brak pełnego wyniku strategii.
 
-Następny krok: Rozszerzyć ten sam zweryfikowany mechanizm na pełną historię GC i następnie stały koszyk12rynków, bez zmiany progów. Równolegle uzupełniać datowane depozyty i kalendarze; zamrozić pełny plan przed obliczeniem zwrotu strategii.
+Fullrange minute data audit plus seven timed margin cases, not strategy performance (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_RANGE_REPORT.html) · GC 2019–2025: odczytano 4 635 018 rzeczywistych świec minutowych i 282 879 z rozgrzewki 2018; 103 obserwowane kontrakty łącznie, bez zgłoszonych błędów technicznych. Zebrano 52 zmiany modelu depozytów. Osobny test wykazał przedwczesne stosowanie niższej stawki QC 19.06.2020: od północy zamiast po zamknięciu według CME. Nowy moduł rozdziela te momenty i przeszedł 10 kontroli; pełny adapter oraz wynik strategii po kosztach pozostają do ukończenia.
+
+Następny krok: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
 T003-E2 · Częściowo uzupełniony
-Mechanika jednego rzeczywistego rolla GC i dwóch wariantów większej pozycji przeszła kontrolę. Pełna historia i koszyk pozostają do zbadania.
+Całookresowe dane minutowe odczytane, ale pełny adapter/kalendarze/efektywność depozytów nie są jeszcze kwalifikowane.
 
 Potwierdzone:
 
@@ -571,6 +607,10 @@ Onecontractbaseline40.02USD;16contractdelay250/1000ms bothcomplete, allpartialfi
 
 9newuniqueICEsnapshots+1knownsnapshotbyte-reconciled,0HTTP429in10pacedrequests; officialJan/Febholidaytradedatesread.
 
+Odczyt rzeczywistych minut GC2019–2025 plus rozgrzewka2018 i zapis pełnych wyników/hashów zakończony.
+
+Jedna temporalna rozbieżność modelu depozytów vs CME potwierdzona, komponent naprawczy sprawdzony.
+
 Pozostało:
 
 Historical fees,margin,cash collateral funding and full account reset decisions are missing.
@@ -605,17 +645,19 @@ Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walida
 
 Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
 
-Zastosować zweryfikowany przebieg GC do pełnej historii i pozostałych zadeklarowanych rynków. Ten jeden roll i trzy warianty wykonania nie są pełnym testem zyskowności Turtle ani nowym OOS.
+GC 2019–2025: pełny adapter strategii, własne sygnały każdego kwalifikującego miesiąca, ticki zdarzeń, koszty, dzienne NAV i matched SPY pozostają do obliczenia po osobnym zamrożeniu planu. Audyt 4,64 mln minut nie jest wynikiem skuteczności.
 
-Pełne historyczne kalendarze i terminy dostawy wszystkich miesięcy/rynków 2019–2025: obecna kontrola obejmuje GC wrzesień2023–marzec2024 i termin April24. Styczniowe/lutowe daty giełdowe uzupełnione z oficjalnych komunikatów; pełne godziny każdego święta pozostają do kontroli.
+Kalendarz źródłowy GC 2018–2025: odczytano oficjalne przewodniki CME 2019–2024; trzeba ustrukturyzować daty i terminy, dopełnić rozgrzewkę 2018 i rok 2025 oraz zweryfikować segmenty świąteczne i first intent. Daty zegarowe i kalendarz NYSE nie zastępują dat giełdowych GC.
 
-OI: dwa dni źródłowe opóźnienia są jawną konwencją. Timestamp rekordu nie dowodzi godziny publicznej publikacji. Przed uznaniem realnej wykonalności nadal potrzebna kontrola publikacji OI/volume i płynności pełnej pozycji.
+Depozyty: zebrano 52 pierwsze obserwowane zmiany modelu wraz z rozgrzewką i punktowe potwierdzenia źródłowe. Trzeba uzgodnić obowiązywanie po zamknięciu, publikację i klasyfikację wszystkich używanych stawek. Jeden poprawiony przypadek nie kwalifikuje 52 zmian; nowy moduł dated_margin musi wejść do adaptera.
 
-Depozyty i SB: dodatni historyczny model QC dla GC potwierdzony w kontrolowanym punkcie; brak pełnej klasyfikacji historycznych narzutów brokera. ICE: 52 poprawne datowane tabele z serii archiwalnej, w tym9 nowych unikatowych w tej rundzie; starsza historia 2019–2021 i pozostałe 2022–2024 nadal niekompletne. Obowiązuje Retry-After i ograniczone pobieranie.
+Lista kontraktów i rolowanie: filtr 0–400 dni do wygaśnięcia służył kontroli danych, nie jest zatwierdzonym uniwersum strategii. Potrzebne pełne własne rozgrzewki 55 sesji, przyczynowy wybór miesiąca, płynność i kompletne terminy dostawy. Mechaniczny termin rolla i wyjątek silniejszego bliskiego miesiąca muszą być ustalone przed PnL.
 
-Skala portfela: 16 kontraktów wynika z założonego na moment kontrolny notional 1 mln USD i czterech jednostek po4; rzeczywista wcześniejsza ścieżka NAV/notional nie została odtworzona. Potrzeba pełnego rachunku wielorynkowego, resetów, settlement, finansowania, wyboru miesięcy i benchmarku SPY przed wynikiem strategii.
+Publikacja OI/volume: obecny harmonogram CME wskazuje finalny biuletyn o 10 CT następnego dnia roboczego. Nie dowodzi faktycznej dostępności ani vintage wszystkich danych 2019–2025; nie zamyka historycznej luki as-of.
 
-Wykonanie i koszty: to wypełnienia modelowe na rzeczywistym L1, z zadanym opóźnieniem i1tickiem poślizgu. Nie zmierzono rzeczywistego opóźnienia Maca, kolejki/marketimpact, brokerfilli, osobistej taryfy, historycznych opłat overnight, FX ani podatków. Nie nazywać pełnym netto.
+Wykonanie i rachunek: rzeczywiste historyczne kwotowania, opóźnienia i częściowe fille trzeba zastosować do wszystkich zdarzeń, z kosztem obu nóg. Prowizje obecnego scenariusza i 1 tick poślizgu pozostają założeniami. Brak osobistych filli, house margin, historycznych opłat, FX i podatków; nie nazywać pełnym netto.
+
+Portfel 12 rynków dopiero po GC, zgodnie z poleceniem Piotra. Historia i klasyfikacja SB pozostają niepełne; brak rynku nie upoważnia do jego cichego usunięcia.
 
 PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
 
@@ -635,43 +677,43 @@ Account component controls + actual historical margin-data qualification; no str
 
 ActualquoteGCroll control +independentledger/cost/stop checks; notfullstrategyPnL (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_ROLL_REPORT.html) · GC April→June,22.03.2024: oba miesiące mają własny long. Kontrola 1 kontraktu kosztuje modelowo 40,02USD. Przy 16 kontraktach i opóźnieniu 250 ms koszt 705,32USD; przy 1 s 610,32USD. Zamknięcie starego przed nowym, częściowe fille, depozyty, bilans i wszystkie stopy uzgodnione niezależnie. Jeden przypadek,3 warianty wykonania; brak pełnego wyniku strategii.
 
-Następny krok: Rozszerzyć ten sam zweryfikowany mechanizm na pełną historię GC i następnie stały koszyk12rynków, bez zmiany progów. Równolegle uzupełniać datowane depozyty i kalendarze; zamrozić pełny plan przed obliczeniem zwrotu strategii.
+Fullrange minute data audit plus seven timed margin cases, not strategy performance (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_RANGE_REPORT.html) · GC 2019–2025: odczytano 4 635 018 rzeczywistych świec minutowych i 282 879 z rozgrzewki 2018; 103 obserwowane kontrakty łącznie, bez zgłoszonych błędów technicznych. Zebrano 52 zmiany modelu depozytów. Osobny test wykazał przedwczesne stosowanie niższej stawki QC 19.06.2020: od północy zamiast po zamknięciu według CME. Nowy moduł rozdziela te momenty i przeszedł 10 kontroli; pełny adapter oraz wynik strategii po kosztach pozostają do ukończenia.
 
-Turtle: rzeczywiste rolowanie GC i częściowe wykonanie · 30.10.2026
+Następny krok: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
 
-GC April→June,22.03.2024: oba miesiące mają własny long. Kontrola 1 kontraktu kosztuje modelowo 40,02USD. Przy 16 kontraktach i opóźnieniu 250 ms koszt 705,32USD; przy 1 s 610,32USD. Zamknięcie starego przed nowym, częściowe fille, depozyty, bilans i wszystkie stopy uzgodnione niezależnie. Jeden przypadek,3 warianty wykonania; brak pełnego wyniku strategii.
+Turtle GC2019–2025: kontrola całego zakresu i zegara depozytów
+
+GC 2019–2025: odczytano 4 635 018 rzeczywistych świec minutowych i 282 879 z rozgrzewki 2018; 103 obserwowane kontrakty łącznie, bez zgłoszonych błędów technicznych. Zebrano 52 zmiany modelu depozytów. Osobny test wykazał przedwczesne stosowanie niższej stawki QC 19.06.2020: od północy zamiast po zamknięciu według CME. Nowy moduł rozdziela te momenty i przeszedł 10 kontroli; pełny adapter oraz wynik strategii po kosztach pozostają do ukończenia.
 
 KontrolaWynik / ograniczenie
 
-Źródłowy warunek rollaOba własne System 2: long po 4 jednostki;139 dat źródłowych. Nie otwieramy następnego miesiąca tylko dlatego, że mamy stary.
+Zakres danych2019–2025 + rozgrzewka od1.07.2018; 4 917 897 minut łącznie
 
-1 kontrakt — baza40,02USD modelowo: spread 15USD, opłaty 5,02USD,1 tick/nogę 20USD.
+Błędy techniczne danych0 zgłoszonych; nie dowodzi pełności kalendarza
 
-16 kontraktów /250 ms705,32USD łącznie,44,08USD/kontrakt;5 częściowych zamknięć i 9 otwarć.
+Depozyty52 zmiany modelu;18 160 odczytów; punktowe potwierdzenia
 
-16 kontraktów /1 s610,32USD łącznie,38,15USD/kontrakt;6 częściowych zamknięć i 9 otwarć.
+Różnica czasowa19.06.2020 QC od północy; CME po zamknięciu.3/7 próbek niezgodnych w czasie.
 
-Rachunek i stopyStary zamknięty przed nowym. Wszystkie ilości, opłaty, bilans i 10 nowych lotów/stopów na wariant zgodne z osobnym przeliczeniem.
+Nowy komponent10 kontroli czasu/coverage PASS, integracja adaptera nadal wymagana
 
-Depozyt9680USD initial i 8800USD maintenance na kontrakt według datowanego modeluQC;16×initial=154880USD.
+Wynik po kosztachJESZCZE NIEOBLICZONY; nie odrzucono Turtle
 
-Nowe darmowe dane9 nowych unikatowych tabelICE i 1 uzgodniona kopia; źródłowe kalendarze styczniowego/lutowego święta.
+GC 2019–2025: pełny adapter strategii, własne sygnały każdego kwalifikującego miesiąca, ticki zdarzeń, koszty, dzienne NAV i matched SPY pozostają do obliczenia po osobnym zamrożeniu planu. Audyt 4,64 mln minut nie jest wynikiem skuteczności.
 
-Pełny wynik TurtleJeszcze niepoliczony.1 roll,3 warianty wykonania; wcześniejsze NAV/notional i cały koszyk nieodtworzone. Brak nowego werdyktu.
+Kalendarz źródłowy GC 2018–2025: odczytano oficjalne przewodniki CME 2019–2024; trzeba ustrukturyzować daty i terminy, dopełnić rozgrzewkę 2018 i rok 2025 oraz zweryfikować segmenty świąteczne i first intent. Daty zegarowe i kalendarz NYSE nie zastępują dat giełdowych GC.
 
-Zastosować zweryfikowany przebieg GC do pełnej historii i pozostałych zadeklarowanych rynków. Ten jeden roll i trzy warianty wykonania nie są pełnym testem zyskowności Turtle ani nowym OOS.
+Depozyty: zebrano 52 pierwsze obserwowane zmiany modelu wraz z rozgrzewką i punktowe potwierdzenia źródłowe. Trzeba uzgodnić obowiązywanie po zamknięciu, publikację i klasyfikację wszystkich używanych stawek. Jeden poprawiony przypadek nie kwalifikuje 52 zmian; nowy moduł dated_margin musi wejść do adaptera.
 
-Pełne historyczne kalendarze i terminy dostawy wszystkich miesięcy/rynków 2019–2025: obecna kontrola obejmuje GC wrzesień2023–marzec2024 i termin April24. Styczniowe/lutowe daty giełdowe uzupełnione z oficjalnych komunikatów; pełne godziny każdego święta pozostają do kontroli.
+Lista kontraktów i rolowanie: filtr 0–400 dni do wygaśnięcia służył kontroli danych, nie jest zatwierdzonym uniwersum strategii. Potrzebne pełne własne rozgrzewki 55 sesji, przyczynowy wybór miesiąca, płynność i kompletne terminy dostawy. Mechaniczny termin rolla i wyjątek silniejszego bliskiego miesiąca muszą być ustalone przed PnL.
 
-OI: dwa dni źródłowe opóźnienia są jawną konwencją. Timestamp rekordu nie dowodzi godziny publicznej publikacji. Przed uznaniem realnej wykonalności nadal potrzebna kontrola publikacji OI/volume i płynności pełnej pozycji.
+Publikacja OI/volume: obecny harmonogram CME wskazuje finalny biuletyn o 10 CT następnego dnia roboczego. Nie dowodzi faktycznej dostępności ani vintage wszystkich danych 2019–2025; nie zamyka historycznej luki as-of.
 
-Depozyty i SB: dodatni historyczny model QC dla GC potwierdzony w kontrolowanym punkcie; brak pełnej klasyfikacji historycznych narzutów brokera. ICE: 52 poprawne datowane tabele z serii archiwalnej, w tym9 nowych unikatowych w tej rundzie; starsza historia 2019–2021 i pozostałe 2022–2024 nadal niekompletne. Obowiązuje Retry-After i ograniczone pobieranie.
+Wykonanie i rachunek: rzeczywiste historyczne kwotowania, opóźnienia i częściowe fille trzeba zastosować do wszystkich zdarzeń, z kosztem obu nóg. Prowizje obecnego scenariusza i 1 tick poślizgu pozostają założeniami. Brak osobistych filli, house margin, historycznych opłat, FX i podatków; nie nazywać pełnym netto.
 
-Skala portfela: 16 kontraktów wynika z założonego na moment kontrolny notional 1 mln USD i czterech jednostek po4; rzeczywista wcześniejsza ścieżka NAV/notional nie została odtworzona. Potrzeba pełnego rachunku wielorynkowego, resetów, settlement, finansowania, wyboru miesięcy i benchmarku SPY przed wynikiem strategii.
+Portfel 12 rynków dopiero po GC, zgodnie z poleceniem Piotra. Historia i klasyfikacja SB pozostają niepełne; brak rynku nie upoważnia do jego cichego usunięcia.
 
-Wykonanie i koszty: to wypełnienia modelowe na rzeczywistym L1, z zadanym opóźnieniem i1tickiem poślizgu. Nie zmierzono rzeczywistego opóźnienia Maca, kolejki/marketimpact, brokerfilli, osobistej taryfy, historycznych opłat overnight, FX ani podatków. Nie nazywać pełnym netto.
-
-Dane wyniku i ograniczenia (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_ROLL_REPORT.html)
+Dane wyniku i ograniczenia (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_RANGE_REPORT.html)
 
 Dywidendy: kontrola paczki zakończona · 30.10.2026
 
@@ -845,7 +887,7 @@ Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika
 
 Dane wyniku i ograniczenia
 
-Następne działanie dla karty: Rozszerzyć ten sam zweryfikowany mechanizm na pełną historię GC i następnie stały koszyk12rynków, bez zmiany progów. Równolegle uzupełniać datowane depozyty i kalendarze; zamrozić pełny plan przed obliczeniem zwrotu strategii.
+Następne działanie dla karty: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
 
 Pełny zapis ustaleń, dowodów i braków tej rundy
 
@@ -879,7 +921,7 @@ Niezależna kontrola kompletnościzanimrun.
 
 Gdy nie uda się zdobyć: Uproszczonykanał55/20 nadal może istnieć jako własnateza, bezTurtlereproduction.
 
-Następne działanie: Rozszerzyć ten sam zweryfikowany mechanizm na pełną historię GC i następnie stały koszyk12rynków, bez zmiany progów. Równolegle uzupełniać datowane depozyty i kalendarze; zamrozić pełny plan przed obliczeniem zwrotu strategii.
+Następne działanie: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
 T003-D1 · Historyczneseparatecontract futures i jawne źródłoweuniwersum.
 Dlaczego potrzebne: JednoseryjnySPY usuwaźródłowe rynki,short i dywersyfikację.
 
@@ -923,7 +965,7 @@ Wersja zpodzbiorem jest oznaczona osobno.
 
 Gdy nie uda się zdobyć: Jawny source-incomplete subset lub własnokanałowyETFwariant; oryginał pozostaje requiresdata.
 
-Następne działanie: Rozszerzyć ten sam zweryfikowany mechanizm na pełną historię GC i następnie stały koszyk12rynków, bez zmiany progów. Równolegle uzupełniać datowane depozyty i kalendarze; zamrozić pełny plan przed obliczeniem zwrotu strategii.
+Następne działanie: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
 T003-E1 · Kolejność intradayprzebicia,stopu i gapów oraz realnośćfilla.
 Dlaczego potrzebne: Dailyclose→nextopen nie odtwarza źródłowego wejścia w trakcieprzebicia.
 
@@ -963,7 +1005,7 @@ Sourceintraday i naszeclose są porównywane tylko w odrębnychwersjach.
 
 Gdy nie uda się zdobyć: Konserwatywny testzwidełkami możliwy po nowymplanie; brak rozstrzygnięciaoryginału przy nierozwiązanejkolejności.
 
-Następne działanie: Rozszerzyć ten sam zweryfikowany mechanizm na pełną historię GC i następnie stały koszyk12rynków, bez zmiany progów. Równolegle uzupełniać datowane depozyty i kalendarze; zamrozić pełny plan przed obliczeniem zwrotu strategii.
+Następne działanie: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
 T003-E2 · Kosztyfutures, margin,borrow/finansowanie i limityportfela.
 Dlaczego potrzebne: Oryginalneriskunits nie przeliczająsięna100%kapitałuSPY.
 
@@ -995,7 +1037,7 @@ Braktradeorders podczasreprodukcji.
 
 Gdy nie uda się zdobyć: Wyłącznie statystykisygnału/grossscenario, beznetprofitclaim.
 
-Następne działanie: Rozszerzyć ten sam zweryfikowany mechanizm na pełną historię GC i następnie stały koszyk12rynków, bez zmiany progów. Równolegle uzupełniać datowane depozyty i kalendarze; zamrozić pełny plan przed obliczeniem zwrotu strategii.
+Następne działanie: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
 
 Krótka karta dla AI · Źródło (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · Pełna karta, audyt i stare wyniki
 

@@ -1,0 +1,43 @@
+{
+  "at_utc": "2026-10-30T18:38:46.456284+00:00",
+  "accepted_notice": {
+    "url": "https://www.cmegroup.com/notices/clearing/2020/06/Chadv20-247.pdf",
+    "document_id": "20-247",
+    "notice_date": "2020-06-18",
+    "effective_after_close": "2020-06-19",
+    "scope": "GC Spec alltiers1..7/8+; initial10065→9020 USD, maintenance9150→8200 USD; hedge/member distinct",
+    "why_accept": "HeaderID/date/bodyGCrows/effectivedate match; sourcewebread, no localbinaryclaimed"
+  },
+  "quarantined_candidate": {
+    "requested_url": "https://www.cmegroup.com/notices/clearing/2020/08/Chadv20-309.pdf",
+    "search_snippet_claim": "20-309/2020-08-06 GC9020→9570/8200→8700",
+    "actual_web_redirect": "https://www.cmegroup.com/content/dam/cmegroup/notices/clearing/2022/03/Chadv22-105.pdf#page=1",
+    "returned_document": "22-105,2022-03-17,42pages",
+    "accepted_as2020": false,
+    "canonical_2020_contentdam_followup": "webtoolinaccessible",
+    "decision": "Do not assign2020data fromsnippet; original2020notice remainsmissing. URLalone cannotvalidateidentity."
+  },
+  "CME_author_article": {
+    "url": "https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes",
+    "read": true,
+    "reported_at_close": [
+      "2020-01-10 initial5500 maintenance5000",
+      "2020-03-24 initial7700 maintenance7000"
+    ],
+    "general_notice": "atleast24hours priornotice stated; actualhistoricalreceipt notprovided",
+    "role": "Independent datedspotcheck, notfullseries."
+  },
+  "RJO_snapshots": {
+    "dates": [
+      "2019-02-16",
+      "2019-04-05"
+    ],
+    "GC_initial_maintenance_USD": [
+      3740,
+      3400
+    ],
+    "reported_last_move": "2018-10-12",
+    "same_underlying_publisher_not_independent_sources": true,
+    "role": "Two broker-publication snapshots, notfullyqualifieddailyhistory orpersonalhousemargin"
+  }
+}

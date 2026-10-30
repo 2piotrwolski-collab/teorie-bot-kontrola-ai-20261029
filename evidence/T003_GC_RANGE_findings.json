@@ -1,0 +1,400 @@
+{
+  "id": "T003_GC_FULL_RANGE_DATA_AND_MARGIN_CLOCK_20261030_V1",
+  "at_utc": "2026-10-30T18:55:58.884340+00:00",
+  "status": "FULL_RANGE_MINUTE_AUDIT_COMPLETE_MARGIN_EFFECTIVITY_CORRECTION_REQUIRED_STRATEGY_PENDING",
+  "theory": "T003",
+  "study_period": [
+    "2019-01-02",
+    "2025-12-31"
+  ],
+  "warmup_from": "2018-07-01",
+  "range_audit": {
+    "id": "T003_GC_RANGE_ARTIFACT_RECONCILIATION_20261030_V1",
+    "all_passed": true,
+    "raw_minute_bars_including_warmup": 4917897,
+    "study_2019_2025_raw_minute_bars": 4635018,
+    "warmup_raw_minute_bars": 282879,
+    "observed_contracts_including_warmup": 103,
+    "dated_model_changes_including_warmup": 52,
+    "source_model_spotchecks": [
+      {
+        "day": "2019-02-16",
+        "model": [
+          3740.0,
+          3400.0
+        ],
+        "source": [
+          3740,
+          3400
+        ],
+        "source_scope": "RJO authoredsnapshot readviaWeb; rawdownloadfailedcertificate, samepublisherasApril"
+      },
+      {
+        "day": "2019-04-05",
+        "model": [
+          3740.0,
+          3400.0
+        ],
+        "source": [
+          3740,
+          3400
+        ],
+        "source_scope": "ArchivedRJO PDF1d3584...; snapshotnotdailyhistory"
+      },
+      {
+        "day": "2020-01-10",
+        "model": [
+          5500.0,
+          5000.0
+        ],
+        "source": [
+          5500,
+          5000
+        ],
+        "source_scope": "CMEauthorarticlepoint-in-date; effectivityseparate20-014afterJan9close"
+      },
+      {
+        "day": "2020-03-24",
+        "model": [
+          7700.0,
+          7000.0
+        ],
+        "source": [
+          7700,
+          7000
+        ],
+        "source_scope": "CMEauthorarticlepoint-in-date; notannouncementclockproof"
+      },
+      {
+        "day": "2020-06-19",
+        "model": [
+          9020.0,
+          8200.0
+        ],
+        "source": [
+          9020,
+          8200
+        ],
+        "source_scope": "CME20-247, NEW pair validonlyAFTERclose19Jun; same-daymorningcomparisonpendingtimingcontrol"
+      },
+      {
+        "day": "2024-03-22",
+        "model": [
+          9680.0,
+          8800.0
+        ],
+        "source": [
+          9680,
+          8800
+        ],
+        "source_scope": "8800CMEminimumrow; initial9680 remains declared1.1modelprofile, notseparateCMEhouseproof"
+      }
+    ],
+    "model_margin_observations": 18160,
+    "code_sha_verified": "b5d8735917cd793588b87ce7660fa8044495259c7caa1ebf6a04253cf4f3098e",
+    "code_normalization": "Exactfilematches cloudSHAwithoneadditionalterminalLF; ASTequal",
+    "no_orders_or_strategy_PnL": true,
+    "not_verified": [
+      "Rawproviderrowsnotindependentlyfrozen/recomputedfromlocalCSV",
+      "Clockdatesnotfullsourcecalendar; nofullsessioncompletenessproof",
+      "0..400dayfilter notwholequalifiedliquidlisteduniverse",
+      "AllCMEchangeeffectivity/personalhouse/settlement/holidaymetadata",
+      "FullsourceSystem2strategyperformance/execution,matchedSPY/OOS"
+    ]
+  },
+  "margin_clock_control": {
+    "id": "T003_GC_MARGIN_EFFECTIVITY_VERIFIED_20261030_V1",
+    "technical_artifact_checks_passed": true,
+    "CME_temporal_model_match": false,
+    "mismatching_samples": 3,
+    "samples": [
+      {
+        "at_NY": "2020-06-18T12:00:00-04:00",
+        "model": [
+          10065.0,
+          9150.0
+        ],
+        "CME_after_close_interpretation": [
+          10065,
+          9150
+        ],
+        "mismatch": false
+      },
+      {
+        "at_NY": "2020-06-18T16:59:00-04:00",
+        "model": [
+          10065.0,
+          9150.0
+        ],
+        "CME_after_close_interpretation": [
+          10065,
+          9150
+        ],
+        "mismatch": false
+      },
+      {
+        "at_NY": "2020-06-18T18:01:00-04:00",
+        "model": [
+          10065.0,
+          9150.0
+        ],
+        "CME_after_close_interpretation": [
+          10065,
+          9150
+        ],
+        "mismatch": false
+      },
+      {
+        "at_NY": "2020-06-19T00:01:00-04:00",
+        "model": [
+          9020.0,
+          8200.0
+        ],
+        "CME_after_close_interpretation": [
+          10065,
+          9150
+        ],
+        "mismatch": true
+      },
+      {
+        "at_NY": "2020-06-19T10:00:00-04:00",
+        "model": [
+          9020.0,
+          8200.0
+        ],
+        "CME_after_close_interpretation": [
+          10065,
+          9150
+        ],
+        "mismatch": true
+      },
+      {
+        "at_NY": "2020-06-19T16:59:00-04:00",
+        "model": [
+          9020.0,
+          8200.0
+        ],
+        "CME_after_close_interpretation": [
+          10065,
+          9150
+        ],
+        "mismatch": true
+      },
+      {
+        "at_NY": "2020-06-21T18:01:00-04:00",
+        "model": [
+          9020.0,
+          8200.0
+        ],
+        "CME_after_close_interpretation": [
+          9020,
+          8200
+        ],
+        "mismatch": false
+      }
+    ],
+    "finding": "QC uses9020/8200 by00:01NY19Jun2020; CME20-247 makes these newrates effectiveonlyafterclose19Jun. Do not feedcalendar-daymodeldirectlyintointradaymarginchecks.",
+    "repair": "Newdated_margin.py separatesknown_at/effective_after, strictcloseboundary, explicitcoverageandknowledgeassumption,10syntheticchecksPASS; fullhistoricaladapterstilltointegrate.",
+    "scope": "Oneverifiedtransition, not52fullyreconciledchanges;17NYisexplicitstandard-sessioncloseinterpretation; notactualbrokerreceipt/houseprofile.",
+    "prior_result_impact": "No fullGCstrategyPnL hasbeencomputed. Frozen22Mar2024roll hasno same-dayratechange and isnotrecomputed/replaced.",
+    "executed_code_sha256": "3369159b14511d07db7c505644888eb7d0cb91e7915b4ffd91820bd8334445b4",
+    "real_orders": 0,
+    "new_strategy_PnL": false
+  },
+  "completed_cloud_data_controls": 2,
+  "new_strategy_trials": 0,
+  "full_strategy_PnL": false,
+  "confirmed_strategy": false,
+  "original_theory_rejected": false,
+  "real_orders": 0,
+  "paid_services": 0,
+  "review_status": "provisional_no_partner_review",
+  "source_access": {
+    "at_utc": "2026-10-30T18:36:15.454311+00:00",
+    "CME_GC_margin_pdf": {
+      "url": "https://www.cmegroup.com/clearing/risk-management/files/GC-2020-to-present.pdf",
+      "web_read": true,
+      "web_reported_pages": 1009,
+      "web_reported_lines": 37325,
+      "first_business_date_in_descending_table": "2026-09-30",
+      "last_business_date_in_descending_table": "2020-09-30",
+      "header_not_full_2020_coverage": true,
+      "verified_spot": "2024-03-22 GC01..21 USD8800; matches QCmaintenance one-controlled-date only",
+      "direct_http": 403,
+      "raw_pdf_archived": false,
+      "IAB_browser": "blankrender, no content; no bypass",
+      "remaining": "2019 andJan-Sep2020/earlierwarmup requireotherdatednotices; rollrank mapping andinitial/maintenance/house/publicationclassification notclosed"
+    },
+    "official_annual_guides": [
+      {
+        "year": 2019,
+        "url": "https://www.cmegroup.com/education/files/metals-prod_guide_2019.pdf",
+        "read": "WebPDF104pages; GC100oz/tick.1, sourceGlobexNY18–17, listedmonths, holiday/LTDcalendar; notfullholidayhaltsegments orintent"
+      },
+      {
+        "year": 2020,
+        "url": "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2020.pdf",
+        "read": "Webfulltext, exactGCspecavailable; holiday/LTDcalendarrequires structuredextraction"
+      },
+      {
+        "year": 2021,
+        "url": "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2021.pdf",
+        "read": "Webfulltext, sourceGlobexhours/annualcalendaravailable; fullstructuredextractionpending"
+      },
+      {
+        "year": 2022,
+        "url": "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2022.pdf",
+        "read": "WebPDF92pages; annualholiday/LTDcalendaravailable, pendingextraction"
+      },
+      {
+        "year": 2023,
+        "url": "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2023.pdf",
+        "read": "Webfulltext annualcalendar; Juneteenth2023 markerpresent; Jan/Aug/Sep/otherLTDexamples read"
+      },
+      {
+        "year": 2024,
+        "url": "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2024.pdf",
+        "read": "ExistingR14guide available; boundedGCsamplepreviouslychecked"
+      }
+    ],
+    "bulletin_publication": {
+      "url": "https://www.cmegroup.com/market-data/daily-bulletin.html",
+      "web_read": true,
+      "current_stated_schedule": "Preliminary approx00:00CTfollowingbusinessday; Final10:00CTfollowingbusinessday",
+      "qualifies": "Supportsconservativecompleted-businessdaylagdesign, notactual2019–25receipt/vintagehistories; keepasofgap",
+      "raw_html_archived": false
+    },
+    "portfolio_not_started": true,
+    "performance_PnL_computed": false
+  },
+  "notice_identity_checks": {
+    "at_utc": "2026-10-30T18:38:46.456284+00:00",
+    "accepted_notice": {
+      "url": "https://www.cmegroup.com/notices/clearing/2020/06/Chadv20-247.pdf",
+      "document_id": "20-247",
+      "notice_date": "2020-06-18",
+      "effective_after_close": "2020-06-19",
+      "scope": "GC Spec alltiers1..7/8+; initial10065→9020 USD, maintenance9150→8200 USD; hedge/member distinct",
+      "why_accept": "HeaderID/date/bodyGCrows/effectivedate match; sourcewebread, no localbinaryclaimed"
+    },
+    "quarantined_candidate": {
+      "requested_url": "https://www.cmegroup.com/notices/clearing/2020/08/Chadv20-309.pdf",
+      "search_snippet_claim": "20-309/2020-08-06 GC9020→9570/8200→8700",
+      "actual_web_redirect": "https://www.cmegroup.com/content/dam/cmegroup/notices/clearing/2022/03/Chadv22-105.pdf#page=1",
+      "returned_document": "22-105,2022-03-17,42pages",
+      "accepted_as2020": false,
+      "canonical_2020_contentdam_followup": "webtoolinaccessible",
+      "decision": "Do not assign2020data fromsnippet; original2020notice remainsmissing. URLalone cannotvalidateidentity."
+    },
+    "CME_author_article": {
+      "url": "https://www.cmegroup.com/education/articles-and-reports/understanding-margin-changes",
+      "read": true,
+      "reported_at_close": [
+        "2020-01-10 initial5500 maintenance5000",
+        "2020-03-24 initial7700 maintenance7000"
+      ],
+      "general_notice": "atleast24hours priornotice stated; actualhistoricalreceipt notprovided",
+      "role": "Independent datedspotcheck, notfullseries."
+    },
+    "RJO_snapshots": {
+      "dates": [
+        "2019-02-16",
+        "2019-04-05"
+      ],
+      "GC_initial_maintenance_USD": [
+        3740,
+        3400
+      ],
+      "reported_last_move": "2018-10-12",
+      "same_underlying_publisher_not_independent_sources": true,
+      "role": "Two broker-publication snapshots, notfullyqualifieddailyhistory orpersonalhousemargin"
+    }
+  },
+  "remaining": [
+    "GC 2019–2025: pełny adapter strategii, własne sygnały każdego kwalifikującego miesiąca, ticki zdarzeń, koszty, dzienne NAV i matched SPY pozostają do obliczenia po osobnym zamrożeniu planu. Audyt 4,64 mln minut nie jest wynikiem skuteczności.",
+    "Kalendarz źródłowy GC 2018–2025: odczytano oficjalne przewodniki CME 2019–2024; trzeba ustrukturyzować daty i terminy, dopełnić rozgrzewkę 2018 i rok 2025 oraz zweryfikować segmenty świąteczne i first intent. Daty zegarowe i kalendarz NYSE nie zastępują dat giełdowych GC.",
+    "Depozyty: zebrano 52 pierwsze obserwowane zmiany modelu wraz z rozgrzewką i punktowe potwierdzenia źródłowe. Trzeba uzgodnić obowiązywanie po zamknięciu, publikację i klasyfikację wszystkich używanych stawek. Jeden poprawiony przypadek nie kwalifikuje 52 zmian; nowy moduł dated_margin musi wejść do adaptera.",
+    "Lista kontraktów i rolowanie: filtr 0–400 dni do wygaśnięcia służył kontroli danych, nie jest zatwierdzonym uniwersum strategii. Potrzebne pełne własne rozgrzewki 55 sesji, przyczynowy wybór miesiąca, płynność i kompletne terminy dostawy. Mechaniczny termin rolla i wyjątek silniejszego bliskiego miesiąca muszą być ustalone przed PnL.",
+    "Publikacja OI/volume: obecny harmonogram CME wskazuje finalny biuletyn o 10 CT następnego dnia roboczego. Nie dowodzi faktycznej dostępności ani vintage wszystkich danych 2019–2025; nie zamyka historycznej luki as-of.",
+    "Wykonanie i rachunek: rzeczywiste historyczne kwotowania, opóźnienia i częściowe fille trzeba zastosować do wszystkich zdarzeń, z kosztem obu nóg. Prowizje obecnego scenariusza i 1 tick poślizgu pozostają założeniami. Brak osobistych filli, house margin, historycznych opłat, FX i podatków; nie nazywać pełnym netto.",
+    "Portfel 12 rynków dopiero po GC, zgodnie z poleceniem Piotra. Historia i klasyfikacja SB pozostają niepełne; brak rynku nie upoważnia do jego cichego usunięcia."
+  ],
+  "next_action": "Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.",
+  "gap_plan": [
+    {
+      "gap_id": "GC_SOURCE_CALENDAR",
+      "what": "2018warmup+2019–2025 source trade dates, segments and delivery deadlines",
+      "sources": [
+        "https://www.cmegroup.com/education/files/metals-prod_guide_2019.pdf",
+        "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2020.pdf",
+        "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2021.pdf",
+        "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2022.pdf",
+        "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2023.pdf",
+        "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2024.pdf"
+      ],
+      "access": "Webfulltexts read; rawCME PDFdirect403; no claimbinaryarchived",
+      "steps": "Extractyearlyholiday/LTDtables, locate dated2018/2025notices, map source trade-date acrossholidayhalts; compare all observed minutes and verifyfirstintent separately",
+      "acceptance": "No unexplained traded-date/minute mapping; all held months safe before delivery; no NYSE substitution",
+      "free": "ReadpublicCME sources only",
+      "blocks_performance_qualification": true,
+      "fallback": "Keepunsupportedperiod explicitlyunqualified; do notsilentlyshorten2019–25"
+    },
+    {
+      "gap_id": "GC_MARGIN_EFFECTIVITY",
+      "what": "Timestamped applicable rates vs model calendar date",
+      "sources": [
+        "https://www.cmegroup.com/notices/clearing/2020/06/Chadv20-247.pdf",
+        "https://www.cmegroup.com/notices/clearing/2020/01/Chadv20-014.html",
+        "https://www.cmegroup.com/solutions/risk-management/margin-services/historical-margins.html"
+      ],
+      "access": "20-247header/effectivity/GCrowsread;20-014headerread,XLS2timeouts;historicalPDFwebreadstarts30Sep2020;wrongredirect20-309quarantined",
+      "steps": "Obtain matching datednotices/coverage for eachusedrate; separateSpec/HRP/house, notice knowledge andeffectiveafterclose; integrate dated_margin before account.set_margin",
+      "acceptance": "No earlyeffectivity; independentcoverage/timestamps/basis explicit; nofirstfuture orstale-constantfallback",
+      "free": "Officialpublicnotices andbroker-authoredsnapshots",
+      "blocks_performance_qualification": true,
+      "fallback": "Model-only rate scenarios disclosed, no fullyqualifiedhouseclaim"
+    },
+    {
+      "gap_id": "GC_MONTH_SELECTION_ROLL",
+      "what": "Eligiblemonths, ownsourcewarmup/shadow andmechanicalrollingpolicy",
+      "sources": [
+        "sources/turtle.pdf physicalpages34–35; SHA54910d0f55398a1974839473cc6d59f9fd2b1db7a34627ad3987e256d0a72fee",
+        "https://www.quantconnect.com/docs/v2/writing-algorithms/universes/futures"
+      ],
+      "access": "AuthororiginalPDF localread; QC0..400envelopecontrolleddataonly",
+      "steps": "Freezehistoricaleligibility/own55sessionwarmup andN; formalize authorpermittedstrength measure/roll discretion, firstintent guard; retain source mismatch conventions",
+      "acceptance": "No inheritedsuccessorsignal/lookahead/chosenwinner; source-discretion conventions separatelynamed beforePnL",
+      "free": "ExistingFreeQC+publicCMEreference",
+      "blocks_performance_qualification": true,
+      "fallback": "No silentETF/continuousclose replacement"
+    },
+    {
+      "gap_id": "GC_FULL_EXECUTION_AND_LEDGER",
+      "what": "Full7year chronology,alltradequotes, costs, NAV andbenchmark",
+      "sources": [
+        "research_round14/T003_GC_roll/capacity_verification.json",
+        "research_round13/T003_full_futures/COST_PROFILE.json",
+        "https://www.cmegroup.com/market-data/daily-bulletin.html"
+      ],
+      "access": "Oneactualroll3executionvariants alreadyverified; wholehistoryrawminutesavailable, notwholeactiontick/settlementpath",
+      "steps": "Integratesourcecalendars/shadows/timestampedmargins andaccount; allactiontickrefinement, delays/spread/fees/slippage; fullchronologicalledger, yearlyresets,matchedSPY andindependentreconcile",
+      "acceptance": "Frozenperformanceplan, no unexplaineddatagates, completeledgerandmatchedperiod; hypothesesnotjudgedfrombugs",
+      "free": "ExistingFreeQC/localcode; noorders orpaidfallback",
+      "blocks_performance_qualification": true,
+      "fallback": "Documentincomplete/testinvalid; nohypothesisrejection"
+    }
+  ],
+  "evidence_sha256": {
+    "DATA_GATE_FREEZE.json": "7eb27c597ef15bd9fd0c1533d396321ac1df31e7f70661d287b9ef2ed8e5553a",
+    "MARGIN_TIMING_FREEZE.json": "28365c53c302d8b07c4fa5591832682a11a28734a75b5d450f8659fa1c6d7488",
+    "QC_range_full_report.json": "ef0bdb0b525f449e0b3d3a64b8ab01b0d001ee32791400801cb7b7dcc637cdf5",
+    "QC_range_receipt.json": "8e5c0ba8f9cbbfd8d183d92e475a693e8e3a96448c63bb1b784d661728abb439",
+    "range_verification.json": "f18911e5996382277760e423879ad3bdc7227864ed10d85dab134e72fbd7741d",
+    "QC_margin_timing_report.json": "03e5692054e49e5fb3b6467f84a72ccf9fbd70f3163821cb24e143e3b74eccfe",
+    "QC_margin_timing_receipt.json": "1951682678fc02b43a77dfa8a394ff6e3f7fa36ebb1577ccc5b1c5e88d3bb598",
+    "timing_verification.json": "2ede3c446c025a5ef6dffbd5bbeec26723cd526f690509cbcb1c68ab1da10a1d",
+    "dated_margin_checks.log": "71c309e72a01fb4f53043aef6ba2b125847767a3999ba8718084b390a68e5775",
+    "source_access_findings.json": "88712aa1e626448d32d0974e20f1e429b39f1bd1c16bd8f8a32ebc42536a0026",
+    "notice_identity_checks.json": "da3c9446b73f62ea8dfc19eab36a4c8ee3b1437cce7b27356b7f9a8f8095c5fe"
+  }
+}

@@ -1,0 +1,55 @@
+"""One dated GC rate transition: distinguish model clock from CME effectivity."""
+from AlgorithmImports import *
+from datetime import datetime, timedelta
+import json, hashlib
+
+
+class GCMarginTimingControl(QCAlgorithm):
+    def initialize(self):
+        if self.live_mode:
+            raise ValueError('Historical research only')
+        self.set_start_date(2020, 6, 22)
+        self.set_end_date(2020, 6, 22)
+        self.set_time_zone(TimeZones.NEW_YORK)
+        self.set_cash(1000000)
+        symbol = Symbol.create_future('GC', Market.COMEX, datetime(2020, 8, 27))
+        sec = self.add_future_contract(symbol, Resolution.MINUTE,
+            fill_forward=False, extended_market_hours=True)
+        # Frozen clock cases; June19Friday has no18:00 reopen.
+        times = [datetime(2020, 6, 18, 12), datetime(2020, 6, 18, 16, 59),
+                 datetime(2020, 6, 18, 18, 1), datetime(2020, 6, 19, 0, 1),
+                 datetime(2020, 6, 19, 10), datetime(2020, 6, 19, 16, 59),
+                 datetime(2020, 6, 21, 18, 1)]
+        self.report = {'protocol': 'T003_GC_MARGIN_EFFECTIVITY_20_247_V1',
+            'symbol': str(symbol.id), 'zone': 'America/New_York',
+            'CME_notice': '20-247 published18Jun2020; effectiveafterclose19Jun2020',
+            'rate_old': [10065, 9150], 'rate_new': [9020, 8200],
+            'CME_close_interpretation': '17NYnormalGCsession; noactualtrades17–18',
+            'rows': [], 'errors': [], 'orders': 0, 'strategy_PnL': False}
+        for at in times:
+            try:
+                bars = list(self.history[TradeBar](symbol, at-timedelta(minutes=2),
+                    at, Resolution.MINUTE, fill_forward=False, extended_market_hours=True))
+                if not bars:
+                    raise ValueError('No raw trade bar in bounded2minute window')
+                bar = bars[-1]
+                if bar.end_time > at or bar.is_fill_forward:
+                    raise ValueError('Future/fill-forward raw evidence')
+                sec.set_market_price(bar)
+                model = FutureMarginModel(0, sec)
+                self.report['rows'].append({'query_at_NY': at.isoformat(),
+                    'bar_time_NY': bar.time.isoformat(), 'bar_end_NY': bar.end_time.isoformat(),
+                    'bar_fill_forward': bool(bar.is_fill_forward),
+                    'model_initial': float(model.initial_overnight_margin_requirement),
+                    'model_maintenance': float(model.maintenance_overnight_margin_requirement)})
+            except Exception as exc:
+                self.report['errors'].append({'at': at.isoformat(), 'error': repr(exc)})
+        self.report['executed_main_sha256'] = hashlib.sha256(open(__file__,'rb').read()).hexdigest()
+
+    def on_end_of_algorithm(self):
+        self.debug('GC_MARGIN_TIMING_JSON ' + json.dumps(self.report, sort_keys=True))
+        self.set_runtime_statistic('Protocol','GC datedmargin clock data control')
+        self.set_runtime_statistic('Rows',str(len(self.report['rows'])))
+        self.set_runtime_statistic('Errors',str(len(self.report['errors'])))
+        self.set_runtime_statistic('Orders/PnL','0 / NONE')
+

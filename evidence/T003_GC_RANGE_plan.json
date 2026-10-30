@@ -1,0 +1,29 @@
+{
+  "id": "T003_GC_FULL_RANGE_DATA_GATE_20261030_V1",
+  "frozen_at_utc": "2026-10-30T18:32:08.263908+00:00",
+  "scope": "GC data qualification 2018warmup/2019–2025 before source-calendar replay/performance",
+  "period": [
+    "2019-01-02",
+    "2025-12-31"
+  ],
+  "warmup_from": "2018-07-01",
+  "preserved_source_parameters": "55/20,20TRWilder,1%,.5N/2N,4units; no PnL in this data gate",
+  "scientific_trials": 1,
+  "technical_repairs_max": 2,
+  "allow_paid": false,
+  "allow_orders": false,
+  "cloud_run": "One new raw-minute fullrange audit using existing Free QC clone38666177; prior margin/roll runs retained",
+  "acceptance": [
+    "Every2019–25year receives real individualGCminute observations",
+    "No fillforward,duplicateorder,invalidOHLCV or nonpositive model margins",
+    "Per-year streamed input SHA and executedcodeSHA preserved",
+    "Firstobservedmarginchange dates, notclaimedpublication or exactCMEeffective time",
+    "Clockdatecounts neverreportedassource-tradedate orfullcoverage",
+    "NormalDebugJSON<=7800chars; retain fullDownloadResults/logs, no paidstore or quota bypass"
+  ],
+  "calendar_gate": "Mustindependentlyqualify source-tradedates/segments/deliveryfromCMEbeforeperformance; nativeDaily/calendarlibrarynotassumedcorrect",
+  "performance_plan_frozen": false,
+  "full_strategy_PnL": false,
+  "code_sha256": "90e728149cb7cc13f7d8927f9ccd202bbb95b9556977631eb41716ce9afeaab2",
+  "next_action": "Run bounded fullrange data gate, independentlycheck output; complete sources/calendar/delivery androllpolicy before performance freeze."
+}

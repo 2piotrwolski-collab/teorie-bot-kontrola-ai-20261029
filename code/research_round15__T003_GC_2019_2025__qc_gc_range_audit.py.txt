@@ -1,0 +1,150 @@
+"""GC historical raw-minute / dated model audit; no strategy or orders.
+
+The clock dates below are data timestamps, NOT asserted source trade dates.
+Actual calendars/eligible months/decision-time margin still gate performance.
+"""
+from AlgorithmImports import *
+from datetime import datetime, timedelta
+import hashlib, json, traceback
+
+
+class GCWholeRangeDataAudit(QCAlgorithm):
+    def initialize(self):
+        if self.live_mode:
+            raise ValueError('Historical research only')
+        self.set_time_zone(TimeZones.NEW_YORK)
+        self.set_start_date(2018, 7, 1)
+        self.set_end_date(2025, 12, 31)
+        self.set_cash(1000000)
+        self.years = {}
+        self.previous = {}
+        self.margin_models = {}
+        self.margin_observation_day = {}
+        self.margin_changes = []
+        self.last_margin_pair = None
+        self.errors = {}
+        self.samples = []
+        self.symbols_seen = set()
+        self.first_last = {}
+        self.zones = set()
+        self.raw_digest = hashlib.sha256()
+        self.reported = False
+        future = self.add_future('GC', Resolution.MINUTE,
+            fill_forward=False, extended_market_hours=True,
+            data_normalization_mode=DataNormalizationMode.RAW)
+        # Coverage envelope, not a trading/delivery or liquidity policy.
+        future.set_filter(timedelta(days=0), timedelta(days=400))
+
+    def fail(self, text):
+        self.errors[text] = self.errors.get(text, 0) + 1
+        if len(self.samples) < 5:
+            self.samples.append({'at': str(self.time), 'issue': text})
+
+    def on_data(self, data):
+        for symbol, bar in sorted(data.bars.items(), key=lambda x: str(x[0].id)):
+            if symbol.is_canonical() or symbol.id.symbol != 'GC':
+                continue
+            try:
+                sid = str(symbol.id)
+                row = self.years.setdefault(bar.time.year, {
+                    'minute_bars': 0, 'clock_dates': set(), 'contracts': set(),
+                    'nonpositive_prices': 0, 'weekend_clock_bars': 0,
+                    'margin_observations': 0, 'margin_pairs': set(),
+                    'minute_before_17': 0, 'minute_17_to_18': 0,
+                    'minute_after_18': 0, 'raw_digest': hashlib.sha256()})
+                if bar.is_fill_forward:
+                    self.fail('Fill-forward bar')
+                if sid in self.previous and self.previous[sid] >= bar.time:
+                    self.fail('Duplicate or unordered per-contract minute')
+                self.previous[sid] = bar.time
+                if not (bar.low <= min(bar.open, bar.close)
+                        <= max(bar.open, bar.close) <= bar.high) or bar.volume < 0:
+                    self.fail('Invalid raw OHLCV')
+                row['minute_bars'] += 1
+                row['clock_dates'].add(bar.time.date())
+                row['contracts'].add(sid)
+                row['nonpositive_prices'] += int(bar.low <= 0)
+                row['weekend_clock_bars'] += int(bar.time.weekday() >= 5)
+                part = 'minute_before_17' if bar.time.hour < 17 else (
+                    'minute_17_to_18' if bar.time.hour < 18 else 'minute_after_18')
+                row[part] += 1
+                self.symbols_seen.add(sid)
+                record = self.first_last.setdefault(sid, [str(bar.time), None, 0])
+                record[1] = str(bar.end_time)
+                record[2] += 1
+                line = '|'.join(map(str, [sid, bar.time.isoformat(),
+                    bar.end_time.isoformat(), bar.open, bar.high, bar.low,
+                    bar.close, bar.volume])) + '\n'
+                self.raw_digest.update(line.encode())
+                row['raw_digest'].update(line.encode())
+                sec = self.securities[symbol]
+                self.zones.add(str(sec.exchange.time_zone))
+                if self.margin_observation_day.get(sid) == bar.time.date():
+                    continue
+                self.margin_observation_day[sid] = bar.time.date()
+                model = self.margin_models.setdefault(sid, FutureMarginModel(0, sec))
+                initial = float(model.initial_overnight_margin_requirement)
+                maintenance = float(model.maintenance_overnight_margin_requirement)
+                if not (initial > 0 and 0 < maintenance <= initial):
+                    self.fail('Missing/nonpositive/invalid dated GC model margin')
+                row['margin_observations'] += 1
+                row['margin_pairs'].add((initial, maintenance))
+                # Capture first observed pair each date. Different contracts on
+                # that date are checked separately, not silently collapsed.
+                if not hasattr(self, 'day_pairs'):
+                    self.day_pairs = {}
+                day = str(bar.time.date())
+                pair = (initial, maintenance)
+                if day in self.day_pairs and self.day_pairs[day] != pair:
+                    self.fail('GC contract model margins differ on same clock date')
+                self.day_pairs[day] = pair
+                if pair != self.last_margin_pair:
+                    self.margin_changes.append([day, initial, maintenance])
+                    self.last_margin_pair = pair
+            except Exception as exc:
+                self.fail(type(exc).__name__ + ': ' + str(exc)[:140])
+
+    def on_end_of_algorithm(self):
+        if self.reported:
+            return
+        self.reported = True
+        years = []
+        for year, row in sorted(self.years.items()):
+            years.append({'year': year, **{k: v for k, v in row.items()
+                if k not in ['clock_dates', 'contracts', 'margin_pairs', 'raw_digest']},
+                'observed_clock_dates': len(row['clock_dates']),
+                'first_clock_date': str(min(row['clock_dates'])),
+                'last_clock_date': str(max(row['clock_dates'])),
+                'contracts': len(row['contracts']),
+                'distinct_margin_pairs': len(row['margin_pairs']),
+                'raw_rows_sha256': row['raw_digest'].hexdigest()})
+        own_bytes = open(__file__, 'rb').read()
+        report = {'protocol': 'T003_GC_RANGE_DATA_2018WARM_2019_2025_V1',
+            'strategy_PnL': False, 'orders_submitted': 0,
+            'source': 'QC historical individual GC raw TradeBar minutes; no fill-forward',
+            'start': '2018-07-01', 'end': '2025-12-31',
+            'filter': '0..400 days to actual expiry, coverage envelope only',
+            'algorithm_zone': str(self.time_zone), 'exchange_zones': sorted(self.zones),
+            'years': years, 'margin_pair_changes_first_observed': self.margin_changes,
+            'distinct_contracts': len(self.symbols_seen),
+            'contract_coverage_digest': hashlib.sha256(json.dumps(self.first_last,
+                sort_keys=True).encode()).hexdigest(),
+            'all_raw_rows_sha256': self.raw_digest.hexdigest(),
+            'executed_main_sha256': hashlib.sha256(own_bytes).hexdigest(),
+            'errors': self.errors, 'error_samples': self.samples,
+            'limits': ['Clockdate counts are not source sessions or completeness proof.',
+                '0..400dayfilter is not a qualified historical tradable universe.',
+                'Raw rows retained by provider only; hashes do not recover missing data.',
+                'QC model margin is not historical personal house margin or publication proof.',
+                'No returns, source strategy, benchmark or hypothesis verdict.']}
+        message = json.dumps(report, sort_keys=True, separators=(',', ':'))
+        if len(message) > 7800:
+            self.error('Report exceeds frozen 7800character quota; do not claim complete')
+        else:
+            self.debug('GC_RANGE_AUDIT_JSON ' + message)
+        self.set_runtime_statistic('Protocol', 'GC2019-2025 RAW MINUTE DATA ONLY')
+        self.set_runtime_statistic('Orders/strategy result', '0 / NONE')
+        self.set_runtime_statistic('Contract count', str(len(self.symbols_seen)))
+        self.set_runtime_statistic('Data errors', str(sum(self.errors.values())))
+        self.set_runtime_statistic('Raw minute bars', str(sum(x['minute_bars'] for x in years)))
+        self.set_runtime_statistic('Observed model changes', str(len(self.margin_changes)))

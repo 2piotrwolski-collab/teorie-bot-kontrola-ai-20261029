@@ -1,0 +1,418 @@
+{
+  "algorithm_zone": "America/New_York",
+  "all_raw_rows_sha256": "4381fb5fc8f9f8a3ac44075d87c422c3faac49c44b0fa68d17830873a03ea21d",
+  "contract_coverage_digest": "ae1751fcf7b12cffcfd5432d22382e731199232fef98d2b38996aa58e95b2f44",
+  "distinct_contracts": 103,
+  "end": "2025-12-31",
+  "error_samples": [],
+  "errors": {},
+  "exchange_zones": [
+    "America/New_York"
+  ],
+  "executed_main_sha256": "b5d8735917cd793588b87ce7660fa8044495259c7caa1ebf6a04253cf4f3098e",
+  "filter": "0..400 days to actual expiry, coverage envelope only",
+  "limits": [
+    "Clockdate counts are not source sessions or completeness proof.",
+    "0..400dayfilter is not a qualified historical tradable universe.",
+    "Raw rows retained by provider only; hashes do not recover missing data.",
+    "QC model margin is not historical personal house margin or publication proof.",
+    "No returns, source strategy, benchmark or hypothesis verdict."
+  ],
+  "margin_pair_changes_first_observed": [
+    [
+      "2018-07-01",
+      3410.0,
+      3100.0
+    ],
+    [
+      "2018-10-12",
+      3740.0,
+      3400.0
+    ],
+    [
+      "2019-06-21",
+      4070.0,
+      3700.0
+    ],
+    [
+      "2019-06-28",
+      4400.0,
+      4000.0
+    ],
+    [
+      "2019-08-14",
+      4950.0,
+      4500.0
+    ],
+    [
+      "2020-01-09",
+      5500.0,
+      5000.0
+    ],
+    [
+      "2020-02-27",
+      6050.0,
+      5500.0
+    ],
+    [
+      "2020-03-03",
+      6600.0,
+      6000.0
+    ],
+    [
+      "2020-03-17",
+      7700.0,
+      7000.0
+    ],
+    [
+      "2020-03-25",
+      9185.0,
+      8350.0
+    ],
+    [
+      "2020-04-14",
+      10065.0,
+      9150.0
+    ],
+    [
+      "2020-06-19",
+      9020.0,
+      8200.0
+    ],
+    [
+      "2020-08-07",
+      9570.0,
+      8700.0
+    ],
+    [
+      "2020-08-12",
+      10230.0,
+      9300.0
+    ],
+    [
+      "2020-10-02",
+      11550.0,
+      10500.0
+    ],
+    [
+      "2020-10-16",
+      12650.0,
+      11500.0
+    ],
+    [
+      "2020-12-04",
+      11000.0,
+      10000.0
+    ],
+    [
+      "2021-02-02",
+      12100.0,
+      11000.0
+    ],
+    [
+      "2021-03-05",
+      11000.0,
+      10000.0
+    ],
+    [
+      "2021-05-07",
+      9900.0,
+      9000.0
+    ],
+    [
+      "2021-08-20",
+      9075.0,
+      8250.0
+    ],
+    [
+      "2021-09-29",
+      8250.0,
+      7500.0
+    ],
+    [
+      "2022-01-05",
+      7150.0,
+      6500.0
+    ],
+    [
+      "2022-01-21",
+      6600.0,
+      6000.0
+    ],
+    [
+      "2022-02-25",
+      7260.0,
+      6600.0
+    ],
+    [
+      "2022-03-08",
+      7920.0,
+      7200.0
+    ],
+    [
+      "2022-07-08",
+      7150.0,
+      6500.0
+    ],
+    [
+      "2022-09-16",
+      6270.0,
+      5700.0
+    ],
+    [
+      "2022-12-05",
+      6930.0,
+      6300.0
+    ],
+    [
+      "2023-01-06",
+      7590.0,
+      6900.0
+    ],
+    [
+      "2023-02-10",
+      8140.0,
+      7400.0
+    ],
+    [
+      "2023-03-14",
+      8800.0,
+      8000.0
+    ],
+    [
+      "2023-04-06",
+      9130.0,
+      8300.0
+    ],
+    [
+      "2023-09-08",
+      8580.0,
+      7800.0
+    ],
+    [
+      "2023-12-15",
+      9130.0,
+      8300.0
+    ],
+    [
+      "2024-03-08",
+      9680.0,
+      8800.0
+    ],
+    [
+      "2024-04-05",
+      10340.0,
+      9400.0
+    ],
+    [
+      "2024-04-19",
+      11000.0,
+      10000.0
+    ],
+    [
+      "2024-08-23",
+      11550.0,
+      10500.0
+    ],
+    [
+      "2024-09-27",
+      12100.0,
+      11000.0
+    ],
+    [
+      "2024-11-01",
+      12650.0,
+      11500.0
+    ],
+    [
+      "2025-02-07",
+      13750.0,
+      12500.0
+    ],
+    [
+      "2025-03-21",
+      14850.0,
+      13500.0
+    ],
+    [
+      "2025-03-28",
+      15400.0,
+      14000.0
+    ],
+    [
+      "2025-04-04",
+      16500.0,
+      15000.0
+    ],
+    [
+      "2025-09-12",
+      17600.0,
+      16000.0
+    ],
+    [
+      "2025-09-26",
+      18700.0,
+      17000.0
+    ],
+    [
+      "2025-10-10",
+      19800.0,
+      18000.0
+    ],
+    [
+      "2025-10-17",
+      20900.0,
+      19000.0
+    ],
+    [
+      "2025-10-24",
+      22000.0,
+      20000.0
+    ],
+    [
+      "2025-12-29",
+      24200.0,
+      22000.0
+    ],
+    [
+      "2025-12-31",
+      26400.0,
+      24000.0
+    ]
+  ],
+  "orders_submitted": 0,
+  "protocol": "T003_GC_RANGE_DATA_2018WARM_2019_2025_V1",
+  "source": "QC historical individual GC raw TradeBar minutes; no fill-forward",
+  "start": "2018-07-01",
+  "strategy_PnL": false,
+  "years": [
+    {
+      "contracts": 13,
+      "distinct_margin_pairs": 2,
+      "first_clock_date": "2018-07-01",
+      "last_clock_date": "2018-12-31",
+      "margin_observations": 1115,
+      "minute_17_to_18": 0,
+      "minute_after_18": 59599,
+      "minute_bars": 282879,
+      "minute_before_17": 223280,
+      "nonpositive_prices": 0,
+      "observed_clock_dates": 153,
+      "raw_rows_sha256": "12cab1c6fc0cd57f4f62855703cebdac2b264d3d34ae2e5c201a629dc3df4c8a",
+      "weekend_clock_bars": 13064,
+      "year": 2018
+    },
+    {
+      "contracts": 19,
+      "distinct_margin_pairs": 4,
+      "first_clock_date": "2019-01-02",
+      "last_clock_date": "2019-12-31",
+      "margin_observations": 2282,
+      "minute_17_to_18": 0,
+      "minute_after_18": 131014,
+      "minute_bars": 629688,
+      "minute_before_17": 498674,
+      "nonpositive_prices": 0,
+      "observed_clock_dates": 304,
+      "raw_rows_sha256": "764d8b8507f4489c7451c336f608846df332ec0f978cbc365bed892066a9ccb3",
+      "weekend_clock_bars": 28472,
+      "year": 2019
+    },
+    {
+      "contracts": 19,
+      "distinct_margin_pairs": 13,
+      "first_clock_date": "2020-01-02",
+      "last_clock_date": "2020-12-31",
+      "margin_observations": 2367,
+      "minute_17_to_18": 0,
+      "minute_after_18": 147798,
+      "minute_bars": 699691,
+      "minute_before_17": 551893,
+      "nonpositive_prices": 0,
+      "observed_clock_dates": 305,
+      "raw_rows_sha256": "0edc38800286aa874ad1d85de68e472ece295c268e4fb7011315e0670ba1405d",
+      "weekend_clock_bars": 32220,
+      "year": 2020
+    },
+    {
+      "contracts": 19,
+      "distinct_margin_pairs": 5,
+      "first_clock_date": "2021-01-03",
+      "last_clock_date": "2021-12-31",
+      "margin_observations": 2305,
+      "minute_17_to_18": 0,
+      "minute_after_18": 125535,
+      "minute_bars": 613977,
+      "minute_before_17": 488442,
+      "nonpositive_prices": 0,
+      "observed_clock_dates": 304,
+      "raw_rows_sha256": "9fca19f59174a1e26a52235af99143ef0807fb92165d2a1ffa25581b99924824",
+      "weekend_clock_bars": 27838,
+      "year": 2021
+    },
+    {
+      "contracts": 19,
+      "distinct_margin_pairs": 7,
+      "first_clock_date": "2022-01-02",
+      "last_clock_date": "2022-12-30",
+      "margin_observations": 2276,
+      "minute_17_to_18": 0,
+      "minute_after_18": 125086,
+      "minute_bars": 613743,
+      "minute_before_17": 488657,
+      "nonpositive_prices": 0,
+      "observed_clock_dates": 302,
+      "raw_rows_sha256": "01042954ddb0c98e0e6e17fea622cdb6d8a8db6bb9618269e2f2d71e1fa8a152",
+      "weekend_clock_bars": 26424,
+      "year": 2022
+    },
+    {
+      "contracts": 19,
+      "distinct_margin_pairs": 6,
+      "first_clock_date": "2023-01-03",
+      "last_clock_date": "2023-12-29",
+      "margin_observations": 2303,
+      "minute_17_to_18": 0,
+      "minute_after_18": 131334,
+      "minute_bars": 633796,
+      "minute_before_17": 502462,
+      "nonpositive_prices": 0,
+      "observed_clock_dates": 301,
+      "raw_rows_sha256": "cc9b50c5039ca951a798a43134451747ee27819348a4955007d8475d1e4f8f77",
+      "weekend_clock_bars": 28328,
+      "year": 2023
+    },
+    {
+      "contracts": 19,
+      "distinct_margin_pairs": 7,
+      "first_clock_date": "2024-01-01",
+      "last_clock_date": "2024-12-31",
+      "margin_observations": 2398,
+      "minute_17_to_18": 0,
+      "minute_after_18": 145374,
+      "minute_bars": 686741,
+      "minute_before_17": 541367,
+      "nonpositive_prices": 0,
+      "observed_clock_dates": 313,
+      "raw_rows_sha256": "e694786a0f487fed5e6f227f768b61198d5d0afe01d2ff8467fa4e7f35d7e7ac",
+      "weekend_clock_bars": 31835,
+      "year": 2024
+    },
+    {
+      "contracts": 25,
+      "distinct_margin_pairs": 12,
+      "first_clock_date": "2025-01-01",
+      "last_clock_date": "2025-12-31",
+      "margin_observations": 3114,
+      "minute_17_to_18": 0,
+      "minute_after_18": 175110,
+      "minute_bars": 757382,
+      "minute_before_17": 582272,
+      "nonpositive_prices": 0,
+      "observed_clock_dates": 311,
+      "raw_rows_sha256": "1cc7583b60870d6cc9410af3faf4eb1c63eb1b8e813cd7339b9b85f79aa89ff0",
+      "weekend_clock_bars": 37647,
+      "year": 2025
+    }
+  ]
+}

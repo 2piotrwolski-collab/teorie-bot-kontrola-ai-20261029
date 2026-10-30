@@ -1,0 +1,78 @@
+"""Explicit notice knowledge and rate effectivity; no date-at-midnight shortcut.
+
+Caller must supply qualified coverage, contract and source close timestamp.
+This module cannot turn a QC model row into verified CME/house evidence.
+"""
+from dataclasses import dataclass
+from datetime import datetime
+from decimal import Decimal
+
+
+class MarginEvidenceError(ValueError):
+    pass
+
+
+def aware(at):
+    if not isinstance(at, datetime) or at.tzinfo is None or at.utcoffset() is None:
+        raise MarginEvidenceError('Aware timestamp required')
+
+
+@dataclass(frozen=True)
+class DatedRate:
+    contract: str
+    initial: Decimal
+    maintenance: Decimal
+    known_at: datetime
+    effective_after: datetime
+    source: str
+    knowledge_basis: str
+
+    def __post_init__(self):
+        aware(self.known_at)
+        aware(self.effective_after)
+        for key in ('initial', 'maintenance'):
+            object.__setattr__(self, key, Decimal(str(getattr(self, key))))
+        if not (self.initial.is_finite() and self.maintenance.is_finite()
+                and 0 < self.maintenance <= self.initial):
+            raise MarginEvidenceError('Invalid rates')
+        if not self.contract or not self.source:
+            raise MarginEvidenceError('Contract and source required')
+        if self.knowledge_basis not in ('archived_publication_timestamp',
+                                        'notice_date_end_of_day_convention'):
+            raise MarginEvidenceError('Knowledge basis must be explicit')
+        if self.known_at > self.effective_after:
+            raise MarginEvidenceError('Notice knowledge after effectivity')
+
+
+class MarginTimeline:
+    def __init__(self, contract, rates, verified_from, verified_until,
+                 allow_notice_date_convention=False):
+        aware(verified_from)
+        aware(verified_until)
+        if not verified_from < verified_until or not rates:
+            raise MarginEvidenceError('Explicit nonempty qualified coverage required')
+        self.contract = contract
+        self.rates = tuple(rates)
+        self.start, self.end = verified_from, verified_until
+        self.allow_convention = allow_notice_date_convention
+        if any(r.contract != contract for r in self.rates):
+            raise MarginEvidenceError('Contract mismatch')
+        if any(a.effective_after >= b.effective_after
+               for a, b in zip(self.rates, self.rates[1:])):
+            raise MarginEvidenceError('Duplicate or unordered effectivity')
+
+    def lookup(self, at):
+        aware(at)
+        if not self.start <= at <= self.end:
+            raise MarginEvidenceError('Outside independently qualified coverage')
+        # New requirement is active AFTER the stated close. Knowing a future
+        # rate in advance does not make it the currently applicable rate.
+        effective = [r for r in self.rates if r.effective_after < at]
+        if not effective:
+            raise MarginEvidenceError('No prior effective rate; no future fallback')
+        rate = effective[-1]
+        if rate.known_at > at:
+            raise MarginEvidenceError('Effective rate was not known at decision')
+        if rate.knowledge_basis.endswith('_convention') and not self.allow_convention:
+            raise MarginEvidenceError('Notice date does not prove publication clock')
+        return rate

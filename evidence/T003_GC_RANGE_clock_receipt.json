@@ -1,0 +1,13 @@
+{
+  "at_utc": "2026-10-30T18:51:13.397192+00:00",
+  "project_id": 38666177,
+  "run_id": "6a20f89b11a33b7a218d2d0b9323e180",
+  "name": "Hyper Active Orange Goat",
+  "engine": "2.5.0.0.18217",
+  "rows": 7,
+  "errors": [],
+  "orders": 0,
+  "PnL": false,
+  "log_sha256": "0e9a2725770cf63a57a878f2ed9e85eb67024c94f0dcf585a53c8a33c6690bb3",
+  "source_code_sha256": "3369159b14511d07db7c505644888eb7d0cb91e7915b4ffd91820bd8334445b4"
+}
