@@ -136,5 +136,23 @@
     "url": "code/audit_sensitivity_20261029__independent_check_v2__finish_audit.py.txt",
     "stage": "COMPLETED_ARCHIVAL_SENSITIVITY_NOT_ORIGINAL_TURTLE",
     "sha256": "70f5b4bd13e6a65423a952a51f80dc5c73b54d0ec8d8e3567d339132389fec25"
+  },
+  {
+    "source_file": "audit_dividends_20261030/reconcile.py",
+    "url": "code/audit_dividends_20261030__reconcile.py.txt",
+    "stage": "COMPLETED_ACCOUNTING_RECONSTRUCTION_NOT_HISTORICAL_CLAUDE_PROOF",
+    "sha256": "f801a870f535fb4c770557622b0e7368b1ff20efdc3c25c8ee45798cc05c6eed"
+  },
+  {
+    "source_file": "audit_dividends_20261030/test_accounting.py",
+    "url": "code/audit_dividends_20261030__test_accounting.py.txt",
+    "stage": "COMPLETED_ACCOUNTING_RECONSTRUCTION_NOT_HISTORICAL_CLAUDE_PROOF",
+    "sha256": "6a74a588657b01096d55d431bce9476d6eaac1bc92ba27a834b75bed77e3fe50"
+  },
+  {
+    "source_file": "t003_dividend_review.py",
+    "url": "code/t003_dividend_review.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "42858d048e06ca0ce42cba9524493d715258d7a9e5e9148cdf9445ddcee91e62"
   }
 ]

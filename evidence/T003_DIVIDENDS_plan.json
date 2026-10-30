@@ -1,0 +1,77 @@
+{
+  "id": "T003_DIVIDEND_RECONCILIATION_20261030_V1",
+  "frozen_at_utc": "2026-10-30T10:58:41.347010+00:00",
+  "scope": "Accounting-method audit of archived SPY long/cash Donchian55/20; no original Turtle verdict, optimization, unseen OOS or market-data fetch",
+  "source_fit": {
+    "input": "Frozen original SPY nominal daily OHLC and actual Yahoo cash dividend events",
+    "signal": "strict previous-close breakout of preceding55 highs/20 lows, next open, 0/1 long/cash",
+    "cost": "5bps per side; dividend sale-fee switch is a diagnostic of Claude method, not proposed broker practice",
+    "dividend_baseline": "previous-close entitlement; credit before exdate open; hold cash at0% until next entry",
+    "reinvestment_switch": "if held after open, reinvest only current exdate credit at same close at zero cost",
+    "realism": "Neither instant exdate cash nor zero-fee close reinvestment certifies payment-date cash availability or broker DRIP execution; no fills/tax/FX assessed"
+  },
+  "inputs": {
+    "engine.py": "c2aa02065a545a1e6e11fe5e1b927b103738182cc443036b2b4de9388ef91d41",
+    "data/processed/SPY.csv": "638ceaafe7de04e32e8214fe227bc060e94d437bd7c97cf0bd6993572333e6ba",
+    "data/raw/SPY_yahoo.json": "4b413dce7ed42892f672d66e1fad00c51a6ccc1fdf8d188b32bf875be53e1bad",
+    "data/raw/SPY_receipt.json": "29e09a9db238ff17204b38e0408b8b3bfaa5ee71af45afbde274497416c3cda8"
+  },
+  "claim_sha256": "aa65dc0be936e035bebfa1767b456cc8a6b452f14d9eab4263454c1eb53596cc",
+  "segments": {
+    "development": [
+      "2001-01-02",
+      "2015-12-31"
+    ],
+    "validation": [
+      "2016-01-04",
+      "2019-12-31"
+    ],
+    "retrospective_check": [
+      "2020-01-02",
+      "2026-10-27"
+    ]
+  },
+  "known_claims": {
+    "Claude_original_CAGR_pct": [
+      0.887,
+      4.263,
+      2.801
+    ],
+    "Claude_reconstruction_CAGR_pct": [
+      0.886664,
+      4.263415,
+      2.80093
+    ],
+    "original_CSV_and_full_code": "not_preserved per Claude; only prose received, claimed code/package not attached or found in Downloads",
+    "attribution_reinvest_pp": [
+      -0.0007775,
+      -0.0016813,
+      0.015193
+    ],
+    "attribution_fee_pp": [
+      -9.6e-06,
+      0,
+      -3.47e-05
+    ],
+    "attribution_yearbase_pp": [
+      1.83e-05,
+      8.94e-05,
+      5.82e-05
+    ]
+  },
+  "factors": [
+    "reinvest_current_dividend_at_close",
+    "charge_fee_on_same_day_dividend_when_sell",
+    "year_base365_25_instead365_2425",
+    "suppress_pre_segment_signal"
+  ],
+  "budget": "16 complete factorial accounting combinations per segment =48 diagnostic runs, plus hand-computed synthetic accounting checks. No per-dividend optimization or signal parameter alternatives.",
+  "gates": {
+    "cash_baseline_daily_NAV_max_abs_error": 1e-12,
+    "operations_identical_to_archived_B_exact": true,
+    "Claude_reconstruction_CAGR_abs_tolerance_pp": 5.1e-07,
+    "Shapley_reinvest_and_fee_abs_tolerance_pp": 1.1e-07,
+    "first_difference_NAV_abs_tolerance": 1e-11
+  },
+  "interpretation": "Can substantiate numerical reconstruction on frozen data and causal accounting explanation. Cannot prove lost historical inputs/code, fresh Yahoo identity or undisclosed package hashes. Stop on baseline mismatch; preserve all failures."
+}

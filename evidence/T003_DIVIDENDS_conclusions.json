@@ -1,0 +1,105 @@
+{
+  "id": "T003_DIVIDEND_RECONCILIATION_20261030_V1",
+  "scope": "Accounting-method audit of archived SPY long/cash Donchian55/20; no original Turtle verdict, optimization, unseen OOS or market-data fetch",
+  "status": "numerical_reconstruction_confirmed_historical_provenance_unverified",
+  "summary": [
+    {
+      "segment": "development",
+      "start": "2001-01-02",
+      "end": "2015-12-31",
+      "scope": "accounting_sensitivity_not_strategy_verdict",
+      "cash_CAGR_pct": 0.8874325737331601,
+      "reconstructed_Claude_CAGR_pct": 0.8866637741383299,
+      "reported_Claude_CAGR_pct": 0.887,
+      "matched_archival_SPY_CAGR_pct": 4.9180727341182395,
+      "reconstruction_minus_cash_pp": -0.0007687995948302273,
+      "reported_minus_cash_pp": -0.00043257373316007985,
+      "reported_rounding_residual_pp": 0.00033622586167014745,
+      "Shapley_pp": {
+        "reinvestment": -0.0007774911812585826,
+        "dividend_sale_fee": -9.603691131232495e-06,
+        "year_base": 1.829527755958793e-05,
+        "suppress_first_signal": 0.0
+      },
+      "baseline_NAV_max_abs_error": 0.0,
+      "operations": 74,
+      "dividend_credits": 24,
+      "all_operation_lists_match": true,
+      "first_NAV_difference": {
+        "date": "2001-06-15",
+        "cash_NAV": 0.9390308617805698,
+        "reconstructed_NAV": 0.939029521365506
+      }
+    },
+    {
+      "segment": "validation",
+      "start": "2016-01-04",
+      "end": "2019-12-31",
+      "scope": "accounting_sensitivity_not_strategy_verdict",
+      "cash_CAGR_pct": 4.265007286782452,
+      "reconstructed_Claude_CAGR_pct": 4.263415409025084,
+      "reported_Claude_CAGR_pct": 4.263,
+      "matched_archival_SPY_CAGR_pct": 14.784654529188623,
+      "reconstruction_minus_cash_pp": -0.0015918777573675769,
+      "reported_minus_cash_pp": -0.002007286782451878,
+      "reported_rounding_residual_pp": -0.0004154090250843012,
+      "Shapley_pp": {
+        "reinvestment": -0.0016812803881105507,
+        "dividend_sale_fee": 0.0,
+        "year_base": 8.940263074297405e-05,
+        "suppress_first_signal": 0.0
+      },
+      "baseline_NAV_max_abs_error": 0.0,
+      "operations": 18,
+      "dividend_credits": 9,
+      "all_operation_lists_match": true,
+      "first_NAV_difference": {
+        "date": "2016-06-20",
+        "cash_NAV": 1.014149825615244,
+        "reconstructed_NAV": 1.014183524407404
+      }
+    },
+    {
+      "segment": "retrospective_check",
+      "start": "2020-01-02",
+      "end": "2026-10-27",
+      "scope": "accounting_sensitivity_not_strategy_verdict",
+      "cash_CAGR_pct": 2.7857132858845945,
+      "reconstructed_Claude_CAGR_pct": 2.8009297589503435,
+      "reported_Claude_CAGR_pct": 2.801,
+      "matched_archival_SPY_CAGR_pct": 15.127449409355819,
+      "reconstruction_minus_cash_pp": 0.015216473065748914,
+      "reported_minus_cash_pp": 0.015286714115405609,
+      "reported_rounding_residual_pp": 7.024104965669409e-05,
+      "Shapley_pp": {
+        "reinvestment": 0.015193023465761197,
+        "dividend_sale_fee": -3.470246895768507e-05,
+        "year_base": 5.815206894540144e-05,
+        "suppress_first_signal": 0.0
+      },
+      "baseline_NAV_max_abs_error": 0.0,
+      "operations": 40,
+      "dividend_credits": 15,
+      "all_operation_lists_match": true,
+      "first_NAV_difference": {
+        "date": "2020-06-22",
+        "cash_NAV": 1.0086983577473836,
+        "reconstructed_NAV": 1.0087266902925143
+      }
+    }
+  ],
+  "factorial_runs": 48,
+  "reinvest_share_of_reported_gap_pct": 99.38711060508425,
+  "baseline_NAV_exact": true,
+  "original_Claude_CSV_and_code_preserved": false,
+  "Claude_claimed_JS_CSV_package_received": false,
+  "fresh_Yahoo_identity_independently_checked": false,
+  "old_files_changed": [],
+  "protected_inputs_count": 83,
+  "limits": [
+    "Only the new reconstruction is numerically explained; the lost original inputs/code cannot be independently reproduced.",
+    "Own Python reconstruction from prose; not a byte-for-byte review of the claimed JS package.",
+    "Instant exdate cash and cost-free close reinvestment do not establish actual payment-date or broker DRIP execution.",
+    "Archival SPY adaptation; no new OOS, no original Turtle/futures verdict, no taxes/FX/fills."
+  ]
+}

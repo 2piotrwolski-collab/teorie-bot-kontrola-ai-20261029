@@ -1,0 +1,9 @@
+test_buy_exdate_has_no_entitlement (audit_dividends_20261030.test_accounting.AccountingChecks.test_buy_exdate_has_no_entitlement) ... ok
+test_factorial_attribution_accounts_for_interaction (audit_dividends_20261030.test_accounting.AccountingChecks.test_factorial_attribution_accounts_for_interaction) ... ok
+test_reinvest_gains_only_after_exdate (audit_dividends_20261030.test_accounting.AccountingChecks.test_reinvest_gains_only_after_exdate) ... ok
+test_sell_exdate_fee_is_diagnostic_not_share_commission (audit_dividends_20261030.test_accounting.AccountingChecks.test_sell_exdate_fee_is_diagnostic_not_share_commission) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.000s
+
+OK

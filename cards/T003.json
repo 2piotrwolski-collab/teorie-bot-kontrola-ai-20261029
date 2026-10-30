@@ -1,5 +1,5 @@
 {
-  "snapshot_at_utc": "2026-10-29T21:09:02.683283+00:00",
+  "snapshot_at_utc": "2026-10-30T11:03:40.139454+00:00",
   "scope": "Research snapshot. No full original-theory verification; no live orders.",
   "card": {
     "id": "T003",
@@ -24,7 +24,10 @@
       "Wariant A+B: CAGR1,8375%/4,9706%/4,0478% wobec matchedSPY4,9181%/14,7847%/15,1274% w okresach2001–2015/2016–2019/2020–27.10.2026 przy5bps na stronę. Historyczna wykonalność cash i pełne netto niepotwierdzone.",
       "Remis20.01.2005: nominalnie117,5=117,5, lecz w skorygowanych danych close jest niżej o0,000006564834; ścisły operator wyjścia działa poprawnie. Pominięcie tylko tego wyjścia zmienia CAGR development1,110043→1,069860% (−0,040183pp). Nie dopasowywano tolerancji.",
       "Różnice operacji: tylko v1 ma17/4/5=26wpisów, tylko B również26 (symetrycznie52). Po pominięciu wyjścia20.01.2005 jest16/4/5, co uzgadnia liczbę25Claude. Parowanie po samym indeksie jest mylące.",
-      "B-exact na rzeczywistych zamrożonych dywidendach cash daje0,887433%/4,265007%/2,785713%; ostatnia liczba jest o0,015287pp niższa od2,801%Claude. Dokładna przyczyna wymaga jego CSV i kodu. A używa stopy dyskontowej DTB3 z opóźnieniem daty, co nie dowodzi historycznej godziny publikacji/vintages ani odsetek wykonalnego rachunku cash."
+      "Uzgodnienie dywidend 30.10: niezależny kod odtworzył rekonstrukcję Claude na zamrożonym SPY. W latach 2020–27.10.2026 reinwestycja daje CAGR 2,800930%, gotówka 2,785713%, dotychczasowy matched SPY 15,127449%, przy 5 bps na stronę. Sygnały i 40 operacji są identyczne; wynik nie rozstrzyga oryginalnego Turtle.",
+      "Uzgodnienie dywidend 30.10: reinwestowanie po zamknięciu ex-date zamiast trzymania dywidendy w gotówce wyjaśnia 99,39% różnicy do raportowanych 2,801%. Pozostałe składniki: koszt także od dywidendy przy sprzedaży na ex-date, rok 365,25 zamiast 365,2425 i zaokrąglenie wyniku. Nie zmieniano reguł ani progów strategii.",
+      "Uzgodnienie dywidend 30.10: Claude nie zachował pierwotnego CSV ani pełnego kodu. Otrzymano opis nowej rekonstrukcji, bez wymienionej w nim paczki JS/CSV. Wyjaśnienie rachunkowe zostało sprawdzone; zgodność z utraconym pierwotnym przebiegiem i jego danymi pozostaje nieudowodniona.",
+      "Uzgodnienie dywidend 30.10: reinwestycja bez kosztu na zamknięciu ex-date i natychmiastowy kredyt cash są założeniami audytu. Nie potwierdzono dat wypłat, realnego DRIP, podatków, FX ani filli; naliczanie prowizji od dywidendy odtworzono wyłącznie jako diagnostykę różnicy."
     ],
     "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
     "overall_status": "source_gap_still_blocks_original_test",
@@ -415,6 +418,48 @@
     ],
     "observations": [
       {
+        "id": "T003_DIVIDEND_RECON_0384f6f6f127",
+        "title": "Uzgodnienie dywidend z rekonstrukcją Claude · 30.10.2026",
+        "summary": "CAGR % rocznie. Te same zamrożone dane i operacje; odmienna reinwestycja i konwencje rachunkowe. Nie jest to nowy test oryginalnego Turtle.",
+        "columns": [
+          "Okres",
+          "Dywidendy w gotówce",
+          "Rekonstrukcja Claude",
+          "Różnica pp",
+          "Dotychczasowy SPY"
+        ],
+        "rows": [
+          [
+            "2001–2015",
+            0.887433,
+            0.886664,
+            -0.0007688,
+            4.918073
+          ],
+          [
+            "2016–2019",
+            4.265007,
+            4.263415,
+            -0.0015919,
+            14.784655
+          ],
+          [
+            "2020–27.10.2026",
+            2.785713,
+            2.80093,
+            0.0152165,
+            15.127449
+          ]
+        ],
+        "limitations": [
+          "Potwierdzono rekonstrukcję na danych Codex; nie udowodniono utraconego pierwotnego CSV/kodu Claude ani identyczności jego dawnego pobrania Yahoo.",
+          "Nie otrzymano paczki JS/CSV wymienionej w opisie Claude. Nowe obliczenia wykonano własnym kodem na podstawie czterech opisanych różnic.",
+          "Natychmiastowy kredyt na ex-date, darmowa reinwestycja po close i koszt od dywidendy to model księgowy, bez potwierdzenia rzeczywistych wypłat, DRIP, podatków, FX i filli.",
+          "Stare wyniki i ich hashe zachowane. Pozostałe braki pełnego Turtle na kontraktach nadal otwarte."
+        ],
+        "evidence_report": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_DIVIDENDS_AUDIT.html"
+      },
+      {
         "id": "T003_AB_SENSITIVITY_34a3fe166aaf",
         "title": "Niezależna kontrola A/B i remisów · 29.10.2026",
         "summary": "CAGR% rocznie; zamrożony wariant SPY-v1,5bps na stronę. To analiza wrażliwości, bez nowego werdyktu Turtle.",
@@ -458,7 +503,7 @@
         ],
         "limitations": [
           "Opóźnienie daty DTB3 nie jest pełnym dowodem historycznej dostępności publikacji/vintages; stopa dyskontowa nie jest automatycznie stopą broker cash.",
-          "B-exact zachowuje dywidendy cash do kolejnego wejścia, bez natychmiastowej reinwestycji. Różnica wobec Claude pozostaje jawna.",
+          "B-exact zachowuje dywidendy cash do kolejnego wejścia. Różnicę rachunkową do nowej rekonstrukcji Claude wyjaśniono w audycie z 30.10; pierwotne pliki Claude nie są zachowane.",
           "Pozostają braki pełnego portfela futures, sesji/roll/FND/OI i rzeczywistego wykonania. Wynik SPY nie rozstrzyga oryginalnego Turtle."
         ],
         "evidence_report": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_AB_AUDIT.html"
@@ -701,6 +746,7 @@
     "source_update_artifact": "research_round2/source_updates_T001_T004.json",
     "source_update_sha256": "2953f6d2229cc4cc35f01b17b0ed374572ae1805eabdeaa991755a222392c6e2",
     "observation_ids": [
+      "T003_DIVIDEND_RECON_0384f6f6f127",
       "T003_AB_SENSITIVITY_34a3fe166aaf",
       "QC_DATA_CONTROLS_20261029_V5_T003",
       "QC_T003_T010_PREPARATION_20261029_V1_T003",
@@ -720,7 +766,9 @@
     "qc_data_review_id": "QC_DATA_CONTROLS_20261029_V5",
     "claude_triage_sha256": "a46f6855cb47d35142f93d75643741c36df918eb63348dac921de593dd5a4bbb",
     "t003_sensitivity_audit_sha256": "34a3fe166aaf146ce475540a9f0abf622550e27f4b55aed23cba2ed5ee9f977d",
-    "sensitivity_audit_next_action": "Do dokładnego uzgodnienia B-exact pozyskać od Claude jego zamrożony CSV OHLC/adj_close, zdarzenia dywidend, kod i zasady reinwestycji. Historyczną wykonalność gotówki osobno zweryfikować przez archiwalne publikacje/vintages i rzeczywisty instrument cash. Nie ustawiać tolerancji sygnału po wyniku."
+    "sensitivity_audit_next_action": "Uzgodnienie rachunkowe zakończone. Po otrzymaniu paczki JS/CSV Claude zweryfikować kod i hashe nowej rekonstrukcji; utracony pierwotny przebieg pozostaje nieodtwarzalny. Realistyczne wypłaty/DRIP i pełny Turtle wymagają osobnego planu oraz brakujących danych. Bez zmiany historycznych wyników.",
+    "t003_dividend_audit_sha256": "0384f6f6f127ce75d1f47a3ac603ecf20d227cf75a4bb812740ea70d8b684446",
+    "dividend_audit_next_action": "Uzgodnienie rachunkowe zakończone. Po otrzymaniu paczki JS/CSV Claude zweryfikować kod i hashe nowej rekonstrukcji; utracony pierwotny przebieg pozostaje nieodtwarzalny. Realistyczne wypłaty/DRIP i pełny Turtle wymagają osobnego planu oraz brakujących danych. Bez zmiany historycznych wyników."
   },
   "source_qualification": {
     "id": "T003",

@@ -1,0 +1,40 @@
+import unittest
+from .reconcile import simulate, attribution
+
+
+class AccountingChecks(unittest.TestCase):
+    def sample(self):
+        return [{'date':'2020-01-02','open':100.,'close':100.},
+                {'date':'2020-01-03','open':90.,'close':90.},
+                {'date':'2020-01-06','open':99.,'close':99.}]
+
+    def test_reinvest_gains_only_after_exdate(self):
+        args=(self.sample(),{'2020-01-03':10.},'2020-01-02','2020-01-06')
+        cash=simulate(*args,mask=0,fee=0.,decisions=[True,True,True])
+        reinvest=simulate(*args,mask=1,fee=0.,decisions=[True,True,True])
+        self.assertAlmostEqual(cash['ledger'][1]['nav_eod'],1.)
+        self.assertAlmostEqual(reinvest['ledger'][1]['nav_eod'],1.)
+        self.assertAlmostEqual(cash['ledger'][2]['nav_eod'],1.09)
+        self.assertAlmostEqual(reinvest['ledger'][2]['nav_eod'],1.10)
+
+    def test_sell_exdate_fee_is_diagnostic_not_share_commission(self):
+        args=(self.sample(),{'2020-01-03':10.},'2020-01-02','2020-01-06')
+        base=simulate(*args,mask=0,decisions=[True,False,False])
+        fee=simulate(*args,mask=2,decisions=[True,False,False])
+        credit=base['ledger'][1]['dividend_credit']
+        self.assertGreater(credit,0)
+        self.assertAlmostEqual(base['ledger'][1]['nav_eod']-fee['ledger'][1]['nav_eod'],credit*.0005)
+
+    def test_buy_exdate_has_no_entitlement(self):
+        run=simulate(self.sample(),{'2020-01-03':10.},'2020-01-02','2020-01-06',mask=1,fee=0.,decisions=[False,True,True])
+        self.assertEqual(run['ledger'][1]['dividend_credit'],0)
+
+    def test_factorial_attribution_accounts_for_interaction(self):
+        values=[sum((m>>i)&1 for i in range(4))+3*((m&3)==3) for m in range(16)]
+        result=attribution(values)
+        self.assertEqual(result['reinvestment'],2.5)
+        self.assertEqual(result['dividend_sale_fee'],2.5)
+        self.assertAlmostEqual(sum(result.values()),7.)
+
+
+if __name__=='__main__':unittest.main()

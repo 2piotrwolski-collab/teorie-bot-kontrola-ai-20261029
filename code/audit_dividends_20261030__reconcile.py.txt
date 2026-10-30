@@ -1,0 +1,216 @@
+"""Independent accounting reconciliation from Claude's prose, not his lost code.
+
+No network, no orders, no strategy tuning. Writes only new audit outputs.
+"""
+import csv
+import datetime as dt
+import gzip
+import hashlib
+import itertools
+import json
+import math
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent
+FEE = .0005
+FACTORS = ('reinvestment', 'dividend_sale_fee', 'year_base', 'suppress_first_signal')
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def write(name, value):
+    p = HERE/name
+    p.parent.mkdir(exist_ok=True, parents=True)
+    with p.open('x') as handle:
+        json.dump(value, handle, ensure_ascii=False, indent=2, allow_nan=False)
+        handle.write('\n')
+
+
+def cagr(nav, start, end, yearbase):
+    days = (dt.date.fromisoformat(end)-dt.date.fromisoformat(start)).days+1
+    return (nav**(yearbase/days)-1)*100
+
+
+def decision(bars, signal_index, held):
+    window, field = (20, 'low') if held else (55, 'high')
+    if signal_index < window:
+        return held
+    channel = [b[field] for b in bars[signal_index-window:signal_index]]
+    close = bars[signal_index]['close']
+    return close >= min(channel) if held else close > max(channel)
+
+
+def simulate(bars, dividends, start, end, mask, fee=FEE, decisions=None):
+    reinvest, divfee, yearbase, nofirst = [(mask >> i) & 1 for i in range(4)]
+    selected = [i for i, b in enumerate(bars) if start <= b['date'] <= end]
+    q, cash, cumulative = 0., 1., 0.
+    ledger, trades, events = [], [], []
+    for position, i in enumerate(selected):
+        bar = bars[i]
+        date, o, c = bar['date'], bar['open'], bar['close']
+        entitled = q
+        dividend = dividends.get(date, 0.)
+        credit = entitled*dividend
+        cash += credit
+        cumulative += credit
+        held = q > 0
+        desired = (decisions[position] if decisions is not None
+                   else decision(bars, i-1, held))
+        if position == 0 and nofirst:
+            desired = held
+        operation = []
+        regular_fee = extra_fee = reinvested = 0.
+        if desired and not held:
+            q = cash/(o*(1+fee))
+            regular_fee = q*o*fee
+            cash = 0.
+            side, reason = 'buy', 'prior_channel_entry'
+            operation.append('BUY_OPEN')
+        elif not desired and held:
+            notional = q*o
+            regular_fee = notional*fee
+            extra_fee = credit*fee if divfee else 0.
+            cash += notional-regular_fee-extra_fee
+            q = 0.
+            side, reason = 'sell', 'prior_channel_exit'
+            operation.append('SELL_OPEN')
+        else:
+            side = None
+        if side is not None:
+            trades.append({'side': side, 'signal_date': bars[i-1]['date'],
+                           'execution_date': date, 'execution_time': 'open',
+                           'reason': reason})
+        if credit:
+            if reinvest and q > 0:
+                q += credit/c
+                cash -= credit
+                reinvested = credit
+                operation.append('DIV_REINVESTED_AT_CLOSE')
+            else:
+                operation.append('DIV_TO_CASH')
+        if position == len(selected)-1 and q:
+            regular_fee += q*c*fee
+            cash += q*c*(1-fee)
+            q = 0.
+            trades.append({'side':'sell','signal_date':None,'execution_date':date,
+                           'execution_time':'close','reason':'terminal_liquidation'})
+            operation.append('TERMINAL_SELL_CLOSE')
+        nav = cash+q*c
+        row = {'date': date, 'event': '+'.join(operation), 'open': o, 'close': c,
+               'dividend_per_share': dividend, 'shares_entitled_prev_close': entitled,
+               'dividend_credit': credit, 'shares_eod': q, 'cash_eod': cash,
+               'accrued_dividends_cum': cumulative, 'nav_eod': nav,
+               'regular_fee': regular_fee, 'diagnostic_fee_on_dividend': extra_fee,
+               'reinvested': reinvested}
+        assert q >= 0 and cash > -1e-12 and nav > 0
+        assert abs(nav-cash-q*c) < 1e-12
+        ledger.append(row)
+        if operation:
+            events.append(row)
+    return {'mask': mask, 'settings': dict(zip(FACTORS, [bool((mask >> i) & 1) for i in range(4)])),
+            'cagr_pct': cagr(ledger[-1]['nav_eod'], start, end, 365.25 if yearbase else 365.2425),
+            'ledger': ledger, 'trades': trades, 'events': events}
+
+
+def first_difference(a, b):
+    for x, y in zip(a['ledger'], b['ledger']):
+        if abs(x['nav_eod']-y['nav_eod']) > 1e-12:
+            return {'date': x['date'], 'cash_method': x, 'reconstructed_method': y,
+                    'NAV_difference': y['nav_eod']-x['nav_eod']}
+    return None
+
+
+def attribution(values):
+    result = {}
+    for i, factor in enumerate(FACTORS):
+        total = 0.
+        for mask in range(16):
+            if mask & (1 << i):
+                continue
+            count = mask.bit_count()
+            weight = math.factorial(count)*math.factorial(3-count)/math.factorial(4)
+            total += weight*(values[mask | (1 << i)]-values[mask])
+        result[factor] = total
+    assert abs(sum(result.values())-(values[15]-values[0])) < 1e-12
+    return result
+
+
+def main():
+    plan = json.loads((HERE/'plan.json').read_text())
+    freeze = json.loads((HERE/'freeze.json').read_text())
+    for rel, digest in freeze['sha256'].items():
+        assert sha(ROOT/rel) == digest, rel
+    bars = [{'date': row['date'], **{k: float(row[k]) for k in ('open','high','low','close','adj_close')}}
+            for row in csv.DictReader((ROOT/'data/processed/SPY.csv').open())]
+    assert [b['date'] for b in bars] == sorted({b['date'] for b in bars})
+    assert all(0 < b['low'] <= min(b['open'], b['close']) <= max(b['open'], b['close']) <= b['high'] for b in bars)
+    raw = json.loads((ROOT/'data/raw/SPY_yahoo.json').read_text())['chart']['result'][0]
+    assert not raw.get('events', {}).get('splits')
+    dividends = {dt.datetime.fromtimestamp(v['date'], dt.timezone.utc).date().isoformat():v['amount']
+                 for v in raw['events']['dividends'].values()}
+    summary, comparisons = [], []
+    expected_first = ['2001-06-15','2016-06-20','2020-06-22']
+    for s, (segment, (start,end)) in enumerate(plan['segments'].items()):
+        old = json.loads((ROOT/'audit_sensitivity_20261029/independent_check_v2'/
+                          (segment+'_ledger_and_daily_NAV.json')).read_text())
+        runs = [simulate(bars, dividends, start, end, mask) for mask in range(16)]
+        base = runs[0]
+        error = max(abs(a['nav_eod']-b['equity']) for a,b in zip(base['ledger'],old['B_exact']['equity']))
+        assert len(base['ledger']) == len(old['B_exact']['equity'])
+        assert error < plan['gates']['cash_baseline_daily_NAV_max_abs_error'], (segment,error)
+        keys = ('side','signal_date','execution_date','execution_time','reason')
+        old_operations = [{k:t[k] for k in keys} for t in old['B_exact']['trades']]
+        assert all(run['trades'] == old_operations for run in runs)
+        values = [run['cagr_pct'] for run in runs]
+        attr = attribution(values)
+        assert abs(values[15]-plan['known_claims']['Claude_reconstruction_CAGR_pct'][s]) < plan['gates']['Claude_reconstruction_CAGR_abs_tolerance_pp']
+        for factor, claimkey in [('reinvestment','attribution_reinvest_pp'),('dividend_sale_fee','attribution_fee_pp'),('year_base','attribution_yearbase_pp')]:
+            assert abs(attr[factor]-plan['known_claims'][claimkey][s]) < plan['gates']['Shapley_reinvest_and_fee_abs_tolerance_pp'], (segment,factor,attr)
+        first = first_difference(base, runs[15])
+        assert first['date'] == expected_first[s]
+        for run in runs:
+            with gzip.open(HERE/(segment+'_mask_'+str(run['mask']).zfill(2)+'.json.gz'), 'xb') as f:
+                f.write(json.dumps(run,ensure_ascii=False,allow_nan=False).encode())
+        archive = json.loads(next((ROOT/'results/T003').glob(segment+'_5bps_*.json')).read_text())
+        row = {'segment':segment,'start':start,'end':end,'scope':'accounting_sensitivity_not_strategy_verdict',
+               'cash_CAGR_pct':values[0], 'reconstructed_Claude_CAGR_pct':values[15],
+               'reported_Claude_CAGR_pct':plan['known_claims']['Claude_original_CAGR_pct'][s],
+               'matched_archival_SPY_CAGR_pct':archive['benchmark']['metrics']['cagr_pct'],
+               'reconstruction_minus_cash_pp':values[15]-values[0],
+               'reported_minus_cash_pp':plan['known_claims']['Claude_original_CAGR_pct'][s]-values[0],
+               'reported_rounding_residual_pp':plan['known_claims']['Claude_original_CAGR_pct'][s]-values[15],
+               'Shapley_pp':attr,'baseline_NAV_max_abs_error':error,
+               'operations':len(base['trades']), 'dividend_credits':sum(t['dividend_credit']>0 for t in base['ledger']),
+               'first_NAV_difference':first,
+               'all_operation_lists_match':True}
+        summary.append(row)
+        comparisons.append({'segment':segment, 'reinvestment_only_first':first_difference(base,runs[1]),
+                            'sale_dividend_fee_events':[t for t in runs[15]['events'] if t['diagnostic_fee_on_dividend']>0],
+                            'all_factorial_CAGR_pct':values})
+    protected=json.loads((HERE/'protected_inputs_before.json').read_text())
+    assert all(sha(ROOT/p)==h for p,h in protected.items())
+    result={'id':plan['id'],'completed_at_utc':dt.datetime.now(dt.timezone.utc).isoformat(),
+            'scope':plan['scope'],'summary':summary,'detail':comparisons,'factorial_runs':48,
+            'protected_inputs_count':len(protected),'old_files_changed':[],
+            'reinvest_share_of_reported_gap_pct':summary[-1]['Shapley_pp']['reinvestment']/summary[-1]['reported_minus_cash_pp']*100,
+            'historical_Claude_original_reproducible':False,
+            'Claude_code_and_claimed_package_received':False,
+            'fresh_Yahoo_identity_independently_checked':False,
+            'conclusion':'Reinvestment explains numerical reconstruction; historical provenance remains unverified. No original Turtle verdict.'}
+    write('results.json',result)
+    with (HERE/'summary.csv').open('x') as f:
+        columns=['segment','cash_CAGR_pct','reconstructed_Claude_CAGR_pct','reported_Claude_CAGR_pct','matched_archival_SPY_CAGR_pct','reconstruction_minus_cash_pp','reported_minus_cash_pp']
+        w=csv.DictWriter(f,fieldnames=columns,extrasaction='ignore');w.writeheader();w.writerows(summary)
+    print(json.dumps({'summary':[{k:v for k,v in x.items() if k not in ('first_NAV_difference',)} for x in summary],
+                      'reinvestment_share_pct':result['reinvest_share_of_reported_gap_pct']},ensure_ascii=False))
+
+
+if __name__=='__main__':
+    try:
+        main()
+    except Exception as exc:
+        write('FAILED_ATTEMPT.json', {'type':type(exc).__name__,'error':str(exc),'at_utc':dt.datetime.now(dt.timezone.utc).isoformat()})
+        raise

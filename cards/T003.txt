@@ -1,4 +1,4 @@
-Snapshot: 2026-10-29T21:09:02.683283+00:00
+Snapshot: 2026-10-30T11:03:40.139454+00:00
 T003 · Archiwalny v1: Zmienione reguły / adaptacja
 
 Turtle System 2: kompletny system wybicia
@@ -81,7 +81,13 @@ Remis20.01.2005: nominalnie117,5=117,5, lecz w skorygowanych danych close jest n
 
 Różnice operacji: tylko v1 ma17/4/5=26wpisów, tylko B również26 (symetrycznie52). Po pominięciu wyjścia20.01.2005 jest16/4/5, co uzgadnia liczbę25Claude. Parowanie po samym indeksie jest mylące.
 
-B-exact na rzeczywistych zamrożonych dywidendach cash daje0,887433%/4,265007%/2,785713%; ostatnia liczba jest o0,015287pp niższa od2,801%Claude. Dokładna przyczyna wymaga jego CSV i kodu. A używa stopy dyskontowej DTB3 z opóźnieniem daty, co nie dowodzi historycznej godziny publikacji/vintages ani odsetek wykonalnego rachunku cash.
+Uzgodnienie dywidend 30.10: niezależny kod odtworzył rekonstrukcję Claude na zamrożonym SPY. W latach 2020–27.10.2026 reinwestycja daje CAGR 2,800930%, gotówka 2,785713%, dotychczasowy matched SPY 15,127449%, przy 5 bps na stronę. Sygnały i 40 operacji są identyczne; wynik nie rozstrzyga oryginalnego Turtle.
+
+Uzgodnienie dywidend 30.10: reinwestowanie po zamknięciu ex-date zamiast trzymania dywidendy w gotówce wyjaśnia 99,39% różnicy do raportowanych 2,801%. Pozostałe składniki: koszt także od dywidendy przy sprzedaży na ex-date, rok 365,25 zamiast 365,2425 i zaokrąglenie wyniku. Nie zmieniano reguł ani progów strategii.
+
+Uzgodnienie dywidend 30.10: Claude nie zachował pierwotnego CSV ani pełnego kodu. Otrzymano opis nowej rekonstrukcji, bez wymienionej w nim paczki JS/CSV. Wyjaśnienie rachunkowe zostało sprawdzone; zgodność z utraconym pierwotnym przebiegiem i jego danymi pozostaje nieudowodniona.
+
+Uzgodnienie dywidend 30.10: reinwestycja bez kosztu na zamknięciu ex-date i natychmiastowy kredyt cash są założeniami audytu. Nie potwierdzono dat wypłat, realnego DRIP, podatków, FX ani filli; naliczanie prowizji od dywidendy odtworzono wyłącznie jako diagnostykę różnicy.
 T003-R1 · Częściowo uzupełniony
 Potwierdzone elementy i pozostałe warunki podano poniżej.
 
@@ -413,6 +419,28 @@ Completed bounded QC data controls; no strategy return (https://www.quantconnect
 
 Następny krok: Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.
 
+Uzgodnienie dywidend z rekonstrukcją Claude · 30.10.2026
+
+CAGR % rocznie. Te same zamrożone dane i operacje; odmienna reinwestycja i konwencje rachunkowe. Nie jest to nowy test oryginalnego Turtle.
+
+OkresDywidendy w gotówceRekonstrukcja ClaudeRóżnica ppDotychczasowy SPY
+
+2001–20150.8874330.886664-0.00076884.918073
+
+2016–20194.2650074.263415-0.001591914.784655
+
+2020–27.10.20262.7857132.800930.015216515.127449
+
+Potwierdzono rekonstrukcję na danych Codex; nie udowodniono utraconego pierwotnego CSV/kodu Claude ani identyczności jego dawnego pobrania Yahoo.
+
+Nie otrzymano paczki JS/CSV wymienionej w opisie Claude. Nowe obliczenia wykonano własnym kodem na podstawie czterech opisanych różnic.
+
+Natychmiastowy kredyt na ex-date, darmowa reinwestycja po close i koszt od dywidendy to model księgowy, bez potwierdzenia rzeczywistych wypłat, DRIP, podatków, FX i filli.
+
+Stare wyniki i ich hashe zachowane. Pozostałe braki pełnego Turtle na kontraktach nadal otwarte.
+
+Dane wyniku i ograniczenia (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_DIVIDENDS_AUDIT.html)
+
 Niezależna kontrola A/B i remisów · 29.10.2026
 
 CAGR% rocznie; zamrożony wariant SPY-v1,5bps na stronę. To analiza wrażliwości, bez nowego werdyktu Turtle.
@@ -427,7 +455,7 @@ retrospective_check3.5028024.7001722.7982292.7857134.047815.127449
 
 Opóźnienie daty DTB3 nie jest pełnym dowodem historycznej dostępności publikacji/vintages; stopa dyskontowa nie jest automatycznie stopą broker cash.
 
-B-exact zachowuje dywidendy cash do kolejnego wejścia, bez natychmiastowej reinwestycji. Różnica wobec Claude pozostaje jawna.
+B-exact zachowuje dywidendy cash do kolejnego wejścia. Różnicę rachunkową do nowej rekonstrukcji Claude wyjaśniono w audycie z 30.10; pierwotne pliki Claude nie są zachowane.
 
 Pozostają braki pełnego portfela futures, sesji/roll/FND/OI i rzeczywistego wykonania. Wynik SPY nie rozstrzyga oryginalnego Turtle.
 

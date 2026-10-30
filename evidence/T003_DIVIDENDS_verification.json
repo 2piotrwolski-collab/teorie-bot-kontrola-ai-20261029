@@ -1,0 +1,28 @@
+{
+  "at_utc": "2026-10-30T11:03:39.893549+00:00",
+  "protected_inputs": 83,
+  "old_files_changed": [],
+  "scientific_tables_identical": {
+    "experiments": 90,
+    "strategy_trials": 247,
+    "decisions": 21
+  },
+  "frozen_code_plan_inputs_unchanged": true,
+  "cash_daily_NAV_max_error": 0,
+  "factorial_runs": 48,
+  "all_operations_identical": true,
+  "accounting_synthetic_checks_passed": 4,
+  "projection_preservation_idempotence_checks_passed": 2,
+  "Claude_JS_CSV_package_not_received": true,
+  "historical_original_provenance_unverified": true,
+  "code_plan_data_sha256": {
+    "engine.py": "c2aa02065a545a1e6e11fe5e1b927b103738182cc443036b2b4de9388ef91d41",
+    "data/processed/SPY.csv": "638ceaafe7de04e32e8214fe227bc060e94d437bd7c97cf0bd6993572333e6ba",
+    "data/raw/SPY_yahoo.json": "4b413dce7ed42892f672d66e1fad00c51a6ccc1fdf8d188b32bf875be53e1bad",
+    "data/raw/SPY_receipt.json": "29e09a9db238ff17204b38e0408b8b3bfaa5ee71af45afbde274497416c3cda8",
+    "audit_dividends_20261030/plan.json": "f8362e0a7e8b86856c7b5fd9f0b6f0d24cd9a114fde281c24d2a46dc7be0e02f",
+    "audit_dividends_20261030/reconcile.py": "f801a870f535fb4c770557622b0e7368b1ff20efdc3c25c8ee45798cc05c6eed",
+    "audit_dividends_20261030/test_accounting.py": "6a74a588657b01096d55d431bce9476d6eaac1bc92ba27a834b75bed77e3fe50",
+    "audit_dividends_20261030/CLAUDE_RECONSTRUCTION_AS_RECEIVED.txt": "aa65dc0be936e035bebfa1767b456cc8a6b452f14d9eab4263454c1eb53596cc"
+  }
+}
