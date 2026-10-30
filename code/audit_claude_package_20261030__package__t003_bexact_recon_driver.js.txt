@@ -1,0 +1,130 @@
+/* T003 B-exact RECONSTRUCTION - analysis driver. Load t003_bexact_recon_lib.js first.
+   analyze(bars, divm) runs, per segment, on ONE data set:
+     - my method (runOrig port and sim ledger) and the Codex method (sim), CAGR with both day-count constants,
+     - the 4 switches that are the only differences between the two engines (2^4 = 16 runs, Shapley split + both sequential orders),
+     - first date on which the daily NAVs differ (relative 1e-12) and what happened that day,
+     - event-level effect of every dividend (that single dividend switched from "reinvested at close" to "cash"),
+     - the same CAGR with dividends derived from adj_close/close instead of the actual Yahoo events. */
+(function (root) {
+  'use strict';
+  var T = root.T003;
+  var HAS = Object.prototype.hasOwnProperty;
+  var HISTORICAL_REPORTED = {development: 0.887, validation: 4.263, retrospective_check: 2.801};
+  var CODEX_PUBLISHED = {development: 0.8874325737331601, validation: 4.265007286782452, retrospective_check: 2.7857132858845945};
+  var KEYS = ['dayConst', 'firstDaySignal', 'costOnDivAtSell', 'reinvest'];
+  var LABELS = ['cagr_day_count_365.25_to_365.2425', 'signal_of_session_before_segment_start', 'cost_on_dividend_at_ex_date_sale', 'dividend_reinvested_at_close_to_cash_until_next_entry'];
+  var VALS = {dayConst: [365.25, 365.2425], firstDaySignal: [false, true], costOnDivAtSell: [true, false], reinvest: ['close', 'none']};
+
+  function opt(mask) {
+    var o = {};
+    KEYS.forEach(function (k, i) { o[k] = VALS[k][(mask >> i) & 1]; });
+    return o;
+  }
+  function fact(n) { return n <= 1 ? 1 : n * fact(n - 1); }
+  function shapley(c) {
+    var n = 4, v = [0, 0, 0, 0];
+    for (var i = 0; i < n; i++) {
+      for (var S = 0; S < 16; S++) {
+        if ((S >> i) & 1) continue;
+        var s = 0;
+        for (var j = 0; j < n; j++) { if ((S >> j) & 1) s++; }
+        v[i] += fact(s) * fact(n - s - 1) / fact(n) * (c[S | (1 << i)] - c[S]);
+      }
+    }
+    return v;
+  }
+  function impliedMap(bars, divm) {
+    var f = bars.map(function (x) { return x.a / x.c; }), out = {}, maxRel = 0, n = 0;
+    for (var t = 1; t < bars.length; t++) {
+      var d = bars[t].d;
+      if (HAS.call(divm, d)) {
+        var Dm = bars[t - 1].c * (1 - f[t - 1] / f[t]);
+        out[d] = Dm; n++;
+        var rel = Math.abs(Dm - divm[d]) / divm[d];
+        if (rel > maxRel) maxRel = rel;
+      }
+    }
+    return {m: out, n: n, maxRel: maxRel};
+  }
+  function round(x, k) { return Math.round(x * Math.pow(10, k)) / Math.pow(10, k); }
+
+  function analyze(bars, divm) {
+    var res = {schema: 't003-bexact-recon-1', status: 'NEW RECONSTRUCTION - not the historical run', segments: {}};
+    var implied = impliedMap(bars, divm);
+    res.derived_dividend_check = {ex_dates_compared: implied.n, max_relative_difference_vs_actual: implied.maxRel};
+    Object.keys(T.SEGMENTS).forEach(function (seg) {
+      var a = T.SEGMENTS[seg][0], b = T.SEGMENTS[seg][1];
+      var orig = T.runOrig(bars, divm, a, b, 365.25);
+      var mine = T.sim(bars, divm, a, b, T.OPT_MINE);
+      var codex = T.sim(bars, divm, a, b, T.OPT_CODEX);
+      var mineNav = mine.path.map(function (x) { return {d: x.d, nav: x.nav}; });
+      var codexNav = codex.path.map(function (x) { return {d: x.d, nav: x.nav}; });
+      var chk = T.cmpNav(mineNav, orig.nav, 1e-13);
+      var mOps = T.opsOf(mine.trades), cOps = T.opsOf(codex.trades);
+      var opsSameAsRunOrig = mOps.length === orig.ops.length && mOps.every(function (x, i) { return x === orig.ops[i]; });
+      var opsSameAsCodex = mOps.length === cOps.length && mOps.every(function (x, i) { return x === cOps[i]; });
+      var c16 = [];
+      for (var m = 0; m < 16; m++) c16.push(T.sim(bars, divm, a, b, opt(m)).cagr);
+      var sh = shapley(c16);
+      var seqF = [c16[1] - c16[0], c16[3] - c16[1], c16[7] - c16[3], c16[15] - c16[7]];
+      var seqR = [c16[8] - c16[0], c16[12] - c16[8], c16[14] - c16[12], c16[15] - c16[14]];
+      var fd = -1;
+      for (var i = 0; i < mineNav.length; i++) {
+        if (Math.abs(mineNav[i].nav - codexNav[i].nav) / codexNav[i].nav > 1e-12) { fd = i; break; }
+      }
+      var firstDivergence = fd < 0 ? null : {date: mine.path[fd].d, nav_mine: mine.path[fd].nav, nav_codex: codex.path[fd].nav,
+        relative_difference: (mine.path[fd].nav - codex.path[fd].nav) / codex.path[fd].nav,
+        event_mine_that_day: mine.path[fd].ev, event_mine_previous_session: fd > 0 ? mine.path[fd - 1].ev : '',
+        shares_mine: mine.path[fd].shares, shares_codex: codex.path[fd].shares, cash_codex: codex.path[fd].cash};
+      var firstReinv = null;
+      for (var k = 0; k < mine.path.length - 1; k++) {
+        if (mine.path[k].ev.indexOf('DIV_REINVESTED') >= 0) {
+          firstReinv = {ex_date: mine.path[k].d, nav_difference_on_ex_date: mine.path[k].nav - codex.path[k].nav,
+            next_session: mine.path[k + 1].d, nav_difference_next_session: mine.path[k + 1].nav - codex.path[k + 1].nav};
+          break;
+        }
+      }
+      var events = mine.credits.map(function (c) {
+        var o = Object.assign({}, T.OPT_MINE, {cashDates: {}});
+        o.cashDates[c.d] = true;
+        var r = T.sim(bars, divm, a, b, o);
+        var idx = mine.path.findIndex(function (x) { return x.d === c.d; });
+        var prevNav = idx > 0 ? mine.path[idx - 1].nav : 1;
+        var ex = mine.trades.filter(function (t) { return t.side === 'S' && t.exec >= c.d; })[0];
+        var en = mine.trades.filter(function (t) { return t.side === 'B' && t.exec <= c.d; }).pop();
+        var cc = codex.credits.filter(function (x) { return x.d === c.d; })[0];
+        return {ex_date: c.d, booked_mine: c.booked, dividend_per_share: c.dps,
+          shares_entitled_mine: c.entitled, credit_mine: c.credit, credit_bp_of_nav: c.credit / prevNav * 1e4,
+          shares_entitled_codex: cc ? cc.entitled : null, credit_codex: cc ? cc.credit : null,
+          entry: en.exec, exit: ex.exec + ' ' + ex.time, exit_price_over_exdate_close: ex.price / mine.path[idx].c,
+          cagr_effect_pp_if_this_dividend_were_cash: mine.cagr - r.cagr};
+      });
+      var evSum = events.reduce(function (s, e) { return s + e.cagr_effect_pp_if_this_dividend_were_cash; }, 0);
+      var allCash = T.sim(bars, divm, a, b, Object.assign({}, T.OPT_MINE, {reinvest: 'none'}));
+      var impl = T.sim(bars, implied.m, a, b, T.OPT_MINE);
+      res.segments[seg] = {
+        range: [a, b], sessions: mine.path.length, trades: mine.trades.length, dividend_credits_mine: mine.credits.length,
+        cagr_pct: {
+          historical_reported_by_me_3dp: HISTORICAL_REPORTED[seg], my_method_runOrig_day365_25: orig.cagr, my_method_sim_day365_25: mine.cagr,
+          my_method_day365_2425: T.cagrPct(mine.E, mine.path[0].d, mine.path[mine.path.length - 1].d, 365.2425),
+          codex_method_sim: codex.cagr, codex_published: CODEX_PUBLISHED[seg]
+        },
+        gaps_pp: {my_minus_codex_identical_data: orig.cagr - codex.cagr, reported_minus_codex: HISTORICAL_REPORTED[seg] - CODEX_PUBLISHED[seg],
+          rounding_of_reported_3dp: HISTORICAL_REPORTED[seg] - orig.cagr},
+        checks: {runOrig_vs_sim_ops_equal: opsSameAsRunOrig, runOrig_vs_sim_nav_max_relative_difference: chk.maxRel,
+          my_trade_list_equals_codex_trade_list: opsSameAsCodex, codex_sim_vs_published_cagr_difference: codex.cagr - CODEX_PUBLISHED[seg]},
+        decomposition_codex_minus_mine_pp: {labels: LABELS, cagr_16_runs: c16, shapley: sh, sequential_forward: seqF, sequential_reverse: seqR,
+          total: c16[15] - c16[0], shapley_sum_minus_total: sh.reduce(function (s, x) { return s + x; }, 0) - (c16[15] - c16[0])},
+        first_divergence: firstDivergence, first_reinvested_dividend: firstReinv,
+        sells_on_ex_date: mine.path.filter(function (x) { return x.ev.indexOf('SELL_OPEN+DIV') >= 0; }).map(function (x) { return x.d; }),
+        events: events,
+        event_effects_sum_pp: evSum, reinvestment_total_effect_pp: mine.cagr - allCash.cagr,
+        event_sum_minus_total_pp: evSum - (mine.cagr - allCash.cagr),
+        derived_dividends_variant: {my_method_with_actual_dividends: mine.cagr, my_method_with_dividends_from_adjclose_over_close: impl.cagr, difference_pp: impl.cagr - mine.cagr}
+      };
+    });
+    return res;
+  }
+  root.T003.analyze = analyze;
+  root.T003.round = round;
+})(typeof window !== 'undefined' ? window : globalThis);

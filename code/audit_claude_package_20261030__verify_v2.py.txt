@@ -1,0 +1,143 @@
+"""Compare unchanged Claude JS outputs with independent frozen Python ledgers."""
+import csv
+import datetime as dt
+import gzip
+import hashlib
+import json
+from pathlib import Path
+import sqlite3
+
+HERE=Path(__file__).resolve().parent
+ROOT=HERE.parent
+
+
+def digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def save(name, value):
+    with (HERE/name).open('x') as f:
+        json.dump(value,f,ensure_ascii=False,indent=2,allow_nan=False)
+        f.write('\n')
+
+
+def compare_tree(a,b,path='',numeric_tolerance=1e-10):
+    if isinstance(a,dict):
+        assert isinstance(b,dict) and set(a)==set(b),path
+        for key in a:compare_tree(a[key],b[key],path+'/'+key,numeric_tolerance)
+    elif isinstance(a,list):
+        assert isinstance(b,list) and len(a)==len(b),path
+        for i,(x,y) in enumerate(zip(a,b)):compare_tree(x,y,path+'/'+str(i),numeric_tolerance)
+    elif isinstance(a,(int,float)) and not isinstance(a,bool):
+        assert abs(a-b)<=numeric_tolerance,(path,a,b)
+    else:
+        assert a==b,(path,a,b)
+
+
+def main():
+    plan=json.loads((HERE/'plan.json').read_text())
+    current=json.loads((HERE/'runner_output/results.json').read_text())
+    supplied=json.loads((HERE/'package/wyniki/T003_wyniki_podsumowanie.json').read_text())
+    own=json.loads((ROOT/'audit_dividends_20261030/results.json').read_text())
+    inp=current['inputs']
+    assert inp['csv']['equals_codex_frozen'] and inp['yahoo_json']['equals_codex_frozen']
+    assert inp['csv']['rows']==inp['yahoo_json']['rows']==6997
+    assert inp['yahoo_json']['dividends']==112 and inp['yahoo_json']['splits']==0
+    assert inp['yahoo_json']['nulls']==0
+    for k in ('csv_vs_json_raw_ohlc_row_mismatches','dividend_utc_vs_new_york_date_mismatches','dividend_duplicate_dates'):
+        assert inp[k]==0,k
+    supplied_events=list(csv.DictReader((HERE/'package/wyniki/T003_zdarzenia_dywidendowe.csv').open()))
+    for segment, fields in current['segments'].items():
+        assert set(fields)-set(supplied['segments'][segment])=={'events'}
+        compare_tree({k:v for k,v in fields.items() if k!='events'},supplied['segments'][segment])
+        event_rows=[row for row in supplied_events if row['segment']==segment]
+        assert len(event_rows)==len(fields['events'])
+        for actual,raw_expected in zip(fields['events'],event_rows):
+            assert set(actual)==set(raw_expected)-{'segment'}
+            expected={k:float(raw_expected[k]) if isinstance(v,(int,float)) else raw_expected[k] for k,v in actual.items()}
+            compare_tree(actual,expected)
+    compare_tree(current['derived_dividend_check'],supplied['derived_dividend_check'])
+    dates=[x['date'] for x in csv.DictReader((ROOT/'data/processed/SPY.csv').open())]
+    previous={dates[i]:dates[i-1] for i in range(1,len(dates))}
+    cash_fields={'nav_eod':'nav_eod','shares_eod':'shares_eod','cash_eod':'cash_eod',
+                 'dividend_credit':'dividend_credit','accrued_dividends_cum':'accrued_dividends_cum'}
+    comparisons=[]
+    for segment,js in current['segments'].items():
+        py=next(x for x in own['summary'] if x['segment']==segment)
+        modes=[]
+        for label,mask in [('CODEX_cash_until_next_entry',0),('MINE_reinvest_at_close',15)]:
+            with gzip.open(ROOT/'audit_dividends_20261030'/(segment+'_mask_'+str(mask).zfill(2)+'.json.gz'),'rt') as f:
+                independent=json.load(f)
+            rows=list(csv.DictReader((HERE/'runner_output'/('ledger_daily_'+segment+'_'+label+'.csv')).open()))
+            assert len(rows)==len(independent['ledger'])
+            max_errors={key:0. for key in cash_fields}
+            operations=[]
+            for actual,expected in zip(rows,independent['ledger']):
+                assert actual['date']==expected['date']
+                for key,pykey in cash_fields.items():
+                    error=abs(float(actual[key])-expected[pykey]);max_errors[key]=max(max_errors[key],error)
+                    assert error<=1e-12,(segment,label,key,actual['date'],error)
+                ev=actual['event']
+                for code,side,when,reason in [('BUY_OPEN','buy','open','prior_channel_entry'),('SELL_OPEN','sell','open','prior_channel_exit'),('TERMINAL_SELL_CLOSE','sell','close','terminal_liquidation')]:
+                    if code in ev:
+                        operations.append({'side':side,'signal_date':previous[actual['date']] if when=='open' else None,
+                            'execution_date':actual['date'],'execution_time':when,'reason':reason})
+            assert operations==independent['trades'],(segment,label)
+            modes.append({'mode':label,'rows':len(rows),'max_abs_errors_vs_independent_Python':max_errors,
+                          'operations':len(operations),'operation_list_matches':True})
+        expected_factors=next(x for x in own['detail'] if x['segment']==segment)['all_factorial_CAGR_pct']
+        jsf=js['decomposition_codex_minus_mine_pp']['cagr_16_runs']
+        diffs=[]
+        for m,actual in enumerate(jsf):
+            p=((1-((m>>3)&1))<<0)|((1-((m>>2)&1))<<1)|((1-(m&1))<<2)|((1-((m>>1)&1))<<3)
+            diffs.append(abs(actual-expected_factors[p]))
+        assert max(diffs)<=1e-10,(segment,diffs)
+        attr={k:-js['decomposition_codex_minus_mine_pp']['shapley'][i] for i,k in
+              enumerate(('year_base','suppress_first_signal','dividend_sale_fee','reinvestment'))}
+        compare_tree(attr,py['Shapley_pp'])
+        assert abs(js['cagr_pct']['codex_method_sim']-py['cash_CAGR_pct'])<=1e-10
+        assert abs(js['cagr_pct']['my_method_sim_day365_25']-py['reconstructed_Claude_CAGR_pct'])<=1e-10
+        comparisons.append({'segment':segment,'modes':modes,'all16_factorial_CAGR_max_error_pp':max(diffs),
+            'Shapley_matches_after_order_and_sign_normalization':True,
+            'cash_CAGR_pct':js['cagr_pct']['codex_method_sim'],
+            'reconstructed_Claude_CAGR_pct':js['cagr_pct']['my_method_sim_day365_25'],
+            'matched_archival_SPY_CAGR_pct':py['matched_archival_SPY_CAGR_pct'],
+            'first_divergence':js['first_divergence']['date']})
+    protected=json.loads((HERE/'protected_inputs_before.json').read_text())
+    changed=[rel for rel,h in protected.items() if digest(ROOT/rel)!=h]
+    assert not changed,changed
+    frozen=json.loads((HERE/'freeze.json').read_text())
+    assert all(digest(ROOT/rel)==h for rel,h in frozen['sha256'].items())
+    old=sqlite3.connect('file:'+str(ROOT/'backups/registry_before_T003_package_20261030.sqlite')+'?mode=ro',uri=True)
+    now=sqlite3.connect('file:'+str(ROOT/'registry.sqlite')+'?mode=ro',uri=True)
+    tables={}
+    for table in ('experiments','strategy_trials','decisions'):
+        a=old.execute(f'SELECT * FROM {table} ORDER BY rowid').fetchall()
+        b=now.execute(f'SELECT * FROM {table} ORDER BY rowid').fetchall()
+        assert a==b,table;tables[table]=len(a)
+    result={'id':plan['id'],'verified_at_utc':dt.datetime.now(dt.timezone.utc).isoformat(),
+            'status':'CLOSED_NUMERICAL_RECONSTRUCTION_DISCREPANCY',
+            'zip_sha256':plan['package_sha256'],'zip_bytes':56452,
+            'package_manifest_passed':17,'ledger_hashes_sizes_rows_passed':12,
+            'supplied_event_CSVs_byte_identical':6,'previously_missing_daily_CSVs_generated_and_hash_verified':6,
+            'node_version':plan['node_version'],'runner_exit_code':0,'runner_changed':False,
+            'input_hashes_match_frozen':True,'inputs':plan['inputs'],
+            'cash_and_reinvestment_independent_Python_comparison':comparisons,
+            'supplied_summary_reproduced_numeric_tolerance':1e-10,
+            'all48_dividend_event_rows_match_separate_supplied_CSV':True,
+            'supplied_summary_schema_note':'Runner includes events in each segment; packaged summary omits that field and provides all48 records separately in T003_zdarzenia_dywidendowe.csv, verified explicitly.',
+            'all48_factorial_results_and_attribution_match':True,
+            'protected_old_files':len(protected),'old_files_changed':[],
+            'scientific_tables_unchanged':tables,
+            'code_review':'Both engines compute from supplied prices/dividends. Published CAGR constants are comparison references, not substituted results. Strict previous55/20 channels, nextopen fills and previousclose dividend entitlement agree with independent audit. Reinvestment, same-day dividend fee and yearbase differences are explicit. Runner has no overwrite guard; protected by an exclusively created empty OUT directory.',
+            'code_sha256':{n:digest(HERE/'package'/n) for n in ('t003_bexact_recon_lib.js','t003_bexact_recon_driver.js','t003_run_node.js')},
+            'historical_original_Claude_run_reproducible':False,
+            'historical_original_limitation':'Original29Oct CSV and full code were lost; the notes fragment is not executable original evidence. Matching reconstruction does not recover that provenance.',
+            'live_dividend_execution_verified':False,'original_Turtle_strategy_verified':False,
+            'remaining_scope_limits':['Real payment dates/DRIP/taxFX/fills are outside this bookkeeping reconciliation.','No evidence about the effectiveness of original multi-futures Turtle.'],
+            'next_action':'No further action required for this numerical discrepancy. Keep artifacts; reopen only on specific contrary evidence. Future executable strategy research needs its own source-fit plan.'}
+    save('verification.json',result)
+    print(json.dumps({'status':result['status'],'ledger_hashes_passed':12,'modes':comparisons,'old_files_changed':[]},ensure_ascii=False))
+
+
+if __name__=='__main__':main()

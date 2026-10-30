@@ -1,0 +1,9 @@
+test_preserves_other_cards_current_evidence_and_original_verdict (test_t003_dividend_review.DividendOverlayChecks.test_preserves_other_cards_current_evidence_and_original_verdict) ... ok
+test_repeated_reports_remain_identical (test_t003_dividend_review.DividendOverlayChecks.test_repeated_reports_remain_identical) ... ok
+test_incomplete_evidence_cannot_close_discrepancy (test_t003_dividend_package_review.ClosureChecks.test_incomplete_evidence_cannot_close_discrepancy) ... ok
+test_regeneration_preserves_closure_fresh_observations_and_other_cards (test_t003_dividend_package_review.ClosureChecks.test_regeneration_preserves_closure_fresh_observations_and_other_cards) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.002s
+
+OK

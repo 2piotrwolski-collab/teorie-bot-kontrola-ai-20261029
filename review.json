@@ -1,5 +1,5 @@
 {
-  "snapshot_at_utc": "2026-10-30T11:03:40.139454+00:00",
+  "snapshot_at_utc": "2026-10-30T12:01:09.655468+00:00",
   "purpose": "Niezależna kontrola logiki badań. Statyczna kopia do odczytu.",
   "status": "0 potwierdzonych strategii; wyniki wstępne, nie dowód wykonalnej alfy.",
   "historical_warning": "90 dawnych uproszczonych prób SPY pozostaje audytem błędnego dopasowania; nie są testami oryginalnych teorii.",
@@ -905,8 +905,9 @@
         "Różnice operacji: tylko v1 ma17/4/5=26wpisów, tylko B również26 (symetrycznie52). Po pominięciu wyjścia20.01.2005 jest16/4/5, co uzgadnia liczbę25Claude. Parowanie po samym indeksie jest mylące.",
         "Uzgodnienie dywidend 30.10: niezależny kod odtworzył rekonstrukcję Claude na zamrożonym SPY. W latach 2020–27.10.2026 reinwestycja daje CAGR 2,800930%, gotówka 2,785713%, dotychczasowy matched SPY 15,127449%, przy 5 bps na stronę. Sygnały i 40 operacji są identyczne; wynik nie rozstrzyga oryginalnego Turtle.",
         "Uzgodnienie dywidend 30.10: reinwestowanie po zamknięciu ex-date zamiast trzymania dywidendy w gotówce wyjaśnia 99,39% różnicy do raportowanych 2,801%. Pozostałe składniki: koszt także od dywidendy przy sprzedaży na ex-date, rok 365,25 zamiast 365,2425 i zaokrąglenie wyniku. Nie zmieniano reguł ani progów strategii.",
-        "Uzgodnienie dywidend 30.10: Claude nie zachował pierwotnego CSV ani pełnego kodu. Otrzymano opis nowej rekonstrukcji, bez wymienionej w nim paczki JS/CSV. Wyjaśnienie rachunkowe zostało sprawdzone; zgodność z utraconym pierwotnym przebiegiem i jego danymi pozostaje nieudowodniona.",
-        "Uzgodnienie dywidend 30.10: reinwestycja bez kosztu na zamknięciu ex-date i natychmiastowy kredyt cash są założeniami audytu. Nie potwierdzono dat wypłat, realnego DRIP, podatków, FX ani filli; naliczanie prowizji od dywidendy odtworzono wyłącznie jako diagnostykę różnicy."
+        "Uzgodnienie dywidend 30.10: paczka JS/CSV Claude została odebrana i uruchomiona bez zmian na zamrożonych danych. Wszystkie 17 sum plików i 12 hashy dzienników są zgodne. Pierwotny utracony CSV i pełny kod nadal pozostają nieodtwarzalne; sprawdzono nową rekonstrukcję.",
+        "Uzgodnienie dywidend 30.10: reinwestycja bez kosztu na zamknięciu ex-date i natychmiastowy kredyt cash są założeniami audytu. Nie potwierdzono dat wypłat, realnego DRIP, podatków, FX ani filli; naliczanie prowizji od dywidendy odtworzono wyłącznie jako diagnostykę różnicy.",
+        "Kontrola paczki Claude: rozbieżność rachunkowa dywidend ZAMKNIĘTA. Oba wejścia mają właściwe zamrożone SHA; wygenerowano 6 brakujących dziennych CSV i potwierdzono wszystkie 12 dzienników co do bajtu. Operacje, pełne dzienne księgi i rozbicie przyczyn zgadzają się z niezależnym Pythonem. Nie jest to potwierdzenie oryginalnego Turtle ani realnej egzekucji dywidend."
       ],
       "next_action": "Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.",
       "overall_status": "source_gap_still_blocks_original_test",
@@ -1297,6 +1298,42 @@
       ],
       "observations": [
         {
+          "id": "T003_DIVIDEND_PACKAGE_2d2df8dc98eb",
+          "title": "Dywidendy: kontrola paczki zakończona · 30.10.2026",
+          "summary": "Rozbieżność rachunkowa zamknięta. Kod JS Claude i niezależny Python odtwarzają tę samą nową rekonstrukcję na zamrożonym SPY.",
+          "columns": [
+            "Dowód",
+            "Wynik"
+          ],
+          "rows": [
+            [
+              "Integralność paczki",
+              "ZIP zgodny; 17/17 sum plików poprawnych"
+            ],
+            [
+              "Zamrożone wejścia",
+              "Oba SHA zgodne, 0 różnic OHLC"
+            ],
+            [
+              "Wygenerowane dzienniki",
+              "12/12 zgodnych co do bajtu, rozmiaru i liczby wierszy"
+            ],
+            [
+              "Niezależny Python",
+              "Operacje identyczne; różnica dziennego NAV ≤ 1,12×10⁻¹⁵"
+            ],
+            [
+              "Decyzja",
+              "Rozbieżność dywidend w rekonstrukcji ZAMKNIĘTA"
+            ]
+          ],
+          "limitations": [
+            "Nie odtworzono utraconego pierwotnego CSV ani pełnego kodu Claude. To ograniczenie historycznego pochodzenia, a nie pozostająca różnica rachunkowa.",
+            "Realne daty wypłat, DRIP, podatki, FX, fille i pełny Turtle na futures pozostają poza tym uzgodnieniem."
+          ],
+          "evidence_report": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_DIVIDENDS_PACKAGE_AUDIT.html"
+        },
+        {
           "id": "T003_DIVIDEND_RECON_0384f6f6f127",
           "title": "Uzgodnienie dywidend z rekonstrukcją Claude · 30.10.2026",
           "summary": "CAGR % rocznie. Te same zamrożone dane i operacje; odmienna reinwestycja i konwencje rachunkowe. Nie jest to nowy test oryginalnego Turtle.",
@@ -1332,7 +1369,7 @@
           ],
           "limitations": [
             "Potwierdzono rekonstrukcję na danych Codex; nie udowodniono utraconego pierwotnego CSV/kodu Claude ani identyczności jego dawnego pobrania Yahoo.",
-            "Nie otrzymano paczki JS/CSV wymienionej w opisie Claude. Nowe obliczenia wykonano własnym kodem na podstawie czterech opisanych różnic.",
+            "Paczka JS/CSV została następnie sprawdzona na zamrożonych danych: 17/17 plików i 12/12 dzienników zgodnych. Pierwotny utracony przebieg pozostaje nieodtwarzalny.",
             "Natychmiastowy kredyt na ex-date, darmowa reinwestycja po close i koszt od dywidendy to model księgowy, bez potwierdzenia rzeczywistych wypłat, DRIP, podatków, FX i filli.",
             "Stare wyniki i ich hashe zachowane. Pozostałe braki pełnego Turtle na kontraktach nadal otwarte."
           ],
@@ -1625,6 +1662,7 @@
       "source_update_artifact": "research_round2/source_updates_T001_T004.json",
       "source_update_sha256": "2953f6d2229cc4cc35f01b17b0ed374572ae1805eabdeaa991755a222392c6e2",
       "observation_ids": [
+        "T003_DIVIDEND_PACKAGE_2d2df8dc98eb",
         "T003_DIVIDEND_RECON_0384f6f6f127",
         "T003_AB_SENSITIVITY_34a3fe166aaf",
         "QC_DATA_CONTROLS_20261029_V5_T003",
@@ -1645,9 +1683,11 @@
       "qc_data_review_id": "QC_DATA_CONTROLS_20261029_V5",
       "claude_triage_sha256": "a46f6855cb47d35142f93d75643741c36df918eb63348dac921de593dd5a4bbb",
       "t003_sensitivity_audit_sha256": "34a3fe166aaf146ce475540a9f0abf622550e27f4b55aed23cba2ed5ee9f977d",
-      "sensitivity_audit_next_action": "Uzgodnienie rachunkowe zakończone. Po otrzymaniu paczki JS/CSV Claude zweryfikować kod i hashe nowej rekonstrukcji; utracony pierwotny przebieg pozostaje nieodtwarzalny. Realistyczne wypłaty/DRIP i pełny Turtle wymagają osobnego planu oraz brakujących danych. Bez zmiany historycznych wyników.",
+      "sensitivity_audit_next_action": "Rozbieżność rachunkowa dywidend ZAMKNIĘTA: paczka, kod, oba wejścia i12dzienników zgodne. Zachować dowody; nie ponawiać uzgodnienia bez konkretnego nowego zarzutu. Utracone pochodzenie pierwotnego przebiegu jest udokumentowanym ograniczeniem. Badanie realnych wypłat/DRIP i pełnego Turtle wymaga osobnego planu.",
       "t003_dividend_audit_sha256": "0384f6f6f127ce75d1f47a3ac603ecf20d227cf75a4bb812740ea70d8b684446",
-      "dividend_audit_next_action": "Uzgodnienie rachunkowe zakończone. Po otrzymaniu paczki JS/CSV Claude zweryfikować kod i hashe nowej rekonstrukcji; utracony pierwotny przebieg pozostaje nieodtwarzalny. Realistyczne wypłaty/DRIP i pełny Turtle wymagają osobnego planu oraz brakujących danych. Bez zmiany historycznych wyników."
+      "dividend_audit_next_action": "Rozbieżność rachunkowa dywidend ZAMKNIĘTA: paczka, kod, oba wejścia i12dzienników zgodne. Zachować dowody; nie ponawiać uzgodnienia bez konkretnego nowego zarzutu. Utracone pochodzenie pierwotnego przebiegu jest udokumentowanym ograniczeniem. Badanie realnych wypłat/DRIP i pełnego Turtle wymaga osobnego planu.",
+      "t003_dividend_package_sha256": "2d2df8dc98eb2f3cd427395936d4dacb221b8db8b63768561a3b34c72418235e",
+      "dividend_reconciliation_status": "closed_numerical_reconstruction_discrepancy"
     },
     {
       "id": "T004",

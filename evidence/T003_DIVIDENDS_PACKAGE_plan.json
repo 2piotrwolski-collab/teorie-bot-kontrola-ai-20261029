@@ -1,0 +1,24 @@
+{
+  "id": "T003_CLAUDE_PACKAGE_VERIFICATION_20261030_V1",
+  "frozen_at_utc": "2026-10-30T11:54:36.117249+00:00",
+  "scope": "Close only the numerical dividend-reconstruction discrepancy for archived SPY55/20; original Turtle/futures and lost original Claude run not validated",
+  "package_sha256": "2330ffc99b573f247bb2bc504043787011dd073566843a8c315267a5a7052727",
+  "node_version": "v24.22.1",
+  "node_executable": "[local path]",
+  "code_policy": "Run original verified package bytes, no patches. Static review completed: pure calculation; runner reads its2 supplied inputs and2JS files and writes OUT. No network calls, credentials, account/orders or paid APIs. Runner can overwrite OUT, so supply a new empty exclusive directory only. Strip inherited environment.",
+  "inputs": {
+    "data/processed/SPY.csv": "638ceaafe7de04e32e8214fe227bc060e94d437bd7c97cf0bd6993572333e6ba",
+    "data/raw/SPY_yahoo.json": "4b413dce7ed42892f672d66e1fad00c51a6ccc1fdf8d188b32bf875be53e1bad"
+  },
+  "budget": "Exactly1 unchanged package runner invocation on frozen inputs with120s timeout; no new Yahoo download, tuning or variant additions. Internal fixed accounting analyses retained as package defines them.",
+  "acceptance": [
+    "ZIP hash, CRC and all17 manifest SHA exact",
+    "both input hash flags true,6997rows,0rawOHLC mismatches,112dividends,0duplicate exdates/UTC-NY mismatch/splits",
+    "all12 output CSV hashes, bytes and rows match declared expectations;6 supplied event CSVs byte-identical",
+    "daily cash and reinvestment NAV/shares/cash agree with independent Python audit at absolute tolerance1e-12; mapped operation lists identical",
+    "CAGR and four-effect decomposition agree with independent Python audit within1e-10 pp after factor-order and sign normalization",
+    "old protected inputs and scientific tables unchanged"
+  ],
+  "known_outcomes": "prior Python audit explained99.3871106% via reinvestment; last segment cash2.785713286, reinvest2.800929759, archival matchedSPY15.127449409 at5bps/side. This is reproduction, not unseenOOS.",
+  "closure_rule": "Close numerical discrepancy only if checks pass. Lost original CSV/code remain documented historical provenance limitation, not an unresolved accounting difference. Real pay-date/DRIP/taxFX/fills remain outside scope. Failure stays archived; no adjusting outputs to hashes."
+}

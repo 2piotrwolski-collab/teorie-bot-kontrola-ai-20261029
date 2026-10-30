@@ -1,4 +1,4 @@
-Snapshot: 2026-10-30T11:03:40.139454+00:00
+Snapshot: 2026-10-30T12:01:09.655468+00:00
 T009 · Archiwalny v1: Test nieadekwatny do źródła
 
 Moreira–Muir: portfele zarządzane zmiennością

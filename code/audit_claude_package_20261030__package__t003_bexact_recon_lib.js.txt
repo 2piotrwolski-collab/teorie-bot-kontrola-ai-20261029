@@ -1,0 +1,204 @@
+/* T003 B-exact RECONSTRUCTION library (plain JS, no dependencies; runs in a browser console and in Node >= 20).
+   NEW RECONSTRUCTION written 2026-10-29 - it is NOT the code of the historical run (that file was never saved).
+   Two engines on identical inputs:
+     runOrig = port of the core loop of the original B-exact run (scalar equity E, dividend implicitly reinvested at the ex-date close)
+     sim     = share/cash ledger engine; its options reproduce either runOrig or the Codex audit engine (cash dividends held until next entry)
+   Signals: RAW (nominal) OHLC, strict inequalities, Donchian 55 entry / 20 exit, close-confirmed, next-open fill, 5 bps per side. */
+(function (root) {
+  'use strict';
+  var RATE = 0.0005;
+  var SEGMENTS = {
+    development: ['2001-01-02', '2015-12-31'],
+    validation: ['2016-01-04', '2019-12-31'],
+    retrospective_check: ['2020-01-02', '2026-10-27']
+  };
+  var OPT_MINE = {reinvest: 'close', costOnDivAtSell: true, firstDaySignal: false, dayConst: 365.25};
+  var OPT_CODEX = {reinvest: 'none', costOnDivAtSell: false, firstDaySignal: true, dayConst: 365.2425};
+  var HAS = Object.prototype.hasOwnProperty;
+
+  function subtle() {
+    if (root.crypto && root.crypto.subtle) return root.crypto.subtle;
+    return require('crypto').webcrypto.subtle;
+  }
+
+  function sha256hex(buf) {
+    return subtle().digest('SHA-256', buf).then(function (h) {
+      return Array.prototype.map.call(new Uint8Array(h), function (b) { return ('0' + b.toString(16)).slice(-2); }).join('');
+    });
+  }
+
+  function fnv32(s) {
+    var h = 0x811c9dc5;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    return h;
+  }
+
+  function parseCsv(text) {
+    var L = text.trim().split(/\r?\n/), hdr = L[0].split(','), ix = {};
+    hdr.forEach(function (k, i) { ix[k.trim()] = i; });
+    return L.slice(1).map(function (l) {
+      var p = l.split(',');
+      return {d: p[ix.date], o: +p[ix.open], h: +p[ix.high], l: +p[ix.low], c: +p[ix.close], v: +p[ix.volume], a: +p[ix.adj_close]};
+    });
+  }
+
+  function fromYahoo(json) {
+    var r = json.chart.result[0], ts = r.timestamp, q = r.indicators.quote[0], ad = r.indicators.adjclose[0].adjclose;
+    var ny = new Intl.DateTimeFormat('en-CA', {timeZone: 'America/New_York'});
+    var bars = [], nulls = 0;
+    for (var i = 0; i < ts.length; i++) {
+      if (q.open[i] == null || q.high[i] == null || q.low[i] == null || q.close[i] == null || ad[i] == null) { nulls++; continue; }
+      bars.push({d: ny.format(new Date(ts[i] * 1000)), o: q.open[i], h: q.high[i], l: q.low[i], c: q.close[i], v: q.volume[i], a: ad[i]});
+    }
+    var evd = (r.events && r.events.dividends) ? r.events.dividends : {};
+    var divs = Object.keys(evd).map(function (k) {
+      var x = evd[k], dt = new Date(x.date * 1000);
+      return {ts: x.date, utc: dt.toISOString().slice(0, 10), ny: ny.format(dt), amt: x.amount};
+    }).sort(function (a, b) { return a.ts - b.ts; });
+    var splits = (r.events && r.events.splits) ? Object.keys(r.events.splits).length : 0;
+    return {bars: bars, divs: divs, splits: splits, nulls: nulls, meta: r.meta};
+  }
+
+  function divMap(divs, key) {
+    var m = {}, dup = 0;
+    divs.forEach(function (x) { if (HAS.call(m, x[key])) dup++; m[x[key]] = x.amt; });
+    return {m: m, dup: dup};
+  }
+
+  function dayDiff(a, b) {
+    var ua = Date.UTC(+a.slice(0, 4), +a.slice(5, 7) - 1, +a.slice(8, 10));
+    var ub = Date.UTC(+b.slice(0, 4), +b.slice(5, 7) - 1, +b.slice(8, 10));
+    return Math.round((ub - ua) / 86400000);
+  }
+
+  function cagrPct(Eend, d0, d1, dayConst) {
+    var years = (dayDiff(d0, d1) + 1) / dayConst;
+    return (Math.pow(Eend, 1 / years) - 1) * 100;
+  }
+
+  function features(sig, idx, held) {
+    var n = held ? 20 : 55;
+    if (idx < n) return null;
+    var level = held ? Infinity : -Infinity;
+    for (var k = idx - n; k < idx; k++) { level = held ? Math.min(level, sig[k].l) : Math.max(level, sig[k].h); }
+    var close = sig[idx].c;
+    return {close: close, level: level, triggered: held ? close < level : close > level};
+  }
+
+  /* o.reinvest: 'close' = dividend reinvested in shares at the ex-date close (no cost); 'none' = dividend held as cash until next entry.
+     o.costOnDivAtSell: when selling at the ex-date open, charge the 5 bps also on the dividend credited that morning.
+     o.firstDaySignal: evaluate the signal of the session before the segment start (the Codex/engine behaviour).
+     o.dayConst: day-count divisor of the CAGR (365.25 or 365.2425). o.cashDates: optional {date:true} forcing cash for single ex-dates. */
+  function sim(bars, divm, start, end, o) {
+    var sel = [], i;
+    for (i = 0; i < bars.length; i++) { if (bars[i].d >= start && bars[i].d <= end) sel.push(i); }
+    if (!sel.length) throw new Error('empty segment');
+    var last = sel[sel.length - 1];
+    var cash = 1, shares = 0, accrued = 0, expo = 0;
+    var path = [], trades = [], credits = [];
+    for (var s = 0; s < sel.length; s++) {
+      var i2 = sel[s], b = bars[i2], d = b.d;
+      var D = HAS.call(divm, d) ? divm[d] : 0;
+      var heldBefore = shares > 0;
+      var entitled = heldBefore ? shares : 0;
+      var credit = (heldBefore && D > 0) ? shares * D : 0;
+      var desired = heldBefore;
+      if (s > 0 || o.firstDaySignal) {
+        var f = features(bars, i2 - 1, heldBefore);
+        if (f !== null) desired = heldBefore ? !f.triggered : f.triggered;
+      }
+      var ev = '';
+      if (desired && !heldBefore) {
+        var qty = cash / (b.o * (1 + RATE));
+        trades.push({side: 'B', sig: bars[i2 - 1].d, exec: d, time: 'open', price: b.o, qty: qty, cost: qty * b.o * RATE});
+        shares = qty; cash = 0; ev = 'BUY_OPEN';
+      } else if (!desired && heldBefore) {
+        var notional = shares * b.o;
+        var cost2 = notional * RATE + (o.costOnDivAtSell ? credit * RATE : 0);
+        trades.push({side: 'S', sig: bars[i2 - 1].d, exec: d, time: 'open', price: b.o, qty: shares, cost: cost2});
+        cash += credit + notional - cost2; shares = 0; ev = 'SELL_OPEN';
+        if (credit > 0) {
+          accrued += credit; ev += '+DIV_TO_CASH';
+          credits.push({d: d, entitled: entitled, dps: D, credit: credit, booked: 'cash_at_open_sale'});
+        }
+      } else if (heldBefore && credit > 0) {
+        accrued += credit;
+        if (o.reinvest === 'close' && !(o.cashDates && HAS.call(o.cashDates, d))) {
+          shares += credit / b.c; ev = 'DIV_REINVESTED_AT_CLOSE';
+          credits.push({d: d, entitled: entitled, dps: D, credit: credit, booked: 'reinvested_at_close'});
+        } else {
+          cash += credit; ev = 'DIV_TO_CASH';
+          credits.push({d: d, entitled: entitled, dps: D, credit: credit, booked: 'cash_held'});
+        }
+      }
+      var isLong = shares > 0;
+      if (isLong) expo++;
+      var nav = cash + shares * b.c, sharesEod = shares, cashEod = cash;
+      if (i2 === last && shares > 0) {
+        var n3 = shares * b.c, c3 = n3 * RATE;
+        trades.push({side: 'S', sig: null, exec: d, time: 'close', price: b.c, qty: shares, cost: c3});
+        cash += n3 - c3; shares = 0; nav = cash; sharesEod = 0; cashEod = cash;
+        ev += (ev ? '+' : '') + 'TERMINAL_SELL_CLOSE';
+      }
+      path.push({d: d, ev: ev, o: b.o, c: b.c, dps: D, entitled: entitled, credit: credit, shares: sharesEod, cash: cashEod, accrued: accrued, nav: nav, long: isLong});
+    }
+    var E = path[path.length - 1].nav;
+    return {E: E, cagr: cagrPct(E, path[0].d, path[path.length - 1].d, o.dayConst), trades: trades, path: path, credits: credits, expoPct: expo / path.length * 100};
+  }
+
+  /* Port of the core loop of the original run: scalar equity E; a held day multiplies by (close+div)/prevClose, i.e. the dividend is
+     implicitly reinvested at the ex-date close; a sale multiplies by ((open+div)/prevClose)*(1-cost); a purchase by (1/(1+cost))*(close/open). */
+  function runOrig(P, divm, a, b, dayConst) {
+    var i0 = -1, i1 = -1, k;
+    for (k = 0; k < P.length; k++) { if (P[k].d >= a) { i0 = k; break; } }
+    for (k = P.length - 1; k >= 0; k--) { if (P[k].d <= b) { i1 = k; break; } }
+    var E = 1, pos = false, pend = null, ops = [], nav = [];
+    for (var t = i0; t <= i1; t++) {
+      var r = P[t], prevC = t > 0 ? P[t - 1].c : r.o;
+      var div = HAS.call(divm, r.d) ? divm[r.d] : 0, g = 1;
+      if (pend) {
+        ops.push(pend.sig + pend.side);
+        if (pend.side === 'B') { g = (1 / (1 + RATE)) * (r.c / r.o); pos = true; }
+        else { g = ((r.o + div) / prevC) * (1 - RATE); pos = false; }
+        pend = null;
+      } else if (pos) { g = (r.c + div) / prevC; }
+      E *= g; nav.push({d: r.d, nav: E});
+      if (t === i1) break;
+      if (!pos) {
+        if (t >= 55) { var m = -Infinity; for (var j = t - 55; j < t; j++) m = Math.max(m, P[j].h); if (P[t].c > m) pend = {side: 'B', sig: P[t].d}; }
+      } else {
+        if (t >= 20) { var m2 = Infinity; for (var j2 = t - 20; j2 < t; j2++) m2 = Math.min(m2, P[j2].l); if (P[t].c < m2) pend = {side: 'S', sig: P[t].d}; }
+      }
+    }
+    if (pos) { E *= (1 - RATE); ops.push('nullS'); nav[nav.length - 1].nav = E; }
+    return {E: E, ops: ops, nav: nav, cagr: cagrPct(E, P[i0].d, P[i1].d, dayConst)};
+  }
+
+  function opsOf(trades) { return trades.map(function (t) { return t.sig === null ? 'nullS' : t.sig + t.side; }); }
+
+  function cmpNav(a, b, tol) {
+    var n = Math.min(a.length, b.length), maxAbs = 0, maxRel = 0, first = -1, firstDate = null, firstDiff = null, dm = 0;
+    for (var i = 0; i < n; i++) {
+      if (a[i].d !== b[i].d) dm++;
+      var df = a[i].nav - b[i].nav, rel = Math.abs(df) / Math.abs(b[i].nav);
+      if (Math.abs(df) > maxAbs) maxAbs = Math.abs(df);
+      if (rel > maxRel) maxRel = rel;
+      if (first < 0 && rel > tol) { first = i; firstDate = a[i].d; firstDiff = df; }
+    }
+    return {lenA: a.length, lenB: b.length, dateMismatch: dm, maxAbs: maxAbs, maxRel: maxRel, firstIdx: first, firstDate: firstDate, firstDiff: firstDiff};
+  }
+
+  var LEDGER_HEADER = 'date,event,open,close,dividend_per_share,shares_entitled_prev_close,dividend_credit,shares_eod,cash_eod,accrued_dividends_cum,nav_eod,position';
+  function ledgerCsv(path, onlyEvents) {
+    var lines = [LEDGER_HEADER];
+    path.forEach(function (r, i) {
+      if (onlyEvents && r.ev === '' && i !== 0 && i !== path.length - 1) return;
+      lines.push([r.d, r.ev, r.o, r.c, r.dps, r.entitled, r.credit, r.shares, r.cash, r.accrued, r.nav, r.long ? 'LONG' : 'FLAT'].join(','));
+    });
+    return lines.join('\n') + '\n';
+  }
+
+  root.T003 = {RATE: RATE, SEGMENTS: SEGMENTS, OPT_MINE: OPT_MINE, OPT_CODEX: OPT_CODEX, sha256hex: sha256hex, fnv32: fnv32, parseCsv: parseCsv,
+    fromYahoo: fromYahoo, divMap: divMap, dayDiff: dayDiff, cagrPct: cagrPct, features: features, sim: sim, runOrig: runOrig,
+    opsOf: opsOf, cmpNav: cmpNav, ledgerCsv: ledgerCsv};
+})(typeof window !== 'undefined' ? window : globalThis);

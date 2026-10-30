@@ -1,0 +1,59 @@
+#!/usr/bin/env node
+/* Runs the T003 B-exact reconstruction on two local files (Node >= 20, no packages).
+   usage: node t003_run_node.js SPY.csv SPY_yahoo.json OUTDIR
+   Writes: results.json, daily ledgers (my method / Codex method, 3 segments), event ledgers, SHA256SUMS.txt.
+   Expected Codex frozen inputs: SPY.csv sha256 638ceaaf..., SPY_yahoo.json sha256 4b413dce... (a mismatch is printed, not hidden). */
+'use strict';
+const fs = require('fs'), path = require('path'), vm = require('vm'), crypto = require('crypto');
+const args = process.argv.slice(2);
+if (args.length !== 3) { console.error('usage: node t003_run_node.js SPY.csv SPY_yahoo.json OUTDIR'); process.exit(2); }
+const [csvPath, jsonPath, outDir] = args;
+const EXPECT = {
+  csv: '638ceaafe7de04e32e8214fe227bc060e94d437bd7c97cf0bd6993572333e6ba',
+  json: '4b413dce7ed42892f672d66e1fad00c51a6ccc1fdf8d188b32bf875be53e1bad'
+};
+const sha = (buf) => crypto.createHash('sha256').update(buf).digest('hex');
+const libFiles = ['t003_bexact_recon_lib.js', 't003_bexact_recon_driver.js'];
+const codeSha = {};
+for (const f of libFiles) {
+  const buf = fs.readFileSync(path.join(__dirname, f));
+  codeSha[f] = sha(buf);
+  vm.runInThisContext(buf.toString('utf8'), {filename: f});
+}
+const T = globalThis.T003;
+const csvBuf = fs.readFileSync(csvPath), jsonBuf = fs.readFileSync(jsonPath);
+const bars = T.parseCsv(csvBuf.toString('utf8'));
+const Y = T.fromYahoo(JSON.parse(jsonBuf.toString('utf8')));
+const dm = T.divMap(Y.divs, 'utc');
+let rowMismatch = 0;
+for (let i = 0; i < bars.length; i++) {
+  const y = Y.bars[i];
+  if (!y || y.d !== bars[i].d || y.o !== bars[i].o || y.h !== bars[i].h || y.l !== bars[i].l || y.c !== bars[i].c) rowMismatch++;
+}
+const res = T.analyze(bars, dm.m);
+res.inputs = {
+  csv: {path: csvPath, bytes: csvBuf.length, sha256: sha(csvBuf), equals_codex_frozen: sha(csvBuf) === EXPECT.csv, rows: bars.length, first: bars[0].d, last: bars[bars.length - 1].d},
+  yahoo_json: {path: jsonPath, bytes: jsonBuf.length, sha256: sha(jsonBuf), equals_codex_frozen: sha(jsonBuf) === EXPECT.json, rows: Y.bars.length, dividends: Y.divs.length, splits: Y.splits, nulls: Y.nulls},
+  csv_vs_json_raw_ohlc_row_mismatches: rowMismatch,
+  dividend_date_key: 'UTC date of the Yahoo event timestamp',
+  dividend_utc_vs_new_york_date_mismatches: Y.divs.filter((x) => x.utc !== x.ny).length,
+  dividend_duplicate_dates: dm.dup,
+  code_sha256: codeSha
+};
+fs.mkdirSync(outDir, {recursive: true});
+const out = [];
+const put = (name, text) => { fs.writeFileSync(path.join(outDir, name), text); out.push(name); };
+put('results.json', JSON.stringify(res, null, 1) + '\n');
+for (const seg of Object.keys(T.SEGMENTS)) {
+  const [a, b] = T.SEGMENTS[seg];
+  const mine = T.sim(bars, dm.m, a, b, T.OPT_MINE);
+  const codex = T.sim(bars, dm.m, a, b, T.OPT_CODEX);
+  put('ledger_daily_' + seg + '_MINE_reinvest_at_close.csv', T.ledgerCsv(mine.path, false));
+  put('ledger_daily_' + seg + '_CODEX_cash_until_next_entry.csv', T.ledgerCsv(codex.path, false));
+  put('ledger_events_' + seg + '_MINE_reinvest_at_close.csv', T.ledgerCsv(mine.path, true));
+  put('ledger_events_' + seg + '_CODEX_cash_until_next_entry.csv', T.ledgerCsv(codex.path, true));
+}
+const sums = out.map((n) => sha(fs.readFileSync(path.join(outDir, n))) + '  ' + n).join('\n') + '\n';
+fs.writeFileSync(path.join(outDir, 'SHA256SUMS.txt'), sums);
+console.log(JSON.stringify({inputs: res.inputs, cagr: Object.fromEntries(Object.entries(res.segments).map(([k, v]) => [k, v.cagr_pct]))}, null, 1));
+console.log('written to ' + outDir);

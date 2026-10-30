@@ -1,0 +1,77 @@
+{
+  "zip_bytes": 56452,
+  "zip_sha256": "2330ffc99b573f247bb2bc504043787011dd073566843a8c315267a5a7052727",
+  "CRC_pass": true,
+  "manifest_checks": [
+    {
+      "path": "BRAKI.txt",
+      "sha256": "615ee57187a84caca9f74f0d9060f3835518722dadc46c5c62c87675713854f6"
+    },
+    {
+      "path": "ORYGINAL_fragment_run_B_exact_z_zapisu_sesji.js.txt",
+      "sha256": "c8f6cf7c0719d37216bbe12e96455f5a1e87e75cae27de19b6f15ce2fd6fc110"
+    },
+    {
+      "path": "README_PL.md",
+      "sha256": "6b41239b29581bf499bae333b3a1a75a8e5fdf7bf49f93e6d51965feb2de3a91"
+    },
+    {
+      "path": "t003_bexact_recon_driver.js",
+      "sha256": "8ba9aba7bf8aed461f4816525a9c44f655175084448b07de147e90a301524f70"
+    },
+    {
+      "path": "t003_bexact_recon_lib.js",
+      "sha256": "3e113d5bdc820c355976605f798f8172c0384adb3e15247dc00da947f63db58f"
+    },
+    {
+      "path": "t003_run_node.js",
+      "sha256": "0586d74166c2899c981e03ad23d72b5368cb19387b4950e3fc3931f5b41e49ed"
+    },
+    {
+      "path": "wyniki/T003_dywidendy_yahoo_112.csv",
+      "sha256": "ed664d387515298a239fad8077b561759f091d97fd6bcdfb9a53c6dfa441e4e5"
+    },
+    {
+      "path": "wyniki/T003_okna_pierwszej_rozbieznosci.csv",
+      "sha256": "8b466e75fafd9ee14a9203d00472b1960e25775274edaf5c141bb7d6dcf1a609"
+    },
+    {
+      "path": "wyniki/T003_sha256_pelnych_dziennikow.txt",
+      "sha256": "20d5b08214ba642def42a45fd1ff5f4a7381e7bf6f116d7ba8720dbeb873dcab"
+    },
+    {
+      "path": "wyniki/T003_wyniki_podsumowanie.json",
+      "sha256": "a6f8a104021897bd6b8f1608f83454921214d00c9f56bd31073e1ed3b2b9e26e"
+    },
+    {
+      "path": "wyniki/T003_zdarzenia_dywidendowe.csv",
+      "sha256": "48cec0baba263dc4af9a31966aa13759136f10a94e250577e34505ba064e37ad"
+    },
+    {
+      "path": "wyniki/ledger_events_development_CODEX_cash_until_next_entry.csv",
+      "sha256": "ebc04d7371b4e27ec3382c5916283953b784007400b5fd8c4488d2fe71e15195"
+    },
+    {
+      "path": "wyniki/ledger_events_development_MINE_reinvest_at_close.csv",
+      "sha256": "e0b71b5c836e578d3d90c4f444d5df3639bf4e082cd78d0645ad2267af0aaf2a"
+    },
+    {
+      "path": "wyniki/ledger_events_retrospective_check_CODEX_cash_until_next_entry.csv",
+      "sha256": "f5517a66f7e2138569ffc545b492ea2248b4aa76d09a994cf6d46f1db823c3b8"
+    },
+    {
+      "path": "wyniki/ledger_events_retrospective_check_MINE_reinvest_at_close.csv",
+      "sha256": "910d5f474eff3333165d386d30166c67e660e919634b244f86e6186a265e24aa"
+    },
+    {
+      "path": "wyniki/ledger_events_validation_CODEX_cash_until_next_entry.csv",
+      "sha256": "746414ebc923f215f7b5ee3320348fbe5f5669acaab8b9503f14ce7cd5befa7d"
+    },
+    {
+      "path": "wyniki/ledger_events_validation_MINE_reinvest_at_close.csv",
+      "sha256": "2cab52b6657ce1ecadd8fcf9beef0ec6258d6956e8d9b849b7162859b2c7bd4b"
+    }
+  ],
+  "files": 18,
+  "manifest_pass": 17
+}

@@ -1,0 +1,122 @@
+[
+  {
+    "file": "ledger_daily_development_CODEX_cash_until_next_entry.csv",
+    "sha_match": true,
+    "bytes_match": true,
+    "rows_match": true,
+    "sha256": "a355f0002e188738b7543f2e220890fc907bd511f56b5ca1e56b446e4d3c4a6f",
+    "bytes": 489704,
+    "rows": 3773,
+    "matches_supplied_event_bytes": null
+  },
+  {
+    "file": "ledger_daily_development_MINE_reinvest_at_close.csv",
+    "sha_match": true,
+    "bytes_match": true,
+    "rows_match": true,
+    "sha256": "ea3973086ba4c9111015f3bae327c7910f0977077b876cd068f3ccd7911d60dd",
+    "bytes": 476071,
+    "rows": 3773,
+    "matches_supplied_event_bytes": null
+  },
+  {
+    "file": "ledger_daily_retrospective_check_CODEX_cash_until_next_entry.csv",
+    "sha_match": true,
+    "bytes_match": true,
+    "rows_match": true,
+    "sha256": "104dae5f2d3a9c816de76cbc9a7a10d4865c25bf128ca68b0d777df74df27d2d",
+    "bytes": 231987,
+    "rows": 1714,
+    "matches_supplied_event_bytes": null
+  },
+  {
+    "file": "ledger_daily_retrospective_check_MINE_reinvest_at_close.csv",
+    "sha_match": true,
+    "bytes_match": true,
+    "rows_match": true,
+    "sha256": "9c19f3152d268887bcbcfadff12787f74e2c3d985f69dbca848e54f91cd64662",
+    "bytes": 222331,
+    "rows": 1714,
+    "matches_supplied_event_bytes": null
+  },
+  {
+    "file": "ledger_daily_validation_CODEX_cash_until_next_entry.csv",
+    "sha_match": true,
+    "bytes_match": true,
+    "rows_match": true,
+    "sha256": "e4d606a204318f58e992943cd566c31ade091d41af32b085e761c5716bed0bc1",
+    "bytes": 132947,
+    "rows": 1006,
+    "matches_supplied_event_bytes": null
+  },
+  {
+    "file": "ledger_daily_validation_MINE_reinvest_at_close.csv",
+    "sha_match": true,
+    "bytes_match": true,
+    "rows_match": true,
+    "sha256": "b38b500fbf96df47776e777f83c9668bb130d1006ce46962667fd7c379c4cf39",
+    "bytes": 127755,
+    "rows": 1006,
+    "matches_supplied_event_bytes": null
+  },
+  {
+    "file": "ledger_events_development_CODEX_cash_until_next_entry.csv",
+    "sha_match": true,
+    "bytes_match": true,
+    "rows_match": true,
+    "sha256": "ebc04d7371b4e27ec3382c5916283953b784007400b5fd8c4488d2fe71e15195",
+    "bytes": 15008,
+    "rows": 99,
+    "matches_supplied_event_bytes": true
+  },
+  {
+    "file": "ledger_events_development_MINE_reinvest_at_close.csv",
+    "sha_match": true,
+    "bytes_match": true,
+    "rows_match": true,
+    "sha256": "e0b71b5c836e578d3d90c4f444d5df3639bf4e082cd78d0645ad2267af0aaf2a",
+    "bytes": 14811,
+    "rows": 99,
+    "matches_supplied_event_bytes": true
+  },
+  {
+    "file": "ledger_events_retrospective_check_CODEX_cash_until_next_entry.csv",
+    "sha_match": true,
+    "bytes_match": true,
+    "rows_match": true,
+    "sha256": "f5517a66f7e2138569ffc545b492ea2248b4aa76d09a994cf6d46f1db823c3b8",
+    "bytes": 8547,
+    "rows": 56,
+    "matches_supplied_event_bytes": true
+  },
+  {
+    "file": "ledger_events_retrospective_check_MINE_reinvest_at_close.csv",
+    "sha_match": true,
+    "bytes_match": true,
+    "rows_match": true,
+    "sha256": "910d5f474eff3333165d386d30166c67e660e919634b244f86e6186a265e24aa",
+    "bytes": 8438,
+    "rows": 56,
+    "matches_supplied_event_bytes": true
+  },
+  {
+    "file": "ledger_events_validation_CODEX_cash_until_next_entry.csv",
+    "sha_match": true,
+    "bytes_match": true,
+    "rows_match": true,
+    "sha256": "746414ebc923f215f7b5ee3320348fbe5f5669acaab8b9503f14ce7cd5befa7d",
+    "bytes": 4402,
+    "rows": 28,
+    "matches_supplied_event_bytes": true
+  },
+  {
+    "file": "ledger_events_validation_MINE_reinvest_at_close.csv",
+    "sha_match": true,
+    "bytes_match": true,
+    "rows_match": true,
+    "sha256": "2cab52b6657ce1ecadd8fcf9beef0ec6258d6956e8d9b849b7162859b2c7bd4b",
+    "bytes": 4352,
+    "rows": 28,
+    "matches_supplied_event_bytes": true
+  }
+]

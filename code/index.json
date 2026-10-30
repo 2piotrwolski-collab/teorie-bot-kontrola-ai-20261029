@@ -153,6 +153,36 @@
     "source_file": "t003_dividend_review.py",
     "url": "code/t003_dividend_review.py.txt",
     "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
-    "sha256": "42858d048e06ca0ce42cba9524493d715258d7a9e5e9148cdf9445ddcee91e62"
+    "sha256": "379667ae9c0d8181163888b2ee1c90b10839710f230b5dd802915ca6a9f33a20"
+  },
+  {
+    "source_file": "audit_claude_package_20261030/package/t003_bexact_recon_lib.js",
+    "url": "code/audit_claude_package_20261030__package__t003_bexact_recon_lib.js.txt",
+    "stage": "PACKAGE_VERIFIED_UNCHANGED_RECONSTRUCTION_NOT_LOST_ORIGINAL",
+    "sha256": "3e113d5bdc820c355976605f798f8172c0384adb3e15247dc00da947f63db58f"
+  },
+  {
+    "source_file": "audit_claude_package_20261030/package/t003_bexact_recon_driver.js",
+    "url": "code/audit_claude_package_20261030__package__t003_bexact_recon_driver.js.txt",
+    "stage": "PACKAGE_VERIFIED_UNCHANGED_RECONSTRUCTION_NOT_LOST_ORIGINAL",
+    "sha256": "8ba9aba7bf8aed461f4816525a9c44f655175084448b07de147e90a301524f70"
+  },
+  {
+    "source_file": "audit_claude_package_20261030/package/t003_run_node.js",
+    "url": "code/audit_claude_package_20261030__package__t003_run_node.js.txt",
+    "stage": "PACKAGE_VERIFIED_UNCHANGED_RECONSTRUCTION_NOT_LOST_ORIGINAL",
+    "sha256": "0586d74166c2899c981e03ad23d72b5368cb19387b4950e3fc3931f5b41e49ed"
+  },
+  {
+    "source_file": "audit_claude_package_20261030/verify_v2.py",
+    "url": "code/audit_claude_package_20261030__verify_v2.py.txt",
+    "stage": "PACKAGE_VERIFIED_UNCHANGED_RECONSTRUCTION_NOT_LOST_ORIGINAL",
+    "sha256": "f69013996ade157a1af8e4051d1deae69494a8e942793c13c4f136659c19ec5d"
+  },
+  {
+    "source_file": "test_t003_dividend_package_review.py",
+    "url": "code/test_t003_dividend_package_review.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "4aa76c01f58f8835fff2799badb86e878d6a91445a9d799e1d12ba82f4837bf6"
   }
 ]

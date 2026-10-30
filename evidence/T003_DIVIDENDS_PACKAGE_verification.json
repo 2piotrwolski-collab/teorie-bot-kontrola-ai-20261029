@@ -1,0 +1,158 @@
+{
+  "id": "T003_CLAUDE_PACKAGE_VERIFICATION_20261030_V1",
+  "verified_at_utc": "2026-10-30T11:57:39.709013+00:00",
+  "status": "CLOSED_NUMERICAL_RECONSTRUCTION_DISCREPANCY",
+  "zip_sha256": "2330ffc99b573f247bb2bc504043787011dd073566843a8c315267a5a7052727",
+  "zip_bytes": 56452,
+  "package_manifest_passed": 17,
+  "ledger_hashes_sizes_rows_passed": 12,
+  "supplied_event_CSVs_byte_identical": 6,
+  "previously_missing_daily_CSVs_generated_and_hash_verified": 6,
+  "node_version": "v24.22.1",
+  "runner_exit_code": 0,
+  "runner_changed": false,
+  "input_hashes_match_frozen": true,
+  "inputs": {
+    "data/processed/SPY.csv": "638ceaafe7de04e32e8214fe227bc060e94d437bd7c97cf0bd6993572333e6ba",
+    "data/raw/SPY_yahoo.json": "4b413dce7ed42892f672d66e1fad00c51a6ccc1fdf8d188b32bf875be53e1bad"
+  },
+  "cash_and_reinvestment_independent_Python_comparison": [
+    {
+      "segment": "development",
+      "modes": [
+        {
+          "mode": "CODEX_cash_until_next_entry",
+          "rows": 3773,
+          "max_abs_errors_vs_independent_Python": {
+            "nav_eod": 0.0,
+            "shares_eod": 0.0,
+            "cash_eod": 0.0,
+            "dividend_credit": 0.0,
+            "accrued_dividends_cum": 0.0
+          },
+          "operations": 74,
+          "operation_list_matches": true
+        },
+        {
+          "mode": "MINE_reinvest_at_close",
+          "rows": 3773,
+          "max_abs_errors_vs_independent_Python": {
+            "nav_eod": 0.0,
+            "shares_eod": 0.0,
+            "cash_eod": 0.0,
+            "dividend_credit": 0.0,
+            "accrued_dividends_cum": 0.0
+          },
+          "operations": 74,
+          "operation_list_matches": true
+        }
+      ],
+      "all16_factorial_CAGR_max_error_pp": 0.0,
+      "Shapley_matches_after_order_and_sign_normalization": true,
+      "cash_CAGR_pct": 0.8874325737331601,
+      "reconstructed_Claude_CAGR_pct": 0.8866637741383299,
+      "matched_archival_SPY_CAGR_pct": 4.9180727341182395,
+      "first_divergence": "2001-06-15"
+    },
+    {
+      "segment": "validation",
+      "modes": [
+        {
+          "mode": "CODEX_cash_until_next_entry",
+          "rows": 1006,
+          "max_abs_errors_vs_independent_Python": {
+            "nav_eod": 0.0,
+            "shares_eod": 0.0,
+            "cash_eod": 0.0,
+            "dividend_credit": 0.0,
+            "accrued_dividends_cum": 0.0
+          },
+          "operations": 18,
+          "operation_list_matches": true
+        },
+        {
+          "mode": "MINE_reinvest_at_close",
+          "rows": 1006,
+          "max_abs_errors_vs_independent_Python": {
+            "nav_eod": 2.220446049250313e-16,
+            "shares_eod": 0.0,
+            "cash_eod": 2.220446049250313e-16,
+            "dividend_credit": 0.0,
+            "accrued_dividends_cum": 0.0
+          },
+          "operations": 18,
+          "operation_list_matches": true
+        }
+      ],
+      "all16_factorial_CAGR_max_error_pp": 0.0,
+      "Shapley_matches_after_order_and_sign_normalization": true,
+      "cash_CAGR_pct": 4.265007286782452,
+      "reconstructed_Claude_CAGR_pct": 4.263415409025084,
+      "matched_archival_SPY_CAGR_pct": 14.784654529188623,
+      "first_divergence": "2016-06-20"
+    },
+    {
+      "segment": "retrospective_check",
+      "modes": [
+        {
+          "mode": "CODEX_cash_until_next_entry",
+          "rows": 1714,
+          "max_abs_errors_vs_independent_Python": {
+            "nav_eod": 0.0,
+            "shares_eod": 0.0,
+            "cash_eod": 0.0,
+            "dividend_credit": 0.0,
+            "accrued_dividends_cum": 0.0
+          },
+          "operations": 40,
+          "operation_list_matches": true
+        },
+        {
+          "mode": "MINE_reinvest_at_close",
+          "rows": 1714,
+          "max_abs_errors_vs_independent_Python": {
+            "nav_eod": 1.1102230246251565e-15,
+            "shares_eod": 1.3010426069826053e-18,
+            "cash_eod": 8.881784197001252e-16,
+            "dividend_credit": 2.6020852139652106e-18,
+            "accrued_dividends_cum": 2.0816681711721685e-17
+          },
+          "operations": 40,
+          "operation_list_matches": true
+        }
+      ],
+      "all16_factorial_CAGR_max_error_pp": 2.220446049250313e-14,
+      "Shapley_matches_after_order_and_sign_normalization": true,
+      "cash_CAGR_pct": 2.7857132858845945,
+      "reconstructed_Claude_CAGR_pct": 2.8009297589503657,
+      "matched_archival_SPY_CAGR_pct": 15.127449409355819,
+      "first_divergence": "2020-06-22"
+    }
+  ],
+  "supplied_summary_reproduced_numeric_tolerance": 1e-10,
+  "all48_dividend_event_rows_match_separate_supplied_CSV": true,
+  "supplied_summary_schema_note": "Runner includes events in each segment; packaged summary omits that field and provides all48 records separately in T003_zdarzenia_dywidendowe.csv, verified explicitly.",
+  "all48_factorial_results_and_attribution_match": true,
+  "protected_old_files": 149,
+  "old_files_changed": [],
+  "scientific_tables_unchanged": {
+    "experiments": 90,
+    "strategy_trials": 247,
+    "decisions": 21
+  },
+  "code_review": "Both engines compute from supplied prices/dividends. Published CAGR constants are comparison references, not substituted results. Strict previous55/20 channels, nextopen fills and previousclose dividend entitlement agree with independent audit. Reinvestment, same-day dividend fee and yearbase differences are explicit. Runner has no overwrite guard; protected by an exclusively created empty OUT directory.",
+  "code_sha256": {
+    "t003_bexact_recon_lib.js": "3e113d5bdc820c355976605f798f8172c0384adb3e15247dc00da947f63db58f",
+    "t003_bexact_recon_driver.js": "8ba9aba7bf8aed461f4816525a9c44f655175084448b07de147e90a301524f70",
+    "t003_run_node.js": "0586d74166c2899c981e03ad23d72b5368cb19387b4950e3fc3931f5b41e49ed"
+  },
+  "historical_original_Claude_run_reproducible": false,
+  "historical_original_limitation": "Original29Oct CSV and full code were lost; the notes fragment is not executable original evidence. Matching reconstruction does not recover that provenance.",
+  "live_dividend_execution_verified": false,
+  "original_Turtle_strategy_verified": false,
+  "remaining_scope_limits": [
+    "Real payment dates/DRIP/taxFX/fills are outside this bookkeeping reconciliation.",
+    "No evidence about the effectiveness of original multi-futures Turtle."
+  ],
+  "next_action": "No further action required for this numerical discrepancy. Keep artifacts; reopen only on specific contrary evidence. Future executable strategy research needs its own source-fit plan."
+}

@@ -1,0 +1,35 @@
+import copy
+import json
+from pathlib import Path
+import unittest
+from t003_dividend_review import merge,merge_package_closure
+
+ROOT=Path(__file__).resolve().parent
+
+
+class ClosureChecks(unittest.TestCase):
+    def setUp(self):
+        self.review=json.loads((ROOT/'results/t003_dividend_package_review_20261030_v1.json').read_text())
+        self.audit=json.loads((ROOT/self.review['audit_file']).read_text())
+        self.old_review=json.loads((ROOT/'results/t003_dividend_review_20261030_v1.json').read_text())
+        self.old_audit=json.loads((ROOT/self.old_review['audit_file']).read_text())
+
+    def test_regeneration_preserves_closure_fresh_observations_and_other_cards(self):
+        source={'items':[{'id':'T003','verdict':'unresolved','findings':['source fact'],'gap_updates':[{'id':'source_gap'}],
+            'observations':[{'id':'FRESH_CLOSE','rows':[['today receipt']]}]}, {'id':'T010','findings':['untouched']}]}
+        baseline=merge(source,self.old_review,self.old_audit)
+        closed=merge_package_closure(baseline,self.review,self.audit)
+        self.assertEqual(closed,merge_package_closure(merge(closed,self.old_review,self.old_audit),self.review,self.audit))
+        self.assertEqual(closed['items'][1],source['items'][1])
+        self.assertEqual(closed['items'][0]['gap_updates'],source['items'][0]['gap_updates'])
+        self.assertEqual(closed['items'][0]['verdict'],'unresolved')
+        self.assertIn(source['items'][0]['observations'][0],closed['items'][0]['observations'])
+        self.assertFalse(any('Nie otrzymano paczki' in str(x) for x in closed['items'][0]['observations']))
+        self.assertEqual(sum(x['id'].startswith('T003_DIVIDEND_PACKAGE_') for x in closed['items'][0]['observations']),1)
+
+    def test_incomplete_evidence_cannot_close_discrepancy(self):
+        altered=copy.deepcopy(self.audit);altered['ledger_hashes_sizes_rows_passed']=11
+        with self.assertRaises(ValueError):merge_package_closure({'items':[]},self.review,altered)
+
+
+if __name__=='__main__':unittest.main()

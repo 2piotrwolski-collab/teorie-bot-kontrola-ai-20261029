@@ -42,6 +42,46 @@ def merge(progress, review, audit):
     return out
 
 
+def merge_package_closure(progress, review, verification):
+    if verification['status']!='CLOSED_NUMERICAL_RECONSTRUCTION_DISCREPANCY':
+        raise ValueError('Package evidence does not permit closing the discrepancy')
+    if verification['ledger_hashes_sizes_rows_passed']!=12 or verification['package_manifest_passed']!=17:
+        raise ValueError('Incomplete package verification')
+    out=copy.deepcopy(progress)
+    card=next(x for x in out['items'] if x['id']=='T003')
+    card['t003_dividend_package_sha256']=review['audit_sha256']
+    card['dividend_reconciliation_status']='closed_numerical_reconstruction_discrepancy'
+    card['findings']=[s for s in card['findings'] if not s.startswith('Kontrola paczki Claude:')]
+    card['findings']=[
+        'Uzgodnienie dywidend 30.10: paczka JS/CSV Claude została odebrana i uruchomiona bez zmian na zamrożonych danych. Wszystkie 17 sum plików i 12 hashy dzienników są zgodne. Pierwotny utracony CSV i pełny kod nadal pozostają nieodtwarzalne; sprawdzono nową rekonstrukcję.'
+        if s.startswith('Uzgodnienie dywidend 30.10: Claude nie zachował pierwotnego CSV') else s
+        for s in card['findings']]
+    card['findings'].append('Kontrola paczki Claude: rozbieżność rachunkowa dywidend ZAMKNIĘTA. Oba wejścia mają właściwe zamrożone SHA; wygenerowano 6 brakujących dziennych CSV i potwierdzono wszystkie 12 dzienników co do bajtu. Operacje, pełne dzienne księgi i rozbicie przyczyn zgadzają się z niezależnym Pythonem. Nie jest to potwierdzenie oryginalnego Turtle ani realnej egzekucji dywidend.')
+    for observation in card.get('observations',[]):
+        if observation['id'].startswith('T003_DIVIDEND_RECON_'):
+            observation['limitations']=[
+                'Paczka JS/CSV została następnie sprawdzona na zamrożonych danych: 17/17 plików i 12/12 dzienników zgodnych. Pierwotny utracony przebieg pozostaje nieodtwarzalny.'
+                if s.startswith('Nie otrzymano paczki JS/CSV') else s for s in observation.get('limitations',[])]
+    card['observations']=[o for o in card.get('observations',[]) if not o['id'].startswith('T003_DIVIDEND_PACKAGE_')]
+    card['observations'].insert(0,{'id':'T003_DIVIDEND_PACKAGE_'+review['audit_sha256'][:12],
+        'title':'Dywidendy: kontrola paczki zakończona · 30.10.2026',
+        'summary':'Rozbieżność rachunkowa zamknięta. Kod JS Claude i niezależny Python odtwarzają tę samą nową rekonstrukcję na zamrożonym SPY.',
+        'columns':['Dowód','Wynik'], 'rows':[
+            ['Integralność paczki','ZIP zgodny; 17/17 sum plików poprawnych'],
+            ['Zamrożone wejścia','Oba SHA zgodne, 0 różnic OHLC'],
+            ['Wygenerowane dzienniki','12/12 zgodnych co do bajtu, rozmiaru i liczby wierszy'],
+            ['Niezależny Python','Operacje identyczne; różnica dziennego NAV ≤ 1,12×10⁻¹⁵'],
+            ['Decyzja','Rozbieżność dywidend w rekonstrukcji ZAMKNIĘTA']],
+        'limitations':[
+            'Nie odtworzono utraconego pierwotnego CSV ani pełnego kodu Claude. To ograniczenie historycznego pochodzenia, a nie pozostająca różnica rachunkowa.',
+            'Realne daty wypłat, DRIP, podatki, FX, fille i pełny Turtle na futures pozostają poza tym uzgodnieniem.'],
+        'evidence_report':review['public_report_url']})
+    card['observation_ids']=[o['id'] for o in card['observations']]
+    card['sensitivity_audit_next_action']=review['next_action']
+    card['dividend_audit_next_action']=review['next_action']
+    return out
+
+
 def refresh(root, db):
     root=Path(root)
     pointer=root/'config/t003_dividend_current.json'
@@ -57,7 +97,22 @@ def refresh(root, db):
     audit=json.loads(audit_file.read_text())
     path=root/'results/research_progress_round4.json'
     old=json.loads(path.read_text());current=merge(old,review,audit)
+    evidence_path=p['review_file']
+    package_pointer=root/'config/t003_dividend_package_current.json'
+    if package_pointer.exists():
+        package_p=json.loads(package_pointer.read_text())
+        package_review_file=root/package_p['review_file']
+        if hashlib.sha256(package_review_file.read_bytes()).hexdigest()!=package_p['review_sha256']:
+            raise ValueError('Package review identity mismatch')
+        package_review=json.loads(package_review_file.read_text())
+        package_audit_file=root/package_review['audit_file']
+        if hashlib.sha256(package_audit_file.read_bytes()).hexdigest()!=package_review['audit_sha256']:
+            raise ValueError('Package audit identity mismatch')
+        package_audit=json.loads(package_audit_file.read_text())
+        current=merge_package_closure(current,package_review,package_audit)
+        evidence_path=package_p['review_file']
+        atomic_json(root/'reports/AUDYT_T003_DYWIDENDY_PACZKA.json',package_audit)
     if current!=old:
         atomic_json(path,current)
-        db.research_update('T003',next(x for x in current['items'] if x['id']=='T003'),p['review_file'])
+        db.research_update('T003',next(x for x in current['items'] if x['id']=='T003'),evidence_path)
     atomic_json(root/'reports/AUDYT_T003_DYWIDENDY.json',audit)

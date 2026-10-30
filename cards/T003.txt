@@ -1,4 +1,4 @@
-Snapshot: 2026-10-30T11:03:40.139454+00:00
+Snapshot: 2026-10-30T12:01:09.655468+00:00
 T003 · Archiwalny v1: Zmienione reguły / adaptacja
 
 Turtle System 2: kompletny system wybicia
@@ -85,9 +85,11 @@ Uzgodnienie dywidend 30.10: niezależny kod odtworzył rekonstrukcję Claude na 
 
 Uzgodnienie dywidend 30.10: reinwestowanie po zamknięciu ex-date zamiast trzymania dywidendy w gotówce wyjaśnia 99,39% różnicy do raportowanych 2,801%. Pozostałe składniki: koszt także od dywidendy przy sprzedaży na ex-date, rok 365,25 zamiast 365,2425 i zaokrąglenie wyniku. Nie zmieniano reguł ani progów strategii.
 
-Uzgodnienie dywidend 30.10: Claude nie zachował pierwotnego CSV ani pełnego kodu. Otrzymano opis nowej rekonstrukcji, bez wymienionej w nim paczki JS/CSV. Wyjaśnienie rachunkowe zostało sprawdzone; zgodność z utraconym pierwotnym przebiegiem i jego danymi pozostaje nieudowodniona.
+Uzgodnienie dywidend 30.10: paczka JS/CSV Claude została odebrana i uruchomiona bez zmian na zamrożonych danych. Wszystkie 17 sum plików i 12 hashy dzienników są zgodne. Pierwotny utracony CSV i pełny kod nadal pozostają nieodtwarzalne; sprawdzono nową rekonstrukcję.
 
 Uzgodnienie dywidend 30.10: reinwestycja bez kosztu na zamknięciu ex-date i natychmiastowy kredyt cash są założeniami audytu. Nie potwierdzono dat wypłat, realnego DRIP, podatków, FX ani filli; naliczanie prowizji od dywidendy odtworzono wyłącznie jako diagnostykę różnicy.
+
+Kontrola paczki Claude: rozbieżność rachunkowa dywidend ZAMKNIĘTA. Oba wejścia mają właściwe zamrożone SHA; wygenerowano 6 brakujących dziennych CSV i potwierdzono wszystkie 12 dzienników co do bajtu. Operacje, pełne dzienne księgi i rozbicie przyczyn zgadzają się z niezależnym Pythonem. Nie jest to potwierdzenie oryginalnego Turtle ani realnej egzekucji dywidend.
 T003-R1 · Częściowo uzupełniony
 Potwierdzone elementy i pozostałe warunki podano poniżej.
 
@@ -419,6 +421,28 @@ Completed bounded QC data controls; no strategy return (https://www.quantconnect
 
 Następny krok: Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.
 
+Dywidendy: kontrola paczki zakończona · 30.10.2026
+
+Rozbieżność rachunkowa zamknięta. Kod JS Claude i niezależny Python odtwarzają tę samą nową rekonstrukcję na zamrożonym SPY.
+
+DowódWynik
+
+Integralność paczkiZIP zgodny; 17/17 sum plików poprawnych
+
+Zamrożone wejściaOba SHA zgodne, 0 różnic OHLC
+
+Wygenerowane dzienniki12/12 zgodnych co do bajtu, rozmiaru i liczby wierszy
+
+Niezależny PythonOperacje identyczne; różnica dziennego NAV ≤ 1,12×10⁻¹⁵
+
+DecyzjaRozbieżność dywidend w rekonstrukcji ZAMKNIĘTA
+
+Nie odtworzono utraconego pierwotnego CSV ani pełnego kodu Claude. To ograniczenie historycznego pochodzenia, a nie pozostająca różnica rachunkowa.
+
+Realne daty wypłat, DRIP, podatki, FX, fille i pełny Turtle na futures pozostają poza tym uzgodnieniem.
+
+Dane wyniku i ograniczenia (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_DIVIDENDS_PACKAGE_AUDIT.html)
+
 Uzgodnienie dywidend z rekonstrukcją Claude · 30.10.2026
 
 CAGR % rocznie. Te same zamrożone dane i operacje; odmienna reinwestycja i konwencje rachunkowe. Nie jest to nowy test oryginalnego Turtle.
@@ -433,7 +457,7 @@ OkresDywidendy w gotówceRekonstrukcja ClaudeRóżnica ppDotychczasowy SPY
 
 Potwierdzono rekonstrukcję na danych Codex; nie udowodniono utraconego pierwotnego CSV/kodu Claude ani identyczności jego dawnego pobrania Yahoo.
 
-Nie otrzymano paczki JS/CSV wymienionej w opisie Claude. Nowe obliczenia wykonano własnym kodem na podstawie czterech opisanych różnic.
+Paczka JS/CSV została następnie sprawdzona na zamrożonych danych: 17/17 plików i 12/12 dzienników zgodnych. Pierwotny utracony przebieg pozostaje nieodtwarzalny.
 
 Natychmiastowy kredyt na ex-date, darmowa reinwestycja po close i koszt od dywidendy to model księgowy, bez potwierdzenia rzeczywistych wypłat, DRIP, podatków, FX i filli.
 
