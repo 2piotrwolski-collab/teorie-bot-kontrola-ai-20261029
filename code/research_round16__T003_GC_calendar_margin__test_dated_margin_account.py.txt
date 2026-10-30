@@ -1,0 +1,117 @@
+import json
+from datetime import datetime, timedelta
+from decimal import Decimal as D
+from pathlib import Path
+import unittest
+from zoneinfo import ZoneInfo
+
+from dated_margin_account import DatedMarginAccount, ROOT
+from account_engine import Contract, Margin, Quote, DataGate, RiskLimit
+from dated_margin import DatedRate, MarginTimeline
+
+NY = ZoneInfo('America/New_York')
+SYMBOL = 'GC XHD34ASNX0NX'
+SOURCE = 'https://www.cmegroup.com/notices/clearing/2020/06/Chadv20-247.pdf'
+
+
+def when(value):
+    return datetime.fromisoformat(value).replace(tzinfo=NY)
+
+
+def source_timeline(allow=True):
+    # Prior-rate snapshot as stated by the notice, known under an explicit EOD
+    # convention; this is not an assertion of the original older change date.
+    known = when('2020-06-18T23:59:59')
+    rates = [DatedRate(SYMBOL,D(10065),D(9150),known,known,SOURCE+'#currentJun18',
+                       'notice_date_end_of_day_convention'),
+             DatedRate(SYMBOL,D(9020),D(8200),known,when('2020-06-19T17:00:00'),SOURCE,
+                       'notice_date_end_of_day_convention')]
+    return MarginTimeline(SYMBOL,rates,when('2020-06-19T00:00:00'),
+                          when('2020-06-21T18:01:00'),allow_notice_date_convention=allow)
+
+
+def account(timeline=None):
+    return DatedMarginAccount(19500,[Contract(SYMBOL,'GC',100,'.1')],{'GC':'2.51'},[],[],
+                              synthetic=True,margin_timelines={SYMBOL:timeline or source_timeline()})
+
+
+def rising_fixture():
+    start=when('2020-06-18T10:00:00');change=start+timedelta(minutes=1)
+    rates=[DatedRate(SYMBOL,D(100),D(90),start-timedelta(days=1),start-timedelta(days=1),
+                     'synthetic_fixture_old','archived_publication_timestamp'),
+           DatedRate(SYMBOL,D(200),D(180),start-timedelta(hours=1),change,
+                     'synthetic_fixture_new','archived_publication_timestamp')]
+    line=MarginTimeline(SYMBOL,rates,start,start+timedelta(hours=1))
+    a=DatedMarginAccount(150,[Contract(SYMBOL,'GC',100,'.1')],{'GC':0},[],[],
+                         synthetic=True,margin_timelines={SYMBOL:line})
+    return a,start,change
+
+
+class IntegrationChecks(unittest.TestCase):
+    def test_actual_saved_bar_times_receive_source_effective_rates(self):
+        saved=json.loads((ROOT/'research_round15/T003_GC_2019_2025/QC_margin_timing_report.json').read_text())
+        checked=0
+        for row in saved['rows']:
+            at=when(row['bar_end_NY'])
+            if at<when('2020-06-19T00:00:00'):
+                continue
+            a=account();rate=a._margin(SYMBOL,at)
+            expected=(10065,9150) if at<=when('2020-06-19T17:00:00') else (9020,8200)
+            self.assertEqual((rate.initial,rate.maintenance),tuple(map(D,expected)))
+            checked+=1
+        self.assertEqual(checked,4)
+
+    def test_exact_close_keeps_old_rate_and_after_close_uses_new(self):
+        a=account();close=when('2020-06-19T17:00:00')
+        self.assertEqual(a._margin(SYMBOL,close).initial,D(10065))
+        self.assertEqual(a._margin(SYMBOL,close+timedelta(microseconds=1)).initial,D(9020))
+
+    def test_capacity_not_admitted_early_then_permitted_after_change(self):
+        a=account();at=when('2020-06-19T10:00:00')
+        self.assertEqual(a.quantity_per_unit(D('.975'),100),2)
+        with self.assertRaises(RiskLimit):a.reserve_unit('unit',SYMBOL,1,D('.975'),2,at)
+        later=when('2020-06-21T18:01:00')
+        a.reserve_unit('unit',SYMBOL,1,D('.975'),2,later)
+        self.assertEqual(a.units['unit'].target,2)
+        self.assertEqual(a.units['unit'].quantity,0)
+        self.assertEqual(a.equity(),D(19500))
+
+    def test_old_snapshot_cannot_be_reused_at_later_lookup(self):
+        a=account();at=when('2020-06-19T10:00:00');old=a._margin(SYMBOL,at)
+        with self.assertRaises(DataGate):old.check(when('2020-06-21T18:01:00'),True)
+        self.assertEqual(a._margin(SYMBOL,when('2020-06-21T18:01:00')).initial,D(9020))
+
+    def test_direct_rate_injection_is_forbidden(self):
+        a=account();at=when('2020-06-19T10:00:00')
+        with self.assertRaises(DataGate):
+            a.set_margin(SYMBOL,Margin(D(1),D(1),at,at,'unqualified'),at)
+
+    def test_unqualified_coverage_and_missing_contract_fail_closed(self):
+        a=account()
+        for at in [when('2020-06-18T12:00:00'),when('2020-06-22T10:00:00')]:
+            with self.assertRaises(DataGate):a._margin(SYMBOL,at)
+        with self.assertRaises(DataGate):a._margin('GC wrong contract',when('2020-06-19T10:00:00'))
+
+    def test_notice_date_convention_needs_explicit_optin(self):
+        a=account(source_timeline(False))
+        with self.assertRaises(DataGate):a._margin(SYMBOL,when('2020-06-19T10:00:00'))
+
+    def test_pending_fill_uses_new_higher_rate_and_can_be_rejected(self):
+        a,start,change=rising_fixture()
+        a.reserve_unit('unit',SYMBOL,1,1,1,start)
+        at=change+timedelta(microseconds=1)
+        quote=Quote(SYMBOL,at,D(100),D('100.1'),at,at,10,10)
+        with self.assertRaises(RiskLimit):a.fill_unit('unit',quote)
+        self.assertEqual(a.units['unit'].quantity,0)
+        self.assertEqual(a.equity(),D(150))
+
+    def test_maintenance_check_reads_new_rate_without_new_market_price(self):
+        a,start,change=rising_fixture()
+        a.reserve_unit('unit',SYMBOL,1,1,1,start)
+        at=start+timedelta(microseconds=1)
+        a.fill_unit('unit',Quote(SYMBOL,at,D(100),D(100),at,at,10,10))
+        self.assertFalse(a.margin_call_required(at))
+        self.assertTrue(a.margin_call_required(change+timedelta(microseconds=1)))
+
+
+if __name__ == '__main__':unittest.main()

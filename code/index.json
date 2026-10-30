@@ -93,7 +93,7 @@
     "source_file": "capture_operations_review.py",
     "url": "code/capture_operations_review.py.txt",
     "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
-    "sha256": "1d4db53c6c1ab6ccabdff1926a433cdb27a8f49ffdec4f33e283918fbcea71c0"
+    "sha256": "93c28f1c87943ad3d8b871f40a641b47b40ea48e1373a6baca0e63f53ab5e597"
   },
   {
     "source_file": "test_iex_capture.py",
@@ -105,7 +105,7 @@
     "source_file": "test_capture_operations.py",
     "url": "code/test_capture_operations.py.txt",
     "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
-    "sha256": "257a60bf11c151e499ca811c8a4c12917eca31a94d6e199d604c06ab74f6183c"
+    "sha256": "3c5aa75ab183c5051dc1e4fd788dfbebf6edc7440b21531c0200c316f3c1ac65"
   },
   {
     "source_file": "engine.py",
@@ -454,5 +454,17 @@
     "url": "code/research_round15__T003_GC_2019_2025__verify_timing.py.txt",
     "stage": "GC_FULL_RANGE_DATA_AND_MARGIN_CLOCK_CONTROL_NOT_STRATEGY_RETURN",
     "sha256": "2463bac758da206f33d68617bc47f3ca37a928f1ade9bbcfb456c9c6573b49eb"
+  },
+  {
+    "source_file": "research_round16/T003_GC_calendar_margin/dated_margin_account.py",
+    "url": "code/research_round16__T003_GC_calendar_margin__dated_margin_account.py.txt",
+    "stage": "DATED_MARGIN_ACCOUNT_COMPONENT_NOT_FULL_STRATEGY_RETURN",
+    "sha256": "c13f05808f7defc00c81cd4fcbb094cc1583cbe05463e5238f8a073e5e9e622a"
+  },
+  {
+    "source_file": "research_round16/T003_GC_calendar_margin/test_dated_margin_account.py",
+    "url": "code/research_round16__T003_GC_calendar_margin__test_dated_margin_account.py.txt",
+    "stage": "DATED_MARGIN_ACCOUNT_COMPONENT_NOT_FULL_STRATEGY_RETURN",
+    "sha256": "a1b6bf66801f8a714b6471faef26405dbafcdec4937792acc86324ab157659ba"
   }
 ]

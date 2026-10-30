@@ -1,3 +1,7 @@
+AKTUALNY STAN R17: najpierw evidence/T003_GC_ACCESS_CALENDAR_REPORT.html i T003_GC_ACCESS_CALENDAR_findings.json. Pliki instrukcji przeglądarki przywrócono z tej samej wersji oryginalnej aplikacji, lecz aplikacja zgłasza wyłączenie lokalnej przeglądarki w ustawieniach Work. Nie twierdź, że QC jest odczytany lub naprawiony. Bez nowych backtestów/PnL. Źródła kalendarza są częściowe:10 linków Globex2022, pierwszy XLS403; komunikat GME25-030 potwierdza przerwę28.11.2025 bez dokładnych godzin; CME Thanksgiving2022 odróżnia rozliczenie od obrotu. Sprawdź osobne kalendarze sesji, przerw, rozliczeń i dostawy. R16: evidence/T003_GC_MARGIN_ACCOUNT_REPORT.html i verification.json opisują9 kontroli rachunku z datowanymi depozytami, nie9 strategii ani pełny test. Stare wyniki i zamknięte dywidendy zachowane.
+
+HISTORIA:
+
 Sprawdź niezależnie logikę naszego badania Turtle System 2 na rzeczywistych kontraktach złota GC. Szukamy błędów, nie potwierdzenia na słowo ani powodu do automatycznego odrzucenia strategii.
 
 UWAGA: TO KONTROLA OBECNEGO ETAPU DANYCH I KODU. PEŁNY WYNIK GC 2019–2025 PO KOSZTACH NIE ZOSTAŁ JESZCZE OBLICZONY. Nie przedstawiaj poniższych kontroli jako pełnego backtestu, OOS, paper tradingu lub realnych zleceń. Nie próbuj ponownie rozstrzygać zamkniętego uzgodnienia dywidend starej adaptacji SPY; aktualny temat to futures GC.

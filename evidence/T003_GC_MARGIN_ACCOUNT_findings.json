@@ -1,0 +1,326 @@
+{
+  "id": "T003_GC_CALENDAR_MARGIN_ACCOUNT_20261030_V1",
+  "at_utc": "2026-10-30T21:29:18.810763+00:00",
+  "theory_id": "T003",
+  "status": "MARGIN_ACCOUNT_COMPONENT_VERIFIED_CALENDAR_AND_BROWSER_ACCESS_PENDING_FULL_STRATEGY_NOT_RUN",
+  "summary": "Wpięto rozdzielenie czasu publikacji i obowiązywania depozytu do nowej wersji rachunku testowego.9 kontroli PASS, w tym cztery rzeczywiste zapisane chwile z czerwca2020. Dwa kolejne komunikaty CME2025 potwierdzają zmianę po zamknięciu. Pełne kalendarze i dostęp Chrome/QC pozostają do odblokowania; wynik GC2019–2025 po kosztach jeszcze nie powstał.",
+  "new_strategy_trials": 0,
+  "full_strategy_PnL": false,
+  "original_theory_rejected": false,
+  "review_status": "provisional_no_partner_review",
+  "source_progress": {
+    "at_utc": "2026-10-30T21:24:26.513957+00:00",
+    "calendar_archive": {
+      "source": "https://www.cmegroup.com/content/cmegroup/cn-s/tools-information/holiday-calendar.html",
+      "web_read": true,
+      "official_2018_2021_zip_links_observed": true,
+      "direct_requests": "4xHTTP403; full error bodies and receipts in sources. No ZIP acquired.",
+      "calendar_2022_individual_links_observed": true,
+      "downloaded": false
+    },
+    "2025_broker_links": {
+      "source": "https://help.metrotrade.com/kb/holiday-trading-hours",
+      "role": "discovery only",
+      "observed": "Lists2025holidays, but selected CME links redirect to current2026/27 page; not accepted as2025tables"
+    },
+    "calendar_QC_public_snapshot": {
+      "commit": "1383825685849e32e0074f34c3be85b627e0f50f",
+      "file": "sources/market-hours-database_1383825.json",
+      "accepted_as_complete_2018_2025": false,
+      "reason": "GC-specific entry has no holidays2018–25 and no early/late exceptions2018–23; cannot infer holidays absent or inherit another product. Not cloud18217readback."
+    },
+    "margin_notices": [
+      {
+        "id": "20-247",
+        "url": "https://www.cmegroup.com/notices/clearing/2020/06/Chadv20-247.pdf",
+        "notice_date": "2020-06-18",
+        "effective_after_close_date": "2020-06-19",
+        "basis": "Spec",
+        "GC_tiers": "1..7/8+",
+        "old": [
+          10065,
+          9150
+        ],
+        "new": [
+          9020,
+          8200
+        ],
+        "raw_binary_archived": false,
+        "account_control_scope": "BoundedJun19–Jun21, explicit notice-date-EOD convention and normalGC17NY close interpretation"
+      },
+      {
+        "id": "25-117",
+        "url": "https://www.cmegroup.com/content/dam/cmegroup/notices/clearing/2025/03/25-117.pdf",
+        "notice_date": "2025-03-27",
+        "effective_after_close_date": "2025-03-28",
+        "basis": "HRP",
+        "GC_tiers": "1..7/8+",
+        "old": [
+          14850,
+          13500
+        ],
+        "new": [
+          15400,
+          14000
+        ],
+        "non_HRP_new": [
+          14000,
+          14000
+        ],
+        "raw_binary_archived": false,
+        "temporal_evidence": "Header+physicalpage7GCrowsread; completeGCsessionclosecalendarstillrequiresqualification"
+      },
+      {
+        "id": "25-308",
+        "url": "https://www.cmegroup.com/content/dam/cmegroup/notices/clearing/2025/09/chadv25-308.pdf",
+        "notice_date": "2025-09-25",
+        "effective_after_close_date": "2025-09-26",
+        "basis": "HRP",
+        "GC_tiers": "1..7/8+",
+        "old": [
+          17600,
+          16000
+        ],
+        "new": [
+          18700,
+          17000
+        ],
+        "non_HRP_new": [
+          17000,
+          17000
+        ],
+        "raw_binary_archived": false,
+        "temporal_evidence": "Header+physicalpages2–3GCrowsread; completeGCsessionclosecalendarstillrequiresqualification"
+      }
+    ],
+    "additional_margin_proof": {
+      "id": "20-127",
+      "notice_url": "https://www.cmegroup.com/notices/clearing/2020/03/Chadv20-127.html",
+      "notice_date": "2020-03-24",
+      "effective_after_close_date": "2020-03-25",
+      "numeric_source": "https://www.cmegroup.com/trading/metals/precious/faq-gold-enhanced-delivery-futures.html",
+      "maintenance": [
+        7000,
+        8350
+      ],
+      "initial_not_independently_read": true,
+      "attachment": "https://www.cmegroup.com/notices/clearing/2020/03/Chadv20-127.xlsx",
+      "attachment_web_read": "Unsupported format; not acquired this round"
+    },
+    "excluded_notice": {
+      "id": "19-194",
+      "url": "https://www.cmegroup.com/notices/clearing/2019/06/Chadv19-194.pdf",
+      "header_date": "2019-06-20",
+      "effective_after_close_date": "2019-06-21",
+      "GC_outright_row_observed": false,
+      "accepted_as_GC_rate_proof": false,
+      "reason": "Correct date alone is not proof that notice contains GC outright change."
+    },
+    "browser_block": {
+      "skill_path": "[local path]",
+      "fs_read": "ENOENT confirmed exec and node",
+      "search": "Searched cache incl hidden/no-ignore; chrome/browser skills directories empty. Native CUA namespace withdrawn.",
+      "effect": "Cannot use Chrome QC session through current approved browser workflow. No implication that QuantConnect website or data are unavailable.",
+      "other_local_research_continues": true
+    }
+  },
+  "account_integration": {
+    "id": "GC_MARGIN_ACCOUNT_BOUNDED_REPLAY_20261030_V1",
+    "at_utc": "2026-10-30T21:29:18.698430+00:00",
+    "plan_sha256": "043255093390ad5feb1b32362e63a860c0927fde973752857017fed1faf49061",
+    "real_timestamp_rows_replayed": 4,
+    "earlier_rows_explicitly_excluded": 3,
+    "unit_checks_passed": 9,
+    "input_sha256": "03e5692054e49e5fb3b6467f84a72ccf9fbd70f3163821cb24e143e3b74eccfe",
+    "rows": [
+      {
+        "bar_end_NY": "2020-06-18T12:00:00",
+        "not_replayed": "Before qualified notice-EOD control coverage; no earlier knowledge invented."
+      },
+      {
+        "bar_end_NY": "2020-06-18T16:59:00",
+        "not_replayed": "Before qualified notice-EOD control coverage; no earlier knowledge invented."
+      },
+      {
+        "bar_end_NY": "2020-06-18T18:01:00",
+        "not_replayed": "Before qualified notice-EOD control coverage; no earlier knowledge invented."
+      },
+      {
+        "actual_saved_bar_end_NY": "2020-06-19T00:01:00",
+        "QC_original_pair": [
+          9020.0,
+          8200.0
+        ],
+        "source_effective_pair": [
+          "10065",
+          "9150"
+        ],
+        "hypothetical_two_contract_margin_plus_entry_fee_USD": "20135.02",
+        "hypothetical19500USD_can_reserve_unit": false,
+        "actual_fills": 0,
+        "strategy_PnL_computed": false
+      },
+      {
+        "actual_saved_bar_end_NY": "2020-06-19T10:00:00",
+        "QC_original_pair": [
+          9020.0,
+          8200.0
+        ],
+        "source_effective_pair": [
+          "10065",
+          "9150"
+        ],
+        "hypothetical_two_contract_margin_plus_entry_fee_USD": "20135.02",
+        "hypothetical19500USD_can_reserve_unit": false,
+        "actual_fills": 0,
+        "strategy_PnL_computed": false
+      },
+      {
+        "actual_saved_bar_end_NY": "2020-06-19T16:59:00",
+        "QC_original_pair": [
+          9020.0,
+          8200.0
+        ],
+        "source_effective_pair": [
+          "10065",
+          "9150"
+        ],
+        "hypothetical_two_contract_margin_plus_entry_fee_USD": "20135.02",
+        "hypothetical19500USD_can_reserve_unit": false,
+        "actual_fills": 0,
+        "strategy_PnL_computed": false
+      },
+      {
+        "actual_saved_bar_end_NY": "2020-06-21T18:01:00",
+        "QC_original_pair": [
+          9020.0,
+          8200.0
+        ],
+        "source_effective_pair": [
+          "9020",
+          "8200"
+        ],
+        "hypothetical_two_contract_margin_plus_entry_fee_USD": "18045.02",
+        "hypothetical19500USD_can_reserve_unit": true,
+        "actual_fills": 0,
+        "strategy_PnL_computed": false
+      }
+    ],
+    "hypothetical_capital_N_fee_only": "19500USD,N0.975,2contracts,GC100oz,fee2.51/side; no invented market prices or fills",
+    "full_GC_2019_2025_result": false,
+    "old_files_unchanged": true,
+    "review_status": "provisional_no_partner_review",
+    "code_sha256": {
+      "research_round16/T003_GC_calendar_margin/dated_margin_account.py": "c13f05808f7defc00c81cd4fcbb094cc1583cbe05463e5238f8a073e5e9e622a",
+      "research_round16/T003_GC_calendar_margin/test_dated_margin_account.py": "a1b6bf66801f8a714b6471faef26405dbafcdec4937792acc86324ab157659ba",
+      "research_round13/T003_full_futures/account_engine.py": "6144d6ce619d896ede25dbe1bf49e8bcf7d62a9a60f26a5d0f60b8e4ee4f6c96",
+      "research_round15/T003_GC_2019_2025/dated_margin.py": "eb143f13ebbffe91c68e94af76aa630e5332670462f3ceffccca4b0d7fc99d50"
+    }
+  },
+  "calendar_qualification": {
+    "source_commit": "1383825685849e32e0074f34c3be85b627e0f50f",
+    "source_sha256": "f44effe21e7937a76a426bdb6a0de427b6440160b811b33bb6ed28c0f04ea1f0",
+    "entry": "Future-comex-GC",
+    "zone": "America/New_York",
+    "holidays_2018_2025": [],
+    "early_closes_2018_2025": {
+      "1/15/2024": "14:30:00",
+      "2/19/2024": "14:30:00",
+      "3/28/2024": "17:00:00",
+      "5/27/2024": "14:30:00",
+      "6/19/2024": "14:30:00",
+      "7/4/2024": "14:30:00",
+      "9/2/2024": "14:30:00",
+      "11/28/2024": "14:30:00",
+      "12/24/2024": "13:45:00",
+      "12/31/2024": "17:00:00",
+      "1/20/2025": "14:30:00",
+      "2/17/2025": "14:30:00",
+      "4/17/2025": "17:00:00",
+      "5/26/2025": "14:30:00",
+      "6/19/2025": "14:30:00",
+      "7/4/2025": "13:00:00",
+      "9/1/2025": "14:30:00",
+      "11/27/2025": "14:30:00",
+      "11/28/2025": "14:45:00",
+      "12/24/2025": "13:45:00",
+      "12/31/2025": "17:00:00"
+    },
+    "late_opens_2018_2025": {
+      "1/1/2024": "18:00:00",
+      "1/15/2024": "18:00:00",
+      "2/19/2024": "18:00:00",
+      "5/27/2024": "18:00:00",
+      "6/19/2024": "18:00:00",
+      "7/4/2024": "18:00:00",
+      "9/2/2024": "18:00:00",
+      "11/28/2024": "18:00:00",
+      "12/25/2024": "18:00:00",
+      "1/1/2025": "18:00:00",
+      "1/20/2025": "18:00:00",
+      "2/17/2025": "18:00:00",
+      "5/26/2025": "18:00:00",
+      "6/19/2025": "18:00:00",
+      "9/1/2025": "18:00:00",
+      "11/27/2025": "18:00:00",
+      "12/25/2025": "18:00:00"
+    },
+    "accepted_for_full_historical_test": false,
+    "specific_counterexample": {
+      "date": "2023-09-04",
+      "official_CME_metals_early_halt_NY": "14:30",
+      "official_source": "https://www.cmegroup.com/trading-hours/files/labor-day-2023.pdf",
+      "GC_specific_public_entry_early_close": null,
+      "limitation": "Public file only; not proof that cloud historical calendar has the same defect. Do not replace exactGC by genericcomex root orNYSE."
+    }
+  },
+  "remaining": [
+    "Pełny kalendarz GC 2018–2025 i terminy first intent/dostawy nadal wymagają uzgodnienia. Oficjalne ZIP2018–2021 są wskazane przez CME, ale cztery pobrania mają403. Linki brokera2025 przekierowują do obecnej strony2026/27, więc nie są przyjęte za tabele2025.",
+    "Publiczny plik kalendarza LEAN z przypiętego commitu nie zawiera wyjątków GC2018–2023 ani pełnej historii świąt2018–2025. Nie zastępuje źródeł CME ani odczytu historycznego kalendarza w chmurze. Oznaczenia miesięcy LTD w ekstrakcji przewodnika2020 wymagają dodatkowej kontroli układu strony.",
+    "Zegary depozytów: nowa klasa rachunku pobiera stawkę przy każdym zdarzeniu i blokuje jej przenoszenie przez zmianę. Kontrola obejmuje cztery zapisane chwile19–21.06.2020; nie kwalifikuje wszystkich52 obserwowanych par modelu. Daty publikacji przyjęte konwencją końca dnia wymagają jawnego opt-in.",
+    "CME25-117 i25-308 uzgadniają wartości i wejście po zamknięciu28.03/26.09.2025. Trzeba domknąć pełny kalendarz godzin, wszystkie pozostałe używane zmiany i jawnie rozdzielić Spec/HRP/Non-HRP oraz ewentualne stawki brokera.",
+    "Pełny adapter GC nadal wymaga własnych55-sesyjnych rozgrzewek każdego miesiąca, N, sygnałów, przyczynowego wyboru i zamrożonej polityki rolla, wszystkich kwotowań zdarzeń, rozliczeń, kosztów oraz matched SPY. Brak kompletnej egzekucji nie jest wynikiem skuteczności.",
+    "Po zmianie narzędzi nie można teraz sterować istniejącą sesją QuantConnect: brakuje pliku instrukcji wtyczki Chrome. Nie oznacza to awarii QuantConnect. Pełny przebieg rynkowy pozostaje niewykonany; zachowano istniejący projekt i wyniki."
+  ],
+  "next_action": "Przywrócić dostęp do istniejącej sesji Chrome/QC i pozyskać archiwalne tabele CME2018–2025; potem włączyć źródłowy kalendarz oraz wszystkie datowane stawki do pełnego adaptera, zamrozić plan i policzyć GC po kosztach, przed całym portfelem.",
+  "gap_plan": [
+    {
+      "gap_id": "GC_SOURCE_CALENDAR",
+      "sources": [
+        "https://www.cmegroup.com/content/cmegroup/cn-s/tools-information/holiday-calendar.html",
+        "https://www.cmegroup.com/education/files/metals-prod_guide_2019.pdf",
+        "https://www.cmegroup.com/trading/metals/files/metals-prod-guide-2020.pdf"
+      ],
+      "access": "CMEarchiveindexread,4ZIPHTTP403; vendorJSONdownloadedbutunqualified",
+      "steps": "ObtainactualCMEannualarchiveZIPorindividualdatedMetalsPDF/XLS; verifybodydate/product/timezone/trade-date anddeliverydates; noNYSEorTASsubstitute.",
+      "free": true,
+      "acceptance": "Complete2018warmup+2019–2025sourcecalendarandno unexplained observed minute/session mapping",
+      "blocks_full_test": true,
+      "fallback": "Keep gap; no unsupported full test or hypothesis rejection"
+    },
+    {
+      "gap_id": "GC_MARGIN_EFFECTIVITY",
+      "sources": [
+        "https://www.cmegroup.com/notices/clearing/2020/06/Chadv20-247.pdf",
+        "https://www.cmegroup.com/content/dam/cmegroup/notices/clearing/2025/03/25-117.pdf",
+        "https://www.cmegroup.com/content/dam/cmegroup/notices/clearing/2025/09/chadv25-308.pdf"
+      ],
+      "access": "Three datedCME headers andGCnumericrowsread; binaryPDFsnotarchived",
+      "steps": "Resolveallremainingusedrates andclose timestamps; explicitlychoose applicableSpec/HRPprofile, known-atconvention; useDatedMarginAccountforeachreserve/fill/roll/maintenance event.",
+      "free": true,
+      "acceptance": "Noearlytransition,no stale rate reuse, no unqualifiedcoverage/default fallback",
+      "blocks_full_test": true,
+      "fallback": "Qualifiedboundedcomponentonly; nofullperformanceclaim"
+    },
+    {
+      "gap_id": "GC_QC_BROWSER_ACCESS",
+      "what": "ListedChrome skillfile absent after toolupdate",
+      "access": "ENOENT in exec andnode; cache searchalso no SKILL; old nativeCUAtoolwithdrawn",
+      "steps": "Restore bundledChrome skill/runtime; then reuseexistingFreeQC38666177,checkexistingresultsfirst.",
+      "acceptance": "ApprovedChromecontrolcanreadexistingQCeditorandresults",
+      "free": true,
+      "blocks_full_cloud_test": true,
+      "fallback": "Continue local evidence/code only; do not invent cloud results"
+    }
+  ]
+}

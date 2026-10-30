@@ -1,0 +1,29 @@
+{
+  "id": "GC_DATED_MARGIN_ACCOUNT_INTEGRATION_20261030_V1",
+  "frozen_at_utc": "2026-10-30T21:24:26.513957+00:00",
+  "input": "research_round15/T003_GC_2019_2025/QC_margin_timing_report.json",
+  "input_sha256": "03e5692054e49e5fb3b6467f84a72ccf9fbd70f3163821cb24e143e3b74eccfe",
+  "question": "Apply source-effective rates on EVERY account margin lookup, including signal, later fill, roll and maintenance checks; do not cache a rate across a change.",
+  "source": "CME20-247, currentJun18, new AFTER closeJun19",
+  "normal_close_interpretation": "17NY; control coverageJun19 00:00 throughJun21 18:01 only; not whole historical calendar",
+  "known_at_convention": "Notice date June18 end of day; not actual historical receipt proof. Explicit opt-in required.",
+  "hypothetical_account": {
+    "capital_USD": 19500,
+    "quantity": 2,
+    "N": 0.975,
+    "multiplier": 100,
+    "fee_per_side": 2.51
+  },
+  "expected": "Before and atJun19 17:00 old10065/9150; afterward new9020/8200. Two-contract unit cannot reserve before change, can reserve afterwards. No actual fills, invented market prices, or strategyPnL.",
+  "other_critical_cases": [
+    "Retained margin object cannot validate at later time",
+    "No direct set_margin bypass",
+    "Unknown contract/coverage/knowledge convention fail closed",
+    "Separate maintenance test after increase using synthetic controlled event"
+  ],
+  "prohibitions": [
+    "No new GC full performance claim",
+    "No frozen file replacement",
+    "No paid/API/broker/order calls"
+  ]
+}

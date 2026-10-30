@@ -1,5 +1,5 @@
 {
-  "snapshot_at_utc": "2026-10-30T19:02:28.543079+00:00",
+  "snapshot_at_utc": "2026-10-30T22:17:10.139737+00:00",
   "scope": "Research snapshot. No full original-theory verification; no live orders.",
   "card": {
     "id": "T005",
@@ -11,7 +11,7 @@
       "Yahoo wskazuje CSI jako dostawcę części historycznych danych USA. Publiczny interfejs Yahoo nie jest niezależnym potwierdzeniem danych CSI autora; zgodność oryginalnej próby, korekt i vintage nadal wymaga kontroli.",
       "Uzupełniono historyczne dwustronne kwotowania SIP z 28.10 o 15:45 NY dla SPY, IWM, QQQ, BIL. To dowód spreadu w jednym punkcie, bez potwierdzenia filli lub bieżącej dostępności SIP.",
       "Zapisano dzisiejszą kontrolę dostępności danych i kosztów; brak nowego wyniku skuteczności strategii.",
-      "Automat pomiaru IEX: 29.10 wysłanie 46,512 s po celu i dwa błędy konektora. Naprawa: bezpośredni darmowy REST, lokalny timer macOS, rozgrzewka połączenia i zapis rzeczywistych czasów. Następny pomiar: 30.10 o 20:45 Warszawa, gdy Mac jest włączony. Stan: scheduled."
+      "Automat pomiaru IEX: 30.10.2026. Odczyt w terminie; dwustronne kwotowania 5/5, świeże i terminowe 4/5. To kontrola wykonania pomiaru, bez wyniku strategii."
     ],
     "next_action": "Ocenić dzisiejszy odbiór danych przed 15:45 NY i kwotowania, a potem zbierać kolejne sesje bez strojenia. Nadal wymagane fille, poślizg, rozliczenia, FX/podatki, dostępność instrumentu i partner review. Gromadzić nowe sesje przed zamknięciem; sprawdzić rzeczywisty wolumen i fille oraz źródłową krótką nogę z kosztami borrow. Nadal szukać RSX i rozstrzygnięcia vol10/20, bez zgadywania.",
     "overall_status": "strategie_kosztowe_provisional",
@@ -155,9 +155,9 @@
     ],
     "observations": [
       {
-        "id": "CAPTURE_OPS_c6ea7eb23d32_T005",
-        "title": "Naprawa automatu pomiaru IEX · 29.10.2026",
-        "summary": "Usterka pomiaru, bez nowego testu skuteczności lub zmiany teorii.",
+        "id": "CAPTURE_OPS_f060fb51a56b_T005",
+        "title": "Pomiar IEX · 30.10.2026",
+        "summary": "Odczyt w terminie; dwustronne kwotowania 5/5, świeże i terminowe 4/5. To kontrola wykonania pomiaru, bez wyniku strategii.",
         "columns": [
           "Kontrola",
           "Wynik"
@@ -177,7 +177,63 @@
           ],
           [
             "30.10, cel 20:45 Warszawa",
-            "scheduled"
+            "captured; w terminie"
+          ],
+          [
+            "Feed i waluta",
+            "Bezpłatny IEX, USD; pojedynczy rynek, nie NBBO"
+          ],
+          [
+            "quotes · rzeczywiste czasy UTC",
+            "Wysłanie 2026-10-30T19:45:00.059995+00:00; odbiór 2026-10-30T19:45:00.188801+00:00; HTTP 200"
+          ],
+          [
+            "bars · rzeczywiste czasy UTC",
+            "Wysłanie 2026-10-30T19:45:00.060932+00:00; odbiór 2026-10-30T19:45:00.226547+00:00; HTTP 200"
+          ],
+          [
+            "SPY · kwotowanie",
+            "Bid/ask 753.27 / 753.29; wiek przy odbiorze 0.067 s; świeże i terminowe"
+          ],
+          [
+            "IWM · kwotowanie",
+            "Bid/ask 278.33 / 278.35; wiek przy odbiorze 0.077 s; świeże i terminowe"
+          ],
+          [
+            "QQQ · kwotowanie",
+            "Bid/ask 687.9 / 687.92; wiek przy odbiorze 0.067 s; świeże i terminowe"
+          ],
+          [
+            "FXI · kwotowanie",
+            "Bid/ask 32.95 / 32.96; wiek przy odbiorze 0.143 s; świeże i terminowe"
+          ],
+          [
+            "BIL · kwotowanie",
+            "Bid/ask 91.7 / 91.71; wiek przy odbiorze 11.975 s; nie spełnia warunków świeżości/czasu"
+          ],
+          [
+            "SPY · ostatnia świeca",
+            "Początek 2026-10-30T19:44:00Z; wiek od końca przy odbiorze 0.227 s; zamknięta przed żądaniem: True"
+          ],
+          [
+            "IWM · ostatnia świeca",
+            "Początek 2026-10-30T19:44:00Z; wiek od końca przy odbiorze 0.227 s; zamknięta przed żądaniem: True"
+          ],
+          [
+            "QQQ · ostatnia świeca",
+            "Początek 2026-10-30T19:44:00Z; wiek od końca przy odbiorze 0.227 s; zamknięta przed żądaniem: True"
+          ],
+          [
+            "FXI · ostatnia świeca",
+            "Początek 2026-10-30T19:43:00Z; wiek od końca przy odbiorze 60.227 s; zamknięta przed żądaniem: True"
+          ],
+          [
+            "BIL · ostatnia świeca",
+            "Początek 2026-10-30T19:35:00Z; wiek od końca przy odbiorze 540.227 s; zamknięta przed żądaniem: True"
+          ],
+          [
+            "Błędy transportu w pomiarze docelowym",
+            "0"
           ]
         ],
         "limitations": [
@@ -1052,7 +1108,7 @@
     "source_update_artifact": "research_round2/source_updates_T005.json",
     "source_update_sha256": "328f201e497420b68b9563a941325ae216de25f81d45137ed086bc65d59ff5fd",
     "observation_ids": [
-      "CAPTURE_OPS_c6ea7eb23d32_T005",
+      "CAPTURE_OPS_f060fb51a56b_T005",
       "QUOTE_PREFLIGHT_20261028_T005",
       "ARRIVAL_20261029_T005",
       "MODERN_EXECUTION_NET_R2_T005",
@@ -1070,7 +1126,7 @@
     "verified_claim": "Autor bada następny jednodniowy close-to-close po IBS. Na stronie 4 opisuje dzienną strategię long przy IBS≤0,2 i short przy IBS≥0,8. Wysoki wolumen jest ważny w źródłowej grupie USA. Nowe long-only warianty wykonania nie są pełnym odtworzeniem tej strategii.",
     "verified_correction": "Dla strategii źródłowej trzeba odtworzyć dzienne long/short, wykonanie i borrow. Nasze long-only open→open oraz estymacja15:40→fillproxy15:45 są osobnymi wariantami. Zachowano źródłowy horyzont jednej sesji, bez arbitralnego trzymania10dni.",
     "execution_evidence_file": "WYKONANIE_DZISIAJ/T005.json",
-    "capture_operations_sha256": "c6ea7eb23d32709c82bfd55a4747aa60bbb4d8de89a321c172e80bd9bc305c04"
+    "capture_operations_sha256": "f060fb51a56b6577247ce0e6b9dceac1a415e604aa11341bcb8f418bdd3c641c"
   },
   "source_qualification": {
     "id": "T005",

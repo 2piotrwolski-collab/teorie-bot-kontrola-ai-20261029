@@ -1,0 +1,83 @@
+{
+  "at_utc": "2026-10-30T22:15:09.680369+00:00",
+  "scope": "GC2019–2025 with2018warmup; acquisition progress only, not qualified full calendar",
+  "official_2022_index": "https://www.cmegroup.com/content/cmegroup/cn-s/tools-information/holiday-calendar.html",
+  "source_locator": "Globex table lines46–61; not ClearPort/trading-floor tables",
+  "holiday_files": [
+    {
+      "url": "https://www.cmegroup.com/tools-information/holiday-calendar/files/2022-mlk-day-holiday-schedule.xls",
+      "status": "HTTP403 raw response retained; web fetch unsupported Excel"
+    },
+    {
+      "url": "https://www.cmegroup.com/tools-information/holiday-calendar/files/2022-presidents-day-holiday-schedule.xls",
+      "status": "link verified; web fetch unsupported Excel; binary download not attempted after first403"
+    },
+    {
+      "url": "https://www.cmegroup.com/tools-information/holiday-calendar/files/2022-good-friday-holiday-schedule.xls",
+      "status": "link verified; web fetch unsupported Excel; binary download not attempted after first403"
+    },
+    {
+      "url": "https://www.cmegroup.com/tools-information/holiday-calendar/files/2022-memorial-day-holiday-schedule.xls",
+      "status": "link verified; web fetch unsupported Excel; binary download not attempted after first403"
+    },
+    {
+      "url": "https://www.cmegroup.com/tools-information/holiday-calendar/files/2022-juneteenth-holiday-schedule.xls",
+      "status": "link verified; web fetch unsupported Excel; binary download not attempted after first403"
+    },
+    {
+      "url": "https://www.cmegroup.com/tools-information/holiday-calendar/files/2022-independence-day-holiday-schedule.xls",
+      "status": "link verified; web fetch unsupported Excel; binary download not attempted after first403"
+    },
+    {
+      "url": "https://www.cmegroup.com/tools-information/holiday-calendar/files/2022-labor-day-holiday-schedule.xls",
+      "status": "link verified; web fetch unsupported Excel; binary download not attempted after first403"
+    },
+    {
+      "url": "https://www.cmegroup.com/tools-information/holiday-calendar/files/2022-thanksgiving-holiday-schedule.xls",
+      "status": "link verified; web fetch unsupported Excel; binary download not attempted after first403"
+    },
+    {
+      "url": "https://www.cmegroup.com/tools-information/holiday-calendar/files/2022-christmas-holiday-schedule.xls",
+      "status": "link verified; web fetch unsupported Excel; binary download not attempted after first403"
+    },
+    {
+      "url": "https://www.cmegroup.com/tools-information/holiday-calendar/files/2023-new-years-holiday-schedule.xls",
+      "status": "link verified; web fetch unsupported Excel; binary download not attempted after first403"
+    }
+  ],
+  "regular_exception_boundary": "Do not substitute ClearPort, floor, TAS, rates or NYSE schedules for GC Globex.",
+  "holiday_settlement": {
+    "url": "https://www.cmegroup.com/tools-information/holiday-calendar/files/2022-thanksgiving-advisory.pdf",
+    "locator": "p1 Clearing Processing Cycles, November24,2022",
+    "observed": [
+      "No intraday clearing cycle",
+      "No EOD variation movement; settlement prices carried from Wednesday",
+      "Initial margin requirements recalculated",
+      "Holiday transactions clear next business day; banks closed"
+    ],
+    "web_read": true,
+    "binary_archived": false,
+    "qualification": "Clearing/settlement evidence only; not exact GC Globex open/close hours"
+  },
+  "unexpected_halt": {
+    "date": "2025-11-28",
+    "source_url": "https://d2744r28dxz36a.cloudfront.net/MemberNotices/2025/25-030.pdf",
+    "issuer": "Gulf Mercantile Exchange",
+    "notice": "25-030",
+    "locator": "p1",
+    "binary_path": "research_round17/T003_GC_access_calendar/sources/GME_25-030.pdf",
+    "sha256": "dc47bf3038198763cb4eeb0b4fc040cb5740d979e4a12363c71eb6494468a509",
+    "http_status": 200,
+    "bytes": 537582,
+    "scope": "Exchange-issued notice confirms Globex halt; not an independent second CME data feed.",
+    "exact_halt_and_reopen_clock_qualified": false,
+    "gc_raw_ticks_reconciled": false,
+    "next_action": "Obtain dated CME alert/resumption notice and compare actual GC tick boundary. Never fill absence with stale bars/quotes."
+  },
+  "historical_cme_alerts": {
+    "url": "https://www.cmegroup.com/tools-information/cme-global-command-center-system-alerts.html",
+    "web_observed": "Historical Alerts require CME Group Login; latest page is current2026, not2025 archival evidence",
+    "bypass_attempted": false
+  },
+  "calendar_complete": false
+}

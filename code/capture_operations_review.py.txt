@@ -39,10 +39,46 @@ def build(root):
                     raise ValueError('Body mismatch')
             review.update(next_status=value['status'],
                           next_assessment=assess(value['requests'], parse(value['target_at_utc'])),
+                          completed_at_utc=value.get('finished_at_utc'),
+                          target_requests=[{k: record.get(k) for k in (
+                              'kind', 'requested_at_utc', 'received_at_utc', 'feed',
+                              'currency', 'http_status', 'isError')} for record in value['requests']],
                           capture_sha256=hashlib.sha256(completed.read_bytes()).hexdigest())
         except (KeyError, ValueError, OSError) as exc:
             review.update(next_status='invalid_evidence', error=str(exc))
     return review
+
+
+def completed_display(review):
+    """Keep completion, transport success and quote qualification separate."""
+    assessment = review.get('next_assessment')
+    if not assessment:
+        return None
+    rows = assessment.get('rows', [])
+    valid = sum(bool(row.get('valid')) for row in rows)
+    fresh = len(assessment.get('fresh_on_time_symbols', []))
+    timing = 'spóźniony' if assessment.get('capture_late') else 'w terminie'
+    state = 'Odczyt '+timing if review['next_status'] == 'captured' else 'Próba nieudana: '+review['next_status']
+    summary = (f'{state}; dwustronne kwotowania {valid}/5, świeże i terminowe {fresh}/5. '
+               'To kontrola wykonania pomiaru, bez wyniku strategii.')
+    result_rows = [['30.10, cel 20:45 Warszawa', review['next_status']+'; '+timing],
+                   ['Feed i waluta', 'Bezpłatny IEX, USD; pojedynczy rynek, nie NBBO']]
+    for record in review.get('target_requests', []):
+        result_rows.append([record['kind']+' · rzeczywiste czasy UTC',
+                            f"Wysłanie {record['requested_at_utc']}; odbiór {record['received_at_utc']}; HTTP {record['http_status']}"])
+    for row in rows:
+        age = row.get('age_at_receive_seconds')
+        age_text = f'{age:.3f} s' if isinstance(age, (int, float)) else 'nieznany'
+        quality = 'świeże i terminowe' if row.get('live_gate_pass') else 'nie spełnia warunków świeżości/czasu'
+        result_rows.append([row['symbol']+' · kwotowanie',
+                            f"Bid/ask {row.get('bid')} / {row.get('ask')}; wiek przy odbiorze {age_text}; {quality}"])
+    for row in assessment.get('bar_rows', []):
+        age = row.get('age_since_bar_end_seconds')
+        age_text = f'{age:.3f} s' if isinstance(age, (int, float)) else 'nieznany'
+        result_rows.append([row['symbol']+' · ostatnia świeca',
+                            f"Początek {row.get('timestamp')}; wiek od końca przy odbiorze {age_text}; zamknięta przed żądaniem: {row.get('valid_completed_bar')}"])
+    result_rows.append(['Błędy transportu w pomiarze docelowym', str(len(assessment.get('errors', [])))])
+    return summary, result_rows
 
 
 def merge(progress, review):
@@ -72,14 +108,22 @@ def merge(progress, review):
             continue
         item['capture_operations_sha256'] = fingerprint
         item['findings'] = [s for s in item['findings'] if not s.startswith('Automat pomiaru IEX:')]
-        item['findings'].append('Automat pomiaru IEX: 29.10 wysłanie 46,512 s po celu i dwa błędy konektora. Naprawa: bezpośredni darmowy REST, lokalny timer macOS, rozgrzewka połączenia i zapis rzeczywistych czasów. Następny pomiar: 30.10 o 20:45 Warszawa, gdy Mac jest włączony. Stan: '+review['next_status']+'.')
+        completed = completed_display(review)
+        if completed:
+            item['findings'].append('Automat pomiaru IEX: 30.10.2026. '+completed[0])
+        else:
+            item['findings'].append('Automat pomiaru IEX: 29.10 wysłanie 46,512 s po celu i dwa błędy konektora. Naprawa: bezpośredni darmowy REST, lokalny timer macOS, rozgrzewka połączenia i zapis rzeczywistych czasów. Następny pomiar: 30.10 o 20:45 Warszawa, gdy Mac jest włączony. Stan: '+review['next_status']+'.')
         item['observations'] = [o for o in item.get('observations', []) if not o['id'].startswith('CAPTURE_OPS_')]
         item['observations'].insert(0, {
             'id': 'CAPTURE_OPS_'+fingerprint[:12]+'_'+item['id'],
-            'title': 'Naprawa automatu pomiaru IEX · 29.10.2026',
-            'summary': 'Usterka pomiaru, bez nowego testu skuteczności lub zmiany teorii.',
+            'title': 'Pomiar IEX · 30.10.2026' if completed else 'Naprawa automatu pomiaru IEX · 29.10.2026',
+            'summary': completed[0] if completed else 'Usterka pomiaru, bez nowego testu skuteczności lub zmiany teorii.',
             'columns': ['Kontrola', 'Wynik'],
             'rows': [['29.10, IEX przez konektor', 'Spóźnienie 46,512 s; dwa błędy, brak terminowego kwotowania'],
+                     ['Bezpośredni REST, diagnostyka', 'HTTP200: kwotowania i świece wszystkich 5 ETF-ów'],
+                     ['Próbny timer macOS', 'Wysłanie po 0,045 s; odpowiedzi po 0,18 s. Osobny test diagnostyczny, nie odczyt zamknięcia'],
+                     *completed[1]] if completed else [
+                     ['29.10, IEX przez konektor', 'Spóźnienie 46,512 s; dwa błędy, brak terminowego kwotowania'],
                      ['Bezpośredni REST, diagnostyka', 'HTTP200: kwotowania i świece wszystkich 5 ETF-ów'],
                      ['Próbny timer macOS', 'Wysłanie po 0,045 s; odpowiedzi po 0,18 s. Osobny test diagnostyczny, nie odczyt zamknięcia'],
                      ['30.10, cel 20:45 Warszawa', review['next_status']]],

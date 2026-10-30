@@ -1,0 +1,12 @@
+{
+  "at_utc": "2026-10-30T22:15:09.680369+00:00",
+  "local_skill_repair": "browser_skill_restore.json",
+  "bootstrap_result": "Local browser use is disabled in Work settings",
+  "documentation_recovery_result": "Local browser use is disabled in Work settings",
+  "chrome_selected": false,
+  "quantconnect_navigation": false,
+  "quantconnect_existing_project": "38666177",
+  "new_backtest_runs": 0,
+  "reason_not_to_retry": "Explicit application setting disables local browser use. Await user enabling it; do not bypass.",
+  "user_action_requested": true
+}

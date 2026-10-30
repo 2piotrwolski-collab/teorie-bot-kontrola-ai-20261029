@@ -1,0 +1,44 @@
+"""Wire date-aware margin evidence into every lookup of the frozen R13 account.
+
+No market data access, source qualification shortcuts or strategy rule changes.
+The parent's cash/fill/roll calculations remain the frozen implementation.
+"""
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT/'research_round13/T003_full_futures'))
+sys.path.insert(0, str(ROOT/'research_round15/T003_GC_2019_2025'))
+from account_engine import Account, Margin, DataGate
+from dated_margin import MarginTimeline, MarginEvidenceError
+
+
+class DatedMarginAccount(Account):
+    def __init__(self, *args, margin_timelines, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.margin_timelines = dict(margin_timelines)
+        for contract, timeline in self.margin_timelines.items():
+            if (contract not in self.contracts or not isinstance(timeline, MarginTimeline)
+                    or timeline.contract != contract):
+                raise DataGate('Margin timeline must identify the exact registered contract')
+
+    def set_margin(self, contract, margin, at):
+        raise DataGate('Dated account requires qualified timelines; direct rate injection forbidden')
+
+    def _margin(self, contract, at):
+        timeline = self.margin_timelines.get(contract)
+        if timeline is None:
+            raise DataGate('Missing qualified margin timeline for '+contract)
+        try:
+            rate = timeline.lookup(at)
+        except MarginEvidenceError as exc:
+            raise DataGate(str(exc)) from exc
+        # A snapshot is valid at this lookup only. Inherited reserve, fill,
+        # maintenance and both roll legs all call this method with their own
+        # actual event time, so a previous rate cannot silently survive a change.
+        provenance = (rate.source+'; knowledge_basis='+rate.knowledge_basis
+                      +'; known_at='+rate.known_at.isoformat()
+                      +'; effective_after='+rate.effective_after.isoformat())
+        result = Margin(rate.initial, rate.maintenance, rate.known_at, at, provenance)
+        result.check(at, self.synthetic)
+        return result

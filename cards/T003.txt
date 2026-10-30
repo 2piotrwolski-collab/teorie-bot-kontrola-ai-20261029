@@ -1,4 +1,4 @@
-Snapshot: 2026-10-30T19:02:28.543079+00:00
+Snapshot: 2026-10-30T22:17:10.139737+00:00
 T003 · Archiwalny v1: Zmienione reguły / adaptacja
 
 Turtle System 2: kompletny system wybicia
@@ -134,8 +134,22 @@ Turtle GC2019–2025: oficjalny PDF GC2020–present faktycznie kończy się wst
 Turtle GC2019–2025: odczytano przewodniki CME2019–2024; pełny strukturalny kalendarz2018–2025/firstintent nadal otwarty. Obecny harmonogram biuletynu CME nie jest dowodem historycznych godzin odbioru OI.
 
 Turtle GC2019–2025:0 nowych wyników zysku i0 nowych werdyktów. Dawny roll22.03.2024 i zamknięte dywidendy pozostają zachowane. Najpierw GC, potem cały zadeklarowany portfel.
+
+Turtle GC2019–2025: nowy rachunek DatedMarginAccount sprawdza bieżącą datowaną stawkę przy rezerwacji, późniejszym fillu, obu nogach rolla i kontroli maintenance. Stara migawka jest ważna wyłącznie w chwili odczytu.9 kontroli integracji PASS, nie9 strategii.
+
+Turtle GC2019–2025: odtworzono cztery zapisane rzeczywiste chwile19–21.06.2020; przed/na17NY19czerwca obowiązuje10065/9150, po zamknięciu9020/8200. Przykład kapitału19500USD i2kontraktów jest hipotetyczną kontrolą dostępu do depozytu, bez filli lub wyniku strategii.
+
+Turtle GC2019–2025: CME25-117 z27.03 i25-308 z25.09 potwierdzają odpowiednio nowe15400/14000 oraz18700/17000USD HRP po zamknięciu28.03 i26.09.2025. Non-HRP ma inny initial. Datowane godziny całej historii i stawka konkretnego brokera nadal wymagają uzgodnienia.
+
+Turtle GC2019–2025: przywrócono3 oryginalne brakujące pliki instrukcji Chrome/Browser z tej samej wersji aplikacji, po porównaniu manifestów i runtime bajtowo. Próba połączenia ujawniła blokadę „Local browser use is disabled in Work settings”; QC nie jest teraz odczytany, żadnych prób nie dublowano.
+
+Turtle GC2019–2025: sprawdzono linki10 właściwych tabel Globex2022. Pierwszy XLS ma403, zachowano całą odpowiedź. Nie uznano działającego webowego indeksu ani tabel ClearPort/parkietu za pełny kalendarz GC.
+
+Turtle GC2019–2025: oficjalny komunikat giełdowy GME25-030 z28.11.2025 potwierdza nadzwyczajne zatrzymanie Globex; PDF pobrany200 i zamrożony SHA. Brakuje dokładnych godzin/porównania ticków. Nie zakładamy ciągłej wykonalności według samego kalendarza świąt.
+
+Turtle GC2019–2025: CME24.11.2022 potwierdza brak przepływu variation i przeniesienie cen rozliczeniowych z poprzedniego dnia mimo przeliczenia IM. Rozliczenie i godziny obrotu wymagają oddzielnych osi.0 nowych wyników strategii i0 odrzuceń hipotezy.
 T003-R1 · Częściowo uzupełniony
-Całookresowe dane minutowe odczytane, ale pełny adapter/kalendarze/efektywność depozytów nie są jeszcze kwalifikowane.
+Dane pełnego GC2019–2025 odczytano wcześniej, ale kalendarz/depozyty/adapter nadal wymagają domknięcia; przeglądarka wyłączona ustawieniem aplikacji.
 
 Potwierdzone:
 
@@ -187,6 +201,14 @@ Odczyt rzeczywistych minut GC2019–2025 plus rozgrzewka2018 i zapis pełnych wy
 
 Jedna temporalna rozbieżność modelu depozytów vs CME potwierdzona, komponent naprawczy sprawdzony.
 
+Nowa wersja rachunku pobiera depozyt wg rzeczywistego czasu każdego zdarzenia;9 kontroli integracji zakończonych.
+
+Dwa dodatkowe komunikaty CME2025 potwierdzają stawki HRP i wejście po zamknięciu.
+
+Przywrócono brakujące oryginalne pliki wtyczek; potwierdzono aktualną blokadę ustawienia Work, nie zgadywaną awarię QC.
+
+Pozyskano surowy oficjalny komunikat giełdowy o zatrzymaniu Globex28.11.2025; kalendarz pełnego zakresu nadal niezakwalifikowany.
+
 Pozostało:
 
 Exact weekly N cutoff,resizing,annual discretionary equity,complete correlation map and simultaneous ordering remain unspecified.
@@ -221,19 +243,21 @@ Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walida
 
 Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
 
-GC 2019–2025: pełny adapter strategii, własne sygnały każdego kwalifikującego miesiąca, ticki zdarzeń, koszty, dzienne NAV i matched SPY pozostają do obliczenia po osobnym zamrożeniu planu. Audyt 4,64 mln minut nie jest wynikiem skuteczności.
+Pełny kalendarz GC2018–2025 i first intent/dostawy nadal otwarte. Oficjalne archiwalne ZIP2018–2021 dały403; wskazano10 właściwych plików Globex2022, pierwszy XLS także403. Nie podstawiono ClearPort, parkietu ani NYSE. Po włączeniu przeglądarki sprawdzić zwykły download w Chrome.
 
-Kalendarz źródłowy GC 2018–2025: odczytano oficjalne przewodniki CME 2019–2024; trzeba ustrukturyzować daty i terminy, dopełnić rozgrzewkę 2018 i rok 2025 oraz zweryfikować segmenty świąteczne i first intent. Daty zegarowe i kalendarz NYSE nie zastępują dat giełdowych GC.
+Aktualna blokada Chrome: aplikacja zgłasza „Local browser use is disabled in Work settings”. Pliki wtyczki przywrócono z identycznej wersji oryginalnej aplikacji; potrzebne włączenie lokalnej przeglądarki w Work. Nie stwierdzono awarii QC ani utraty istniejących wyników.
 
-Depozyty: zebrano 52 pierwsze obserwowane zmiany modelu wraz z rozgrzewką i punktowe potwierdzenia źródłowe. Trzeba uzgodnić obowiązywanie po zamknięciu, publikację i klasyfikację wszystkich używanych stawek. Jeden poprawiony przypadek nie kwalifikuje 52 zmian; nowy moduł dated_margin musi wejść do adaptera.
+Komunikat giełdowy GME25-030 potwierdza przerwę Globex28.11.2025; dokładne godziny zatrzymania/wznowienia i granice tickówGC wymagają uzgodnienia. To wymóg wykonania, nie dowód brakujących cen ani wynik strategii.
 
-Lista kontraktów i rolowanie: filtr 0–400 dni do wygaśnięcia służył kontroli danych, nie jest zatwierdzonym uniwersum strategii. Potrzebne pełne własne rozgrzewki 55 sesji, przyczynowy wybór miesiąca, płynność i kompletne terminy dostawy. Mechaniczny termin rolla i wyjątek silniejszego bliskiego miesiąca muszą być ustalone przed PnL.
+CME24.11.2022 oddziela obrót od rozliczenia: brak przepływu variation, ceny rozliczeniowe z poprzedniego dnia, IM przeliczany. Pełna oś rozliczeń wymaga odrębnego kalendarza; ta jedna notatka nie kwalifikuje całych2019–2025.
 
-Publikacja OI/volume: obecny harmonogram CME wskazuje finalny biuletyn o 10 CT następnego dnia roboczego. Nie dowodzi faktycznej dostępności ani vintage wszystkich danych 2019–2025; nie zamyka historycznej luki as-of.
+Publiczny plik kalendarza LEAN z przypiętego commitu nie zawiera wyjątków GC2018–2023 ani pełnej historii świąt2018–2025. Nie zastępuje źródeł CME ani odczytu historycznego kalendarza w chmurze. Oznaczenia miesięcy LTD w ekstrakcji przewodnika2020 wymagają dodatkowej kontroli układu strony.
 
-Wykonanie i rachunek: rzeczywiste historyczne kwotowania, opóźnienia i częściowe fille trzeba zastosować do wszystkich zdarzeń, z kosztem obu nóg. Prowizje obecnego scenariusza i 1 tick poślizgu pozostają założeniami. Brak osobistych filli, house margin, historycznych opłat, FX i podatków; nie nazywać pełnym netto.
+Zegary depozytów: nowa klasa rachunku pobiera stawkę przy każdym zdarzeniu i blokuje jej przenoszenie przez zmianę. Kontrola obejmuje cztery zapisane chwile19–21.06.2020; nie kwalifikuje wszystkich52 obserwowanych par modelu. Daty publikacji przyjęte konwencją końca dnia wymagają jawnego opt-in.
 
-Portfel 12 rynków dopiero po GC, zgodnie z poleceniem Piotra. Historia i klasyfikacja SB pozostają niepełne; brak rynku nie upoważnia do jego cichego usunięcia.
+CME25-117 i25-308 uzgadniają wartości i wejście po zamknięciu28.03/26.09.2025. Trzeba domknąć pełny kalendarz godzin, wszystkie pozostałe używane zmiany i jawnie rozdzielić Spec/HRP/Non-HRP oraz ewentualne stawki brokera.
+
+Pełny adapter GC nadal wymaga własnych55-sesyjnych rozgrzewek każdego miesiąca, N, sygnałów, przyczynowego wyboru i zamrożonej polityki rolla, wszystkich kwotowań zdarzeń, rozliczeń, kosztów oraz matched SPY. Brak kompletnej egzekucji nie jest wynikiem skuteczności.
 
 PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
 
@@ -253,9 +277,9 @@ ActualquoteGCroll control +independentledger/cost/stop checks; notfullstrategyPn
 
 Fullrange minute data audit plus seven timed margin cases, not strategy performance (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_RANGE_REPORT.html) · GC 2019–2025: odczytano 4 635 018 rzeczywistych świec minutowych i 282 879 z rozgrzewki 2018; 103 obserwowane kontrakty łącznie, bez zgłoszonych błędów technicznych. Zebrano 52 zmiany modelu depozytów. Osobny test wykazał przedwczesne stosowanie niższej stawki QC 19.06.2020: od północy zamiast po zamknięciu według CME. Nowy moduł rozdziela te momenty i przeszedł 10 kontroli; pełny adapter oraz wynik strategii po kosztach pozostają do ukończenia.
 
-Następny krok: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
+Następny krok: Po włączeniu lokalnej przeglądarki w ustawieniach Work połączyć istniejącą sesję Chrome z projektem QC38666177, bez dublowania zapisanych prób. Pozyskać brakujące tabele GC2018–2025 i dokładne godziny przerw, domknąć osie depozytów/adapter, zamrozić pełny plan, następnie policzyć GC po zadeklarowanych kosztach i matchedSPY.
 T003-D1 · Częściowo uzupełniony
-Całookresowe dane minutowe odczytane, ale pełny adapter/kalendarze/efektywność depozytów nie są jeszcze kwalifikowane.
+Dane pełnego GC2019–2025 odczytano wcześniej, ale kalendarz/depozyty/adapter nadal wymagają domknięcia; przeglądarka wyłączona ustawieniem aplikacji.
 
 Potwierdzone:
 
@@ -317,6 +341,14 @@ Odczyt rzeczywistych minut GC2019–2025 plus rozgrzewka2018 i zapis pełnych wy
 
 Jedna temporalna rozbieżność modelu depozytów vs CME potwierdzona, komponent naprawczy sprawdzony.
 
+Nowa wersja rachunku pobiera depozyt wg rzeczywistego czasu każdego zdarzenia;9 kontroli integracji zakończonych.
+
+Dwa dodatkowe komunikaty CME2025 potwierdzają stawki HRP i wejście po zamknięciu.
+
+Przywrócono brakujące oryginalne pliki wtyczek; potwierdzono aktualną blokadę ustawienia Work, nie zgadywaną awarię QC.
+
+Pozyskano surowy oficjalny komunikat giełdowy o zatrzymaniu Globex28.11.2025; kalendarz pełnego zakresu nadal niezakwalifikowany.
+
 Pozostało:
 
 Historical individual-contract prices,open interest,volume,ticks,multipliers and expiry histories have not been acquired.
@@ -365,19 +397,21 @@ Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walida
 
 Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
 
-GC 2019–2025: pełny adapter strategii, własne sygnały każdego kwalifikującego miesiąca, ticki zdarzeń, koszty, dzienne NAV i matched SPY pozostają do obliczenia po osobnym zamrożeniu planu. Audyt 4,64 mln minut nie jest wynikiem skuteczności.
+Pełny kalendarz GC2018–2025 i first intent/dostawy nadal otwarte. Oficjalne archiwalne ZIP2018–2021 dały403; wskazano10 właściwych plików Globex2022, pierwszy XLS także403. Nie podstawiono ClearPort, parkietu ani NYSE. Po włączeniu przeglądarki sprawdzić zwykły download w Chrome.
 
-Kalendarz źródłowy GC 2018–2025: odczytano oficjalne przewodniki CME 2019–2024; trzeba ustrukturyzować daty i terminy, dopełnić rozgrzewkę 2018 i rok 2025 oraz zweryfikować segmenty świąteczne i first intent. Daty zegarowe i kalendarz NYSE nie zastępują dat giełdowych GC.
+Aktualna blokada Chrome: aplikacja zgłasza „Local browser use is disabled in Work settings”. Pliki wtyczki przywrócono z identycznej wersji oryginalnej aplikacji; potrzebne włączenie lokalnej przeglądarki w Work. Nie stwierdzono awarii QC ani utraty istniejących wyników.
 
-Depozyty: zebrano 52 pierwsze obserwowane zmiany modelu wraz z rozgrzewką i punktowe potwierdzenia źródłowe. Trzeba uzgodnić obowiązywanie po zamknięciu, publikację i klasyfikację wszystkich używanych stawek. Jeden poprawiony przypadek nie kwalifikuje 52 zmian; nowy moduł dated_margin musi wejść do adaptera.
+Komunikat giełdowy GME25-030 potwierdza przerwę Globex28.11.2025; dokładne godziny zatrzymania/wznowienia i granice tickówGC wymagają uzgodnienia. To wymóg wykonania, nie dowód brakujących cen ani wynik strategii.
 
-Lista kontraktów i rolowanie: filtr 0–400 dni do wygaśnięcia służył kontroli danych, nie jest zatwierdzonym uniwersum strategii. Potrzebne pełne własne rozgrzewki 55 sesji, przyczynowy wybór miesiąca, płynność i kompletne terminy dostawy. Mechaniczny termin rolla i wyjątek silniejszego bliskiego miesiąca muszą być ustalone przed PnL.
+CME24.11.2022 oddziela obrót od rozliczenia: brak przepływu variation, ceny rozliczeniowe z poprzedniego dnia, IM przeliczany. Pełna oś rozliczeń wymaga odrębnego kalendarza; ta jedna notatka nie kwalifikuje całych2019–2025.
 
-Publikacja OI/volume: obecny harmonogram CME wskazuje finalny biuletyn o 10 CT następnego dnia roboczego. Nie dowodzi faktycznej dostępności ani vintage wszystkich danych 2019–2025; nie zamyka historycznej luki as-of.
+Publiczny plik kalendarza LEAN z przypiętego commitu nie zawiera wyjątków GC2018–2023 ani pełnej historii świąt2018–2025. Nie zastępuje źródeł CME ani odczytu historycznego kalendarza w chmurze. Oznaczenia miesięcy LTD w ekstrakcji przewodnika2020 wymagają dodatkowej kontroli układu strony.
 
-Wykonanie i rachunek: rzeczywiste historyczne kwotowania, opóźnienia i częściowe fille trzeba zastosować do wszystkich zdarzeń, z kosztem obu nóg. Prowizje obecnego scenariusza i 1 tick poślizgu pozostają założeniami. Brak osobistych filli, house margin, historycznych opłat, FX i podatków; nie nazywać pełnym netto.
+Zegary depozytów: nowa klasa rachunku pobiera stawkę przy każdym zdarzeniu i blokuje jej przenoszenie przez zmianę. Kontrola obejmuje cztery zapisane chwile19–21.06.2020; nie kwalifikuje wszystkich52 obserwowanych par modelu. Daty publikacji przyjęte konwencją końca dnia wymagają jawnego opt-in.
 
-Portfel 12 rynków dopiero po GC, zgodnie z poleceniem Piotra. Historia i klasyfikacja SB pozostają niepełne; brak rynku nie upoważnia do jego cichego usunięcia.
+CME25-117 i25-308 uzgadniają wartości i wejście po zamknięciu28.03/26.09.2025. Trzeba domknąć pełny kalendarz godzin, wszystkie pozostałe używane zmiany i jawnie rozdzielić Spec/HRP/Non-HRP oraz ewentualne stawki brokera.
+
+Pełny adapter GC nadal wymaga własnych55-sesyjnych rozgrzewek każdego miesiąca, N, sygnałów, przyczynowego wyboru i zamrożonej polityki rolla, wszystkich kwotowań zdarzeń, rozliczeń, kosztów oraz matched SPY. Brak kompletnej egzekucji nie jest wynikiem skuteczności.
 
 PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
 
@@ -411,9 +445,9 @@ ActualquoteGCroll control +independentledger/cost/stop checks; notfullstrategyPn
 
 Fullrange minute data audit plus seven timed margin cases, not strategy performance (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_RANGE_REPORT.html) · GC 2019–2025: odczytano 4 635 018 rzeczywistych świec minutowych i 282 879 z rozgrzewki 2018; 103 obserwowane kontrakty łącznie, bez zgłoszonych błędów technicznych. Zebrano 52 zmiany modelu depozytów. Osobny test wykazał przedwczesne stosowanie niższej stawki QC 19.06.2020: od północy zamiast po zamknięciu według CME. Nowy moduł rozdziela te momenty i przeszedł 10 kontroli; pełny adapter oraz wynik strategii po kosztach pozostają do ukończenia.
 
-Następny krok: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
+Następny krok: Po włączeniu lokalnej przeglądarki w ustawieniach Work połączyć istniejącą sesję Chrome z projektem QC38666177, bez dublowania zapisanych prób. Pozyskać brakujące tabele GC2018–2025 i dokładne godziny przerw, domknąć osie depozytów/adapter, zamrozić pełny plan, następnie policzyć GC po zadeklarowanych kosztach i matchedSPY.
 T003-E1 · Częściowo uzupełniony
-Całookresowe dane minutowe odczytane, ale pełny adapter/kalendarze/efektywność depozytów nie są jeszcze kwalifikowane.
+Dane pełnego GC2019–2025 odczytano wcześniej, ale kalendarz/depozyty/adapter nadal wymagają domknięcia; przeglądarka wyłączona ustawieniem aplikacji.
 
 Potwierdzone:
 
@@ -473,6 +507,14 @@ Odczyt rzeczywistych minut GC2019–2025 plus rozgrzewka2018 i zapis pełnych wy
 
 Jedna temporalna rozbieżność modelu depozytów vs CME potwierdzona, komponent naprawczy sprawdzony.
 
+Nowa wersja rachunku pobiera depozyt wg rzeczywistego czasu każdego zdarzenia;9 kontroli integracji zakończonych.
+
+Dwa dodatkowe komunikaty CME2025 potwierdzają stawki HRP i wejście po zamknięciu.
+
+Przywrócono brakujące oryginalne pliki wtyczek; potwierdzono aktualną blokadę ustawienia Work, nie zgadywaną awarię QC.
+
+Pozyskano surowy oficjalny komunikat giełdowy o zatrzymaniu Globex28.11.2025; kalendarz pełnego zakresu nadal niezakwalifikowany.
+
 Pozostało:
 
 Intraday event order,quotes and executable fills are absent.
@@ -517,19 +559,21 @@ Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walida
 
 Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
 
-GC 2019–2025: pełny adapter strategii, własne sygnały każdego kwalifikującego miesiąca, ticki zdarzeń, koszty, dzienne NAV i matched SPY pozostają do obliczenia po osobnym zamrożeniu planu. Audyt 4,64 mln minut nie jest wynikiem skuteczności.
+Pełny kalendarz GC2018–2025 i first intent/dostawy nadal otwarte. Oficjalne archiwalne ZIP2018–2021 dały403; wskazano10 właściwych plików Globex2022, pierwszy XLS także403. Nie podstawiono ClearPort, parkietu ani NYSE. Po włączeniu przeglądarki sprawdzić zwykły download w Chrome.
 
-Kalendarz źródłowy GC 2018–2025: odczytano oficjalne przewodniki CME 2019–2024; trzeba ustrukturyzować daty i terminy, dopełnić rozgrzewkę 2018 i rok 2025 oraz zweryfikować segmenty świąteczne i first intent. Daty zegarowe i kalendarz NYSE nie zastępują dat giełdowych GC.
+Aktualna blokada Chrome: aplikacja zgłasza „Local browser use is disabled in Work settings”. Pliki wtyczki przywrócono z identycznej wersji oryginalnej aplikacji; potrzebne włączenie lokalnej przeglądarki w Work. Nie stwierdzono awarii QC ani utraty istniejących wyników.
 
-Depozyty: zebrano 52 pierwsze obserwowane zmiany modelu wraz z rozgrzewką i punktowe potwierdzenia źródłowe. Trzeba uzgodnić obowiązywanie po zamknięciu, publikację i klasyfikację wszystkich używanych stawek. Jeden poprawiony przypadek nie kwalifikuje 52 zmian; nowy moduł dated_margin musi wejść do adaptera.
+Komunikat giełdowy GME25-030 potwierdza przerwę Globex28.11.2025; dokładne godziny zatrzymania/wznowienia i granice tickówGC wymagają uzgodnienia. To wymóg wykonania, nie dowód brakujących cen ani wynik strategii.
 
-Lista kontraktów i rolowanie: filtr 0–400 dni do wygaśnięcia służył kontroli danych, nie jest zatwierdzonym uniwersum strategii. Potrzebne pełne własne rozgrzewki 55 sesji, przyczynowy wybór miesiąca, płynność i kompletne terminy dostawy. Mechaniczny termin rolla i wyjątek silniejszego bliskiego miesiąca muszą być ustalone przed PnL.
+CME24.11.2022 oddziela obrót od rozliczenia: brak przepływu variation, ceny rozliczeniowe z poprzedniego dnia, IM przeliczany. Pełna oś rozliczeń wymaga odrębnego kalendarza; ta jedna notatka nie kwalifikuje całych2019–2025.
 
-Publikacja OI/volume: obecny harmonogram CME wskazuje finalny biuletyn o 10 CT następnego dnia roboczego. Nie dowodzi faktycznej dostępności ani vintage wszystkich danych 2019–2025; nie zamyka historycznej luki as-of.
+Publiczny plik kalendarza LEAN z przypiętego commitu nie zawiera wyjątków GC2018–2023 ani pełnej historii świąt2018–2025. Nie zastępuje źródeł CME ani odczytu historycznego kalendarza w chmurze. Oznaczenia miesięcy LTD w ekstrakcji przewodnika2020 wymagają dodatkowej kontroli układu strony.
 
-Wykonanie i rachunek: rzeczywiste historyczne kwotowania, opóźnienia i częściowe fille trzeba zastosować do wszystkich zdarzeń, z kosztem obu nóg. Prowizje obecnego scenariusza i 1 tick poślizgu pozostają założeniami. Brak osobistych filli, house margin, historycznych opłat, FX i podatków; nie nazywać pełnym netto.
+Zegary depozytów: nowa klasa rachunku pobiera stawkę przy każdym zdarzeniu i blokuje jej przenoszenie przez zmianę. Kontrola obejmuje cztery zapisane chwile19–21.06.2020; nie kwalifikuje wszystkich52 obserwowanych par modelu. Daty publikacji przyjęte konwencją końca dnia wymagają jawnego opt-in.
 
-Portfel 12 rynków dopiero po GC, zgodnie z poleceniem Piotra. Historia i klasyfikacja SB pozostają niepełne; brak rynku nie upoważnia do jego cichego usunięcia.
+CME25-117 i25-308 uzgadniają wartości i wejście po zamknięciu28.03/26.09.2025. Trzeba domknąć pełny kalendarz godzin, wszystkie pozostałe używane zmiany i jawnie rozdzielić Spec/HRP/Non-HRP oraz ewentualne stawki brokera.
+
+Pełny adapter GC nadal wymaga własnych55-sesyjnych rozgrzewek każdego miesiąca, N, sygnałów, przyczynowego wyboru i zamrożonej polityki rolla, wszystkich kwotowań zdarzeń, rozliczeń, kosztów oraz matched SPY. Brak kompletnej egzekucji nie jest wynikiem skuteczności.
 
 PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
 
@@ -559,9 +603,9 @@ ActualquoteGCroll control +independentledger/cost/stop checks; notfullstrategyPn
 
 Fullrange minute data audit plus seven timed margin cases, not strategy performance (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_RANGE_REPORT.html) · GC 2019–2025: odczytano 4 635 018 rzeczywistych świec minutowych i 282 879 z rozgrzewki 2018; 103 obserwowane kontrakty łącznie, bez zgłoszonych błędów technicznych. Zebrano 52 zmiany modelu depozytów. Osobny test wykazał przedwczesne stosowanie niższej stawki QC 19.06.2020: od północy zamiast po zamknięciu według CME. Nowy moduł rozdziela te momenty i przeszedł 10 kontroli; pełny adapter oraz wynik strategii po kosztach pozostają do ukończenia.
 
-Następny krok: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
+Następny krok: Po włączeniu lokalnej przeglądarki w ustawieniach Work połączyć istniejącą sesję Chrome z projektem QC38666177, bez dublowania zapisanych prób. Pozyskać brakujące tabele GC2018–2025 i dokładne godziny przerw, domknąć osie depozytów/adapter, zamrozić pełny plan, następnie policzyć GC po zadeklarowanych kosztach i matchedSPY.
 T003-E2 · Częściowo uzupełniony
-Całookresowe dane minutowe odczytane, ale pełny adapter/kalendarze/efektywność depozytów nie są jeszcze kwalifikowane.
+Dane pełnego GC2019–2025 odczytano wcześniej, ale kalendarz/depozyty/adapter nadal wymagają domknięcia; przeglądarka wyłączona ustawieniem aplikacji.
 
 Potwierdzone:
 
@@ -611,6 +655,14 @@ Odczyt rzeczywistych minut GC2019–2025 plus rozgrzewka2018 i zapis pełnych wy
 
 Jedna temporalna rozbieżność modelu depozytów vs CME potwierdzona, komponent naprawczy sprawdzony.
 
+Nowa wersja rachunku pobiera depozyt wg rzeczywistego czasu każdego zdarzenia;9 kontroli integracji zakończonych.
+
+Dwa dodatkowe komunikaty CME2025 potwierdzają stawki HRP i wejście po zamknięciu.
+
+Przywrócono brakujące oryginalne pliki wtyczek; potwierdzono aktualną blokadę ustawienia Work, nie zgadywaną awarię QC.
+
+Pozyskano surowy oficjalny komunikat giełdowy o zatrzymaniu Globex28.11.2025; kalendarz pełnego zakresu nadal niezakwalifikowany.
+
 Pozostało:
 
 Historical fees,margin,cash collateral funding and full account reset decisions are missing.
@@ -645,19 +697,21 @@ Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walida
 
 Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
 
-GC 2019–2025: pełny adapter strategii, własne sygnały każdego kwalifikującego miesiąca, ticki zdarzeń, koszty, dzienne NAV i matched SPY pozostają do obliczenia po osobnym zamrożeniu planu. Audyt 4,64 mln minut nie jest wynikiem skuteczności.
+Pełny kalendarz GC2018–2025 i first intent/dostawy nadal otwarte. Oficjalne archiwalne ZIP2018–2021 dały403; wskazano10 właściwych plików Globex2022, pierwszy XLS także403. Nie podstawiono ClearPort, parkietu ani NYSE. Po włączeniu przeglądarki sprawdzić zwykły download w Chrome.
 
-Kalendarz źródłowy GC 2018–2025: odczytano oficjalne przewodniki CME 2019–2024; trzeba ustrukturyzować daty i terminy, dopełnić rozgrzewkę 2018 i rok 2025 oraz zweryfikować segmenty świąteczne i first intent. Daty zegarowe i kalendarz NYSE nie zastępują dat giełdowych GC.
+Aktualna blokada Chrome: aplikacja zgłasza „Local browser use is disabled in Work settings”. Pliki wtyczki przywrócono z identycznej wersji oryginalnej aplikacji; potrzebne włączenie lokalnej przeglądarki w Work. Nie stwierdzono awarii QC ani utraty istniejących wyników.
 
-Depozyty: zebrano 52 pierwsze obserwowane zmiany modelu wraz z rozgrzewką i punktowe potwierdzenia źródłowe. Trzeba uzgodnić obowiązywanie po zamknięciu, publikację i klasyfikację wszystkich używanych stawek. Jeden poprawiony przypadek nie kwalifikuje 52 zmian; nowy moduł dated_margin musi wejść do adaptera.
+Komunikat giełdowy GME25-030 potwierdza przerwę Globex28.11.2025; dokładne godziny zatrzymania/wznowienia i granice tickówGC wymagają uzgodnienia. To wymóg wykonania, nie dowód brakujących cen ani wynik strategii.
 
-Lista kontraktów i rolowanie: filtr 0–400 dni do wygaśnięcia służył kontroli danych, nie jest zatwierdzonym uniwersum strategii. Potrzebne pełne własne rozgrzewki 55 sesji, przyczynowy wybór miesiąca, płynność i kompletne terminy dostawy. Mechaniczny termin rolla i wyjątek silniejszego bliskiego miesiąca muszą być ustalone przed PnL.
+CME24.11.2022 oddziela obrót od rozliczenia: brak przepływu variation, ceny rozliczeniowe z poprzedniego dnia, IM przeliczany. Pełna oś rozliczeń wymaga odrębnego kalendarza; ta jedna notatka nie kwalifikuje całych2019–2025.
 
-Publikacja OI/volume: obecny harmonogram CME wskazuje finalny biuletyn o 10 CT następnego dnia roboczego. Nie dowodzi faktycznej dostępności ani vintage wszystkich danych 2019–2025; nie zamyka historycznej luki as-of.
+Publiczny plik kalendarza LEAN z przypiętego commitu nie zawiera wyjątków GC2018–2023 ani pełnej historii świąt2018–2025. Nie zastępuje źródeł CME ani odczytu historycznego kalendarza w chmurze. Oznaczenia miesięcy LTD w ekstrakcji przewodnika2020 wymagają dodatkowej kontroli układu strony.
 
-Wykonanie i rachunek: rzeczywiste historyczne kwotowania, opóźnienia i częściowe fille trzeba zastosować do wszystkich zdarzeń, z kosztem obu nóg. Prowizje obecnego scenariusza i 1 tick poślizgu pozostają założeniami. Brak osobistych filli, house margin, historycznych opłat, FX i podatków; nie nazywać pełnym netto.
+Zegary depozytów: nowa klasa rachunku pobiera stawkę przy każdym zdarzeniu i blokuje jej przenoszenie przez zmianę. Kontrola obejmuje cztery zapisane chwile19–21.06.2020; nie kwalifikuje wszystkich52 obserwowanych par modelu. Daty publikacji przyjęte konwencją końca dnia wymagają jawnego opt-in.
 
-Portfel 12 rynków dopiero po GC, zgodnie z poleceniem Piotra. Historia i klasyfikacja SB pozostają niepełne; brak rynku nie upoważnia do jego cichego usunięcia.
+CME25-117 i25-308 uzgadniają wartości i wejście po zamknięciu28.03/26.09.2025. Trzeba domknąć pełny kalendarz godzin, wszystkie pozostałe używane zmiany i jawnie rozdzielić Spec/HRP/Non-HRP oraz ewentualne stawki brokera.
+
+Pełny adapter GC nadal wymaga własnych55-sesyjnych rozgrzewek każdego miesiąca, N, sygnałów, przyczynowego wyboru i zamrożonej polityki rolla, wszystkich kwotowań zdarzeń, rozliczeń, kosztów oraz matched SPY. Brak kompletnej egzekucji nie jest wynikiem skuteczności.
 
 PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
 
@@ -679,41 +733,41 @@ ActualquoteGCroll control +independentledger/cost/stop checks; notfullstrategyPn
 
 Fullrange minute data audit plus seven timed margin cases, not strategy performance (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_RANGE_REPORT.html) · GC 2019–2025: odczytano 4 635 018 rzeczywistych świec minutowych i 282 879 z rozgrzewki 2018; 103 obserwowane kontrakty łącznie, bez zgłoszonych błędów technicznych. Zebrano 52 zmiany modelu depozytów. Osobny test wykazał przedwczesne stosowanie niższej stawki QC 19.06.2020: od północy zamiast po zamknięciu według CME. Nowy moduł rozdziela te momenty i przeszedł 10 kontroli; pełny adapter oraz wynik strategii po kosztach pozostają do ukończenia.
 
-Następny krok: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
+Następny krok: Po włączeniu lokalnej przeglądarki w ustawieniach Work połączyć istniejącą sesję Chrome z projektem QC38666177, bez dublowania zapisanych prób. Pozyskać brakujące tabele GC2018–2025 i dokładne godziny przerw, domknąć osie depozytów/adapter, zamrozić pełny plan, następnie policzyć GC po zadeklarowanych kosztach i matchedSPY.
 
-Turtle GC2019–2025: kontrola całego zakresu i zegara depozytów
+Turtle: naprawa dostępu i kalendarze GC
 
-GC 2019–2025: odczytano 4 635 018 rzeczywistych świec minutowych i 282 879 z rozgrzewki 2018; 103 obserwowane kontrakty łącznie, bez zgłoszonych błędów technicznych. Zebrano 52 zmiany modelu depozytów. Osobny test wykazał przedwczesne stosowanie niższej stawki QC 19.06.2020: od północy zamiast po zamknięciu według CME. Nowy moduł rozdziela te momenty i przeszedł 10 kontroli; pełny adapter oraz wynik strategii po kosztach pozostają do ukończenia.
+Przywrócono oryginalne brakujące pliki obsługi Chrome; aktualną blokadą jest ustawienie Work wyłączające lokalną przeglądarkę. Dostęp do QC nie został jeszcze odzyskany. Uzupełniono źródła kalendarza o rozliczenia świąteczne2022 i oficjalny komunikat przerwy Globex28.11.2025. Pełny GC2019–2025 po kosztach nadal niewykonany.
 
 KontrolaWynik / ograniczenie
 
-Zakres danych2019–2025 + rozgrzewka od1.07.2018; 4 917 897 minut łącznie
+ChromePliki przywrócone; Work nadal wyłącza lokalną przeglądarkę
 
-Błędy techniczne danych0 zgłoszonych; nie dowodzi pełności kalendarza
+QuantConnectIstniejący projekt38666177 i wyniki zachowane;0 nowych przebiegów
 
-Depozyty52 zmiany modelu;18 160 odczytów; punktowe potwierdzenia
+Kalendarz202210 linków Globex sprawdzonych; pierwszy XLS403
 
-Różnica czasowa19.06.2020 QC od północy; CME po zamknięciu.3/7 próbek niezgodnych w czasie.
+Przerwa28.11.2025Oficjalny komunikat GME pobrany; dokładne godziny nieustalone
 
-Nowy komponent10 kontroli czasu/coverage PASS, integracja adaptera nadal wymagana
+Pełny GC2019–2025 po kosztachNiewykonany; potrzebny dostęp i pozostałe dane
 
-Wynik po kosztachJESZCZE NIEOBLICZONY; nie odrzucono Turtle
+Pełny kalendarz GC2018–2025 i first intent/dostawy nadal otwarte. Oficjalne archiwalne ZIP2018–2021 dały403; wskazano10 właściwych plików Globex2022, pierwszy XLS także403. Nie podstawiono ClearPort, parkietu ani NYSE. Po włączeniu przeglądarki sprawdzić zwykły download w Chrome.
 
-GC 2019–2025: pełny adapter strategii, własne sygnały każdego kwalifikującego miesiąca, ticki zdarzeń, koszty, dzienne NAV i matched SPY pozostają do obliczenia po osobnym zamrożeniu planu. Audyt 4,64 mln minut nie jest wynikiem skuteczności.
+Publiczny plik kalendarza LEAN z przypiętego commitu nie zawiera wyjątków GC2018–2023 ani pełnej historii świąt2018–2025. Nie zastępuje źródeł CME ani odczytu historycznego kalendarza w chmurze. Oznaczenia miesięcy LTD w ekstrakcji przewodnika2020 wymagają dodatkowej kontroli układu strony.
 
-Kalendarz źródłowy GC 2018–2025: odczytano oficjalne przewodniki CME 2019–2024; trzeba ustrukturyzować daty i terminy, dopełnić rozgrzewkę 2018 i rok 2025 oraz zweryfikować segmenty świąteczne i first intent. Daty zegarowe i kalendarz NYSE nie zastępują dat giełdowych GC.
+Zegary depozytów: nowa klasa rachunku pobiera stawkę przy każdym zdarzeniu i blokuje jej przenoszenie przez zmianę. Kontrola obejmuje cztery zapisane chwile19–21.06.2020; nie kwalifikuje wszystkich52 obserwowanych par modelu. Daty publikacji przyjęte konwencją końca dnia wymagają jawnego opt-in.
 
-Depozyty: zebrano 52 pierwsze obserwowane zmiany modelu wraz z rozgrzewką i punktowe potwierdzenia źródłowe. Trzeba uzgodnić obowiązywanie po zamknięciu, publikację i klasyfikację wszystkich używanych stawek. Jeden poprawiony przypadek nie kwalifikuje 52 zmian; nowy moduł dated_margin musi wejść do adaptera.
+CME25-117 i25-308 uzgadniają wartości i wejście po zamknięciu28.03/26.09.2025. Trzeba domknąć pełny kalendarz godzin, wszystkie pozostałe używane zmiany i jawnie rozdzielić Spec/HRP/Non-HRP oraz ewentualne stawki brokera.
 
-Lista kontraktów i rolowanie: filtr 0–400 dni do wygaśnięcia służył kontroli danych, nie jest zatwierdzonym uniwersum strategii. Potrzebne pełne własne rozgrzewki 55 sesji, przyczynowy wybór miesiąca, płynność i kompletne terminy dostawy. Mechaniczny termin rolla i wyjątek silniejszego bliskiego miesiąca muszą być ustalone przed PnL.
+Pełny adapter GC nadal wymaga własnych55-sesyjnych rozgrzewek każdego miesiąca, N, sygnałów, przyczynowego wyboru i zamrożonej polityki rolla, wszystkich kwotowań zdarzeń, rozliczeń, kosztów oraz matched SPY. Brak kompletnej egzekucji nie jest wynikiem skuteczności.
 
-Publikacja OI/volume: obecny harmonogram CME wskazuje finalny biuletyn o 10 CT następnego dnia roboczego. Nie dowodzi faktycznej dostępności ani vintage wszystkich danych 2019–2025; nie zamyka historycznej luki as-of.
+Aktualna blokada Chrome: aplikacja zgłasza „Local browser use is disabled in Work settings”. Pliki wtyczki przywrócono z identycznej wersji oryginalnej aplikacji; potrzebne włączenie lokalnej przeglądarki w Work. Nie stwierdzono awarii QC ani utraty istniejących wyników.
 
-Wykonanie i rachunek: rzeczywiste historyczne kwotowania, opóźnienia i częściowe fille trzeba zastosować do wszystkich zdarzeń, z kosztem obu nóg. Prowizje obecnego scenariusza i 1 tick poślizgu pozostają założeniami. Brak osobistych filli, house margin, historycznych opłat, FX i podatków; nie nazywać pełnym netto.
+Komunikat giełdowy GME25-030 potwierdza przerwę Globex28.11.2025; dokładne godziny zatrzymania/wznowienia i granice tickówGC wymagają uzgodnienia. To wymóg wykonania, nie dowód brakujących cen ani wynik strategii.
 
-Portfel 12 rynków dopiero po GC, zgodnie z poleceniem Piotra. Historia i klasyfikacja SB pozostają niepełne; brak rynku nie upoważnia do jego cichego usunięcia.
+CME24.11.2022 oddziela obrót od rozliczenia: brak przepływu variation, ceny rozliczeniowe z poprzedniego dnia, IM przeliczany. Pełna oś rozliczeń wymaga odrębnego kalendarza; ta jedna notatka nie kwalifikuje całych2019–2025.
 
-Dane wyniku i ograniczenia (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_RANGE_REPORT.html)
+Dane wyniku i ograniczenia (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_GC_ACCESS_CALENDAR_REPORT.html)
 
 Dywidendy: kontrola paczki zakończona · 30.10.2026
 
@@ -887,7 +941,7 @@ Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika
 
 Dane wyniku i ograniczenia
 
-Następne działanie dla karty: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
+Następne działanie dla karty: Po włączeniu lokalnej przeglądarki w ustawieniach Work połączyć istniejącą sesję Chrome z projektem QC38666177, bez dublowania zapisanych prób. Pozyskać brakujące tabele GC2018–2025 i dokładne godziny przerw, domknąć osie depozytów/adapter, zamrozić pełny plan, następnie policzyć GC po zadeklarowanych kosztach i matchedSPY.
 
 Pełny zapis ustaleń, dowodów i braków tej rundy
 
@@ -921,7 +975,7 @@ Niezależna kontrola kompletnościzanimrun.
 
 Gdy nie uda się zdobyć: Uproszczonykanał55/20 nadal może istnieć jako własnateza, bezTurtlereproduction.
 
-Następne działanie: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
+Następne działanie: Po włączeniu lokalnej przeglądarki w ustawieniach Work połączyć istniejącą sesję Chrome z projektem QC38666177, bez dublowania zapisanych prób. Pozyskać brakujące tabele GC2018–2025 i dokładne godziny przerw, domknąć osie depozytów/adapter, zamrozić pełny plan, następnie policzyć GC po zadeklarowanych kosztach i matchedSPY.
 T003-D1 · Historyczneseparatecontract futures i jawne źródłoweuniwersum.
 Dlaczego potrzebne: JednoseryjnySPY usuwaźródłowe rynki,short i dywersyfikację.
 
@@ -965,7 +1019,7 @@ Wersja zpodzbiorem jest oznaczona osobno.
 
 Gdy nie uda się zdobyć: Jawny source-incomplete subset lub własnokanałowyETFwariant; oryginał pozostaje requiresdata.
 
-Następne działanie: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
+Następne działanie: Po włączeniu lokalnej przeglądarki w ustawieniach Work połączyć istniejącą sesję Chrome z projektem QC38666177, bez dublowania zapisanych prób. Pozyskać brakujące tabele GC2018–2025 i dokładne godziny przerw, domknąć osie depozytów/adapter, zamrozić pełny plan, następnie policzyć GC po zadeklarowanych kosztach i matchedSPY.
 T003-E1 · Kolejność intradayprzebicia,stopu i gapów oraz realnośćfilla.
 Dlaczego potrzebne: Dailyclose→nextopen nie odtwarza źródłowego wejścia w trakcieprzebicia.
 
@@ -1005,7 +1059,7 @@ Sourceintraday i naszeclose są porównywane tylko w odrębnychwersjach.
 
 Gdy nie uda się zdobyć: Konserwatywny testzwidełkami możliwy po nowymplanie; brak rozstrzygnięciaoryginału przy nierozwiązanejkolejności.
 
-Następne działanie: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
+Następne działanie: Po włączeniu lokalnej przeglądarki w ustawieniach Work połączyć istniejącą sesję Chrome z projektem QC38666177, bez dublowania zapisanych prób. Pozyskać brakujące tabele GC2018–2025 i dokładne godziny przerw, domknąć osie depozytów/adapter, zamrozić pełny plan, następnie policzyć GC po zadeklarowanych kosztach i matchedSPY.
 T003-E2 · Kosztyfutures, margin,borrow/finansowanie i limityportfela.
 Dlaczego potrzebne: Oryginalneriskunits nie przeliczająsięna100%kapitałuSPY.
 
@@ -1037,7 +1091,7 @@ Braktradeorders podczasreprodukcji.
 
 Gdy nie uda się zdobyć: Wyłącznie statystykisygnału/grossscenario, beznetprofitclaim.
 
-Następne działanie: Najpierw uzgodnić źródłowy kalendarz GC i datowane stawki z godziną obowiązywania; potem zintegrować pełny adapter GC 2019–2025 i zamrozić reguły przed wynikiem po kosztach. Po GC przejść do stałego portfela 12 rynków.
+Następne działanie: Po włączeniu lokalnej przeglądarki w ustawieniach Work połączyć istniejącą sesję Chrome z projektem QC38666177, bez dublowania zapisanych prób. Pozyskać brakujące tabele GC2018–2025 i dokładne godziny przerw, domknąć osie depozytów/adapter, zamrozić pełny plan, następnie policzyć GC po zadeklarowanych kosztach i matchedSPY.
 
 Krótka karta dla AI · Źródło (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · Pełna karta, audyt i stare wyniki
 

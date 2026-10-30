@@ -1,0 +1,93 @@
+{
+  "id": "GC_MARGIN_ACCOUNT_BOUNDED_REPLAY_20261030_V1",
+  "at_utc": "2026-10-30T21:29:18.698430+00:00",
+  "plan_sha256": "043255093390ad5feb1b32362e63a860c0927fde973752857017fed1faf49061",
+  "real_timestamp_rows_replayed": 4,
+  "earlier_rows_explicitly_excluded": 3,
+  "unit_checks_passed": 9,
+  "input_sha256": "03e5692054e49e5fb3b6467f84a72ccf9fbd70f3163821cb24e143e3b74eccfe",
+  "rows": [
+    {
+      "bar_end_NY": "2020-06-18T12:00:00",
+      "not_replayed": "Before qualified notice-EOD control coverage; no earlier knowledge invented."
+    },
+    {
+      "bar_end_NY": "2020-06-18T16:59:00",
+      "not_replayed": "Before qualified notice-EOD control coverage; no earlier knowledge invented."
+    },
+    {
+      "bar_end_NY": "2020-06-18T18:01:00",
+      "not_replayed": "Before qualified notice-EOD control coverage; no earlier knowledge invented."
+    },
+    {
+      "actual_saved_bar_end_NY": "2020-06-19T00:01:00",
+      "QC_original_pair": [
+        9020.0,
+        8200.0
+      ],
+      "source_effective_pair": [
+        "10065",
+        "9150"
+      ],
+      "hypothetical_two_contract_margin_plus_entry_fee_USD": "20135.02",
+      "hypothetical19500USD_can_reserve_unit": false,
+      "actual_fills": 0,
+      "strategy_PnL_computed": false
+    },
+    {
+      "actual_saved_bar_end_NY": "2020-06-19T10:00:00",
+      "QC_original_pair": [
+        9020.0,
+        8200.0
+      ],
+      "source_effective_pair": [
+        "10065",
+        "9150"
+      ],
+      "hypothetical_two_contract_margin_plus_entry_fee_USD": "20135.02",
+      "hypothetical19500USD_can_reserve_unit": false,
+      "actual_fills": 0,
+      "strategy_PnL_computed": false
+    },
+    {
+      "actual_saved_bar_end_NY": "2020-06-19T16:59:00",
+      "QC_original_pair": [
+        9020.0,
+        8200.0
+      ],
+      "source_effective_pair": [
+        "10065",
+        "9150"
+      ],
+      "hypothetical_two_contract_margin_plus_entry_fee_USD": "20135.02",
+      "hypothetical19500USD_can_reserve_unit": false,
+      "actual_fills": 0,
+      "strategy_PnL_computed": false
+    },
+    {
+      "actual_saved_bar_end_NY": "2020-06-21T18:01:00",
+      "QC_original_pair": [
+        9020.0,
+        8200.0
+      ],
+      "source_effective_pair": [
+        "9020",
+        "8200"
+      ],
+      "hypothetical_two_contract_margin_plus_entry_fee_USD": "18045.02",
+      "hypothetical19500USD_can_reserve_unit": true,
+      "actual_fills": 0,
+      "strategy_PnL_computed": false
+    }
+  ],
+  "hypothetical_capital_N_fee_only": "19500USD,N0.975,2contracts,GC100oz,fee2.51/side; no invented market prices or fills",
+  "full_GC_2019_2025_result": false,
+  "old_files_unchanged": true,
+  "review_status": "provisional_no_partner_review",
+  "code_sha256": {
+    "research_round16/T003_GC_calendar_margin/dated_margin_account.py": "c13f05808f7defc00c81cd4fcbb094cc1583cbe05463e5238f8a073e5e9e622a",
+    "research_round16/T003_GC_calendar_margin/test_dated_margin_account.py": "a1b6bf66801f8a714b6471faef26405dbafcdec4937792acc86324ab157659ba",
+    "research_round13/T003_full_futures/account_engine.py": "6144d6ce619d896ede25dbe1bf49e8bcf7d62a9a60f26a5d0f60b8e4ee4f6c96",
+    "research_round15/T003_GC_2019_2025/dated_margin.py": "eb143f13ebbffe91c68e94af76aa630e5332670462f3ceffccca4b0d7fc99d50"
+  }
+}

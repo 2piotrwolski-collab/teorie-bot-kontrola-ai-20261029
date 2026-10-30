@@ -1,0 +1,24 @@
+{
+  "id": "T003_GC_ACCESS_CALENDAR_20261030_V1",
+  "at_utc": "2026-10-30T22:15:09.680369+00:00",
+  "theory_id": "T003",
+  "status": "VENDOR_SKILLS_RESTORED_WORK_BROWSER_DISABLED_CALENDAR_PARTIAL_FULL_STRATEGY_NOT_RUN",
+  "summary": "Przywrócono oryginalne brakujące pliki obsługi Chrome; aktualną blokadą jest ustawienie Work wyłączające lokalną przeglądarkę. Dostęp do QC nie został jeszcze odzyskany. Uzupełniono źródła kalendarza o rozliczenia świąteczne2022 i oficjalny komunikat przerwy Globex28.11.2025. Pełny GC2019–2025 po kosztach nadal niewykonany.",
+  "browser": "browser_access_attempt.json",
+  "calendar": "calendar_source_progress.json",
+  "full_strategy_PnL": false,
+  "new_strategy_trials": 0,
+  "original_theory_rejected": false,
+  "review_status": "provisional_no_partner_review",
+  "remaining": [
+    "Pełny kalendarz GC2018–2025 i first intent/dostawy nadal otwarte. Oficjalne archiwalne ZIP2018–2021 dały403; wskazano10 właściwych plików Globex2022, pierwszy XLS także403. Nie podstawiono ClearPort, parkietu ani NYSE. Po włączeniu przeglądarki sprawdzić zwykły download w Chrome.",
+    "Publiczny plik kalendarza LEAN z przypiętego commitu nie zawiera wyjątków GC2018–2023 ani pełnej historii świąt2018–2025. Nie zastępuje źródeł CME ani odczytu historycznego kalendarza w chmurze. Oznaczenia miesięcy LTD w ekstrakcji przewodnika2020 wymagają dodatkowej kontroli układu strony.",
+    "Zegary depozytów: nowa klasa rachunku pobiera stawkę przy każdym zdarzeniu i blokuje jej przenoszenie przez zmianę. Kontrola obejmuje cztery zapisane chwile19–21.06.2020; nie kwalifikuje wszystkich52 obserwowanych par modelu. Daty publikacji przyjęte konwencją końca dnia wymagają jawnego opt-in.",
+    "CME25-117 i25-308 uzgadniają wartości i wejście po zamknięciu28.03/26.09.2025. Trzeba domknąć pełny kalendarz godzin, wszystkie pozostałe używane zmiany i jawnie rozdzielić Spec/HRP/Non-HRP oraz ewentualne stawki brokera.",
+    "Pełny adapter GC nadal wymaga własnych55-sesyjnych rozgrzewek każdego miesiąca, N, sygnałów, przyczynowego wyboru i zamrożonej polityki rolla, wszystkich kwotowań zdarzeń, rozliczeń, kosztów oraz matched SPY. Brak kompletnej egzekucji nie jest wynikiem skuteczności.",
+    "Aktualna blokada Chrome: aplikacja zgłasza „Local browser use is disabled in Work settings”. Pliki wtyczki przywrócono z identycznej wersji oryginalnej aplikacji; potrzebne włączenie lokalnej przeglądarki w Work. Nie stwierdzono awarii QC ani utraty istniejących wyników.",
+    "Komunikat giełdowy GME25-030 potwierdza przerwę Globex28.11.2025; dokładne godziny zatrzymania/wznowienia i granice tickówGC wymagają uzgodnienia. To wymóg wykonania, nie dowód brakujących cen ani wynik strategii.",
+    "CME24.11.2022 oddziela obrót od rozliczenia: brak przepływu variation, ceny rozliczeniowe z poprzedniego dnia, IM przeliczany. Pełna oś rozliczeń wymaga odrębnego kalendarza; ta jedna notatka nie kwalifikuje całych2019–2025."
+  ],
+  "next_action": "Po włączeniu lokalnej przeglądarki w ustawieniach Work połączyć istniejącą sesję Chrome z projektem QC38666177, bez dublowania zapisanych prób. Pozyskać brakujące tabele GC2018–2025 i dokładne godziny przerw, domknąć osie depozytów/adapter, zamrozić pełny plan, następnie policzyć GC po zadeklarowanych kosztach i matchedSPY."
+}
