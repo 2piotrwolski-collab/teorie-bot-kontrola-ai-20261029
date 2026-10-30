@@ -1,0 +1,19 @@
+{
+  "at_utc": "2026-10-30T16:47:03.908708+00:00",
+  "project_id": 38666177,
+  "backtest_id": "a8385dfc8029759c1a22b1fc794dddb9",
+  "name": "Dancing Fluorescent Pink Salmon",
+  "engine": "2.5.0.0.18217",
+  "files_sha256": {
+    "QC_capacity_results.json": "9dc9c7cacaefea23615a614fc3768eac509ec806c7453e5d8ab613ab3b9ce928",
+    "QC_capacity_logs.txt": "a691139a046be42f8b74e267bab3676a6d57c4686a861369b8722cc9d8a2447c"
+  },
+  "output_integrity": {
+    "meta_received": true,
+    "scenarios_received": 2,
+    "parse_errors": [],
+    "log_bytes": 9456
+  },
+  "orders_in_export": 0,
+  "strategy_PnL": false
+}

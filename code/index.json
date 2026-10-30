@@ -189,13 +189,13 @@
     "source_file": "t003_futures_review.py",
     "url": "code/t003_futures_review.py.txt",
     "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
-    "sha256": "3da8f6e0015b6688b272e9b2c5e31be584fb4cce38ce04ffc79b1b3ee80e14d5"
+    "sha256": "6ce0a8cf0ebc354f54a1c3b8a9fbb2d9b200f944e83b2f98c9900d01c737d417"
   },
   {
     "source_file": "test_t003_futures_review.py",
     "url": "code/test_t003_futures_review.py.txt",
     "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
-    "sha256": "06305f6ed841b9c9b25ad68e3626e037823800b38334d0d6115555722dd5d9bf"
+    "sha256": "62d0d49db91a88ee6aca0a42c4d29184daf958d839336770d92e654ef4473a32"
   },
   {
     "source_file": "research_round12/T003_futures/session_audit_qc_v1.py",
@@ -334,5 +334,77 @@
     "url": "code/research_round13__T003_full_futures__acquire_ice_scanning.py.txt",
     "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
     "sha256": "66c18cd364cf0f26277c6bebd69be8a5b2b2bb1f9bb4b99a8443e533d6c85525"
+  },
+  {
+    "source_file": "research_round14/T003_GC_roll/roll_adapter.py",
+    "url": "code/research_round14__T003_GC_roll__roll_adapter.py.txt",
+    "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
+    "sha256": "c49f0626c32eb59577be18542dc28f6f5e63179e98dade7a5e3a2ab7aba762ca"
+  },
+  {
+    "source_file": "research_round14/T003_GC_roll/test_roll_adapter.py",
+    "url": "code/research_round14__T003_GC_roll__test_roll_adapter.py.txt",
+    "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
+    "sha256": "74a5125dc17625449407d489bccb6a3bc42d1e3f1d01b496f7a76a57b1798882"
+  },
+  {
+    "source_file": "research_round14/T003_GC_roll/test_cloud_namespace.py",
+    "url": "code/research_round14__T003_GC_roll__test_cloud_namespace.py.txt",
+    "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
+    "sha256": "305bdc57e6aacb00a600ddeb16e93b8fe4bdabf5e3b920f717bfa5f8c898a1ba"
+  },
+  {
+    "source_file": "research_round14/T003_GC_roll/main_v2.py",
+    "url": "code/research_round14__T003_GC_roll__main_v2.py.txt",
+    "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
+    "sha256": "9601cbc92f623cf270551afdff01e8166632dd818d57c27285900a5b2387aa41"
+  },
+  {
+    "source_file": "research_round14/T003_GC_roll/capacity_main_v2.py",
+    "url": "code/research_round14__T003_GC_roll__capacity_main_v2.py.txt",
+    "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
+    "sha256": "b8dba5ef56ffd2a7ebac27043e9860d0dc9f744493db1f1979eedd47ff989541"
+  },
+  {
+    "source_file": "research_round14/T003_GC_roll/verify_baseline.py",
+    "url": "code/research_round14__T003_GC_roll__verify_baseline.py.txt",
+    "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
+    "sha256": "04a87e192d80a388d8a04a0291acc6d837429b0585b66e675cdb8eaf4c5eb0f6"
+  },
+  {
+    "source_file": "research_round14/T003_GC_roll/verify_capacity.py",
+    "url": "code/research_round14__T003_GC_roll__verify_capacity.py.txt",
+    "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
+    "sha256": "ca0c0ff9cd13aa5865022fcc17e99244910ab2ff289ae5a79d367affa80112e2"
+  },
+  {
+    "source_file": "research_round14/T003_GC_roll/acquire_ice_scanning_v3.py",
+    "url": "code/research_round14__T003_GC_roll__acquire_ice_scanning_v3.py.txt",
+    "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
+    "sha256": "f731accc4b3ecc74e09462ffb6303b632181562603419fe71ca6e9200f31e0e5"
+  },
+  {
+    "source_file": "research_round14/T003_GC_roll/cloud_executed_source/main.py",
+    "url": "code/research_round14__T003_GC_roll__cloud_executed_source__main.py.txt",
+    "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
+    "sha256": "1c4b53ed7cc317f6b6faa0dfa115a11c9bd1ed64837bbca019dd00c3ce4afe5b"
+  },
+  {
+    "source_file": "research_round14/T003_GC_roll/cloud_executed_source/account_engine.py",
+    "url": "code/research_round14__T003_GC_roll__cloud_executed_source__account_engine.py.txt",
+    "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
+    "sha256": "27606828e54be2e04a63077e4f0ae9ac8774e749b8746630d31971ae869ec389"
+  },
+  {
+    "source_file": "research_round14/T003_GC_roll/cloud_executed_source/system2.py",
+    "url": "code/research_round14__T003_GC_roll__cloud_executed_source__system2.py.txt",
+    "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
+    "sha256": "e70af80e10b32b02dd754b46eba84e9c785a1463c3574e1f59dfcec59b60ba1e"
+  },
+  {
+    "source_file": "research_round14/T003_GC_roll/cloud_executed_source/shadow_system2.py",
+    "url": "code/research_round14__T003_GC_roll__cloud_executed_source__shadow_system2.py.txt",
+    "stage": "ACTUAL_GC_ROLL_EXECUTION_CONTROL_NOT_FULL_STRATEGY_PNL",
+    "sha256": "a03dee5ac919fc7dc1fe9840719a0017112ae6a5452a6ad6125418f729686496"
   }
 ]

@@ -1,0 +1,10 @@
+{
+  "http_status": 429,
+  "attempts": 1,
+  "all_response_body_headers_saved": true,
+  "Retry-After_seconds": 2056,
+  "do_not_request_before_UTC": "2026-10-30T16:39:47.415883+00:00",
+  "next_code": "acquire_ice_scanning_v3.py",
+  "new_valid_files": 0,
+  "no_further_request_sent": true
+}

@@ -1,0 +1,202 @@
+"""Anchored source-session channels and trade→later-quote System2 integration.
+
+Validated calendars, contract selection, own-contract shadow qualification and
+complete historical market inputs must be supplied by the data adapter.
+"""
+from collections import deque,Counter
+from dataclasses import dataclass
+from account_engine import D,DataGate,RiskLimit,QuoteUnavailable,aware,ranked_simultaneous
+
+@dataclass(frozen=True)
+class SessionBar:
+    contract:str
+    close_at:object
+    available_at:object
+    open:object
+    high:object
+    low:object
+    close:object
+
+class DailyState:
+    def __init__(self,contract,expected_closes,seed_anchor):
+        self.contract=contract;self.calendar=tuple(expected_closes)
+        if not self.calendar or self.calendar[0]!=seed_anchor:raise DataGate('Explicit anchored calendar required')
+        for x in self.calendar:aware(x)
+        if any(a>=b for a,b in zip(self.calendar,self.calendar[1:])):raise DataGate('Unordered/duplicate source calendar')
+        self.index=0;self.bars=deque(maxlen=55);self.previous=None;self.seed=[];self.n=None
+    def add(self,b):
+        aware(b.close_at);aware(b.available_at)
+        if b.contract!=self.contract or self.index>=len(self.calendar) or b.close_at!=self.calendar[self.index]:
+            raise DataGate('Wrong contract or missing/duplicate source trading session')
+        if b.available_at<b.close_at:raise DataGate('Unavailable session bar')
+        o,h,l,c=map(D,[b.open,b.high,b.low,b.close])
+        if not l<=min(o,c)<=max(o,c)<=h:raise DataGate('Invalid OHLC; negative futures prices are permitted')
+        if self.previous is not None:
+            if b.available_at<=self.previous.available_at:raise DataGate('Nonincreasing availability')
+            pc=D(self.previous.close);tr=max(h-l,abs(h-pc),abs(l-pc))
+            if self.n is None:
+                self.seed.append(tr)
+                if len(self.seed)==20:self.n=sum(self.seed,D(0))/20
+            else:self.n=(19*self.n+tr)/20
+        self.bars.append(b);self.previous=b;self.index+=1
+    def levels(self,decision_at,tick):
+        aware(decision_at);tick=D(tick)
+        if len(self.bars)<55 or self.n is None or self.n<=0:raise DataGate('55 validated sessions and positive anchored N required')
+        if self.previous.available_at>=decision_at:raise DataGate('Future/unavailable daily input')
+        if tick<=0:raise DataGate('Positive tick required')
+        bars=list(self.bars)
+        return {'contract':self.contract,'available_at':decision_at,'buy':max(D(b.high) for b in bars)+tick,
+            'short':min(D(b.low) for b in bars)-tick,'exit_long':min(D(b.low) for b in bars[-20:])-tick,
+            'exit_short':max(D(b.high) for b in bars[-20:])+tick,'n':self.n}
+
+class System2:
+    def __init__(self,account):
+        self.a=account;self.levels={};self.campaigns={};self.pending={};self.sequence=0
+        self.selected={};self.eligible={};self.ranking={};self.last_trade_at=None;self.diagnostics=[];self.diagnostic_counts=Counter()
+    def _diag(self,payload):
+        self.diagnostic_counts[payload["kind"]]+=1
+        if len(self.diagnostics)<100:self.diagnostics.append(payload)
+    def set_levels(self,levels):
+        at=levels['available_at'];aware(at);symbol=levels['contract']
+        if symbol not in self.a.contracts:raise DataGate('Unknown contract levels')
+        if symbol in self.levels and at<=self.levels[symbol]['available_at']:raise DataGate('Daily levels must advance')
+        if self.last_trade_at and at<=self.last_trade_at:raise DataGate('Cannot update levels behind already processed trades')
+        if D(levels['n'])<=0:raise DataGate('Positive source N required')
+        self.levels[symbol]={**levels,**{k:D(levels[k]) for k in ['buy','short','exit_long','exit_short','n']}}
+    def select(self,root,contract,known_at,price_3m,price_3m_known_at):
+        aware(known_at);aware(price_3m_known_at)
+        if self.a.contracts[contract].root!=root or price_3m_known_at>known_at:raise DataGate('Invalid contract/ranking asof')
+        if any(u.root==root and u.quantity and u.contract!=contract for u in self.a.units.values()):
+            raise DataGate('Cannot switch a held raw contract without completing the two-leg roll')
+        self.selected[root]=(contract,known_at);self.ranking[contract]=(D(price_3m),price_3m_known_at)
+        self.eligible[root]={contract:known_at}
+    def select_many(self,root,candidates,known_at):
+        """All eligible months, fixed using only then-available metadata.
+
+        Each candidate is (contract, three-month reference, reference-known-at).
+        Select the strongest qualifying breakout at the actual trade batch,
+        rather than choosing a month from its future performance.
+        """
+        aware(known_at)
+        if not candidates:raise DataGate('Empty eligible contract universe')
+        eligible={}
+        for contract,reference,ref_at in candidates:
+            aware(ref_at)
+            if contract in eligible or self.a.contracts[contract].root!=root or ref_at>known_at:
+                raise DataGate('Duplicate/invalid/unavailable eligible contract')
+            eligible[contract]=known_at;self.ranking[contract]=(D(reference),ref_at)
+        held=[u for u in self.a.units.values() if u.root==root and u.quantity]
+        if held and held[0].contract not in eligible:raise DataGate('Held month cannot disappear without close/roll')
+        self.eligible[root]=eligible;self.selected[root]=(next(iter(eligible)),known_at)
+    def _request_close(self,u,at,reason,indices=None):
+        if not u.quantity:return
+        if not u.complete and not u.cancelled:self.a.cancel_unfilled(u.uid,at)
+        prior=self.pending.get(u.uid)
+        if prior and prior['kind']=='exit':
+            if indices is None:prior['lots']=None
+            elif prior['lots'] is not None:prior['lots']=sorted(set(prior['lots'])|set(indices))
+            return
+        self.pending[u.uid]={'kind':'exit','signal_at':at,'reason':reason,'lots':indices}
+    def on_trades(self,at,prices):
+        aware(at)
+        if self.last_trade_at is not None and at<=self.last_trade_at:raise DataGate('Batch equal-time trades together; no order invented between them')
+        self.last_trade_at=at
+        self.a.mark_batch(prices,at)
+        # Margin liquidation is an account outcome, not a statement that the source hypothesis is false.
+        if self.a.margin_call_required(at):
+            for u in list(self.a.units.values()):
+                if not u.complete and not u.cancelled:self.a.cancel_unfilled(u.uid,at)
+                if u.quantity:self._request_close(u,at,'maintenance_margin')
+            self._diag({'at':at.isoformat(),'kind':'MARGIN_LIQUIDATION_REQUESTED'})
+            return
+        candidates=[]
+        for root,(contract,known_at) in self.selected.items():
+            held=[u for u in self.a.units.values() if u.root==root and u.quantity]
+            if held:contract=held[0].contract
+            else:
+                # One winning month per market, selected before portfolio caps.
+                month_candidates=[]
+                if any(u.root==root and not u.complete and not u.cancelled for u in self.a.units.values()):continue
+                for symbol,selection_at in self.eligible.get(root,{contract:known_at}).items():
+                    if selection_at>at:raise DataGate('Future eligible universe')
+                    if symbol not in prices:continue
+                    if symbol not in self.levels:raise DataGate('Missing source levels for eligible month')
+                    lv=self.levels[symbol]
+                    if lv['available_at']>at:raise DataGate('Future eligible-month levels')
+                    p=D(prices[symbol]);direction=1 if p>=lv['buy'] else (-1 if p<=lv['short'] else 0)
+                    if not direction:continue
+                    ref,ref_at=self.ranking[symbol]
+                    month_candidates.append({'root':root,'contract':symbol,'direction':direction,'n':lv['n'],
+                        'last':p,'price_3m':ref,'price_3m_known_at':ref_at,'decision_at':at})
+                if not month_candidates:continue
+                contract=ranked_simultaneous(month_candidates)[0]['contract']
+            if contract not in prices:continue
+            if known_at>at:raise DataGate('Contract selection unavailable at event')
+            if contract not in self.levels:raise DataGate('Missing source levels for selected contract')
+            lev=self.levels[contract]
+            if lev['available_at']>at:raise DataGate('Daily levels unavailable at trade')
+            price=D(prices[contract]);units=[u for u in self.a.units.values() if u.root==root and u.quantity]
+            pending_entry=[u for u in self.a.units.values() if u.root==root and not u.complete and not u.cancelled]
+            closing=False
+            for u in units:
+                channel=price<=lev['exit_long'] if u.direction>0 else price>=lev['exit_short']
+                stopped=[i for i,l in enumerate(u.lots) if l['q'] and (price<=l['stop'] if u.direction>0 else price>=l['stop'])]
+                if channel or stopped:
+                    self._request_close(u,at,'channel20' if channel else '2N',None if channel else stopped);closing=True
+            if closing:continue
+            if any(r.root==root and r.state in {'CLOSING','OPENING'} for r in self.a.rolls.values()):continue
+            if pending_entry or any(self.pending.get(u.uid,{}).get('kind')=='exit' for u in units):continue
+            if units:
+                campaign=self.campaigns.get(root)
+                if campaign is None:raise DataGate('Missing active campaign state')
+                direction=campaign['direction'];n=campaign['n'];anchor=campaign['last_purchase']
+                if price*direction<(anchor+direction*D('.5')*n)*direction:continue
+            else:
+                self.campaigns.pop(root,None)
+                direction=1 if price>=lev['buy'] else (-1 if price<=lev['short'] else 0)
+                if not direction:continue
+                n=lev['n']
+            if contract not in self.ranking:raise DataGate('Missing source strength ranking input')
+            reference,ref_at=self.ranking[contract]
+            candidates.append({'root':root,'contract':contract,'direction':direction,'n':n,'last':price,
+                'price_3m':reference,'price_3m_known_at':ref_at,'decision_at':at})
+        for c in ranked_simultaneous(candidates):
+            quantity=self.a.quantity_per_unit(c['n'],self.a.contracts[c['contract']].multiplier)
+            if quantity==0:
+                self._diag({'at':at.isoformat(),'kind':'ZERO_INTEGER_UNIT','root':c['root']});continue
+            self.sequence+=1;uid='S2-'+str(self.sequence)
+            try:self.a.reserve_unit(uid,c['contract'],c['direction'],c['n'],quantity,at)
+            except RiskLimit as exc:
+                self._diag({'at':at.isoformat(),'kind':'CAPITAL_OR_UNIT_LIMIT','root':c['root'],'reason':str(exc)});continue
+            self.pending[uid]={'kind':'entry','signal_at':at}
+    def on_quote(self,quote):
+        # Exit requests consume displayed liquidity first. New orders cannot use the signal's earlier quote.
+        requests=sorted(list(self.pending.items()),key=lambda kv:(0 if kv[1]['kind']=='exit' else 1,kv[1]['signal_at'],kv[0]))
+        for uid,request in requests:
+            u=self.a.units[uid]
+            if u.contract!=quote.contract or quote.at<=request['signal_at']:continue
+            if request['kind']=='entry' and u.cancelled:
+                self.pending.pop(uid,None);continue
+            try:
+                if request['kind']=='entry':
+                    filled=self.a.fill_unit(uid,quote)
+                    if filled:
+                        c=self.campaigns.setdefault(u.root,{'direction':u.direction,'n':u.n,'contract':u.contract,'last_purchase':u.entry_vwap})
+                        c['last_purchase']=u.entry_vwap
+                    if u.complete:self.pending.pop(uid,None)
+                else:
+                    self.a.close_unit(uid,quote,request['signal_at'],request['reason'],lot_indices=request['lots'])
+                    remaining=sum(l['q'] for i,l in enumerate(u.lots) if request['lots'] is None or i in request['lots'])
+                    if not remaining:self.pending.pop(uid,None)
+            except QuoteUnavailable as exc:
+                # Record an unusable quote as a measurement failure, never fill it or substitute a price.
+                self._diag({'at':quote.at.isoformat(),'kind':'EXECUTION_DATA_REJECTED','reason':str(exc)})
+            except RiskLimit as exc:
+                if request['kind']=='entry':self.a.cancel_unfilled(uid,quote.at);self.pending.pop(uid,None)
+                self._diag({'at':quote.at.isoformat(),'kind':'CAPITAL_LIMIT_AT_FILL','reason':str(exc)})
+    def source_roll_completed(self,rid):
+        r=self.a.rolls[rid]
+        if r.state!='DONE':raise DataGate('Incomplete roll')
+        new=[self.a.units[x] for x in r.new_uids.values()]
+        self.campaigns[r.root]={'direction':r.direction,'n':new[-1].n,'contract':r.new,'last_purchase':new[-1].entry_vwap}
+

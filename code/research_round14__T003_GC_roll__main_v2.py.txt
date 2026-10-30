@@ -1,0 +1,281 @@
+"""Bounded GC source trade-date envelopes and event refinement for a roll audit.
+
+Holiday envelopes deliberately include the scheduled halt. Actual trades alone
+are aggregated; no synthetic prices are inserted during closed minutes. This is
+not a full-hours validation or a universal calendar beyond this fixed sample.
+"""
+from datetime import datetime,date,time,timedelta
+from zoneinfo import ZoneInfo
+from collections import defaultdict
+from decimal import Decimal
+from account_engine import D,DataGate,Quote
+NY=ZoneInfo('America/New_York')
+
+def gc_sessions(end=date(2024,3,22)):
+    if not date(2023,9,1)<=end<=date(2024,3,22):raise DataGate('Audit calendar range exceeded')
+    excluded={date(2023,9,4),date(2023,11,23),date(2023,12,25),date(2024,1,1),date(2024,1,15),date(2024,2,19)}
+    merged={date(2023,9,5):date(2023,9,3),date(2023,11,24):date(2023,11,22),date(2024,1,16):date(2024,1,14),date(2024,2,20):date(2024,2,18)}
+    result=[];day=date(2023,9,1)
+    while day<=end:
+        if day.weekday()<5 and day not in excluded:
+            start=datetime.combine(merged.get(day,day-timedelta(days=1)),time(18),NY)
+            close=datetime.combine(day,time(13,45) if day==date(2023,11,24) else time(17),NY)
+            result.append({'trade_date':day,'open_at':start,'close_at':close})
+        day+=timedelta(days=1)
+    return result
+
+def needs_ticks(shadow,lo,hi):
+    lo,hi=D(lo),D(hi)
+    if shadow.pending:return True
+    lev=shadow.levels
+    if lev is None:return False
+    if not shadow.units:return hi>=lev['buy'] or lo<=lev['short']
+    if shadow.direction>0:
+        if lo<=max([lev['exit_long']]+[u['stop'] for u in shadow.units]):return True
+        return len(shadow.units)<4 and hi>=shadow.last_purchase+D('.5')*shadow.n
+    if hi>=min([lev['exit_short']]+[u['stop'] for u in shadow.units]):return True
+    return len(shadow.units)<4 and lo<=shadow.last_purchase-D('.5')*shadow.n
+
+def same_time_trade(shadow,prices):
+    """One unique decision per timestamp; reject competing exit/add ordering."""
+    if not prices:return None
+    lo=min(map(D,prices));hi=max(map(D,prices));lev=shadow.levels
+    if not shadow.units:
+        if hi>=lev['buy'] and lo<=lev['short']:raise DataGate('Same-time opposing breakouts; sequence unavailable')
+        return hi if hi>=lev['buy'] else lo
+    if shadow.direction>0:
+        exit_hit=lo<=max([lev['exit_long']]+[u['stop'] for u in shadow.units])
+        add_hit=len(shadow.units)<4 and hi>=shadow.last_purchase+D('.5')*shadow.n
+        if exit_hit and add_hit:raise DataGate('Same-time exit/add collision; no guessed ordering')
+        return lo if exit_hit else hi
+    exit_hit=hi>=min([lev['exit_short']]+[u['stop'] for u in shadow.units])
+    add_hit=len(shadow.units)<4 and lo<=shadow.last_purchase-D('.5')*shadow.n
+    if exit_hit and add_hit:raise DataGate('Same-time exit/add collision; no guessed ordering')
+    return hi if exit_hit else lo
+
+class GCBook:
+    """GC-only positive-price tick decoder; one-sided update does not erase other side."""
+    def __init__(self,contract):self.contract=contract;self.bid=None;self.ask=None;self.ambiguous_sides=0
+    def update(self,at,updates):
+        bids={(D(b),int(bs)) for b,a,bs,ass in updates if D(b)>0}
+        asks={(D(a),int(ass)) for b,a,bs,ass in updates if D(a)>0}
+        for side,values in [('bid',bids),('ask',asks)]:
+            if len(values)>1:setattr(self,side,None);self.ambiguous_sides+=1
+            elif values:
+                price,size=next(iter(values));setattr(self,side,(at,price,size))
+        if self.bid is None or self.ask is None:return None
+        bt,b,bs=self.bid;atime,a,ass=self.ask
+        return Quote(self.contract,at,b,a,bt,atime,bs,ass)
+
+def validate_refinement(bar,trade_prices):
+    if not trade_prices:raise DataGate('Action minute has no raw trade ticks')
+    prices=list(map(D,trade_prices));expected=tuple(map(D,[bar.open,bar.high,bar.low,bar.close]))
+    actual=(prices[0],max(prices),min(prices),prices[-1])
+    # Ordering of equal-time ticks affects O/C. H/L must match; O/C are audited,
+    # not used to invent an intraminute path. Caller reports O/C discrepancies.
+    if actual[1:3]!=expected[1:3]:raise DataGate('Raw minute and tick high/low differ; no silent substitution')
+    return actual==expected
+
+from AlgorithmImports import *
+from itertools import groupby
+from collections import Counter
+import json,hashlib,traceback
+from datetime import datetime,date,time,timedelta
+from account_engine import Account,Contract,Margin,Unit,QuoteUnavailable,RiskLimit,Quote,D,DataGate
+from system2 import DailyState,SessionBar
+from shadow_system2 import ShadowSystem2
+
+class TurtleActualRollControl(QCAlgorithm):
+    def initialize(self):
+        if self.live_mode:raise ValueError('Historical research only')
+        self.set_time_zone(TimeZones.NEW_YORK);self.set_start_date(2024,3,25);self.set_end_date(2024,3,25);self.set_cash(1000000)
+        self.target=datetime(2024,3,22,10,tzinfo=NY);self.finish=self.target+timedelta(minutes=5)
+        self.report={'protocol':'T003_GC_ACTUAL_ROLL_20261030_V1','question':'Two independent source campaigns and an actual-quote one-contract roll control, not strategy PNL','orders_submitted':0,'errors':[],'contracts':{},'roll':{},'limitations':['Retrospective flat-start after55source sessions, anchoredSep1; not originalcontractinception.','WeeklyN fixed at firstsource sessionofISOweek; campaignN heldfixed, explicitreconstruction.','L1quote+tape timestamps are not proof of receipt, latency, actualfills orbookdepth.','OIpublication unverified; lagged2completedsource sessions is an explicit convention, not proof.','One representative contract inventory checkpoint, not fullsource1% sizing orstrategyreturn.','QCdatedmodelmargins/currentfee scenario; personal/historicalhousemargin notverified.']}
+        self.symbols={};self.secs={};self.minute={};self.shadows={};self.books={};self.max_queries=500;self.queries=0
+        definitions=[('OLD',datetime(2024,4,26)),('NEW',datetime(2024,6,26))]
+        try:
+            for name,expiry in definitions:
+                symbol=Symbol.create_future('GC',Market.COMEX,expiry)
+                self.symbols[name]=symbol;self.secs[name]=self.add_future_contract(symbol,Resolution.MINUTE,fill_forward=False,extended_market_hours=True)
+                self.shadows[name]=ShadowSystem2(str(symbol),'.1');self.books[name]=GCBook(str(symbol))
+                bars=list(self.history[TradeBar](symbol,datetime(2023,8,31,18),self.target.replace(tzinfo=None),Resolution.MINUTE,fill_forward=False,extended_market_hours=True))
+                if not bars:raise DataGate('No actual individual-contract minute data')
+                if any(b.is_fill_forward for b in bars):raise DataGate('Unexpected fill-forward data')
+                if any(a.time>=b.time for a,b in zip(bars,bars[1:])):raise DataGate('Duplicate/unordered minute data')
+                self.minute[name]=bars
+                self.report['contracts'][name]={'sid':str(symbol.id),'minute_bars':len(bars),'complete_sessions':0,'action_minutes':0,'ticks':0,'refinement_OHLC_equal':0,'refinement_OC_different':0,'ambiguous_sides':0,'events':0,'skipped_by_safe_bounds':0,'suspicious_ticks':0}
+                self.replay(name)
+            self.roll_control()
+        except Exception as e:
+            self.report['errors'].append({'type':type(e).__name__,'message':str(e),'trace':traceback.format_exc()[-2500:]})
+        self.report['history_tick_queries']=self.queries
+
+    def at(self,t):return t.replace(tzinfo=NY)
+    def ticks(self,name,start,end):
+        self.queries+=1
+        if self.queries>self.max_queries:raise DataGate('Frozen500tickquerybudget reached; no unbounded retry')
+        return list(self.history[Tick](self.symbols[name],start.replace(tzinfo=None),end.replace(tzinfo=None),Resolution.TICK,fill_forward=False,extended_market_hours=True))
+
+    def tick_groups(self,ticks):
+        if any(a.time>b.time for a,b in zip(ticks,ticks[1:])):raise DataGate('Unordered raw ticks')
+        return groupby(ticks,key=lambda t:self.at(t.time))
+
+    def shadow_group(self,name,at,group,apply_trade=True):
+        s=self.shadows[name];row=self.report['contracts'][name];updates=[];trades=[]
+        for tick in group:
+            row['ticks']+=1
+            if tick.suspicious:
+                row['suspicious_ticks']+=1
+                # No suspicious action evidence is silently used.
+                raise DataGate('Suspicious tick in action/roll window')
+            if tick.tick_type==TickType.TRADE:trades.append(D(tick.last_price))
+            elif tick.tick_type==TickType.QUOTE:updates.append((tick.bid_price,tick.ask_price,tick.bid_size,tick.ask_size))
+        if apply_trade and trades:
+            price=same_time_trade(s,trades);s.on_trade(price,at)
+        quote=self.books[name].update(at,updates) if updates else None
+        if apply_trade and quote is not None:s.on_quote(quote)
+        return quote,trades
+
+    def replay(self,name):
+        bars=self.minute[name];sessions=gc_sessions();state=DailyState(str(self.symbols[name]),[x['close_at'] for x in sessions],sessions[0]['close_at'])
+        row=self.report['contracts'][name];s=self.shadows[name];index=0;week=None;weekly_n=None
+        for session in sessions:
+            start,close=session['open_at'],session['close_at'];available=close+timedelta(microseconds=1)
+            while index<len(bars) and self.at(bars[index].time)<start:
+                raise DataGate('Minute outside declared source trade-date envelopes')
+            current=[]
+            while index<len(bars) and self.at(bars[index].end_time)<=min(close,self.target):
+                b=bars[index]
+                if self.at(b.time)<start:raise DataGate('Wrong source session mapping')
+                if not D(b.low)<=min(D(b.open),D(b.close))<=max(D(b.open),D(b.close))<=D(b.high) or b.volume<0:raise DataGate('Invalid minute OHLCV')
+                current.append(b);index+=1
+            if not current:raise DataGate('Expected source session has no actual trade bars: '+str(session['trade_date']))
+            if state.index>=55:
+                lev=state.levels(start,'.1');key=session['trade_date'].isocalendar()[:2]
+                if week!=key:week=key;weekly_n=lev['n']
+                lev['n']=weekly_n;s.set_levels(lev)
+                for b in current:
+                    if not needs_ticks(s,b.low,b.high):row['skipped_by_safe_bounds']+=1;continue
+                    row['action_minutes']+=1;bt=self.at(b.time);be=self.at(b.end_time)
+                    ticks=self.ticks(name,bt-timedelta(seconds=1),be)
+                    all_prices=[t.last_price for t in ticks if t.tick_type==TickType.TRADE and bt<=self.at(t.time)<be]
+                    equal=validate_refinement(b,all_prices);row['refinement_OHLC_equal' if equal else 'refinement_OC_different']+=1
+                    # Seed quote state from earlier tape only, never replay earlier trades.
+                    for at,g in self.tick_groups(ticks):
+                        if at>=be:continue
+                        group=list(g)
+                        if at<bt:
+                            self.shadow_group(name,at,group,False)
+                        else:self.shadow_group(name,at,group,True)
+            if close>self.target:break
+            state.add(SessionBar(str(self.symbols[name]),close,available,current[0].open,max(b.high for b in current),min(b.low for b in current),current[-1].close))
+            row['complete_sessions']+=1
+        if index!=len(bars):raise DataGate('Unprocessed minute bars')
+        row.update(events=len(s.events),direction=s.direction,active_units=len(s.units),pending=None if s.pending is None else s.pending['kind'],campaign_N=None if s.n is None else str(s.n),anchored_daily_N=str(state.n),ambiguous_sides=self.books[name].ambiguous_sides)
+        row['last_campaign_events']=s.events[-8:]
+        self.states=getattr(self,'states',{});self.states[name]=state
+
+    def active_direction(self,name):
+        s=self.shadows[name]
+        return 0 if s.pending and s.pending['kind']=='exit' else s.direction
+
+    def roll_control(self):
+        events=[]
+        for name in ['OLD','NEW']:
+            for tick in self.ticks(name,self.target-timedelta(seconds=1),self.finish):events.append((self.at(tick.time),name,tick))
+        events.sort(key=lambda x:x[0]);decision=None;account=None;rid='GCJ24_TO_GCM24';before_nav=None;midcost=D(0)
+        r=self.report['roll'];r.update(status='WAITING_FOR_FROZEN_WINDOW',inventory_quantity=1,inventory_is_checkpoint_not_strategy_entry=True,source_sizing_tested=False)
+        for at,items in groupby(events,key=lambda x:x[0]):
+            batch=list(items);quotes={}
+            for name in ['OLD','NEW']:
+                ticks=[t for t_at,n,t in batch if n==name]
+                if ticks:
+                    q,trades=self.shadow_group(name,at,ticks,at>=self.target)
+                    if q is not None:quotes[name]=q
+            if decision is None and at>=self.target:
+                decision=at+timedelta(microseconds=1);r['decision_NY']=decision.isoformat()
+                for name in ['OLD','NEW']:
+                    self.shadows[name].certify_coverage(decision,'Full observed minute tape, action-minute tick refinement throughfixedwindow; providercompleteness notindependentlyproven')
+                    e=self.shadows[name].roll_eligibility(decision);r[name+'_source_direction']=e['direction'];r[name+'_source_units']=e['units']
+                direction=r['OLD_source_direction']
+                if direction==0 or r['NEW_source_direction']!=direction:
+                    r['status']='SOURCE_SIGNAL_DOES_NOT_AUTHORIZE_ROLL';return
+                # Model margins from an actual complete minute strictly before the decision.
+                ms={}
+                for name in ['OLD','NEW']:
+                    eligible=[b for b in self.minute[name] if self.at(b.end_time)<self.target]
+                    bar=eligible[-1];self.secs[name].set_market_price(bar);model=FutureMarginModel(0,self.secs[name]);ini=D(model.initial_overnight_margin_requirement);maint=D(model.maintenance_overnight_margin_requirement)
+                    ms[name]=(ini,maint);r[name+'_initial_usd']=str(ini);r[name+'_maintenance_usd']=str(maint)
+                    if not 0<maint<=ini:raise DataGate('Invalid dated margin')
+                old=str(self.symbols['OLD']);new=str(self.symbols['NEW'])
+                old_deadline=datetime(2024,3,27,tzinfo=NY);known=datetime(2024,3,21,23,59,59,tzinfo=NY)
+                contracts=[Contract(old,'GC',100,'.1',exit_before=old_deadline,critical_dates_known_at=known,critical_dates_source='CME24-083dated21Mar2024: firstintent27Mar'),Contract(new,'GC',100,'.1',exit_before=self.finish+timedelta(seconds=1),critical_dates_known_at=known,critical_dates_source='Declaredshortauditcutoff22Mar2024, stricterthandelivery; CME2024guidelistsJuncontract')]
+                account=Account(1000000,contracts,{'GC':'2.51'},[],[],slippage_ticks=1,synthetic=False)
+                for name,symbol in [('OLD',old),('NEW',new)]:
+                    ini,maint=ms[name];account.set_margin(symbol,Margin(ini,maint,self.target-timedelta(minutes=1),self.finish+timedelta(seconds=1),'QCdatedFutureMarginModel; modelscenario notverifiedpersonalhouse/PITpublication'),decision)
+                    last=[b for b in self.minute[name] if self.at(b.end_time)<self.target][-1];account.mark(symbol,last.close,decision)
+                source=self.shadows['OLD'];lot=source.units[0]
+                u=Unit('CHECKPOINT_ONE',old,'GC',direction,source.n,1,decision,lots=[{'q':1,'basis':account.marks[old],'entry':D(lot['entry']),'stop':D(lot['stop'])}],entry_qty=1,entry_value=D(lot['entry']),complete=True,advance_done=True)
+                account.units[u.uid]=u;account.ledger.append({'kind':'inventory_checkpoint_not_strategy_entry','at':decision.isoformat(),'quantity':1,'basis':str(account.marks[old]),'source_stop':str(lot['stop'])})
+                # Conservative lag is explicit. Provider timestamp is not publication proof.
+                cutoff=datetime(2024,3,20,17,tzinfo=NY);oi=list(self.history[OpenInterest](self.symbols['NEW'],datetime(2024,3,18),cutoff.replace(tzinfo=None),Resolution.MINUTE,fill_forward=False,extended_market_hours=True))
+                oi=[b for b in oi if b.value>0 and self.at(b.end_time)<=cutoff]
+                if not oi:raise DataGate('No positive lagged successor OI')
+                lag_session=next(x for x in gc_sessions() if x['trade_date']==date(2024,3,20));volume=sum(D(b.volume) for b in self.minute['NEW'] if lag_session['open_at']<=self.at(b.time) and self.at(b.end_time)<=lag_session['close_at'])
+                r.update(lagged_successor_volume=str(volume),lagged_successor_OI=str(oi[-1].value),OI_history_timestamp=str(oi[-1].end_time),OI_publication_verified=False,OI_lag_convention='2completedsource sessions; notpublicationproof')
+                account.start_roll(rid,old,new,decision,direction,decision,cutoff,old_deadline,known,volume,oi[-1].value)
+                r['status']='MECHANICAL_ROLL_STARTED_CONDITIONAL_OI_MARGIN_MODELS';continue
+            if account is None or at<=decision:continue
+            roll=account.rolls[rid]
+            if roll.state=='CLOSING' and 'OLD' in quotes:
+                q=quotes['OLD'];account.mark(q.contract,(D(q.bid)+D(q.ask))/2,at)
+                if self.active_direction('OLD')!=roll.direction:
+                    roll.stopped=True;r['source_exit_during_old_leg']=True
+                pre=account.equity()
+                try:filled=account.close_unit('CHECKPOINT_ONE',q,decision,'roll')
+                except QuoteUnavailable:filled=0
+                if filled:
+                    before_nav=pre;cost=roll.direction*((D(q.bid)+D(q.ask))/2-D(account.ledger[-1]['price']))*100+D(account.ledger[-1]['fee']);midcost+=cost
+                    r['old_leg_quote']={'at':q.at.isoformat(),'bid':str(q.bid),'ask':str(q.ask),'bid_at':q.bid_at.isoformat(),'ask_at':q.ask_at.isoformat(),'bid_size':q.bid_size,'ask_size':q.ask_size,'implementation_cost_usd':str(cost)}
+                    if roll.state=='OPENING':account.reserve_roll_successor(rid,at,self.active_direction('NEW'),at)
+            if roll.state=='OPENING' and 'NEW' in quotes:
+                if self.active_direction('NEW')!=roll.direction:
+                    for uid in roll.new_uids.values():account.cancel_unfilled(uid,at)
+                    roll.state='ABORTED';r['source_exit_before_new_leg']=True
+                else:
+                    q=quotes['NEW'];account.mark(q.contract,(D(q.bid)+D(q.ask))/2,at);uid=next(iter(roll.new_uids.values()))
+                    try:filled=account.fill_unit(uid,q)
+                    except QuoteUnavailable:filled=0
+                    if filled:
+                        entry=account.ledger[-1];cost=roll.direction*(D(entry['price'])-(D(q.bid)+D(q.ask))/2)*100+D(entry['fee']);midcost+=cost
+                        r['new_leg_quote']={'at':q.at.isoformat(),'bid':str(q.bid),'ask':str(q.ask),'bid_at':q.bid_at.isoformat(),'ask_at':q.ask_at.isoformat(),'bid_size':q.bid_size,'ask_size':q.ask_size,'implementation_cost_usd':str(cost)}
+            if roll.state in ['DONE','ABORTED']:
+                r.update(status=roll.state,ledger=account.ledger,fee_total_usd=str(account.fee_total),implementation_cost_usd=str(midcost),pre_roll_NAV=str(before_nav),post_roll_NAV=str(account.equity()),held_old=sum(u.quantity for u in account.units.values() if u.contract==roll.old),held_new=sum(u.quantity for u in account.units.values() if u.contract==roll.new))
+                if roll.state=='DONE':
+                    r['NAV_cost_reconciliation']=account.equity()-before_nav==-midcost
+                    exits=[e for e in account.ledger if e['kind']=='exit'];entries=[e for e in account.ledger if e['kind']=='entry'];r['old_closed_strictly_before_new_opened']=exits[-1]['at']<entries[-1]['at'];r['raw_price_gap_not_profit']=True
+                    if not r['NAV_cost_reconciliation'] or not r['old_closed_strictly_before_new_opened']:raise DataGate('Independent roll accounting/chronology control failed')
+                return
+        r['status']='NO_COMPLETE_VALID_EXECUTION_WITHIN_FIXED_5MIN_WINDOW'
+
+    def on_data(self,data):pass
+    def on_end_of_algorithm(self):
+        r=self.report['roll'];self.set_runtime_statistic('Protocol',self.report['protocol']);self.set_runtime_statistic('Control scope','GC Apr->Jun2024 onecontract roll; NOT strategy return')
+        self.set_runtime_statistic('Result',r.get('status','NOT_STARTED'));self.set_runtime_statistic('Errors',str(len(self.report['errors'])));self.set_runtime_statistic('Tick queries',str(self.queries))
+        for name,row in self.report['contracts'].items():
+            self.set_runtime_statistic(name+' coverage','sessions %s; minute bars %s; action minutes %s; rawticks %s'%(row['complete_sessions'],row['minute_bars'],row['action_minutes'],row['ticks']))
+            self.set_runtime_statistic(name+' source','direction %s; units %s; pending %s; N %s'%(row.get('direction'),row.get('active_units'),row.get('pending'),row.get('campaign_N')))
+            self.set_runtime_statistic(name+' refinements','OHLCequal %s; OCdifferent %s; ambiguousquote sides %s; suspectticks %s'%(row['refinement_OHLC_equal'],row['refinement_OC_different'],row['ambiguous_sides'],row['suspicious_ticks']))
+            for i,e in enumerate(row.get('last_campaign_events',[])):
+                self.set_runtime_statistic(name+' event '+str(i+1),'%s %s price %s'%(e['at'],e['kind'],e['price']))
+        for key in ['decision_NY','OLD_source_direction','NEW_source_direction','OLD_source_units','NEW_source_units','OLD_initial_usd','OLD_maintenance_usd','NEW_initial_usd','NEW_maintenance_usd','lagged_successor_volume','lagged_successor_OI','OI_history_timestamp','fee_total_usd','implementation_cost_usd','NAV_cost_reconciliation','old_closed_strictly_before_new_opened','held_old','held_new']:
+            if key in r:self.set_runtime_statistic(key.replace('_',' '),str(r[key]))
+        for key in ['old_leg_quote','new_leg_quote']:
+            if key in r:
+                q=r[key];self.set_runtime_statistic(key.replace('_',' '),'%s bid%s ask%s size%s/%s; costUSD%s'%(q['at'],q['bid'],q['ask'],q['bid_size'],q['ask_size'],q['implementation_cost_usd']))
+                self.set_runtime_statistic(key.replace('_',' ')+' times','bid '+q['bid_at']+'; ask '+q['ask_at'])
+        for i,e in enumerate(r.get('ledger',[])):
+            self.set_runtime_statistic('Ledger '+str(i+1),'%s %s %s price%s fee%s'%(e.get('at'),e['kind'],e.get('contract','checkpoint'),e.get('price',''),e.get('fee','')))
+        for i,e in enumerate(self.report['errors'][:3]):self.set_runtime_statistic('Error '+str(i+1),e['type']+': '+e['message'][:150])
+        self.set_runtime_statistic('Qualification','Quote-based model control; OIpublication/housemargins/fills andfullstrategy stillnotproven')
+        raw=json.dumps(self.report,sort_keys=True,separators=(',',':'));self.debug('GC_ROLL_REPORT '+raw)

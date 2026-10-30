@@ -1,0 +1,58 @@
+from pathlib import Path
+from decimal import Decimal as D
+from datetime import datetime,timedelta
+from collections import defaultdict,deque
+import json,hashlib,ast
+P=Path(__file__).resolve().parent
+r=json.loads((P/'QC_capacity_full_report.json').read_text());assert not r['errors'];assert len(r['scenarios'])==2
+rows=[]
+for s in sorted(r['scenarios'],key=lambda x:x['latency_ms']):
+ assert s['status']=='DONE' and s['total_contracts']==16 and s['source_units']==4 and s['quantity_per_unit']==4
+ assert s['OLD_direction']==s['NEW_direction']==1
+ old=[x for x in s['fills'] if x['leg']=='OLD'];new=[x for x in s['fills'] if x['leg']=='NEW'];q=16;direction=s['OLD_direction'];point=D(100)
+ assert sum(x['qty'] for x in old)==sum(x['qty'] for x in new)==q
+ assert all(sum(x['qty'] for x in leg if x['source_unit']==i)==4 for leg in [old,new] for i in range(1,5))
+ dt=lambda x:datetime.fromisoformat(x)
+ assert min(dt(x['at']) for x in old)>=dt(s['decision_at'])+timedelta(milliseconds=s['latency_ms'])
+ assert min(dt(x['at']) for x in new)>=max(dt(x['at']) for x in old)+timedelta(milliseconds=s['latency_ms'])
+ assert max(dt(x['at']) for x in old)<min(dt(x['at']) for x in new)
+ for leg in [old,new]:
+  bytime=defaultdict(list)
+  for x in leg:bytime[x['at']].append(x)
+  for at,fills in bytime.items():assert sum(x['qty'] for x in fills)<=min(x['displayed_size'] for x in fills)
+ fees=sum((D(x['fee']) for x in s['fills']),D(0));assert fees==D('80.32')==D(s['fee_total'])
+ cost=sum((direction*(D(x['reference_mid'])-D(x['price']))*x['qty']*point+D(x['fee']) for x in old),D(0))+sum((direction*(D(x['price'])-D(x['reference_mid']))*x['qty']*point+D(x['fee']) for x in new),D(0));assert cost==D(s['cost_total'])
+ slippage=D('.1')*point*q*2;spread=cost-fees-slippage;assert spread>=0
+ cash=D(1000000)+sum((direction*(D(x['price'])-D(s['checkpoint_basis']))*x['qty']*point for x in old),D(0))-fees;assert cash==D(s['final_cash'])
+ nav=cash+sum((direction*(D(s['final_new_mark'])-D(x['price']))*x['qty']*point for x in new),D(0));assert nav==D(s['after_NAV'])
+ motion=direction*point*(sum((D(x['reference_mid'])*x['qty'] for x in old),D(0))-q*D(old[0]['reference_mid'])+q*D(s['final_new_mark'])-sum((D(x['reference_mid'])*x['qty'] for x in new),D(0)))
+ assert motion==D(s['mark_motion_usd']);assert nav-D(s['before_NAV'])==motion-cost
+ # Independent stop identity: newstop=oldstop+(newfill-oldfill), FIFO per sourceunit.
+ queues=defaultdict(deque)
+ for x in old:queues[x['source_unit']].append([x['qty'],D(x['price'])])
+ predicted=defaultdict(list)
+ for x in new:
+  left=x['qty'];unit=x['source_unit'];oldstop=D(s['old_stops'][str(unit)])
+  while left:
+   item=queues[unit][0];n=min(item[0],left);stop=oldstop+D(x['price'])-item[1];predicted[unit].append((n,D(x['price']),stop));left-=n;item[0]-=n
+   if not item[0]:queues[unit].popleft()
+ assert all(not v for v in queues.values())
+ observed=defaultdict(list)
+ for x in s['new_lots']:observed[x['source_unit']].append((x['qty'],D(x['entry']),D(x['stop'])))
+ assert predicted==observed
+ assert s['held_old']==0 and s['held_new']==16
+ assert D(s['margins']['OLD']['initial'])*16==D(s['max_margin_usd'])==D('154880')
+ rows.append({'delay_ms':s['latency_ms'],'status':'INDEPENDENT_CHECK_PASS','quantity':16,'source_units':4,'fills_old':len(old),'fills_new':len(new),'fees_usd':str(fees),'quoted_spread_cost_usd':str(spread),'assumed_slippage_usd':str(slippage),'total_cost_usd':str(cost),'cost_per_contract_usd':str(cost/16),'max_initial_margin_usd':s['max_margin_usd'],'market_motion_during_roll_usd':str(motion),'NAV_reconciles_including_market_motion':True,'liquidity_size_not_reused_per_quote':True,'actual_first_old_after_ms':s['delay_gate_old_ms'],'actual_between_legs_ms':s['delay_between_legs_ms'],'all10_new_lots_stops_reconcile':len(s['new_lots'])==10,'source_stop_and_N_not_reset':True})
+# Cloud returned a digest of its own files. All4 match exact local source plus
+# one additional terminal LF, a transport formatting change; logical AST same.
+snaps=P/'cloud_executed_source';snaps.mkdir(exist_ok=True);codes=[]
+for name,f in [('main',P/'capacity_main_v2.py')]+[(n,P.parents[1]/'research_round13/T003_full_futures'/(n+'.py')) for n in ['account_engine','system2','shadow_system2']]:
+ raw=f.read_bytes();candidate=raw.rstrip(b'\r\n')+b'\n\n';cloud=r['source_file_sha256'][name]
+ assert hashlib.sha256(candidate).hexdigest()==cloud
+ assert ast.dump(ast.parse(raw.decode()))==ast.dump(ast.parse(candidate.decode()))
+ target=snaps/(name+'.py')
+ if target.exists():assert target.read_bytes()==candidate
+ else:target.write_bytes(candidate)
+ codes.append({'name':name,'local_sha256':hashlib.sha256(raw).hexdigest(),'reported_cloud_sha256':cloud,'verified_transformation':'One additional terminalLF; all otherbytes exact','AST_equal':True,'reconstructed_exact_cloud_bytes':str(target.relative_to(P))})
+out={'id':'T003_GC_CAPACITY_DELAY_INDEPENDENT_VERIFICATION_20261030','strategy_PnL':False,'real_fills_or_orders':False,'market_case_count':1,'execution_scenarios':rows,'code_identity':codes,'source_data':'Providerhistoricaldata; no independentlyfrozenrawtickexport','all_passed':True}
+(P/'capacity_verification.json').write_text(json.dumps(out,indent=2)+'\n');print(json.dumps(rows,indent=2))

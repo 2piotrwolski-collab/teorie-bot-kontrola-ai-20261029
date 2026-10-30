@@ -1,0 +1,56 @@
+"""Paced acquisition of actual public ICE archive links. No paid fallback.
+
+Attempt1 and every HTTP429 body are retained. Default repair makes at most10
+requests, one every2seconds, respecting server Retry-After and at least15minutes after a retained429.
+Stop immediately on429/5xx and record full public response body and headers.
+"""
+from pathlib import Path
+from datetime import datetime,timezone,timedelta
+import argparse,csv,hashlib,json,requests,time
+P=Path(__file__).resolve().parents[2]/'research_round13/T003_full_futures'
+
+def main():
+ ap=argparse.ArgumentParser();ap.add_argument('--batch-id',required=True);ap.add_argument('--limit',type=int,default=10)
+ args=ap.parse_args()
+ if not args.batch_id.replace('-','').replace('_','').isalnum() or not 1<=args.limit<=30:raise ValueError('Bounded named batch required')
+ receipts=P/'sources'/('ICE_scanning_'+args.batch_id+'_receipts.jsonl')
+ if receipts.exists():raise FileExistsError(receipts)
+ old=[]
+ for f in (P/'sources').glob('ICE_scanning*receipts.jsonl'):old.extend(json.loads(x) for x in f.read_text().splitlines())
+ from email.utils import parsedate_to_datetime
+ deadlines=[]
+ for x in old:
+  if x.get('http_status')!=429:continue
+  received=datetime.fromisoformat(x.get('received_at_utc',x['request_at_utc']))
+  retry=next((v for k,v in x.get('headers',{}).items() if k.lower()=='retry-after'),None)
+  until=received+timedelta(minutes=15)
+  if retry:
+   try:server=received+timedelta(seconds=float(retry))
+   except ValueError:server=parsedate_to_datetime(retry)
+   until=max(until,server)
+  deadlines.append(until)
+ if deadlines and datetime.now(timezone.utc)<max(deadlines):
+  raise ValueError('Server Retry-After/cooldown until '+max(deadlines).isoformat()+'; no requests sent')
+ links=json.loads((P/'sources/ICE_historical_scanning_links.json').read_text())
+ links=list({x['href']:x for x in links if '2019'<=x['href'].rsplit('_',1)[-1][:4]<='2025'}.values())
+ saved={x['url'] for x in old if x.get('valid_scanning_csv')}
+ todo=[x for x in links if 'https://www.ice.com'+x['href'] not in saved][:args.limit]
+ outdir=P/'sources'/('ICE_scanning_'+args.batch_id);outdir.mkdir(exist_ok=False)
+ with receipts.open('x') as log:
+  for i,row in enumerate(todo):
+   if i:time.sleep(2)
+   url='https://www.ice.com'+row['href'];result={'url':url,'ui_row':row['row'],'request_at_utc':datetime.now(timezone.utc).isoformat()}
+   try:
+    r=requests.get(url,timeout=25);raw=r.content;name=url.rsplit('/',1)[-1];out=outdir/name
+    result.update(received_at_utc=datetime.now(timezone.utc).isoformat(),http_status=r.status_code,headers=dict(r.headers),bytes=len(raw),sha256=hashlib.sha256(raw).hexdigest())
+    rows=list(csv.DictReader(raw.decode('utf-8-sig').splitlines())) if r.status_code==200 else []
+    ok=bool(rows) and {'Effective Date','Logical Commodity Code','New Applied Margin Rate','Tier Structure From'}<=set(rows[0])
+    result['valid_scanning_csv']=ok
+    if not ok:out=out.with_suffix(out.suffix+'.response')
+    with out.open('xb') as f:f.write(raw)
+    result['file']=str(out.relative_to(P));result['SB_rows']=sum(x['Logical Commodity Code']=='SB' for x in rows) if ok else 0
+   except Exception as e:result['error']={'type':type(e).__name__,'message':str(e)}
+   log.write(json.dumps(result,ensure_ascii=False)+'\n');log.flush()
+   if result.get('http_status',0)==429 or result.get('http_status',0)>=500 or not result.get('valid_scanning_csv'):break
+ print(str(receipts))
+if __name__=='__main__':main()

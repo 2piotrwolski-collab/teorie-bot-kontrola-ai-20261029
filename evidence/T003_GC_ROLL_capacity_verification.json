@@ -1,0 +1,86 @@
+{
+  "id": "T003_GC_CAPACITY_DELAY_INDEPENDENT_VERIFICATION_20261030",
+  "strategy_PnL": false,
+  "real_fills_or_orders": false,
+  "market_case_count": 1,
+  "execution_scenarios": [
+    {
+      "delay_ms": 250,
+      "status": "INDEPENDENT_CHECK_PASS",
+      "quantity": 16,
+      "source_units": 4,
+      "fills_old": 5,
+      "fills_new": 9,
+      "fees_usd": "80.32",
+      "quoted_spread_cost_usd": "305.00",
+      "assumed_slippage_usd": "320.0",
+      "total_cost_usd": "705.32",
+      "cost_per_contract_usd": "44.0825",
+      "max_initial_margin_usd": "154880.0",
+      "market_motion_during_roll_usd": "75.00",
+      "NAV_reconciles_including_market_motion": true,
+      "liquidity_size_not_reused_per_quote": true,
+      "actual_first_old_after_ms": 262.07599999999996,
+      "actual_between_legs_ms": 267.36,
+      "all10_new_lots_stops_reconcile": true,
+      "source_stop_and_N_not_reset": true
+    },
+    {
+      "delay_ms": 1000,
+      "status": "INDEPENDENT_CHECK_PASS",
+      "quantity": 16,
+      "source_units": 4,
+      "fills_old": 6,
+      "fills_new": 9,
+      "fees_usd": "80.32",
+      "quoted_spread_cost_usd": "210.00",
+      "assumed_slippage_usd": "320.0",
+      "total_cost_usd": "610.32",
+      "cost_per_contract_usd": "38.145",
+      "max_initial_margin_usd": "154880.0",
+      "market_motion_during_roll_usd": "30.00",
+      "NAV_reconciles_including_market_motion": true,
+      "liquidity_size_not_reused_per_quote": true,
+      "actual_first_old_after_ms": 1037.797,
+      "actual_between_legs_ms": 1204.539,
+      "all10_new_lots_stops_reconcile": true,
+      "source_stop_and_N_not_reset": true
+    }
+  ],
+  "code_identity": [
+    {
+      "name": "main",
+      "local_sha256": "b8dba5ef56ffd2a7ebac27043e9860d0dc9f744493db1f1979eedd47ff989541",
+      "reported_cloud_sha256": "1c4b53ed7cc317f6b6faa0dfa115a11c9bd1ed64837bbca019dd00c3ce4afe5b",
+      "verified_transformation": "One additional terminalLF; all otherbytes exact",
+      "AST_equal": true,
+      "reconstructed_exact_cloud_bytes": "cloud_executed_source/main.py"
+    },
+    {
+      "name": "account_engine",
+      "local_sha256": "6144d6ce619d896ede25dbe1bf49e8bcf7d62a9a60f26a5d0f60b8e4ee4f6c96",
+      "reported_cloud_sha256": "27606828e54be2e04a63077e4f0ae9ac8774e749b8746630d31971ae869ec389",
+      "verified_transformation": "One additional terminalLF; all otherbytes exact",
+      "AST_equal": true,
+      "reconstructed_exact_cloud_bytes": "cloud_executed_source/account_engine.py"
+    },
+    {
+      "name": "system2",
+      "local_sha256": "140580f423095ebc906426cf06e948c07e7932d9e8175d0ff84e046963fac6ac",
+      "reported_cloud_sha256": "e70af80e10b32b02dd754b46eba84e9c785a1463c3574e1f59dfcec59b60ba1e",
+      "verified_transformation": "One additional terminalLF; all otherbytes exact",
+      "AST_equal": true,
+      "reconstructed_exact_cloud_bytes": "cloud_executed_source/system2.py"
+    },
+    {
+      "name": "shadow_system2",
+      "local_sha256": "2e8110361afd58a8567638a2b24ad5e35193abd1519e4d9a51e2b73508d67982",
+      "reported_cloud_sha256": "a03dee5ac919fc7dc1fe9840719a0017112ae6a5452a6ad6125418f729686496",
+      "verified_transformation": "One additional terminalLF; all otherbytes exact",
+      "AST_equal": true,
+      "reconstructed_exact_cloud_bytes": "cloud_executed_source/shadow_system2.py"
+    }
+  ],
+  "source_data": "Providerhistoricaldata; no independentlyfrozenrawtickexport",
+  "all_passed": true
+}

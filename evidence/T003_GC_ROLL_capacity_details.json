@@ -1,0 +1,548 @@
+{
+  "errors": [],
+  "protocol": "T003_GC_CAPACITY_DELAY_20261030_V1",
+  "source_file_sha256": {
+    "account_engine": "27606828e54be2e04a63077e4f0ae9ac8774e749b8746630d31971ae869ec389",
+    "main": "1c4b53ed7cc317f6b6faa0dfa115a11c9bd1ed64837bbca019dd00c3ce4afe5b",
+    "shadow_system2": "a03dee5ac919fc7dc1fe9840719a0017112ae6a5452a6ad6125418f729686496",
+    "system2": "e70af80e10b32b02dd754b46eba84e9c785a1463c3574e1f59dfcec59b60ba1e"
+  },
+  "source_summary": {
+    "NEW": {
+      "action_minutes": 17,
+      "active_units": 4,
+      "campaign_N": "22.21036779890513849496299150",
+      "complete_sessions": 139,
+      "direction": 1,
+      "minute_bars": 43212,
+      "refinement_OC_different": 0,
+      "refinement_OHLC_equal": 17
+    },
+    "OLD": {
+      "action_minutes": 14,
+      "active_units": 4,
+      "campaign_N": "22.67302822503962988090895988",
+      "complete_sessions": 139,
+      "direction": 1,
+      "minute_bars": 90778,
+      "refinement_OC_different": 0,
+      "refinement_OHLC_equal": 14
+    }
+  },
+  "scenarios": [
+    {
+      "NAV_check": true,
+      "NEW_direction": 1,
+      "OI_publication_verified": false,
+      "OI_timestamp": "2024-03-20 09:32:00",
+      "OLD_direction": 1,
+      "after_NAV": "998649.68",
+      "before_NAV": "999280.00",
+      "campaign_N": "22.67302822503962988090895988",
+      "capital_checkpoint": "1000000",
+      "checkpoint_basis": "2180.5",
+      "cost_total": "705.32",
+      "decision_at": "2024-03-22T10:00:00.111730-04:00",
+      "delay_between_legs_ms": 267.36,
+      "delay_gate_old_ms": 262.07599999999996,
+      "fee_total": "80.32",
+      "fills": [
+        {
+          "at": "2024-03-22T10:00:00.373806-04:00",
+          "displayed_size": 5,
+          "fee": "10.04",
+          "leg": "OLD",
+          "price": "2179.9",
+          "qty": 4,
+          "reference_mid": "2180.05",
+          "source_unit": 1
+        },
+        {
+          "at": "2024-03-22T10:00:00.373806-04:00",
+          "displayed_size": 5,
+          "fee": "2.51",
+          "leg": "OLD",
+          "price": "2179.9",
+          "qty": 1,
+          "reference_mid": "2180.05",
+          "source_unit": 2
+        },
+        {
+          "at": "2024-03-22T10:00:00.390302-04:00",
+          "displayed_size": 16,
+          "fee": "7.53",
+          "leg": "OLD",
+          "price": "2179.8",
+          "qty": 3,
+          "reference_mid": "2180.0",
+          "source_unit": 2
+        },
+        {
+          "at": "2024-03-22T10:00:00.390302-04:00",
+          "displayed_size": 16,
+          "fee": "10.04",
+          "leg": "OLD",
+          "price": "2179.8",
+          "qty": 4,
+          "reference_mid": "2180.0",
+          "source_unit": 3
+        },
+        {
+          "at": "2024-03-22T10:00:00.390302-04:00",
+          "displayed_size": 16,
+          "fee": "10.04",
+          "leg": "OLD",
+          "price": "2179.8",
+          "qty": 4,
+          "reference_mid": "2180.0",
+          "source_unit": 4
+        },
+        {
+          "at": "2024-03-22T10:00:00.657662-04:00",
+          "displayed_size": 2,
+          "fee": "5.02",
+          "leg": "NEW",
+          "price": "2202.3",
+          "qty": 2,
+          "reference_mid": "2202.15",
+          "source_unit": 1
+        },
+        {
+          "at": "2024-03-22T10:00:00.664243-04:00",
+          "displayed_size": 1,
+          "fee": "2.51",
+          "leg": "NEW",
+          "price": "2202.3",
+          "qty": 1,
+          "reference_mid": "2202.15",
+          "source_unit": 1
+        },
+        {
+          "at": "2024-03-22T10:00:00.757389-04:00",
+          "displayed_size": 3,
+          "fee": "2.51",
+          "leg": "NEW",
+          "price": "2202.4",
+          "qty": 1,
+          "reference_mid": "2202.2",
+          "source_unit": 1
+        },
+        {
+          "at": "2024-03-22T10:00:00.757389-04:00",
+          "displayed_size": 3,
+          "fee": "5.02",
+          "leg": "NEW",
+          "price": "2202.4",
+          "qty": 2,
+          "reference_mid": "2202.2",
+          "source_unit": 2
+        },
+        {
+          "at": "2024-03-22T10:00:00.758051-04:00",
+          "displayed_size": 2,
+          "fee": "5.02",
+          "leg": "NEW",
+          "price": "2202.4",
+          "qty": 2,
+          "reference_mid": "2202.2",
+          "source_unit": 2
+        },
+        {
+          "at": "2024-03-22T10:00:00.758087-04:00",
+          "displayed_size": 1,
+          "fee": "2.51",
+          "leg": "NEW",
+          "price": "2202.4",
+          "qty": 1,
+          "reference_mid": "2202.2",
+          "source_unit": 3
+        },
+        {
+          "at": "2024-03-22T10:00:00.758201-04:00",
+          "displayed_size": 5,
+          "fee": "7.53",
+          "leg": "NEW",
+          "price": "2202.5",
+          "qty": 3,
+          "reference_mid": "2202.25",
+          "source_unit": 3
+        },
+        {
+          "at": "2024-03-22T10:00:00.758201-04:00",
+          "displayed_size": 5,
+          "fee": "5.02",
+          "leg": "NEW",
+          "price": "2202.5",
+          "qty": 2,
+          "reference_mid": "2202.25",
+          "source_unit": 4
+        },
+        {
+          "at": "2024-03-22T10:00:00.810541-04:00",
+          "displayed_size": 4,
+          "fee": "5.02",
+          "leg": "NEW",
+          "price": "2202.5",
+          "qty": 2,
+          "reference_mid": "2202.3",
+          "source_unit": 4
+        }
+      ],
+      "final_cash": "998849.68",
+      "final_new_mark": "2202.3",
+      "held_new": 16,
+      "held_old": 0,
+      "inventory_checkpoint_not_strategy_entry": true,
+      "lagged_OI": "272806.0",
+      "lagged_volume": "25013.0",
+      "latency_ms": 250,
+      "margins": {
+        "NEW": {
+          "initial": "9680.0",
+          "maintenance": "8800.0"
+        },
+        "OLD": {
+          "initial": "9680.0",
+          "maintenance": "8800.0"
+        }
+      },
+      "mark_motion_usd": "75.00",
+      "max_margin_usd": "154880.0",
+      "new_lots": [
+        {
+          "entry": "2202.3",
+          "qty": 2,
+          "source_unit": 1,
+          "stop": "2129.263485887480185059545520"
+        },
+        {
+          "entry": "2202.3",
+          "qty": 1,
+          "source_unit": 1,
+          "stop": "2129.263485887480185059545520"
+        },
+        {
+          "entry": "2202.4",
+          "qty": 1,
+          "source_unit": 1,
+          "stop": "2129.363485887480185059545520"
+        },
+        {
+          "entry": "2202.4",
+          "qty": 1,
+          "source_unit": 2,
+          "stop": "2129.626971774960370119091040"
+        },
+        {
+          "entry": "2202.4",
+          "qty": 1,
+          "source_unit": 2,
+          "stop": "2129.726971774960370119091040"
+        },
+        {
+          "entry": "2202.4",
+          "qty": 2,
+          "source_unit": 2,
+          "stop": "2129.726971774960370119091040"
+        },
+        {
+          "entry": "2202.4",
+          "qty": 1,
+          "source_unit": 3,
+          "stop": "2129.890457662440555178636560"
+        },
+        {
+          "entry": "2202.5",
+          "qty": 3,
+          "source_unit": 3,
+          "stop": "2129.990457662440555178636560"
+        },
+        {
+          "entry": "2202.5",
+          "qty": 2,
+          "source_unit": 4,
+          "stop": "2130.153943549920740238182080"
+        },
+        {
+          "entry": "2202.5",
+          "qty": 2,
+          "source_unit": 4,
+          "stop": "2130.153943549920740238182080"
+        }
+      ],
+      "old_closed_before_new": true,
+      "old_stops": {
+        "1": "2106.863485887480185059545520",
+        "2": "2107.126971774960370119091040",
+        "3": "2107.290457662440555178636560",
+        "4": "2107.453943549920740238182080"
+      },
+      "quantity_per_unit": 4,
+      "source_units": 4,
+      "status": "DONE",
+      "total_contracts": 16
+    },
+    {
+      "NAV_check": true,
+      "NEW_direction": 1,
+      "OI_publication_verified": false,
+      "OI_timestamp": "2024-03-20 09:32:00",
+      "OLD_direction": 1,
+      "after_NAV": "999499.68",
+      "before_NAV": "1000080.00",
+      "campaign_N": "22.67302822503962988090895988",
+      "capital_checkpoint": "1000000",
+      "checkpoint_basis": "2180.5",
+      "cost_total": "610.32",
+      "decision_at": "2024-03-22T10:00:00.111730-04:00",
+      "delay_between_legs_ms": 1204.539,
+      "delay_gate_old_ms": 1037.797,
+      "fee_total": "80.32",
+      "fills": [
+        {
+          "at": "2024-03-22T10:00:01.149527-04:00",
+          "displayed_size": 7,
+          "fee": "10.04",
+          "leg": "OLD",
+          "price": "2180.4",
+          "qty": 4,
+          "reference_mid": "2180.55",
+          "source_unit": 1
+        },
+        {
+          "at": "2024-03-22T10:00:01.149527-04:00",
+          "displayed_size": 7,
+          "fee": "7.53",
+          "leg": "OLD",
+          "price": "2180.4",
+          "qty": 3,
+          "reference_mid": "2180.55",
+          "source_unit": 2
+        },
+        {
+          "at": "2024-03-22T10:00:01.193957-04:00",
+          "displayed_size": 6,
+          "fee": "2.51",
+          "leg": "OLD",
+          "price": "2180.4",
+          "qty": 1,
+          "reference_mid": "2180.55",
+          "source_unit": 2
+        },
+        {
+          "at": "2024-03-22T10:00:01.193957-04:00",
+          "displayed_size": 6,
+          "fee": "10.04",
+          "leg": "OLD",
+          "price": "2180.4",
+          "qty": 4,
+          "reference_mid": "2180.55",
+          "source_unit": 3
+        },
+        {
+          "at": "2024-03-22T10:00:01.193957-04:00",
+          "displayed_size": 6,
+          "fee": "2.51",
+          "leg": "OLD",
+          "price": "2180.4",
+          "qty": 1,
+          "reference_mid": "2180.55",
+          "source_unit": 4
+        },
+        {
+          "at": "2024-03-22T10:00:01.194189-04:00",
+          "displayed_size": 5,
+          "fee": "7.53",
+          "leg": "OLD",
+          "price": "2180.4",
+          "qty": 3,
+          "reference_mid": "2180.55",
+          "source_unit": 4
+        },
+        {
+          "at": "2024-03-22T10:00:02.398728-04:00",
+          "displayed_size": 3,
+          "fee": "7.53",
+          "leg": "NEW",
+          "price": "2202.4",
+          "qty": 3,
+          "reference_mid": "2202.25",
+          "source_unit": 1
+        },
+        {
+          "at": "2024-03-22T10:00:02.398979-04:00",
+          "displayed_size": 2,
+          "fee": "2.51",
+          "leg": "NEW",
+          "price": "2202.4",
+          "qty": 1,
+          "reference_mid": "2202.25",
+          "source_unit": 1
+        },
+        {
+          "at": "2024-03-22T10:00:02.398979-04:00",
+          "displayed_size": 2,
+          "fee": "2.51",
+          "leg": "NEW",
+          "price": "2202.4",
+          "qty": 1,
+          "reference_mid": "2202.25",
+          "source_unit": 2
+        },
+        {
+          "at": "2024-03-22T10:00:02.399550-04:00",
+          "displayed_size": 1,
+          "fee": "2.51",
+          "leg": "NEW",
+          "price": "2202.4",
+          "qty": 1,
+          "reference_mid": "2202.25",
+          "source_unit": 2
+        },
+        {
+          "at": "2024-03-22T10:00:02.399584-04:00",
+          "displayed_size": 4,
+          "fee": "5.02",
+          "leg": "NEW",
+          "price": "2202.5",
+          "qty": 2,
+          "reference_mid": "2202.3",
+          "source_unit": 2
+        },
+        {
+          "at": "2024-03-22T10:00:02.399584-04:00",
+          "displayed_size": 4,
+          "fee": "5.02",
+          "leg": "NEW",
+          "price": "2202.5",
+          "qty": 2,
+          "reference_mid": "2202.3",
+          "source_unit": 3
+        },
+        {
+          "at": "2024-03-22T10:00:02.444091-04:00",
+          "displayed_size": 3,
+          "fee": "5.02",
+          "leg": "NEW",
+          "price": "2202.5",
+          "qty": 2,
+          "reference_mid": "2202.3",
+          "source_unit": 3
+        },
+        {
+          "at": "2024-03-22T10:00:02.444091-04:00",
+          "displayed_size": 3,
+          "fee": "2.51",
+          "leg": "NEW",
+          "price": "2202.5",
+          "qty": 1,
+          "reference_mid": "2202.3",
+          "source_unit": 4
+        },
+        {
+          "at": "2024-03-22T10:00:02.449736-04:00",
+          "displayed_size": 4,
+          "fee": "7.53",
+          "leg": "NEW",
+          "price": "2202.5",
+          "qty": 3,
+          "reference_mid": "2202.3",
+          "source_unit": 4
+        }
+      ],
+      "final_cash": "999759.68",
+      "final_new_mark": "2202.3",
+      "held_new": 16,
+      "held_old": 0,
+      "inventory_checkpoint_not_strategy_entry": true,
+      "lagged_OI": "272806.0",
+      "lagged_volume": "25013.0",
+      "latency_ms": 1000,
+      "margins": {
+        "NEW": {
+          "initial": "9680.0",
+          "maintenance": "8800.0"
+        },
+        "OLD": {
+          "initial": "9680.0",
+          "maintenance": "8800.0"
+        }
+      },
+      "mark_motion_usd": "30.00",
+      "max_margin_usd": "154880.0",
+      "new_lots": [
+        {
+          "entry": "2202.4",
+          "qty": 3,
+          "source_unit": 1,
+          "stop": "2128.863485887480185059545520"
+        },
+        {
+          "entry": "2202.4",
+          "qty": 1,
+          "source_unit": 1,
+          "stop": "2128.863485887480185059545520"
+        },
+        {
+          "entry": "2202.4",
+          "qty": 1,
+          "source_unit": 2,
+          "stop": "2129.126971774960370119091040"
+        },
+        {
+          "entry": "2202.4",
+          "qty": 1,
+          "source_unit": 2,
+          "stop": "2129.126971774960370119091040"
+        },
+        {
+          "entry": "2202.5",
+          "qty": 1,
+          "source_unit": 2,
+          "stop": "2129.226971774960370119091040"
+        },
+        {
+          "entry": "2202.5",
+          "qty": 1,
+          "source_unit": 2,
+          "stop": "2129.226971774960370119091040"
+        },
+        {
+          "entry": "2202.5",
+          "qty": 2,
+          "source_unit": 3,
+          "stop": "2129.390457662440555178636560"
+        },
+        {
+          "entry": "2202.5",
+          "qty": 2,
+          "source_unit": 3,
+          "stop": "2129.390457662440555178636560"
+        },
+        {
+          "entry": "2202.5",
+          "qty": 1,
+          "source_unit": 4,
+          "stop": "2129.553943549920740238182080"
+        },
+        {
+          "entry": "2202.5",
+          "qty": 3,
+          "source_unit": 4,
+          "stop": "2129.553943549920740238182080"
+        }
+      ],
+      "old_closed_before_new": true,
+      "old_stops": {
+        "1": "2106.863485887480185059545520",
+        "2": "2107.126971774960370119091040",
+        "3": "2107.290457662440555178636560",
+        "4": "2107.453943549920740238182080"
+      },
+      "quantity_per_unit": 4,
+      "source_units": 4,
+      "status": "DONE",
+      "total_contracts": 16
+    }
+  ]
+}

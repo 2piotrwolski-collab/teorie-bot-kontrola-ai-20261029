@@ -1,0 +1,40 @@
+{
+  "id": "T003_GC_CAPACITY_DELAY_20261030_V1",
+  "frozen_at_utc": "2026-10-30T16:42:49.539191+00:00",
+  "why_new_control": "1contractbaseline40.02USDused336microsecondsbetweenlegs; thisdoesnotdemonstrateexecutionatfullsource-stylepositionorMaclatency. Baselinepreserved.",
+  "same_fixed_market_case": "GCJ24->GCM24,22Mar2024at10NY,same139source-sessionreplay; notnewdates/optimization",
+  "new_fixed_scenarios": [
+    {
+      "latency_ms": 250,
+      "quantity": "4sourceunits×4contracts=16atconditional1Mnotionalcheckpoint"
+    },
+    {
+      "latency_ms": 1000,
+      "quantity": "same16"
+    }
+  ],
+  "source_size_scope": "1Mnotionalisadeclaredcheckpointscenario. ActualpriorhistoricalNAV/notionalisnotreconstructed, so thisisnotfullstrategy1%historicalaccount.",
+  "execution": "Nooldfillbeforedecision+latency. Fullyclosealloldbeforefirstnewfill, thenminimumsameseparatedelay. RealL1freshsidequotes/capacity, no reusewithinonequoteevent. Counterfactualorderimpact/depthandrealnetworklatencyunmeasured.",
+  "source_conditions_and_fees": "UnchangedR14sourcecore,0.5%laggedvol/OIparticipation,2.51USD/contract/side+actualspread+1tickeachleg. Bothscenariosmustbereported; selectnoneaswinner.",
+  "checks": [
+    "Quantity16oldout/16newin,4riskunitsretained",
+    "Partialfillliquiditycap",
+    "fees80.32USD",
+    "actual>=declaredlatencybothlegs",
+    "manualNAV=modeledcost+explicitmarketmotion",
+    "eachstoptransferredbyactualtwolegspreadandFIFOlotmapping, noreset2N",
+    "TrycloudownsourceSHAviaordinaryDebuglog, noreadaccountsecrets"
+  ],
+  "source_data_inputs": "Sameproviderhistoryvintage; notindependentnewOOS. Noadditionalhypothesistuning.",
+  "sha256": "721037c534196c07ae8208d6e55247fd9da9b4a39947a395b4251ab021e1848c",
+  "code": "capacity_main.py",
+  "cloud_target": "main.py",
+  "run_budget": {
+    "original": 1,
+    "output_or_technical_repair_max": 1
+  },
+  "paid_services": 0,
+  "real_orders": false,
+  "strategy_PnL": false,
+  "full_debug_output_may_hit10KBquota": "Ifincomplete,retainandlabelpartial; normalRuntimeStatisticsunder50counts. NoencodedexportorpaidObjectStore."
+}

@@ -1,0 +1,53 @@
+{
+  "old_tables": {
+    "theories": {
+      "identical": true,
+      "before": 10,
+      "after": 10
+    },
+    "versions": {
+      "identical": true,
+      "before": 10,
+      "after": 10
+    },
+    "experiments": {
+      "identical": true,
+      "before": 90,
+      "after": 90
+    },
+    "decisions": {
+      "identical": true,
+      "before": 21,
+      "after": 21
+    },
+    "observations": {
+      "identical": true,
+      "before": 4,
+      "after": 4
+    },
+    "strategy_trials": {
+      "identical": true,
+      "before": 247,
+      "after": 247
+    }
+  },
+  "frozen_files": {
+    "research_round13/T003_full_futures/ACCOUNT_COMPONENTS_FREEZE.json": true,
+    "research_round13/T003_full_futures/account_engine.py": true,
+    "research_round13/T003_full_futures/system2.py": true,
+    "research_round13/T003_full_futures/shadow_system2.py": true,
+    "research_round12/T003_futures/gc_sample_calendar.py": true,
+    "quantconnect_tests/PLAN.json": true,
+    "quantconnect_tests/research_kernels.py": true,
+    "config/iex_close_capture_20261030_v2.json": true,
+    "iex_capture.py": true,
+    "audit_claude_package_20261030/verification.json": true
+  },
+  "other9cards_identical": true,
+  "idempotence": {
+    "research_updates_before": 141,
+    "after": 141,
+    "currentprogressbyteidentical": true
+  },
+  "old_dividends_closed": true
+}

@@ -1,0 +1,45 @@
+{
+  "id": "T003_GC_ACTUAL_ROLL_20261030_V1",
+  "frozen_at_utc": "2026-10-30T16:11:24.335292+00:00",
+  "scope": "Independent rawcontract System2 campaigns plusonecontract execution/roll accounting control. Notfullstrategy or profit test.",
+  "source_core": "55/20,20TRWilderN,0.5Nadd,2Nstop,4units. Noauthorrulechanges. ExplicitR13mechanicalconventionsretained.",
+  "contracts": {
+    "old": "GC2024Apr expiry26Apr",
+    "new": "GC2024Jun expiry26Jun"
+  },
+  "source_session_anchor": "2023-09-01",
+  "own_campaign_start": "Flat afterfirst55complete source sessions; no claim originalinception.",
+  "roll_target_NY": "2024-03-22T10:00:00",
+  "decision": "Afterfirstactualtickbatch at/after10:00, plus1microsecond. Allsame-timeevents considered beforedecision; executionstrictlylater. Tapeclock is not actualreceipt.",
+  "window_end_NY": "2024-03-22T10:05:00",
+  "old_first_intent": "2024-03-27",
+  "metadata": "CME24-083published21Mar2024; known conservativeendofday21Mar, before22Mardecision.",
+  "new_safety_deadline": "Technicalauditcutoff22Mar10:05:01, not claimed Junfirstintent.",
+  "source_fit": [
+    "Ownpriceaction bothmonths mustshowexisting same-directionposition, otherwise rollrefused no forcedreplacement.",
+    "Fullsource businessdates includeholidaypartialtrades in nexttradedate; exactholidayhaltclock not independentlyrequalified forJan/Feb; envelopecoversactualtrades.",
+    "Tickrefine everyminute whichcouldchange source state; no guessedOHLCpath. Rawtick H/L mustreconcile; OCdifferencesdisclosed.",
+    "Same-time opposingevents/exit+addcollisionhardgate; multipleconflictingquotesideupdatesdiscardeduntilunambiguousrefresh.",
+    "1contractrepresentativecheckpointcontrol, explicitlynotfullsource1%quantitysize orwholeportfolio.",
+    "Fees2.51USD/side+actualspread+1adversetickperleg. NoPnlreturn/benchmarkclaim fromcontrol.",
+    "Two-sessionOIlag onlyconvention; publicationmissingremainspartial.",
+    "QCdatedinitial/maintmodelscenario, notproofpersonalhouse/PITpublication."
+  ],
+  "budget": {
+    "scientific_cases": 1,
+    "original_cloud_run": 1,
+    "technical_repairs_max": 2,
+    "tick_history_queries_max": 500,
+    "paid_services": 0
+  },
+  "files_sha256": {
+    "main.py": "f10340dbe06c752a369400835c9a36d76aad985c6aa9be1ee69f7d1a7f761ce6",
+    "account_engine.py": "6144d6ce619d896ede25dbe1bf49e8bcf7d62a9a60f26a5d0f60b8e4ee4f6c96",
+    "system2.py": "140580f423095ebc906426cf06e948c07e7932d9e8175d0ff84e046963fac6ac",
+    "shadow_system2.py": "2e8110361afd58a8567638a2b24ad5e35193abd1519e4d9a51e2b73508d67982"
+  },
+  "synthetic_adapter_checks_passed": 12,
+  "output": "Standardhuman-readableRuntimeStatistics/DownloadResults; oneDebugreportwithinexistingquotaforfulltrace, retainiftruncated. NoObjectStore orbulklicensedexport.",
+  "no_real_orders": true,
+  "no_parameter_tuning": true
+}

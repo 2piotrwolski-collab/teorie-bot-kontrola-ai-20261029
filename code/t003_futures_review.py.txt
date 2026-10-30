@@ -8,7 +8,8 @@ def merge(progress,review):
     card=next(x for x in out['items'] if x['id']=='T003')
     card['t003_futures_review_id']=review['id']
     card['futures_original_test_status']=review['status']
-    card['findings']=[s for s in card['findings'] if not s.startswith(('Turtle na kontraktach 30.10:','Turtle rachunek30.10:'))]+review['findings']
+    families={'Turtlenakontraktach30.10','Turtlerachunek30.10','TurtlerolowanieGC30.10'}
+    card['findings']=[s for s in card['findings'] if s.split(':',1)[0].replace(' ','') not in families]+review['findings']
     card['next_action']=review['next_action']
     card['overall_status']='source_gap_still_blocks_original_test'
     for gap in card['gap_updates']:

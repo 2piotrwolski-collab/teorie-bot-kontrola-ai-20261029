@@ -1,0 +1,21 @@
+{
+  "at_utc": "2026-10-30T16:31:51.580011+00:00",
+  "own_QC_hardreload_after_preserving_local_sources": true,
+  "native_plaintext_paste_worked_after_reload": true,
+  "no_browser_clipboard_API_used_after_reload": true,
+  "likely_interference": "Browserclipboardshim suspected butnotconclusivelyproven; notclaimrootcausalproof.",
+  "correct_main_visible_lines": 282,
+  "correct_shadow_visible_lines": 87,
+  "main_under32000chars": true,
+  "modules_saved": [
+    "main.py",
+    "account_engine.py",
+    "system2.py",
+    "shadow_system2.py"
+  ],
+  "latest_build_id": "8488a6-9d57ae",
+  "engine": "2.5.0.0.18217",
+  "actual_source_control_run_requested": true,
+  "previous_old_margin_repeat_not_source_control": true,
+  "cloud_source_exact_byte_readback": false
+}

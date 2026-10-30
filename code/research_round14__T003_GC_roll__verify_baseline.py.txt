@@ -1,0 +1,25 @@
+from pathlib import Path
+from decimal import Decimal as D
+from datetime import datetime
+import json,hashlib
+P=Path(__file__).resolve().parent
+r=json.loads((P/'QC_roll_full_report.json').read_text());roll=r['roll'];ledger=roll['ledger'];old=next(x for x in ledger if x['kind']=='exit');new=next(x for x in ledger if x['kind']=='entry')
+assert not r['errors'] and roll['status']=='DONE'
+assert roll['OLD_source_direction']==roll['NEW_source_direction']==1
+assert roll['OLD_source_units']==roll['NEW_source_units']==4
+assert old['q']==new['q']==1 and datetime.fromisoformat(old['at'])<datetime.fromisoformat(new['at'])
+fees=D(old['fee'])+D(new['fee']);spread=D(0);slippage=D(0);parts=[]
+for kind,fill,key,side in [('sell_old',old,'old_leg_quote',-1),('buy_new',new,'new_leg_quote',1)]:
+ q=roll[key];at=datetime.fromisoformat(q['at']);bid=D(q['bid']);ask=D(q['ask'])
+ ages=[(at-datetime.fromisoformat(q[k])).total_seconds() for k in ['bid_at','ask_at']]
+ assert min(ages)>=0 and max(ages)<=1
+ assert (q['bid_at'] if side<0 else q['ask_at'])==q['at']
+ assert int(q['bid_size'] if side<0 else q['ask_size'])>=1
+ mid=(bid+ask)/2;sc=(ask-bid)/2*100;sl=(mid-D(fill['price']))*100 if side<0 else (D(fill['price'])-mid)*100
+ assert sl==sc+D(10)
+ spread+=sc;slippage+=sl-sc
+ parts.append({'leg':kind,'fill':fill['price'],'bid':str(bid),'ask':str(ask),'spread_cost_usd':str(sc),'assumed_adverse_tick_cost_usd':'10.0','fee_usd':fill['fee'],'side_ages_seconds':ages})
+cost=spread+slippage+fees;assert cost==D('40.02')==D(roll['implementation_cost_usd'])
+assert D(roll['pre_roll_NAV'])-D(roll['post_roll_NAV'])==cost
+x={'id':'T003_REAL_GC_ROLL_ONE_CONTRACT_VERIFIED_20261030','source_report_sha256':hashlib.sha256((P/'QC_roll_full_report.json').read_bytes()).hexdigest(),'source_conditions':'Both own independently replayed campaigns active long,4units each,139complete source dates; boundedflatstartconvention','old_closed_before_new_opened':True,'old_held_end':roll['held_old'],'new_held_end':roll['held_new'],'parts':parts,'spread_cost_usd':str(spread),'fees_model_usd':str(fees),'one_tick_each_leg_model_usd':str(slippage),'total_model_cost_usd':str(cost),'raw_price_gap_points':str(D(new['price'])-D(old['price'])),'price_gap_not_counted_as_profit':True,'latency_between_fills_microseconds':(datetime.fromisoformat(new['at'])-datetime.fromisoformat(old['at'])).total_seconds()*1e6,'dated_initial_per_contract_usd':roll['OLD_initial_usd'],'dated_maintenance_per_contract_usd':roll['OLD_maintenance_usd'],'lagged_new_OI':roll['lagged_successor_OI'],'lagged_new_volume':roll['lagged_successor_volume'],'full_strategy_PnL':False,'real_orders_or_fills':False,'limits':['1contract checkpoint control, notfullsource1%sizing/fullportfolio','Submillisecondtapeexecutionisnot measuredMacnetworklatency; largerposition anddelaycontrol plannedseparately','OIpublicationspeed andpersonalhousemarginunverified; modeledfees/currenttariff nothistoricalfullnet','Rawmarketdatasetnotexportedorindependentlyfrozen; fullnormalQCoutcome/logsaved']}
+(P/'baseline_verification.json').write_text(json.dumps(x,indent=2)+'\n');print(json.dumps({k:x[k] for k in ['spread_cost_usd','fees_model_usd','one_tick_each_leg_model_usd','total_model_cost_usd','raw_price_gap_points','latency_between_fills_microseconds']},indent=2))

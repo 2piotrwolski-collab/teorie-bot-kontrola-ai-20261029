@@ -1,0 +1,10 @@
+{
+  "new_primary_sources": {
+    "MLK": "OCC53911dated08Jan2024explicitallCMEholidaytrades tradeDate16Jan",
+    "Presidents": "OCC54107dated12Feb2024explicitallCMEholidaytrades tradeDate20Feb",
+    "old_delivery": "CME24-083dated21Mar2024:GoldAprLTD26Apr,firstintent27Mar,firstnotice28Mar,firstdelivery01Apr"
+  },
+  "calendars_retained": "EarlierR12LaborDay/Thanksgiving/Christmas/NewYear primaryevidence preserved. Newenvelopes integrateallactualholidaytrades anddeclarenotfull-hourcalendarqualification.",
+  "primary_but_not_applicable": "CME2024presidentsOTCadvisory isIRS/OTCFX, notusedasfuturesGoldcalendar. OCC10%holidaymargin forOCCXCMEaccounts notautomaticallyapplied toIBKR/COMEXmodel; exactclearingrouteunknown.",
+  "no_price_results_yet_in_source_fit": true
+}

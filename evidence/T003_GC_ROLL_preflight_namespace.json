@@ -1,0 +1,11 @@
+{
+  "id": "T003_GC_ACTUAL_ROLL_PREFLIGHT_NAMESPACE_20261030",
+  "at_utc": "2026-10-30T16:18:00.859094+00:00",
+  "cloud_runs_so_far": 0,
+  "market_results_seen": false,
+  "reason": "AlgorithmImports star may mask purePythonQuote/time; explicitly restore our requiredtypes. No source/data/parameterchange. Preserve main.py andoriginalPLAN.",
+  "local_code_file": "main_v2.py",
+  "cloud_target": "main.py",
+  "sha256": "9601cbc92f623cf270551afdff01e8166632dd818d57c27285900a5b2387aa41",
+  "other3modules": "OriginalR13frozenfiles unchanged"
+}

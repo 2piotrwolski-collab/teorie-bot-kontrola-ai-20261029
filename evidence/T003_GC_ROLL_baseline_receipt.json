@@ -1,0 +1,11 @@
+{
+  "at_utc": "2026-10-30T16:32:49.539022+00:00",
+  "project_id": 38666177,
+  "backtest_id": "9c439dd26d4b098a5fe6c07b1bc2ae15",
+  "name": "Hipster Fluorescent Yellow Pig",
+  "engine": "2.5.0.0.18217",
+  "source_sha256": "ee66808d420f221ec7d29f6eb2de5741c80795f7a3117ba1e4edb1197539c1ff",
+  "orders_in_export": 0,
+  "strategy_PnL": false,
+  "scope": "Onecontract actual-quote roll execution control; sourcecampaigns separately replayed"
+}

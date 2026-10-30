@@ -1,0 +1,77 @@
+"""Bounded GC source trade-date envelopes and event refinement for a roll audit.
+
+Holiday envelopes deliberately include the scheduled halt. Actual trades alone
+are aggregated; no synthetic prices are inserted during closed minutes. This is
+not a full-hours validation or a universal calendar beyond this fixed sample.
+"""
+from datetime import datetime,date,time,timedelta
+from zoneinfo import ZoneInfo
+from collections import defaultdict
+from decimal import Decimal
+from account_engine import D,DataGate,Quote
+NY=ZoneInfo('America/New_York')
+
+def gc_sessions(end=date(2024,3,22)):
+    if not date(2023,9,1)<=end<=date(2024,3,22):raise DataGate('Audit calendar range exceeded')
+    excluded={date(2023,9,4),date(2023,11,23),date(2023,12,25),date(2024,1,1),date(2024,1,15),date(2024,2,19)}
+    merged={date(2023,9,5):date(2023,9,3),date(2023,11,24):date(2023,11,22),date(2024,1,16):date(2024,1,14),date(2024,2,20):date(2024,2,18)}
+    result=[];day=date(2023,9,1)
+    while day<=end:
+        if day.weekday()<5 and day not in excluded:
+            start=datetime.combine(merged.get(day,day-timedelta(days=1)),time(18),NY)
+            close=datetime.combine(day,time(13,45) if day==date(2023,11,24) else time(17),NY)
+            result.append({'trade_date':day,'open_at':start,'close_at':close})
+        day+=timedelta(days=1)
+    return result
+
+def needs_ticks(shadow,lo,hi):
+    lo,hi=D(lo),D(hi)
+    if shadow.pending:return True
+    lev=shadow.levels
+    if lev is None:return False
+    if not shadow.units:return hi>=lev['buy'] or lo<=lev['short']
+    if shadow.direction>0:
+        if lo<=max([lev['exit_long']]+[u['stop'] for u in shadow.units]):return True
+        return len(shadow.units)<4 and hi>=shadow.last_purchase+D('.5')*shadow.n
+    if hi>=min([lev['exit_short']]+[u['stop'] for u in shadow.units]):return True
+    return len(shadow.units)<4 and lo<=shadow.last_purchase-D('.5')*shadow.n
+
+def same_time_trade(shadow,prices):
+    """One unique decision per timestamp; reject competing exit/add ordering."""
+    if not prices:return None
+    lo=min(map(D,prices));hi=max(map(D,prices));lev=shadow.levels
+    if not shadow.units:
+        if hi>=lev['buy'] and lo<=lev['short']:raise DataGate('Same-time opposing breakouts; sequence unavailable')
+        return hi if hi>=lev['buy'] else lo
+    if shadow.direction>0:
+        exit_hit=lo<=max([lev['exit_long']]+[u['stop'] for u in shadow.units])
+        add_hit=len(shadow.units)<4 and hi>=shadow.last_purchase+D('.5')*shadow.n
+        if exit_hit and add_hit:raise DataGate('Same-time exit/add collision; no guessed ordering')
+        return lo if exit_hit else hi
+    exit_hit=hi>=min([lev['exit_short']]+[u['stop'] for u in shadow.units])
+    add_hit=len(shadow.units)<4 and lo<=shadow.last_purchase-D('.5')*shadow.n
+    if exit_hit and add_hit:raise DataGate('Same-time exit/add collision; no guessed ordering')
+    return hi if exit_hit else lo
+
+class GCBook:
+    """GC-only positive-price tick decoder; one-sided update does not erase other side."""
+    def __init__(self,contract):self.contract=contract;self.bid=None;self.ask=None;self.ambiguous_sides=0
+    def update(self,at,updates):
+        bids={(D(b),int(bs)) for b,a,bs,ass in updates if D(b)>0}
+        asks={(D(a),int(ass)) for b,a,bs,ass in updates if D(a)>0}
+        for side,values in [('bid',bids),('ask',asks)]:
+            if len(values)>1:setattr(self,side,None);self.ambiguous_sides+=1
+            elif values:
+                price,size=next(iter(values));setattr(self,side,(at,price,size))
+        if self.bid is None or self.ask is None:return None
+        bt,b,bs=self.bid;atime,a,ass=self.ask
+        return Quote(self.contract,at,b,a,bt,atime,bs,ass)
+
+def validate_refinement(bar,trade_prices):
+    if not trade_prices:raise DataGate('Action minute has no raw trade ticks')
+    prices=list(map(D,trade_prices));expected=tuple(map(D,[bar.open,bar.high,bar.low,bar.close]))
+    actual=(prices[0],max(prices),min(prices),prices[-1])
+    # Ordering of equal-time ticks affects O/C. H/L must match; O/C are audited,
+    # not used to invent an intraminute path. Caller reports O/C discrepancies.
+    if actual[1:3]!=expected[1:3]:raise DataGate('Raw minute and tick high/low differ; no silent substitution')
+    return actual==expected

@@ -1,0 +1,40 @@
+import sys,unittest
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'research_round13/T003_full_futures'))
+from datetime import date,datetime,timedelta
+from types import SimpleNamespace
+from account_engine import D,DataGate
+from shadow_system2 import ShadowSystem2
+from roll_adapter import gc_sessions,needs_ticks,same_time_trade,GCBook,validate_refinement,NY
+T=datetime(2024,3,22,10,tzinfo=NY)
+class AdapterChecks(unittest.TestCase):
+ def shadow(self):
+  s=ShadowSystem2('GCJ24','.1');s.set_levels({'contract':'GCJ24','available_at':T-timedelta(days=1),'buy':105,'short':95,'exit_long':90,'exit_short':110,'n':2});return s
+ def test_MLK_trades_in_Tuesday_envelope(self):
+  rows=gc_sessions();self.assertNotIn(date(2024,1,15),[x['trade_date'] for x in rows]);r=next(x for x in rows if x['trade_date']==date(2024,1,16));self.assertEqual(r['open_at'],datetime(2024,1,14,18,tzinfo=NY))
+ def test_presidents_day_trades_in_Tuesday_envelope(self):
+  r=next(x for x in gc_sessions() if x['trade_date']==date(2024,2,20));self.assertEqual(r['open_at'],datetime(2024,2,18,18,tzinfo=NY))
+ def test_dst_preserves_local_hours(self):
+  rows=gc_sessions();r=next(x for x in rows if x['trade_date']==date(2024,3,11));self.assertEqual(r['open_at'].hour,18);self.assertNotEqual(r['open_at'].utcoffset(),next(x for x in rows if x['trade_date']==date(2024,3,4))['open_at'].utcoffset())
+ def test_no_55_session_source_readiness_from_calendar_only(self):
+  self.assertGreater(len(gc_sessions()),55)
+  with self.assertRaises(DataGate):gc_sessions(date(2024,4,1))
+ def test_tick_fetch_only_if_possible_action(self):
+  s=self.shadow();self.assertFalse(needs_ticks(s,99,104));self.assertTrue(needs_ticks(s,99,106));self.assertTrue(needs_ticks(s,94,104))
+ def test_pending_entry_still_needs_quotes_even_no_new_crossing(self):
+  s=self.shadow();s.on_trade(106,T);self.assertTrue(needs_ticks(s,100,101))
+ def test_same_timestamp_opposing_breakouts_are_not_ordered(self):
+  with self.assertRaises(DataGate):same_time_trade(self.shadow(),[94,106])
+ def test_one_timestamp_exit_and_add_not_guessed(self):
+  s=self.shadow();s.units=[{'entry':D(106),'stop':D(102)}];s.direction=1;s.n=D(2);s.last_purchase=D(106)
+  with self.assertRaises(DataGate):same_time_trade(s,[101,108])
+ def test_one_sided_quote_keeps_prior_other_side(self):
+  b=GCBook('GCJ24');self.assertIsNone(b.update(T,[(100,0,3,0)]));q=b.update(T+timedelta(milliseconds=1),[(0,100.1,0,4)]);self.assertEqual(q.bid,D(100));self.assertEqual(q.bid_at,T)
+ def test_competing_same_time_quotes_are_rejected_until_update(self):
+  b=GCBook('GCJ24');self.assertIsNone(b.update(T,[(100,100.1,3,4),(99.9,0,3,0)]));self.assertIsNone(b.bid)
+ def test_tick_minute_high_low_difference_is_hard_gate(self):
+  bar=SimpleNamespace(open=100,high=103,low=99,close=101)
+  with self.assertRaises(DataGate):validate_refinement(bar,[100,102,99,101])
+ def test_same_time_openclose_difference_is_disclosed_not_reordered(self):
+  bar=SimpleNamespace(open=100,high=103,low=99,close=101);self.assertFalse(validate_refinement(bar,[101,103,99,100]))
+if __name__=='__main__':unittest.main()

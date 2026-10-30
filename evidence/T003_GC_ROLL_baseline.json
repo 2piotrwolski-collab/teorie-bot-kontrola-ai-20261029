@@ -1,0 +1,55 @@
+{
+  "id": "T003_REAL_GC_ROLL_ONE_CONTRACT_VERIFIED_20261030",
+  "source_report_sha256": "afd6ac1e5210c644e091cb1da9a2d6dc438eeb916477a2eeb7c3f176618e9515",
+  "source_conditions": "Both own independently replayed campaigns active long,4units each,139complete source dates; boundedflatstartconvention",
+  "old_closed_before_new_opened": true,
+  "old_held_end": 0,
+  "new_held_end": 1,
+  "parts": [
+    {
+      "leg": "sell_old",
+      "fill": "2179.5",
+      "bid": "2179.6",
+      "ask": "2179.7",
+      "spread_cost_usd": "5.00",
+      "assumed_adverse_tick_cost_usd": "10.0",
+      "fee_usd": "2.51",
+      "side_ages_seconds": [
+        0.0,
+        0.000293
+      ]
+    },
+    {
+      "leg": "buy_new",
+      "fill": "2201.6",
+      "bid": "2201.3",
+      "ask": "2201.5",
+      "spread_cost_usd": "10.0",
+      "assumed_adverse_tick_cost_usd": "10.0",
+      "fee_usd": "2.51",
+      "side_ages_seconds": [
+        3.2e-05,
+        0.0
+      ]
+    }
+  ],
+  "spread_cost_usd": "15.00",
+  "fees_model_usd": "5.02",
+  "one_tick_each_leg_model_usd": "20.00",
+  "total_model_cost_usd": "40.02",
+  "raw_price_gap_points": "22.1",
+  "price_gap_not_counted_as_profit": true,
+  "latency_between_fills_microseconds": 336.0,
+  "dated_initial_per_contract_usd": "9680.0",
+  "dated_maintenance_per_contract_usd": "8800.0",
+  "lagged_new_OI": "272806.0",
+  "lagged_new_volume": "25013.0",
+  "full_strategy_PnL": false,
+  "real_orders_or_fills": false,
+  "limits": [
+    "1contract checkpoint control, notfullsource1%sizing/fullportfolio",
+    "Submillisecondtapeexecutionisnot measuredMacnetworklatency; largerposition anddelaycontrol plannedseparately",
+    "OIpublicationspeed andpersonalhousemarginunverified; modeledfees/currenttariff nothistoricalfullnet",
+    "Rawmarketdatasetnotexportedorindependentlyfrozen; fullnormalQCoutcome/logsaved"
+  ]
+}

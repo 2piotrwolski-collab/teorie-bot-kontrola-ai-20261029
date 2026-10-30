@@ -1,0 +1,97 @@
+{
+  "id": "T003_FREE_ICE_PACED_ROUND14_20261030",
+  "source_receipts_path": "research_round13/T003_full_futures/sources/ICE_scanning_round14-paced-20261030_receipts.jsonl",
+  "source_receipts_sha256": "170eb0407b9df12ab47fd158400e4430c1aaf2cdef17460d9862c00828de0401",
+  "new_HTTP200_valid_csv": 10,
+  "HTTP429": 0,
+  "attempts": 10,
+  "SB_tier_rows": 111,
+  "files": [
+    {
+      "url": "https://www.ice.com/publicdocs/clear_us/irmParameters/ICUS_MARGIN_SCANNING_20241004.CSV",
+      "http": 200,
+      "valid": true,
+      "sha256": "58d0d5105efa5fd4d2557d8dbd660ce02e1c9efc2ff798e043a2e0a718392402",
+      "bytes": 54673,
+      "file": "sources/ICE_scanning_round14-paced-20261030/ICUS_MARGIN_SCANNING_20241004.CSV"
+    },
+    {
+      "url": "https://www.ice.com/publicdocs/clear_us/irmParameters/ICUS_MARGIN_SCANNING_20240925.CSV",
+      "http": 200,
+      "valid": true,
+      "sha256": "d5a4f17ffcca25a45534ecd0bd163ed3249f8a1ec57c0a8c99f9da476a988597",
+      "bytes": 54652,
+      "file": "sources/ICE_scanning_round14-paced-20261030/ICUS_MARGIN_SCANNING_20240925.CSV"
+    },
+    {
+      "url": "https://www.ice.com/publicdocs/clear_us/irmParameters/ICUS_MARGIN_SCANNING_20240920.CSV",
+      "http": 200,
+      "valid": true,
+      "sha256": "f86bae1b9deb69e69926e6cf760aba0b90a6b87d6029a5bf3fbf02634fa2d62a",
+      "bytes": 54593,
+      "file": "sources/ICE_scanning_round14-paced-20261030/ICUS_MARGIN_SCANNING_20240920.CSV"
+    },
+    {
+      "url": "https://www.ice.com/publicdocs/clear_us/irmParameters/ICUS_MARGIN_SCANNING_20240918.CSV",
+      "http": 200,
+      "valid": true,
+      "sha256": "c95b08bb5be9778e7ad7b4b149c4db83874f49bd8419fc9deb15a30f736c6ad2",
+      "bytes": 54574,
+      "file": "sources/ICE_scanning_round14-paced-20261030/ICUS_MARGIN_SCANNING_20240918.CSV"
+    },
+    {
+      "url": "https://www.ice.com/publicdocs/clear_us/irmParameters/ICUS_MARGIN_SCANNING_20240917.CSV",
+      "http": 200,
+      "valid": true,
+      "sha256": "75892a6e415cffc8fcbec28d75e8bffc25e8b3a712df8d08456bcee80868902f",
+      "bytes": 54354,
+      "file": "sources/ICE_scanning_round14-paced-20261030/ICUS_MARGIN_SCANNING_20240917.CSV"
+    },
+    {
+      "url": "https://www.ice.com/publicdocs/clear_us/irmParameters/ICUS_MARGIN_SCANNING_20240910.CSV",
+      "http": 200,
+      "valid": true,
+      "sha256": "c14ba06eee6f6cdbdf27688c843d607f8d636c1068f8d3367a7946b0d6320f73",
+      "bytes": 54686,
+      "file": "sources/ICE_scanning_round14-paced-20261030/ICUS_MARGIN_SCANNING_20240910.CSV"
+    },
+    {
+      "url": "https://www.ice.com/publicdocs/clear_us/irmParameters/ICUS_MARGIN_SCANNING_20240826.CSV",
+      "http": 200,
+      "valid": true,
+      "sha256": "0b89c7094df2d40af6f3eac988cd736144af5c56e5b0c35bd3be433a5866b2bc",
+      "bytes": 54672,
+      "file": "sources/ICE_scanning_round14-paced-20261030/ICUS_MARGIN_SCANNING_20240826.CSV"
+    },
+    {
+      "url": "https://www.ice.com/publicdocs/clear_us/irmParameters/ICUS_MARGIN_SCANNING_20240823.CSV",
+      "http": 200,
+      "valid": true,
+      "sha256": "ab86a6b269b54be73ee6afe87f1b13482baf1f48f38bd0f24ff639e1d0a26cf1",
+      "bytes": 54698,
+      "file": "sources/ICE_scanning_round14-paced-20261030/ICUS_MARGIN_SCANNING_20240823.CSV"
+    },
+    {
+      "url": "https://www.ice.com/publicdocs/clear_us/irmParameters/ICUS_MARGIN_SCANNING_20240719.CSV",
+      "http": 200,
+      "valid": true,
+      "sha256": "a78a76488798d290b760607d536bb585b804ad4d415a149c4209e935654b7967",
+      "bytes": 54482,
+      "file": "sources/ICE_scanning_round14-paced-20261030/ICUS_MARGIN_SCANNING_20240719.CSV"
+    },
+    {
+      "url": "https://www.ice.com/publicdocs/clear_us/irmParameters/ICUS_MARGIN_SCANNING_20240710.CSV",
+      "http": 200,
+      "valid": true,
+      "sha256": "677e9b02d12067f1c48a895926c960e500522773575639fd8b592bd1bd55ad94",
+      "bytes": 55425,
+      "file": "sources/ICE_scanning_round14-paced-20261030/ICUS_MARGIN_SCANNING_20240710.CSV"
+    }
+  ],
+  "prior_42_csv_retained": true,
+  "whole_history_2019_2025_complete": false,
+  "policy": "ActualpublishedUIlinks only; serverRetry-After honoured beforepacedrequests;1request/2seconds; stopfirst429/5xx.",
+  "already_held_snapshot_downloads": 1,
+  "genuinely_new_unique_snapshots": 9,
+  "known_repeat": "18Sep2024 separatelydownloaded inround13, nowreconciledbyteidentical;notnewindependentsource"
+}

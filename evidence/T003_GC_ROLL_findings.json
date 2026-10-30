@@ -1,0 +1,213 @@
+{
+  "id": "T003_REAL_GC_ROLL_20261030_V1",
+  "at_utc": "2026-10-30T16:55:29.385329+00:00",
+  "status": "REAL_QUOTE_ROLL_AND_ACCOUNTING_CONTROLS_PASS_FULL_STRATEGY_PENDING",
+  "theory": "T003",
+  "market_case_count": 1,
+  "execution_scenarios": 3,
+  "research_questions": 2,
+  "intended_cloud_runs": 2,
+  "accidental_old_margin_replay": 1,
+  "source_period": [
+    "2023-09-01",
+    "2024-03-22"
+  ],
+  "roll_date": "2024-03-22",
+  "old_contract": "GC April2024 expiry26Apr",
+  "successor": "GC June2024 expiry26Jun",
+  "source_conditions": {
+    "independent_campaigns": "Both long4units after139complete source trade dates. Ownsource20exit/.5Nadd/2Nstop/55entry, anchoredN. No inheritedsuccessorsignal.",
+    "raw_minute_bars_old": 90778,
+    "raw_minute_bars_new": 43212,
+    "tick_refinement_action_minutes": 31,
+    "refinement_HLOC_reconciliations_passed": 31,
+    "refinement_HLOC_mismatches": 0,
+    "flat_start_anchor_convention": "Sep1anchor; beginflat after55complete sessions, notoriginalcontractinception.",
+    "CME_delivery": "Firstintent27Mar2024, notice28Mar, LTD26Apr; CME24-083published21Mar before22Mardecision.",
+    "OI": "Successor272806 andlaggedvolume25013 asof20Mar; publicationclockunverified,2source-sessionlag explicitconvention."
+  },
+  "one_contract_baseline": {
+    "id": "T003_REAL_GC_ROLL_ONE_CONTRACT_VERIFIED_20261030",
+    "source_report_sha256": "afd6ac1e5210c644e091cb1da9a2d6dc438eeb916477a2eeb7c3f176618e9515",
+    "source_conditions": "Both own independently replayed campaigns active long,4units each,139complete source dates; boundedflatstartconvention",
+    "old_closed_before_new_opened": true,
+    "old_held_end": 0,
+    "new_held_end": 1,
+    "parts": [
+      {
+        "leg": "sell_old",
+        "fill": "2179.5",
+        "bid": "2179.6",
+        "ask": "2179.7",
+        "spread_cost_usd": "5.00",
+        "assumed_adverse_tick_cost_usd": "10.0",
+        "fee_usd": "2.51",
+        "side_ages_seconds": [
+          0.0,
+          0.000293
+        ]
+      },
+      {
+        "leg": "buy_new",
+        "fill": "2201.6",
+        "bid": "2201.3",
+        "ask": "2201.5",
+        "spread_cost_usd": "10.0",
+        "assumed_adverse_tick_cost_usd": "10.0",
+        "fee_usd": "2.51",
+        "side_ages_seconds": [
+          3.2e-05,
+          0.0
+        ]
+      }
+    ],
+    "spread_cost_usd": "15.00",
+    "fees_model_usd": "5.02",
+    "one_tick_each_leg_model_usd": "20.00",
+    "total_model_cost_usd": "40.02",
+    "raw_price_gap_points": "22.1",
+    "price_gap_not_counted_as_profit": true,
+    "latency_between_fills_microseconds": 336.0,
+    "dated_initial_per_contract_usd": "9680.0",
+    "dated_maintenance_per_contract_usd": "8800.0",
+    "lagged_new_OI": "272806.0",
+    "lagged_new_volume": "25013.0",
+    "full_strategy_PnL": false,
+    "real_orders_or_fills": false,
+    "limits": [
+      "1contract checkpoint control, notfullsource1%sizing/fullportfolio",
+      "Submillisecondtapeexecutionisnot measuredMacnetworklatency; largerposition anddelaycontrol plannedseparately",
+      "OIpublicationspeed andpersonalhousemarginunverified; modeledfees/currenttariff nothistoricalfullnet",
+      "Rawmarketdatasetnotexportedorindependentlyfrozen; fullnormalQCoutcome/logsaved"
+    ]
+  },
+  "capacity_controls": [
+    {
+      "delay_ms": 250,
+      "status": "INDEPENDENT_CHECK_PASS",
+      "quantity": 16,
+      "source_units": 4,
+      "fills_old": 5,
+      "fills_new": 9,
+      "fees_usd": "80.32",
+      "quoted_spread_cost_usd": "305.00",
+      "assumed_slippage_usd": "320.0",
+      "total_cost_usd": "705.32",
+      "cost_per_contract_usd": "44.0825",
+      "max_initial_margin_usd": "154880.0",
+      "market_motion_during_roll_usd": "75.00",
+      "NAV_reconciles_including_market_motion": true,
+      "liquidity_size_not_reused_per_quote": true,
+      "actual_first_old_after_ms": 262.07599999999996,
+      "actual_between_legs_ms": 267.36,
+      "all10_new_lots_stops_reconcile": true,
+      "source_stop_and_N_not_reset": true
+    },
+    {
+      "delay_ms": 1000,
+      "status": "INDEPENDENT_CHECK_PASS",
+      "quantity": 16,
+      "source_units": 4,
+      "fills_old": 6,
+      "fills_new": 9,
+      "fees_usd": "80.32",
+      "quoted_spread_cost_usd": "210.00",
+      "assumed_slippage_usd": "320.0",
+      "total_cost_usd": "610.32",
+      "cost_per_contract_usd": "38.145",
+      "max_initial_margin_usd": "154880.0",
+      "market_motion_during_roll_usd": "30.00",
+      "NAV_reconciles_including_market_motion": true,
+      "liquidity_size_not_reused_per_quote": true,
+      "actual_first_old_after_ms": 1037.797,
+      "actual_between_legs_ms": 1204.539,
+      "all10_new_lots_stops_reconcile": true,
+      "source_stop_and_N_not_reset": true
+    }
+  ],
+  "code_identity": [
+    {
+      "name": "main",
+      "local_sha256": "b8dba5ef56ffd2a7ebac27043e9860d0dc9f744493db1f1979eedd47ff989541",
+      "reported_cloud_sha256": "1c4b53ed7cc317f6b6faa0dfa115a11c9bd1ed64837bbca019dd00c3ce4afe5b",
+      "verified_transformation": "One additional terminalLF; all otherbytes exact",
+      "AST_equal": true,
+      "reconstructed_exact_cloud_bytes": "cloud_executed_source/main.py"
+    },
+    {
+      "name": "account_engine",
+      "local_sha256": "6144d6ce619d896ede25dbe1bf49e8bcf7d62a9a60f26a5d0f60b8e4ee4f6c96",
+      "reported_cloud_sha256": "27606828e54be2e04a63077e4f0ae9ac8774e749b8746630d31971ae869ec389",
+      "verified_transformation": "One additional terminalLF; all otherbytes exact",
+      "AST_equal": true,
+      "reconstructed_exact_cloud_bytes": "cloud_executed_source/account_engine.py"
+    },
+    {
+      "name": "system2",
+      "local_sha256": "140580f423095ebc906426cf06e948c07e7932d9e8175d0ff84e046963fac6ac",
+      "reported_cloud_sha256": "e70af80e10b32b02dd754b46eba84e9c785a1463c3574e1f59dfcec59b60ba1e",
+      "verified_transformation": "One additional terminalLF; all otherbytes exact",
+      "AST_equal": true,
+      "reconstructed_exact_cloud_bytes": "cloud_executed_source/system2.py"
+    },
+    {
+      "name": "shadow_system2",
+      "local_sha256": "2e8110361afd58a8567638a2b24ad5e35193abd1519e4d9a51e2b73508d67982",
+      "reported_cloud_sha256": "a03dee5ac919fc7dc1fe9840719a0017112ae6a5452a6ad6125418f729686496",
+      "verified_transformation": "One additional terminalLF; all otherbytes exact",
+      "AST_equal": true,
+      "reconstructed_exact_cloud_bytes": "cloud_executed_source/shadow_system2.py"
+    }
+  ],
+  "new_free_source_data": {
+    "downloaded_valid_snapshots": 10,
+    "genuinely_new_unique_snapshots": 9,
+    "previous_snapshot_reconciled": 1,
+    "known_duplicate": "18Sep2024byteidentical,notnewsource",
+    "archival_series_total_dates": 52,
+    "new_batch_HTTP429": 0,
+    "prior429_preserved": true,
+    "initial_round14_429_RetryAfter2056_obeyed": true,
+    "calendar_primary_Occ": [
+      "53911dated08Jan2024",
+      "54107dated12Feb2024"
+    ],
+    "source_PDF_binary_failures": "Webcontentsread; local2HTTP403and1timeout retained, donotclaimrawPDFsarchived."
+  },
+  "failures_retained": {
+    "UI_transport": "Browserpastedemptieditor, multiline typeText grew72038chars dueautoindent; nativeplaintextpasteworkedafterownpagereload. Oneoldmarginreplay98823c...preservedaswrongcodecontrol,notTurtletrial.",
+    "runtime_stat_limit": "Baseline50customfields limitignored3displayfields; full5696BnormalLogcontainscompleteJSON, parsed. Capacityunder50fields,9456BfullLogcontainsmetadata+bothscenarios.",
+    "cloud_hashes": "All4digests matchlocalbytes withoneextra terminalLF; reconstructedexactcloudbytesstored, ASTequal. No substantivecodedrift."
+  },
+  "full_strategy_PnL": false,
+  "original_theory_rejected": false,
+  "confirmed_strategy": false,
+  "real_orders": 0,
+  "paid_services": 0,
+  "partner_review": "provisional_no_partner_review",
+  "remaining": [
+    "Zastosować zweryfikowany przebieg GC do pełnej historii i pozostałych zadeklarowanych rynków. Ten jeden roll i trzy warianty wykonania nie są pełnym testem zyskowności Turtle ani nowym OOS.",
+    "Pełne historyczne kalendarze i terminy dostawy wszystkich miesięcy/rynków 2019–2025: obecna kontrola obejmuje GC wrzesień2023–marzec2024 i termin April24. Styczniowe/lutowe daty giełdowe uzupełnione z oficjalnych komunikatów; pełne godziny każdego święta pozostają do kontroli.",
+    "OI: dwa dni źródłowe opóźnienia są jawną konwencją. Timestamp rekordu nie dowodzi godziny publicznej publikacji. Przed uznaniem realnej wykonalności nadal potrzebna kontrola publikacji OI/volume i płynności pełnej pozycji.",
+    "Depozyty i SB: dodatni historyczny model QC dla GC potwierdzony w kontrolowanym punkcie; brak pełnej klasyfikacji historycznych narzutów brokera. ICE: 52 poprawne datowane tabele z serii archiwalnej, w tym9 nowych unikatowych w tej rundzie; starsza historia 2019–2021 i pozostałe 2022–2024 nadal niekompletne. Obowiązuje Retry-After i ograniczone pobieranie.",
+    "Skala portfela: 16 kontraktów wynika z założonego na moment kontrolny notional 1 mln USD i czterech jednostek po4; rzeczywista wcześniejsza ścieżka NAV/notional nie została odtworzona. Potrzeba pełnego rachunku wielorynkowego, resetów, settlement, finansowania, wyboru miesięcy i benchmarku SPY przed wynikiem strategii.",
+    "Wykonanie i koszty: to wypełnienia modelowe na rzeczywistym L1, z zadanym opóźnieniem i1tickiem poślizgu. Nie zmierzono rzeczywistego opóźnienia Maca, kolejki/marketimpact, brokerfilli, osobistej taryfy, historycznych opłat overnight, FX ani podatków. Nie nazywać pełnym netto."
+  ],
+  "next_action": "Rozszerzyć ten sam zweryfikowany mechanizm na pełną historię GC i następnie stały koszyk12rynków, bez zmiany progów. Równolegle uzupełniać datowane depozyty i kalendarze; zamrozić pełny plan przed obliczeniem zwrotu strategii.",
+  "evidence_sha256": {
+    "PLAN.json": "7799ec1c69b59f7b990278c7475c4a8caaa241360c1919140bff1efc056f76b5",
+    "PREFLIGHT_NAMESPACE_FREEZE.json": "fd576a4f6899506324bf35cfc3107767de48c0763f4f0e7be47a1c319b004d2c",
+    "CAPACITY_DELAY_FREEZE.json": "30816ab19c3c1a2792d7953617845a96010cdfefe7bebde35846f1322db22541",
+    "CAPACITY_OUTPUT_LAYOUT_FREEZE.json": "ee0ce8af65f18763b2874427ebe17159774d7c20e2226e15575f14958bf93118",
+    "baseline_verification.json": "a8eb11312c341b609876d9bf2107acc8043aacf7f68b1a390b2d9c7c1d2c638d",
+    "capacity_verification.json": "13ce276221823271300f4646a3199c57cce1f9e3ed10394d05c74dd2b9fa7211",
+    "QC_roll_full_report.json": "afd6ac1e5210c644e091cb1da9a2d6dc438eeb916477a2eeb7c3f176618e9515",
+    "QC_capacity_full_report.json": "b296f83bbb4f7b7085010d0cf296f8b9e81330b321433175a6717ef11dc22c2f",
+    "QC_roll_receipt.json": "d71158057da79ecaa1bd7777e1c8964eee0d859b8533ad5bc4497f67a9be2882",
+    "QC_capacity_receipt.json": "0e359ec1593c1a9b9f9a7a0fce2fa394eb60f45174c7652d2a8be67bac91845d",
+    "calendar_delivery_evidence.json": "46191b7977598e59647e8b2771203e18e66b59708c31923841eea4a438fb1558",
+    "ICE_new_data_audit.json": "f9f693fd9abb3c98269e183096c8726195f17a519b81b58e84260116ebe9ec22",
+    "ui_transport_attempts.json": "8bc70090a2d2f4163cb3e906a4ad0d286efe8da1bbf49c280d9f10b0b833fc9e",
+    "ui_transport_recovery.json": "72fa5c90f5aa12b5a66783694765c79d48fd734047727dc48deda9163e13b166"
+  }
+}

@@ -1,0 +1,414 @@
+"""Source-constrained futures account/risk/roll engine, no broker or network.
+
+This module accepts validated chronological market evidence. It does not pretend
+that synthetic cases or a completed account engine are a market backtest.
+"""
+from dataclasses import dataclass,field
+from datetime import datetime,date
+from decimal import Decimal,ROUND_FLOOR,ROUND_HALF_UP
+from collections import defaultdict
+from zoneinfo import ZoneInfo
+from copy import deepcopy
+
+class DataGate(ValueError):pass
+class RiskLimit(ValueError):pass
+class QuoteUnavailable(DataGate):pass
+
+def D(value):
+    result=Decimal(str(value))
+    if not result.is_finite():raise DataGate('Non-finite number')
+    return result
+
+def aware(value):
+    if not isinstance(value,datetime) or value.tzinfo is None or value.utcoffset() is None:
+        raise DataGate('Timezone-aware timestamp required')
+
+@dataclass(frozen=True)
+class Contract:
+    symbol:str
+    root:str
+    multiplier:Decimal
+    tick:Decimal
+    currency:str='USD'
+    exit_before:datetime|None=None
+    critical_dates_known_at:datetime|None=None
+    critical_dates_source:str=''
+    def __post_init__(self):
+        object.__setattr__(self,'multiplier',D(self.multiplier));object.__setattr__(self,'tick',D(self.tick))
+        if self.multiplier<=0 or self.tick<=0 or self.currency!='USD':
+            raise DataGate('Validated positive multiplier/tick and explicit USD contract required')
+        if self.exit_before is not None:
+            aware(self.exit_before);aware(self.critical_dates_known_at)
+            if not self.critical_dates_source:raise DataGate('Critical-date provenance required')
+
+@dataclass(frozen=True)
+class Margin:
+    initial:Decimal
+    maintenance:Decimal
+    known_at:datetime
+    valid_until:datetime
+    provenance:str
+    quality:str='verified'
+    def check(self,at,synthetic=False):
+        aware(at);aware(self.known_at);aware(self.valid_until)
+        if not self.known_at<=at<=self.valid_until:raise DataGate('Margin missing, future or outside verified coverage')
+        if D(self.initial)<=0 or not 0<D(self.maintenance)<=D(self.initial):raise DataGate('Missing/invalid margin; zero is not unlimited leverage')
+        if not self.provenance or self.quality not in ({'verified','synthetic_fixture'} if synthetic else {'verified'}):
+            raise DataGate('Margin provenance/quality not sufficient for this run')
+
+@dataclass(frozen=True)
+class Quote:
+    contract:str
+    at:datetime
+    bid:Decimal
+    ask:Decimal
+    bid_at:datetime
+    ask_at:datetime
+    bid_size:int
+    ask_size:int
+    def check(self,signal_at,side,max_age_seconds):
+        for x in [self.at,self.bid_at,self.ask_at,signal_at]:aware(x)
+        if self.at<=signal_at:raise QuoteUnavailable('Execution must follow the signal, not use an earlier/same-time quote')
+        if D(self.ask)<D(self.bid):raise QuoteUnavailable('Crossed quote')
+        if self.bid_size<=0 or self.ask_size<=0:raise QuoteUnavailable('Both quote sizes required')
+        if min((self.at-self.bid_at).total_seconds(),(self.at-self.ask_at).total_seconds())<0:
+            raise QuoteUnavailable('Future side of quote')
+        if max((self.at-self.bid_at).total_seconds(),(self.at-self.ask_at).total_seconds())>max_age_seconds:
+            raise QuoteUnavailable('Stale side of quote')
+        if (self.ask_at if side>0 else self.bid_at)!=self.at:
+            raise QuoteUnavailable('Fill side must have an actual update after the signal')
+
+@dataclass
+class Unit:
+    uid:str
+    contract:str
+    root:str
+    direction:int
+    n:Decimal
+    target:int
+    signal_at:datetime
+    lots:list=field(default_factory=list)
+    entry_qty:int=0
+    entry_value:Decimal=Decimal('0')
+    complete:bool=False
+    cancelled:bool=False
+    advance_done:bool=False
+    roll_origin:str|None=None
+    @property
+    def quantity(self):return sum(l['q'] for l in self.lots)
+    @property
+    def entry_vwap(self):return self.entry_value/self.entry_qty if self.entry_qty else None
+
+class Notional:
+    """Source loss ladder; explicit annual NAV rebase and recovery convention."""
+    def __init__(self,capital):
+        self.base=D(capital);self.amount=self.base;self.loss_threshold=D(0);self.reductions=0
+        if self.base<=0:raise DataGate('Positive initial capital required')
+    def observe(self,equity):
+        equity=D(equity)
+        if equity>=self.base:
+            self.amount=self.base;self.loss_threshold=D(0);self.reductions=0
+        else:
+            loss=self.base-equity
+            while self.amount>0 and loss>=self.loss_threshold+D('.1')*self.amount:
+                self.loss_threshold+=D('.1')*self.amount;self.amount*=D('.8');self.reductions+=1
+                if self.amount<D('.01'):
+                    self.amount=D(0);break
+        return self.amount
+    def begin_year(self,completed_previous_year_nav):
+        nav=D(completed_previous_year_nav)
+        if nav<=0:raise RiskLimit('No positive equity for annual reset')
+        self.base=nav;self.amount=nav;self.loss_threshold=D(0);self.reductions=0
+
+@dataclass
+class Roll:
+    rid:str
+    root:str
+    old:str
+    new:str
+    direction:int
+    at:datetime
+    old_uids:list
+    templates:dict=field(default_factory=dict)
+    new_uids:dict=field(default_factory=dict)
+    last_close_at:datetime|None=None
+    state:str='CLOSING'
+    stopped:bool=False
+
+class Account:
+    def __init__(self,capital,contracts,fees,close_groups,loose_groups,slippage_ticks=1,max_quote_age_seconds=1,synthetic=False):
+        self.cash=D(capital);self.start=self.cash;self.contracts={c.symbol:c for c in contracts}
+        self.fees={k:D(v) for k,v in fees.items()};self.notional=Notional(capital)
+        if any(c.root not in self.fees or self.fees[c.root]<0 for c in contracts):
+            raise DataGate('Explicit nonnegative per-side fee scenario required for every contract root')
+        self.close_groups=[frozenset(g) for g in close_groups];self.loose_groups=[frozenset(g) for g in loose_groups]
+        self.slip=D(slippage_ticks);self.quote_age=max_quote_age_seconds;self.synthetic=synthetic
+        if self.slip<0 or max_quote_age_seconds<0:raise ValueError('Nonnegative cost/freshness scenario required')
+        self.units={};self.margins={};self.marks={};self.ledger=[];self.consumed=defaultdict(int)
+        self.rolls={};self.overnight_days=set();self.fee_total=D(0);self.overnight_total=D(0)
+        self.realized_trading=D(0);self.last_at=None;self.active_year=None
+        if not synthetic and any(c.exit_before is None for c in contracts):
+            raise DataGate('Real-study contracts need verified delivery/last-trade safety deadlines')
+
+    def _time(self,at):
+        aware(at)
+        if self.last_at is not None and at<self.last_at:raise DataGate('Unordered account events')
+        year=at.astimezone(ZoneInfo('America/New_York')).year
+        if self.active_year is None:self.active_year=year
+        elif year!=self.active_year:raise DataGate('Explicit annual reset from completed prior-year NAV required')
+        for u in self.units.values():
+            c=self.contracts[u.contract]
+            if u.quantity and c.exit_before is not None and at>=c.exit_before:
+                raise DataGate('Delivery safety deadline reached with a held old contract; no invented timely exit')
+        self.last_at=at
+
+    def begin_year(self,year,completed_previous_year_nav,previous_nav_known_at,at):
+        aware(at);aware(previous_nav_known_at)
+        if previous_nav_known_at>=at or (self.last_at is not None and at<self.last_at):raise DataGate('Future/late annual reset')
+        if at.astimezone(ZoneInfo('America/New_York')).year!=year or (self.active_year is not None and year!=self.active_year+1):
+            raise DataGate('Wrong annual reset year')
+        self.notional.begin_year(completed_previous_year_nav);self.active_year=year;self.last_at=at
+        self.ledger.append({'kind':'annual_notional_reset','at':at.isoformat(),'year':year,'prior_nav_known_at':previous_nav_known_at.isoformat(),'notional':str(self.notional.amount)})
+
+    def set_margin(self,contract,margin,at):
+        if contract not in self.contracts:raise DataGate('Margin must identify an actual contract, not an assumed flat root rate')
+        self._time(at);margin.check(at,self.synthetic);self.margins[contract]=margin
+
+    def _margin(self,contract,at):
+        if contract not in self.margins:raise DataGate('Missing dated contract margin for '+contract)
+        m=self.margins[contract];m.check(at,self.synthetic);return m
+
+    def mark(self,contract,price,at):
+        return self.mark_batch({contract:price},at)
+
+    def mark_batch(self,prices,at):
+        # Equal-time marks are one portfolio event. Sequential observation can
+        # otherwise invent a drawdown and permanently reduce source notional.
+        if any(c not in self.contracts for c in prices):raise DataGate('Unknown raw contract')
+        validated={c:D(p) for c,p in prices.items()}
+        self._time(at);self.marks.update(validated)
+        return self.notional.observe(self.equity())
+
+    def equity(self):
+        value=self.cash
+        for u in self.units.values():
+            if u.quantity:
+                if u.contract not in self.marks:raise DataGate('Missing valuation for held contract')
+                point=self.contracts[u.contract].multiplier;mark=self.marks[u.contract]
+                value+=sum(D(u.direction)*(mark-l['basis'])*l['q']*point for l in u.lots)
+        return value
+
+    def margin_used(self,at,kind='initial'):
+        return sum((D(getattr(self._margin(u.contract,at),kind))*u.quantity for u in self.units.values() if u.quantity),D(0))
+
+    def _active(self,u):return u.quantity>0 or (not u.cancelled and not u.complete)
+
+    def risk_counts(self,direction):
+        counts=defaultdict(int)
+        for u in self.units.values():
+            if u.direction==direction and self._active(u):counts[u.root]+=1
+        # A roll reserves its existing unit count while the account is between legs.
+        for r in self.rolls.values():
+            if r.direction==direction and r.state in {'CLOSING','OPENING'}:
+                counts[r.root]=max(counts[r.root],len(r.old_uids))
+        return counts
+
+    def _capacity(self,root,direction,additional=1):
+        counts=self.risk_counts(direction);counts[root]+=additional
+        if counts[root]>4:raise RiskLimit('4 units per market')
+        if sum(counts.values())>12:raise RiskLimit('12 units per direction')
+        for group,limit in [(g,6) for g in self.close_groups]+[(g,10) for g in self.loose_groups]:
+            if root in group and sum(counts[r] for r in group)>limit:raise RiskLimit(str(limit)+' units in correlated group/direction')
+
+    def quantity_per_unit(self,n,multiplier):
+        n=D(n);multiplier=D(multiplier)
+        if min(n,multiplier)<=0:raise DataGate('Positive N and dollar-point value required')
+        return int((D('.01')*self.notional.amount/(n*multiplier)).to_integral_value(rounding=ROUND_FLOOR))
+
+    def reserve_unit(self,uid,contract,direction,n,quantity,signal_at):
+        self._time(signal_at)
+        if uid in self.units or direction not in [-1,1] or quantity<=0 or not isinstance(quantity,int):raise DataGate('Invalid/duplicate unit request')
+        c=self.contracts[contract];self._margin(contract,signal_at)
+        if c.exit_before is not None and (signal_at>=c.exit_before or c.critical_dates_known_at>signal_at):
+            raise DataGate('Expired/ineligible contract or unavailable critical-date metadata')
+        existing=[u for u in self.units.values() if u.root==c.root and self._active(u)]
+        if any(u.contract!=contract or u.direction!=direction for u in existing):raise RiskLimit('One contract month and direction per market; explicit close/roll required')
+        if any(not u.complete and not u.cancelled for u in existing):raise RiskLimit('Complete or cancel the previous partial unit before adding another')
+        if any(r.root==c.root and r.state in {'CLOSING','OPENING'} for r in self.rolls.values()):raise RiskLimit('Roll in progress')
+        if D(n)<=0:raise DataGate('Positive N required')
+        self._capacity(c.root,direction)
+        reserved=sum((D(self._margin(u.contract,signal_at).initial)*(u.target-u.entry_qty) for u in self.units.values() if self._active(u) and not u.cancelled and not u.complete),D(0))
+        if self.equity()<self.margin_used(signal_at)+reserved+(D(self._margin(contract,signal_at).initial)+self.fees.get(c.root,D(0)))*quantity:
+            raise RiskLimit('Initial margin cannot fund the whole proposed unit')
+        self.units[uid]=Unit(uid,contract,c.root,direction,D(n),quantity,signal_at)
+        self.ledger.append({'kind':'unit_reserved','uid':uid,'at':signal_at.isoformat(),'target':quantity,'direction':direction})
+
+    def _execution(self,contract,side,signal_at,quote,requested):
+        if quote.contract!=contract:raise DataGate('Execution evidence from wrong raw contract')
+        quote.check(signal_at,side,self.quote_age);self._time(quote.at)
+        c=self.contracts[contract];key=(contract,side,quote.at)
+        size=quote.ask_size if side>0 else quote.bid_size
+        available=max(0,size-self.consumed[key]);qty=min(requested,available)
+        if qty<=0:return 0,None,None,key
+        price=D(quote.ask if side>0 else quote.bid)+side*self.slip*c.tick
+        if c.root not in self.fees or self.fees[c.root]<0:raise DataGate('Explicit per-contract fee scenario required')
+        fee=self.fees[c.root]*qty
+        return qty,price,fee,key
+
+    def fill_unit(self,uid,quote):
+        u=self.units[uid]
+        if u.cancelled or u.complete:raise DataGate('Unit not accepting entry fills')
+        qty,price,fee,key=self._execution(u.contract,u.direction,u.signal_at,quote,u.target-u.entry_qty)
+        if not qty:return 0
+        m=self._margin(u.contract,quote.at)
+        mark=self.marks.get(u.contract,D(quote.bid if u.direction>0 else quote.ask))
+        predicted_equity=self.equity()-fee+u.direction*(mark-price)*qty*self.contracts[u.contract].multiplier
+        if predicted_equity<self.margin_used(quote.at)+D(m.initial)*qty:
+            raise RiskLimit('Insufficient initial margin at actual partial fill')
+        stops=[]
+        if u.roll_origin:
+            r=self.rolls[u.roll_origin];old_uid=next(k for k,v in r.new_uids.items() if v==uid)
+            template=r.templates[old_uid];left=qty
+            while left:
+                item=next((x for x in template if x['remaining']>0),None)
+                if item is None:raise DataGate('Roll template quantity mismatch')
+                q=min(left,item['remaining']);stops.append((q,price-u.direction*item['distance']))
+                item['remaining']-=q;left-=q
+        else:stops=[(qty,price-u.direction*2*u.n)]
+        for q,stop in stops:u.lots.append({'q':q,'basis':price,'entry':price,'stop':stop})
+        self.cash-=fee;self.fee_total+=fee;self.consumed[key]+=qty
+        u.entry_qty+=qty;u.entry_value+=price*qty;u.complete=u.entry_qty==u.target
+        if u.contract not in self.marks:self.marks[u.contract]=D(quote.bid if u.direction>0 else quote.ask)
+        # A complete additional unit advances older stops by half N, never by a gap-sized jump.
+        if u.complete and not u.advance_done and not u.roll_origin:
+            for older in self.units.values():
+                if older.uid!=uid and older.contract==u.contract and older.direction==u.direction:
+                    for lot in older.lots:lot['stop']+=u.direction*D('.5')*u.n
+            u.advance_done=True
+        self.ledger.append({'kind':'entry','uid':uid,'contract':u.contract,'at':quote.at.isoformat(),
+            'signal_at':u.signal_at.isoformat(),'q':qty,'price':str(price),'fee':str(fee),'roll':u.roll_origin})
+        self.notional.observe(self.equity());self._finish_rolls();return qty
+
+    def cancel_unfilled(self,uid,at):
+        self._time(at);u=self.units[uid];u.cancelled=True
+        self.ledger.append({'kind':'cancel_remaining','uid':uid,'at':at.isoformat(),'remaining':u.target-u.entry_qty})
+
+    def close_unit(self,uid,quote,signal_at,reason,requested=None,lot_indices=None):
+        u=self.units[uid]
+        eligible=sum(l['q'] for i,l in enumerate(u.lots) if lot_indices is None or i in lot_indices)
+        requested=eligible if requested is None else min(requested,eligible)
+        if requested<=0:return 0
+        qty,price,fee,key=self._execution(u.contract,-u.direction,signal_at,quote,requested)
+        if not qty:return 0
+        u.cancelled=True;left=qty;gross=D(0);point=self.contracts[u.contract].multiplier
+        for i,lot in enumerate(u.lots):
+            if lot_indices is not None and i not in lot_indices:continue
+            q=min(left,lot['q'])
+            if q:
+                gross+=u.direction*(price-lot['basis'])*q*point
+                for r in self.rolls.values():
+                    if r.state=='CLOSING' and uid in r.old_uids and reason=='roll':
+                        distance=u.direction*(price-lot['stop'])
+                        if distance<=0:r.stopped=True
+                        r.templates.setdefault(uid,[]).append({'q':q,'remaining':q,'distance':distance})
+                        r.last_close_at=quote.at
+                lot['q']-=q;left-=q
+            if left==0:break
+        self.cash+=gross-fee;self.realized_trading+=gross;self.fee_total+=fee;self.consumed[key]+=qty
+        self.ledger.append({'kind':'exit','uid':uid,'contract':u.contract,'at':quote.at.isoformat(),
+            'signal_at':signal_at.isoformat(),'q':qty,'price':str(price),'gross_pnl':str(gross),'fee':str(fee),'reason':reason})
+        if reason!='roll':
+            for r in self.rolls.values():
+                if uid in r.old_uids and r.state=='CLOSING':r.stopped=True
+                if uid in r.new_uids.values() and r.state=='OPENING':
+                    r.state='ABORTED'
+                    for new_uid in r.new_uids.values():
+                        if not self.units[new_uid].complete:self.units[new_uid].cancelled=True
+        self.notional.observe(self.equity());self._finish_rolls();return qty
+
+    def settle(self,prices,at,provenance):
+        if not provenance:raise DataGate('Settlement source/convention required')
+        held={u.contract for u in self.units.values() if u.quantity}
+        if held-set(prices):raise DataGate('Missing held-contract settlement')
+        validated={c:D(prices[c]) for c in held}
+        self._time(at)
+        delta=D(0)
+        for u in self.units.values():
+            if not u.quantity:continue
+            price=validated[u.contract];point=self.contracts[u.contract].multiplier
+            for lot in u.lots:
+                delta+=u.direction*(price-lot['basis'])*lot['q']*point;lot['basis']=price
+            self.marks[u.contract]=price
+        self.cash+=delta;self.realized_trading+=delta
+        self.ledger.append({'kind':'variation_margin','at':at.isoformat(),'cash_delta':str(delta),'provenance':provenance})
+        return delta
+
+    def margin_call_required(self,at):return self.equity()<self.margin_used(at,'maintenance')
+
+    def charge_overnight(self,business_date,at,is_exchange_business_day):
+        self._time(at)
+        if business_date in self.overnight_days:raise DataGate('Duplicate overnight charge')
+        if not is_exchange_business_day:return D(0)
+        initial=self.margin_used(at)
+        # Documented USD table scenario: r=1:0.10, r=2:0.05, r>=3:0 per contract.
+        ratio=self.equity()/initial if initial else D(3)
+        rate=max(D(0),min(D('.10'),D('.05')*(D(3)-ratio)))
+        contracts=sum(u.quantity for u in self.units.values());fee=(rate*contracts).quantize(D('.01'),rounding=ROUND_HALF_UP)
+        self.cash-=fee;self.overnight_total+=fee;self.overnight_days.add(business_date)
+        self.ledger.append({'kind':'overnight_fee','at':at.isoformat(),'business_date':str(business_date),'q':contracts,'rate':str(rate),'fee':str(fee),'scenario':'IBKR USD table if applicable, not personal tariff proof'})
+        return fee
+
+    def start_roll(self,rid,old,new,at,shadow_direction,shadow_known_at,liquidity_known_at,deadline,metadata_known_at,new_lag_volume,new_lag_open_interest):
+        self._time(at)
+        for x in [shadow_known_at,liquidity_known_at,deadline,metadata_known_at]:aware(x)
+        if max(shadow_known_at,liquidity_known_at,metadata_known_at)>at:raise DataGate('Future roll inputs')
+        if at>=deadline:raise DataGate('No safe time remaining for two-leg roll before delivery')
+        if rid in self.rolls:raise DataGate('Duplicate roll identity')
+        a=self.contracts[old];b=self.contracts[new]
+        if b.exit_before is not None and (at>=b.exit_before or b.critical_dates_known_at>at):
+            raise DataGate('Successor delivery deadline/metadata does not permit this roll')
+        if a.root!=b.root or a.multiplier!=b.multiplier:raise DataGate('Explicit comparable-contract roll required')
+        if a.exit_before is not None and deadline>a.exit_before:raise DataGate('Roll deadline would exceed delivery safety deadline')
+        units=[u for u in self.units.values() if u.contract==old and u.quantity]
+        if not units:raise DataGate('No position to roll')
+        direction=units[0].direction
+        if shadow_direction!=direction:raise RiskLimit('Successor has no own active System2 campaign; close old, do not blindly roll')
+        if any(not u.complete for u in units):raise RiskLimit('Resolve partial source entry before rolling')
+        self._margin(old,at);self._margin(new,at)
+        quantity=sum(u.quantity for u in units)
+        old_margin=sum(D(self._margin(old,at).initial)*u.quantity for u in units)
+        new_margin=D(self._margin(new,at).initial)*quantity
+        if self.equity()-2*self.fees[a.root]*quantity<self.margin_used(at)-old_margin+new_margin:
+            raise RiskLimit('Successor margin and two-leg fees cannot be funded; close old separately')
+        if min(D(new_lag_volume),D(new_lag_open_interest))<=0 or D(quantity)>D('.005')*min(D(new_lag_volume),D(new_lag_open_interest)):
+            raise RiskLimit('Declared0.5% lagged volume/OI participation limit; successor liquidity insufficient')
+        self.rolls[rid]=Roll(rid,a.root,old,new,direction,at,[u.uid for u in units])
+        self.ledger.append({'kind':'roll_started','rid':rid,'at':at.isoformat(),'old':old,'new':new,'units':len(units)})
+
+    def _finish_rolls(self):
+        for r in self.rolls.values():
+            if r.state=='CLOSING' and all(self.units[uid].quantity==0 for uid in r.old_uids):
+                r.state='ABORTED' if r.stopped else 'OPENING'
+            if r.state=='OPENING' and len(r.new_uids)==len(r.old_uids) and all(self.units[uid].complete for uid in r.new_uids.values()):r.state='DONE'
+
+    def reserve_roll_successor(self,rid,at,shadow_direction,shadow_known_at):
+        self._time(at);aware(shadow_known_at);r=self.rolls[rid]
+        if r.state!='OPENING' or r.last_close_at is None:raise RiskLimit('Old leg must be completely closed first')
+        if at<r.last_close_at or shadow_known_at>at:raise DataGate('Invalid roll chronology')
+        if shadow_direction!=r.direction:
+            r.state='ABORTED';self.ledger.append({'kind':'roll_aborted','rid':rid,'at':at.isoformat(),'reason':'successor_source_signal_no_longer_active'});return
+        if r.new_uids:raise DataGate('Successor already reserved')
+        for old_uid in r.old_uids:
+            old=self.units[old_uid];target=sum(x['q'] for x in r.templates[old_uid])
+            new_uid=rid+'::'+old_uid
+            self.units[new_uid]=Unit(new_uid,r.new,r.root,r.direction,old.n,target,r.last_close_at,roll_origin=rid)
+            r.new_uids[old_uid]=new_uid
+        self.ledger.append({'kind':'roll_successor_reserved','rid':rid,'at':at.isoformat(),'old_leg_closed_before_new':True})
+
+def ranked_simultaneous(candidates):
+    """Source alternative: N-normalized 3-calendar-month change; caller supplies asof inputs."""
+    for c in candidates:
+        if c['direction'] not in [-1,1] or D(c['n'])<=0:raise DataGate('Invalid ranking input')
+        if c['price_3m_known_at']>c['decision_at']:raise DataGate('Future ranking price')
+    return sorted(candidates,key=lambda c:(-(D(c['last'])-D(c['price_3m']))/D(c['n'])*c['direction'],c['root'],c['contract']))
+

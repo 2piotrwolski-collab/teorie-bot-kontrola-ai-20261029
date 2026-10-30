@@ -1,0 +1,15 @@
+import unittest,types,sys
+from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parents[2]/'research_round13/T003_full_futures'))
+from account_engine import Quote
+class NamespaceTests(unittest.TestCase):
+ def test_vendor_star_import_cannot_replace_quote_or_datetime(self):
+  fake=types.ModuleType('AlgorithmImports');fake.Quote=object;fake.time=object;fake.datetime=object;fake.QCAlgorithm=object
+  prior=sys.modules.get('AlgorithmImports');sys.modules['AlgorithmImports']=fake
+  try:
+   ns={};exec(compile((Path(__file__).parent/'main_v2.py').read_text(),'cloudmain','exec'),ns)
+   self.assertIs(ns['Quote'],Quote);self.assertEqual(ns['time'](18).hour,18)
+  finally:
+   if prior is None:sys.modules.pop('AlgorithmImports',None)
+   else:sys.modules['AlgorithmImports']=prior
+if __name__=='__main__':unittest.main()

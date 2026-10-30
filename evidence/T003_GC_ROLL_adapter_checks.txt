@@ -1,0 +1,18 @@
+test_vendor_star_import_cannot_replace_quote_or_datetime (test_cloud_namespace.NamespaceTests.test_vendor_star_import_cannot_replace_quote_or_datetime) ... ok
+test_MLK_trades_in_Tuesday_envelope (test_roll_adapter.AdapterChecks.test_MLK_trades_in_Tuesday_envelope) ... ok
+test_competing_same_time_quotes_are_rejected_until_update (test_roll_adapter.AdapterChecks.test_competing_same_time_quotes_are_rejected_until_update) ... ok
+test_dst_preserves_local_hours (test_roll_adapter.AdapterChecks.test_dst_preserves_local_hours) ... ok
+test_no_55_session_source_readiness_from_calendar_only (test_roll_adapter.AdapterChecks.test_no_55_session_source_readiness_from_calendar_only) ... ok
+test_one_sided_quote_keeps_prior_other_side (test_roll_adapter.AdapterChecks.test_one_sided_quote_keeps_prior_other_side) ... ok
+test_one_timestamp_exit_and_add_not_guessed (test_roll_adapter.AdapterChecks.test_one_timestamp_exit_and_add_not_guessed) ... ok
+test_pending_entry_still_needs_quotes_even_no_new_crossing (test_roll_adapter.AdapterChecks.test_pending_entry_still_needs_quotes_even_no_new_crossing) ... ok
+test_presidents_day_trades_in_Tuesday_envelope (test_roll_adapter.AdapterChecks.test_presidents_day_trades_in_Tuesday_envelope) ... ok
+test_same_time_openclose_difference_is_disclosed_not_reordered (test_roll_adapter.AdapterChecks.test_same_time_openclose_difference_is_disclosed_not_reordered) ... ok
+test_same_timestamp_opposing_breakouts_are_not_ordered (test_roll_adapter.AdapterChecks.test_same_timestamp_opposing_breakouts_are_not_ordered) ... ok
+test_tick_fetch_only_if_possible_action (test_roll_adapter.AdapterChecks.test_tick_fetch_only_if_possible_action) ... ok
+test_tick_minute_high_low_difference_is_hard_gate (test_roll_adapter.AdapterChecks.test_tick_minute_high_low_difference_is_hard_gate) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.011s
+
+OK

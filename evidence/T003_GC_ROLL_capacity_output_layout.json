@@ -1,0 +1,10 @@
+{
+  "at_utc": "2026-10-30T16:44:01.714294+00:00",
+  "scope": "Preflightoutputonly, no newmarketresults observed",
+  "changes": "Absent__file__doesnotcrashsourcehashprobe; per-scenarioordinaryJSONdebuglineseachunder8192insteadonebigJSON. Same250/1000msand16contracts.",
+  "sha256": "b8dba5ef56ffd2a7ebac27043e9860d0dc9f744493db1f1979eedd47ff989541",
+  "file": "capacity_main_v2.py",
+  "original_file_preserved": "capacity_main.py",
+  "max_runtime_statistics_estimate": 35,
+  "scientific_parameters_unchanged": true
+}

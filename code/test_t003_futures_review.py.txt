@@ -4,6 +4,18 @@ from t003_futures_review import merge
 ROOT=Path(__file__).parent
 
 class FuturesProjectionTests(unittest.TestCase):
+    def test_actual_roll_view_preserves_old_scope_and_other_cards(self):
+        before=json.loads((ROOT/'results/research_progress_round4.json').read_text())
+        review=json.loads((ROOT/'results/t003_futures_review_20261030_v3.json').read_text())
+        after=merge(before,review)
+        self.assertEqual(merge(after,review),after)
+        for a,b in zip(before['items'],after['items']):
+            if a['id']!='T003':self.assertEqual(a,b)
+        card=next(c for c in after['items'] if c['id']=='T003')
+        self.assertEqual(card['dividend_reconciliation_status'],'closed_numerical_reconstruction_discrepancy')
+        self.assertIn('705,32',card['observations'][0]['summary'])
+        self.assertEqual(len(card['findings']),len(set(card['findings'])))
+        self.assertTrue(all(g['status']=='partial' for g in card['gap_updates']))
     def test_new_account_view_is_idempotent_without_reopening_dividends(self):
         before=json.loads((ROOT/'results/research_progress_round4.json').read_text())
         review=json.loads((ROOT/'results/t003_futures_review_20261030_v2.json').read_text())
