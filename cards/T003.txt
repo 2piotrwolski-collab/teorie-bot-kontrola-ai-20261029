@@ -1,4 +1,4 @@
-Snapshot: 2026-10-30T13:02:42.123149+00:00
+Snapshot: 2026-10-30T13:07:02.515822+00:00
 T003 · Archiwalny v1: Zmienione reguły / adaptacja
 
 Turtle System 2: kompletny system wybicia
