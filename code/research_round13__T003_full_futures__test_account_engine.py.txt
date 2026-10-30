@@ -1,0 +1,180 @@
+import unittest
+from datetime import datetime,timedelta,timezone,date
+from account_engine import Account,Contract,Margin,Quote,D,DataGate,QuoteUnavailable,RiskLimit,Notional,ranked_simultaneous
+
+T=datetime(2024,1,2,15,tzinfo=timezone.utc)
+
+def contract(symbol,root=None):return Contract(symbol,root or symbol,D(100),D('.1'))
+
+class AccountTests(unittest.TestCase):
+    def setUp(self):
+        cs=[contract('GC1','GC'),contract('GC2','GC')]+[contract(r) for r in ['SI','HG','CL','HO','ZB','ZN','6B','6C','6J','6S']]
+        self.a=Account(1000000,cs,{c.root:'2.51' for c in cs},[['GC','SI'],['CL','HO'],['ZB','ZN']],[['GC','SI','HG'],['6B','6C','6J','6S']],synthetic=True)
+        self.t=T
+        for c in cs:
+            self.a.set_margin(c.symbol,Margin(D(1000),D(900),T,T+timedelta(days=90),'synthetic case','synthetic_fixture'),T)
+            self.a.mark(c.symbol,100,T)
+    def next(self):self.t+=timedelta(seconds=1);return self.t
+    def quote(self,c='GC1',bid='100',ask='100.1',size=100,at=None):
+        t=at or self.next();return Quote(c,t,D(bid),D(ask),t,t,size,size)
+    def entry(self,uid,c='GC1',direction=1,n='1',q=1,price='100.3'):
+        self.a.reserve_unit(uid,c,direction,D(n),q,self.next())
+        # Price here is the desired actual fill, after the one tick adverse scenario.
+        price=D(price);ask=price-D('.1') if direction>0 else price+D('.2');bid=ask-D('.1')
+        self.a.fill_unit(uid,self.quote(c,str(bid),str(ask),q))
+        return self.a.units[uid]
+    def roll(self,rid='R',new='GC2',shadow=1):
+        now=self.next();return self.a.start_roll(rid,'GC1',new,now,shadow,now,now,T+timedelta(days=10),T,100000,100000)
+    def test_futures_entry_does_not_spend_contract_notional(self):
+        self.entry('u',q=2,price='2000')
+        self.assertEqual(self.a.cash,D('999994.98'))
+        self.assertEqual(self.a.margin_used(self.t),D(2000))
+    def test_roundtrip_money_and_fees_by_hand(self):
+        self.entry('u',q=2,price='100.2')
+        self.a.close_unit('u',self.quote(bid='102',ask='102.1'),self.t-timedelta(seconds=1),'manual')
+        self.assertEqual(self.a.equity(),D('1000329.96'))
+        self.assertEqual(self.a.fee_total,D('10.04'))
+    def test_zero_and_negative_prices_are_not_corrupt_futures(self):
+        self.entry('u','CL',n=2,price='-37.63')
+        self.assertEqual(self.a.units['u'].entry_vwap,D('-37.63'))
+        self.a.mark('CL',0,self.next());self.assertGreater(self.a.equity(),self.a.start)
+    def test_variation_margin_preserves_nav(self):
+        self.entry('u',q=2);self.a.mark('GC1',103,self.next());before=self.a.equity()
+        delta=self.a.settle({'GC1':103},self.next(),'synthetic actual settlement')
+        self.assertEqual(delta,D(540));self.assertEqual(self.a.equity(),before)
+        self.assertEqual(self.a.units['u'].lots[0]['entry'],D('100.3'))
+    def test_missing_settlement_does_not_impute_price(self):
+        self.entry('u')
+        with self.assertRaises(DataGate):self.a.settle({},self.next(),'test')
+    def test_zero_margin_never_means_infinite_leverage(self):
+        with self.assertRaises(DataGate):self.a.set_margin('GC1',Margin(0,0,T,T+timedelta(days=1),'test'),T)
+    def test_contract_margin_not_assumed_flat_across_months(self):
+        self.a.set_margin('GC2',Margin(5000,4000,T,T+timedelta(days=90),'test','synthetic_fixture'),self.next())
+        self.entry('u','GC2');self.assertEqual(self.a.margin_used(self.t),D(5000))
+    def test_margin_outside_verified_coverage_blocks(self):
+        with self.assertRaises(DataGate):self.a.set_margin('GC1',Margin(1000,900,T,T+timedelta(days=1),'test'),T+timedelta(days=2))
+    def test_future_margin_cannot_leak_into_decision(self):
+        with self.assertRaises(DataGate):self.a.set_margin('GC1',Margin(1000,900,T+timedelta(days=1),T+timedelta(days=2),'test'),T)
+    def test_synthetic_margin_rejected_in_real_mode(self):
+        b=Account(10000,[Contract('X','X',100,'.1',exit_before=T+timedelta(days=10),critical_dates_known_at=T,critical_dates_source='test')],{'X':1},[],[],synthetic=False)
+        with self.assertRaises(DataGate):b.set_margin('X',Margin(1000,900,T,T+timedelta(days=1),'fake','synthetic_fixture'),T)
+    def test_unfundable_whole_unit_rejected(self):
+        with self.assertRaises(RiskLimit):self.a.reserve_unit('u','GC1',1,1,1000,self.next())
+    def test_margin_call_is_detected(self):
+        self.entry('u',q=1)
+        self.a.set_margin('GC1',Margin(2000000,1500000,T,T+timedelta(days=90),'test','synthetic_fixture'),self.next())
+        self.assertTrue(self.a.margin_call_required(self.t))
+    def test_four_unit_market_limit(self):
+        for i in range(4):self.entry(str(i),n=1,price=str(D(100)+i))
+        with self.assertRaises(RiskLimit):self.a.reserve_unit('5','GC1',1,1,1,self.next())
+    def test_close_group_six_unit_limit(self):
+        for i in range(3):self.entry('g'+str(i))
+        for i in range(3):self.entry('s'+str(i),'SI')
+        with self.assertRaises(RiskLimit):self.a.reserve_unit('s4','SI',1,1,1,self.next())
+    def test_loose_group_ten_unit_limit(self):
+        for root,count in [('6B',4),('6C',4),('6J',2)]:
+            for i in range(count):self.entry(root+str(i),root)
+        with self.assertRaises(RiskLimit):self.a.reserve_unit('j3','6J',1,1,1,self.next())
+    def test_twelve_direction_limit(self):
+        for root in ['GC1','CL','ZB']:
+            for i in range(4):self.entry(root+str(i),root)
+        with self.assertRaises(RiskLimit):self.a.reserve_unit('j1','6J',1,1,1,self.next())
+    def test_long_short_limits_are_separate(self):
+        for direction,roots in [(1,['GC1','CL','ZB']),(-1,['SI','HO','ZN'])]:
+            for root in roots:
+                for i in range(4):self.entry(root+str(i),root,direction)
+        self.assertEqual(sum(self.a.risk_counts(1).values()),12)
+        self.assertEqual(sum(self.a.risk_counts(-1).values()),12)
+    def test_source_gap_stops_do_not_all_reset_to_newest_minus2N(self):
+        for i,p in enumerate(['28.3','28.9','29.5','30.8']):self.entry(str(i),n='1.2',price=p)
+        self.assertEqual([self.a.units[str(i)].lots[0]['stop'] for i in range(4)],[D('27.7')]*3+[D('28.4')])
+    def test_partial_fill_waits_for_actual_size(self):
+        self.a.reserve_unit('u','GC1',1,1,3,self.next())
+        self.assertEqual(self.a.fill_unit('u',self.quote(size=1)),1)
+        self.assertFalse(self.a.units['u'].complete)
+        with self.assertRaises(RiskLimit):self.a.reserve_unit('v','GC1',1,1,1,self.next())
+        self.assertEqual(self.a.fill_unit('u',self.quote(size=2)),2)
+        self.assertTrue(self.a.units['u'].complete);self.assertEqual(self.a.units['u'].quantity,3)
+    def test_quote_size_not_reused_for_two_exits(self):
+        self.entry('a');self.entry('b');signal=self.next();q=self.quote(size=1)
+        self.assertEqual(self.a.close_unit('a',q,signal,'test'),1)
+        self.assertEqual(self.a.close_unit('b',q,signal,'test'),0)
+    def test_quote_before_signal_or_same_time_not_executable(self):
+        self.a.reserve_unit('u','GC1',1,1,1,self.next())
+        q=self.quote(at=self.t)
+        with self.assertRaises(QuoteUnavailable):self.a.fill_unit('u',q)
+    def test_individual_stale_side_is_checked(self):
+        self.a.reserve_unit('u','GC1',1,1,1,self.next());at=self.next()
+        q=Quote('GC1',at,100,101,at,at-timedelta(seconds=10),10,10)
+        with self.assertRaises(QuoteUnavailable):self.a.fill_unit('u',q)
+    def test_zero_price_two_sided_quote_allowed(self):
+        self.a.reserve_unit('u','GC1',1,1,1,self.next());self.a.fill_unit('u',self.quote(bid='-.1',ask='0'))
+        self.assertEqual(self.a.units['u'].entry_vwap,D('.1'))
+    def test_naive_timestamp_rejected(self):
+        with self.assertRaises(DataGate):self.a.mark('GC1',100,datetime(2024,1,2))
+    def test_duplicate_or_wrong_month_units_rejected(self):
+        self.entry('a')
+        with self.assertRaises(RiskLimit):self.a.reserve_unit('b','GC2',1,1,1,self.next())
+    def test_roll_requires_own_successor_campaign(self):
+        self.entry('a')
+        with self.assertRaises(RiskLimit):self.roll(shadow=0)
+    def test_roll_rejects_future_oi(self):
+        self.entry('a');at=self.next()
+        with self.assertRaises(DataGate):self.a.start_roll('r','GC1','GC2',at,1,at,at+timedelta(seconds=1),at+timedelta(days=3),T,10000,10000)
+    def test_roll_requires_liquidity_for_position_size(self):
+        self.entry('a');at=self.next()
+        with self.assertRaises(RiskLimit):self.a.start_roll('r','GC1','GC2',at,1,at,at,at+timedelta(days=3),T,10,10)
+    def test_roll_new_leg_waits_for_complete_old_leg(self):
+        self.entry('a',q=2);self.roll();r=self.a.rolls['R'];signal=self.t
+        self.a.close_unit('a',self.quote(size=1),signal,'roll')
+        with self.assertRaises(RiskLimit):self.a.reserve_roll_successor('R',self.next(),1,self.t)
+        self.a.close_unit('a',self.quote(size=1),self.t-timedelta(seconds=1),'roll')
+        self.assertEqual(r.state,'OPENING')
+    def test_roll_two_fees_and_no_fictitious_price_jump(self):
+        self.entry('a',price='100.2');self.a.mark('GC1',110,self.next());self.a.mark('GC2',200,self.t)
+        self.roll();signal=self.t;self.a.close_unit('a',self.quote(bid='110',ask='110.1'),signal,'roll')
+        self.a.reserve_roll_successor('R',self.next(),1,self.t);uid=self.a.rolls['R'].new_uids['a']
+        self.a.fill_unit(uid,self.quote('GC2',bid='200',ask='200.1'))
+        self.assertEqual(self.a.rolls['R'].state,'DONE')
+        self.assertEqual(self.a.fee_total,D('7.53'))
+        self.assertEqual(self.a.equity(),D('1000942.47'))
+        self.assertEqual(self.a.units[uid].lots[0]['stop'],D('188.5'))
+    def test_roll_reserves_risk_while_between_legs(self):
+        for i in range(4):self.entry(str(i))
+        self.roll();signal=self.t
+        for i in range(4):self.a.close_unit(str(i),self.quote(),signal,'roll')
+        self.assertEqual(self.a.risk_counts(1)['GC'],4)
+        with self.assertRaises(RiskLimit):self.a.reserve_unit('x','GC2',1,1,1,self.next())
+    def test_roll_stopped_source_cannot_reopen(self):
+        self.entry('a',price='100.2');self.roll();signal=self.t
+        self.a.close_unit('a',self.quote(bid='98',ask='98.1'),signal,'roll')
+        self.assertEqual(self.a.rolls['R'].state,'ABORTED')
+    def test_roll_aborts_if_successor_signal_disappears(self):
+        self.entry('a');self.roll();self.a.close_unit('a',self.quote(),self.t-timedelta(seconds=1),'roll')
+        self.a.reserve_roll_successor('R',self.next(),0,self.t);self.assertEqual(self.a.rolls['R'].state,'ABORTED')
+    def test_source_notional_ladder_and_full_recovery(self):
+        n=Notional(1000000);self.assertEqual(n.observe(900000),D(800000));self.assertEqual(n.observe(820000),D(640000))
+        self.assertEqual(n.observe(950000),D(640000));self.assertEqual(n.observe(1000000),D(1000000))
+        self.assertEqual(n.observe(1200000),D(1000000));n.begin_year(1200000);self.assertEqual(n.amount,D(1200000))
+    def test_integer_quantity_floor_not_fractional_contracts(self):
+        self.assertEqual(self.a.quantity_per_unit(30,100),3)
+    def test_ranking_buys_strongest_and_sells_weakest(self):
+        def c(root,d,last):return {'root':root,'contract':root,'direction':d,'last':last,'price_3m':100,'n':2,'price_3m_known_at':T,'decision_at':T}
+        self.assertEqual(ranked_simultaneous([c('weak',1,101),c('strong',1,110)])[0]['root'],'strong')
+        self.assertEqual(ranked_simultaneous([c('lessweak',-1,99),c('weakest',-1,90)])[0]['root'],'weakest')
+    def test_zero_position_expired_margin_not_required(self):
+        self.entry('a');self.a.close_unit('a',self.quote(),self.t-timedelta(seconds=1),'test')
+        self.assertEqual(self.a.margin_used(T+timedelta(days=365)),D(0))
+    def test_unit_lot_stop_exit_closes_correct_lot(self):
+        self.a.reserve_unit('u','GC1',1,1,2,self.next());self.a.fill_unit('u',self.quote(ask='100.1',size=1));self.a.fill_unit('u',self.quote(ask='103.1',size=1))
+        self.a.close_unit('u',self.quote(bid='101',ask='101.1'),self.t-timedelta(seconds=1),'2N',lot_indices=[1])
+        self.assertEqual([x['q'] for x in self.a.units['u'].lots],[1,0])
+    def test_overnight_fee_interpolation_and_no_weekend_duplicates(self):
+        a=Account(2000,[contract('X')],{'X':0},[],[],slippage_ticks=0,synthetic=True)
+        a.set_margin('X',Margin(1000,900,T,T+timedelta(days=30),'test','synthetic_fixture'),T);a.mark('X',100,T)
+        a.reserve_unit('u','X',1,1,1,T);a.fill_unit('u',Quote('X',T+timedelta(seconds=1),100,100,T+timedelta(seconds=1),T+timedelta(seconds=1),1,1))
+        self.assertEqual(a.charge_overnight(date(2024,1,2),T+timedelta(seconds=2),True),D('.05'))
+        with self.assertRaises(DataGate):a.charge_overnight(date(2024,1,2),T+timedelta(seconds=3),True)
+        self.assertEqual(a.charge_overnight(date(2024,1,6),T+timedelta(seconds=4),False),D(0))
+
+if __name__=='__main__':unittest.main()

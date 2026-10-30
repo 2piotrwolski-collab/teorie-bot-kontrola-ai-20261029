@@ -1,0 +1,16 @@
+{
+  "project_id": 38666177,
+  "backtest_id": "dc89e08525c1f69d2956f1d892e216c5",
+  "name": "Hipster Tan Dolphin",
+  "engine": "2.5.0.0.18217",
+  "retrieved_at_utc": "2026-10-30T15:10:56.849047+00:00",
+  "download_sha256": "57298b0168604084a24440dafe3d113f1ed21528717a84b1a4c83df7bb99124d",
+  "full_standard_report_saved": true,
+  "normal_human_readable_runtime_fields": true,
+  "cases": 48,
+  "positive_pairs": 48,
+  "errors": 0,
+  "orders_in_export": 0,
+  "strategy_PnL": false,
+  "previous_output_failures_retained": true
+}

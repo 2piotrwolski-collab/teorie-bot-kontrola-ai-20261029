@@ -1,0 +1,40 @@
+{
+  "id": "T003_MARGIN_PATH_2019_2025_20261030_V1",
+  "frozen_at_utc": "2026-10-30T15:29:57.205896+00:00",
+  "code_file": "research_round13/T003_full_futures/qc_margin_path_probe.py",
+  "sha256": "23e609c6b9f8a539a4df5b94c307c28cbf4ea5fec4cef0809f89769f46a6d8c6",
+  "question": "Can historical dated noncanonical contract security data and positive varying margin model values be observed throughout2019-2025 across the fixed12roots?",
+  "roots": [
+    "GC",
+    "SI",
+    "HG",
+    "CL",
+    "HO",
+    "ZB",
+    "ZN",
+    "6B",
+    "6C",
+    "6J",
+    "6S",
+    "SB"
+  ],
+  "period": [
+    "2019-01-02",
+    "2025-12-31"
+  ],
+  "expiry_filter_days": [
+    45,
+    180
+  ],
+  "filter_scope": "qualification sample; not delivery/roll safety rule",
+  "run_budget": {
+    "original": 1,
+    "technical_repair": 1
+  },
+  "no_orders": true,
+  "paid_services": false,
+  "ObjectStore": false,
+  "returns": false,
+  "acceptance": "All12roots historical bars, yearlycoverage/counts, positivepairs. Any gaps/defaults disclosed, not inferred historicalCME complete. Calendar andactualdailyinput coverage muststillqualify separately.",
+  "output": "Normal human-readable RuntimeStatistics andDownloadResults, noencodedfields."
+}

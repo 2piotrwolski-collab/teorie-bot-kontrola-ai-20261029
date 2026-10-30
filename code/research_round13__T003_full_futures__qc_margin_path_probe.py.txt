@@ -1,0 +1,61 @@
+"""FREE historical margin-path qualification. No orders, returns or ObjectStore.
+
+Daily bars serve only as real dated security observations for the buying-power
+model. They are expressly not the full-source-session Turtle signal bars.
+"""
+from AlgorithmImports import *
+from datetime import datetime,timedelta
+
+class TurtleMarginPathProbe(QCAlgorithm):
+    def initialize(self):
+        if self.live_mode:raise ValueError('Historical research only')
+        self.set_start_date(2019,1,2);self.set_end_date(2025,12,31)
+        self.set_time_zone(TimeZones.NEW_YORK);self.set_cash(1000000)
+        self.roots=['GC','SI','HG','CL','HO','ZB','ZN','6B','6C','6J','6S','SB']
+        self.models={};self.errors={};self.negative_bars=0;self.future_bars=0
+        self.records={r:{'bars':0,'dates':set(),'contracts':set(),'rates':set(),'initial':[],'maintenance':[],
+            'first':None,'last':None,'invalid':0,'models':set(),'years':{y:set() for y in range(2019,2026)}} for r in self.roots}
+        for root in self.roots:
+            canonical=self.add_future(root,Resolution.DAILY,fill_forward=False,extended_market_hours=True,
+                data_normalization_mode=DataNormalizationMode.RAW)
+            canonical.set_filter(timedelta(days=45),timedelta(days=180))
+    def on_data(self,data):
+        for symbol,bar in data.bars.items():
+            if symbol.is_canonical():continue
+            root=symbol.id.symbol
+            if root not in self.records:continue
+            row=self.records[root]
+            try:
+                if bar.is_fill_forward:raise ValueError('Unexpected fill-forward data; not margin evidence')
+                if bar.end_time>self.time:
+                    self.future_bars+=1;raise ValueError('Future daily bar')
+                security=self.securities[symbol]
+                model=security.buying_power_model
+                initial=float(model.initial_overnight_margin_requirement)
+                maintenance=float(model.maintenance_overnight_margin_requirement)
+                day=bar.time.date();row['bars']+=1;row['dates'].add(day);row['contracts'].add(str(symbol.id))
+                row['models'].add(type(model).__name__)
+                if min(float(bar.low),float(bar.close))<0:self.negative_bars+=1
+                if not (initial>0 and 0<maintenance<=initial):
+                    row['invalid']+=1;raise ValueError('Nonpositive/invalid historical margin')
+                row['rates'].add((initial,maintenance));row['initial'].append(initial);row['maintenance'].append(maintenance)
+                row['first']=day if row['first'] is None else min(row['first'],day)
+                row['last']=day if row['last'] is None else max(row['last'],day)
+                if day.year in row['years']:row['years'][day.year].add(day)
+            except Exception as exc:
+                key=root+' '+type(exc).__name__+' '+str(exc)[:70]
+                self.errors[key]=self.errors.get(key,0)+1
+    def on_end_of_algorithm(self):
+        self.set_runtime_statistic('Protocol','T003 MARGIN PATH 2019-2025; DATA ONLY')
+        self.set_runtime_statistic('Strategy result','NONE; no orders or strategy PNL')
+        self.set_runtime_statistic('Negative raw bars',str(self.negative_bars))
+        self.set_runtime_statistic('Future bar errors',str(self.future_bars))
+        self.set_runtime_statistic('Data errors',str(sum(self.errors.values())))
+        for root,row in self.records.items():
+            self.set_runtime_statistic(root+' coverage','%s..%s; days %d; bars %d; months %d; invalid %d'%(
+                row['first'],row['last'],len(row['dates']),row['bars'],len(row['contracts']),row['invalid']))
+            self.set_runtime_statistic(root+' margin USD','initial %g..%g; maintenance %g..%g; distinct pairs %d'%(
+                min(row['initial'],default=0),max(row['initial'],default=0),min(row['maintenance'],default=0),max(row['maintenance'],default=0),len(row['rates'])))
+            self.set_runtime_statistic(root+' years',' | '.join('%d:%d'%(y,len(ds)) for y,ds in row['years'].items()))
+        self.set_runtime_statistic('Qualification','QC historical model; no CME/house completeness assertion; SB default requires check')
+        for i,(key,count) in enumerate(sorted(self.errors.items())[:5]):self.set_runtime_statistic('Error '+str(i+1),str(count)+' '+key)

@@ -1,0 +1,337 @@
+{
+  "id": "T003_MARGIN_PATH_2019_2025_20261030_V1",
+  "source_sha256": "eb90548fd3536b474504ed36cce0d1047ddfe697e8686eac5c04131aea35fb60",
+  "roots": [
+    {
+      "root": "GC",
+      "first": "2019-01-02",
+      "last": "2025-12-31",
+      "observed_native_daily_dates": 1767,
+      "bars": 5498,
+      "distinct_contracts": 89,
+      "invalid_margin_pairs": 0,
+      "initial_range_usd": [
+        3740.0,
+        26400.0
+      ],
+      "maintenance_range_usd": [
+        3400.0,
+        24000.0
+      ],
+      "distinct_pairs": 43,
+      "yearly_dates": {
+        "2019": 252,
+        "2020": 253,
+        "2021": 252,
+        "2022": 251,
+        "2023": 251,
+        "2024": 252,
+        "2025": 256
+      }
+    },
+    {
+      "root": "SI",
+      "first": "2019-01-02",
+      "last": "2025-12-31",
+      "observed_native_daily_dates": 1767,
+      "bars": 5305,
+      "distinct_contracts": 89,
+      "invalid_margin_pairs": 0,
+      "initial_range_usd": [
+        3630.0,
+        35750.0
+      ],
+      "maintenance_range_usd": [
+        3300.0,
+        32500.0
+      ],
+      "distinct_pairs": 34,
+      "yearly_dates": {
+        "2019": 252,
+        "2020": 253,
+        "2021": 252,
+        "2022": 251,
+        "2023": 251,
+        "2024": 252,
+        "2025": 256
+      }
+    },
+    {
+      "root": "HG",
+      "first": "2019-01-02",
+      "last": "2025-12-31",
+      "observed_native_daily_dates": 1767,
+      "bars": 7627,
+      "distinct_contracts": 89,
+      "invalid_margin_pairs": 0,
+      "initial_range_usd": [
+        2640.0,
+        12100.0
+      ],
+      "maintenance_range_usd": [
+        2400.0,
+        11000.0
+      ],
+      "distinct_pairs": 27,
+      "yearly_dates": {
+        "2019": 252,
+        "2020": 253,
+        "2021": 252,
+        "2022": 251,
+        "2023": 251,
+        "2024": 252,
+        "2025": 256
+      }
+    },
+    {
+      "root": "CL",
+      "first": "2019-01-02",
+      "last": "2025-12-31",
+      "observed_native_daily_dates": 1768,
+      "bars": 7888,
+      "distinct_contracts": 89,
+      "invalid_margin_pairs": 0,
+      "initial_range_usd": [
+        3465.0,
+        13200.0
+      ],
+      "maintenance_range_usd": [
+        3150.0,
+        12000.0
+      ],
+      "distinct_pairs": 270,
+      "yearly_dates": {
+        "2019": 252,
+        "2020": 253,
+        "2021": 252,
+        "2022": 251,
+        "2023": 251,
+        "2024": 252,
+        "2025": 257
+      }
+    },
+    {
+      "root": "HO",
+      "first": "2019-01-02",
+      "last": "2025-12-31",
+      "observed_native_daily_dates": 1768,
+      "bars": 7888,
+      "distinct_contracts": 88,
+      "invalid_margin_pairs": 0,
+      "initial_range_usd": [
+        3850.0,
+        18700.0
+      ],
+      "maintenance_range_usd": [
+        3500.0,
+        17000.0
+      ],
+      "distinct_pairs": 312,
+      "yearly_dates": {
+        "2019": 252,
+        "2020": 253,
+        "2021": 252,
+        "2022": 251,
+        "2023": 251,
+        "2024": 252,
+        "2025": 257
+      }
+    },
+    {
+      "root": "ZB",
+      "first": "2019-01-02",
+      "last": "2025-12-31",
+      "observed_native_daily_dates": 1768,
+      "bars": 2549,
+      "distinct_contracts": 30,
+      "invalid_margin_pairs": 0,
+      "initial_range_usd": [
+        2640.0,
+        7150.0
+      ],
+      "maintenance_range_usd": [
+        2400.0,
+        6500.0
+      ],
+      "distinct_pairs": 21,
+      "yearly_dates": {
+        "2019": 252,
+        "2020": 253,
+        "2021": 252,
+        "2022": 251,
+        "2023": 252,
+        "2024": 252,
+        "2025": 256
+      }
+    },
+    {
+      "root": "ZN",
+      "first": "2019-01-02",
+      "last": "2025-12-31",
+      "observed_native_daily_dates": 1768,
+      "bars": 2596,
+      "distinct_contracts": 30,
+      "invalid_margin_pairs": 0,
+      "initial_range_usd": [
+        1155.0,
+        2475.0
+      ],
+      "maintenance_range_usd": [
+        1050.0,
+        2250.0
+      ],
+      "distinct_pairs": 23,
+      "yearly_dates": {
+        "2019": 252,
+        "2020": 253,
+        "2021": 252,
+        "2022": 251,
+        "2023": 252,
+        "2024": 252,
+        "2025": 256
+      }
+    },
+    {
+      "root": "6B",
+      "first": "2019-01-02",
+      "last": "2025-12-31",
+      "observed_native_daily_dates": 1808,
+      "bars": 4258,
+      "distinct_contracts": 87,
+      "invalid_margin_pairs": 0,
+      "initial_range_usd": [
+        1925.0,
+        3300.0
+      ],
+      "maintenance_range_usd": [
+        1750.0,
+        3000.0
+      ],
+      "distinct_pairs": 15,
+      "yearly_dates": {
+        "2019": 258,
+        "2020": 259,
+        "2021": 259,
+        "2022": 258,
+        "2023": 258,
+        "2024": 259,
+        "2025": 257
+      }
+    },
+    {
+      "root": "6C",
+      "first": "2019-01-02",
+      "last": "2025-12-31",
+      "observed_native_daily_dates": 1807,
+      "bars": 4250,
+      "distinct_contracts": 88,
+      "invalid_margin_pairs": 0,
+      "initial_range_usd": [
+        990.0,
+        1760.0
+      ],
+      "maintenance_range_usd": [
+        900.0,
+        1600.0
+      ],
+      "distinct_pairs": 17,
+      "yearly_dates": {
+        "2019": 257,
+        "2020": 259,
+        "2021": 259,
+        "2022": 258,
+        "2023": 258,
+        "2024": 259,
+        "2025": 257
+      }
+    },
+    {
+      "root": "6J",
+      "first": "2019-01-02",
+      "last": "2025-12-31",
+      "observed_native_daily_dates": 1807,
+      "bars": 4217,
+      "distinct_contracts": 87,
+      "invalid_margin_pairs": 0,
+      "initial_range_usd": [
+        1980.0,
+        4400.0
+      ],
+      "maintenance_range_usd": [
+        1800.0,
+        4000.0
+      ],
+      "distinct_pairs": 21,
+      "yearly_dates": {
+        "2019": 257,
+        "2020": 259,
+        "2021": 259,
+        "2022": 258,
+        "2023": 258,
+        "2024": 259,
+        "2025": 257
+      }
+    },
+    {
+      "root": "6S",
+      "first": "2019-01-02",
+      "last": "2025-12-31",
+      "observed_native_daily_dates": 1758,
+      "bars": 2307,
+      "distinct_contracts": 30,
+      "invalid_margin_pairs": 0,
+      "initial_range_usd": [
+        2585.0,
+        5940.0
+      ],
+      "maintenance_range_usd": [
+        2350.0,
+        5400.0
+      ],
+      "distinct_pairs": 18,
+      "yearly_dates": {
+        "2019": 251,
+        "2020": 249,
+        "2021": 250,
+        "2022": 252,
+        "2023": 248,
+        "2024": 256,
+        "2025": 252
+      }
+    },
+    {
+      "root": "SB",
+      "first": "2019-01-02",
+      "last": "2025-12-31",
+      "observed_native_daily_dates": 1681,
+      "bars": 2591,
+      "distinct_contracts": 30,
+      "invalid_margin_pairs": 0,
+      "initial_range_usd": [
+        1900.0,
+        1900.0
+      ],
+      "maintenance_range_usd": [
+        1500.0,
+        1500.0
+      ],
+      "distinct_pairs": 1,
+      "yearly_dates": {
+        "2019": 241,
+        "2020": 243,
+        "2021": 241,
+        "2022": 240,
+        "2023": 237,
+        "2024": 238,
+        "2025": 241
+      }
+    }
+  ],
+  "total_contract_daily_observations": 56974,
+  "all12roots_seen_each_year": true,
+  "data_errors": 0,
+  "orders": 0,
+  "strategy_PnL": false,
+  "qualified_scope": "Positive QC historical model requirements at actual observed dated individual-contract bars. Not proof full expected session/contract/quote coverage or historical CME/house tariff. Native daily OHLC not used for Turtle channels.",
+  "SB_default_warning": "1900initial/1500maintenance all2019-2025: identical public1990fixture. Positive rates do not establish realhistorical adequacy; retain SB in declared scope and qualify independently before outcome."
+}

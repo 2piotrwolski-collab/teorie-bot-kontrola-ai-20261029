@@ -1,0 +1,32 @@
+{
+  "id": "T003_MARGIN_CLOUD_COVERAGE_20261030_V1",
+  "frozen_at_utc": "2026-10-30T14:14:48.402740+00:00",
+  "purpose": "Close known historicalmargin data gap before any performance trial; checkfreecloud48fixedroot/datecases",
+  "source_fit_file": "SOURCE_FIT_AND_DESIGN.json",
+  "code_sha256": "b006e56522bb9834753da0b50f05fe075d152b75cb8087cb673c8aede29b4fb1",
+  "roots": [
+    "GC",
+    "SI",
+    "HG",
+    "CL",
+    "HO",
+    "ZB",
+    "ZN",
+    "6B",
+    "6C",
+    "6J",
+    "6S",
+    "SB"
+  ],
+  "dates": [
+    "2019-01-02",
+    "2021-01-04",
+    "2024-01-02",
+    "2025-12-31"
+  ],
+  "cloud_runs_max": 1,
+  "technical_repairs_max": 1,
+  "no_orders_no_PnL_no_paid_api": true,
+  "gate": "Need48completepositivepairs and explicitCME/houseclassification checks. Source/availability error is not a strategyfailure. Modelstale/defaultrates are not certifiedcurrentmargin.",
+  "run_status": "PREPARED_NOT_RUN_CHROME_POPUP_PENDING"
+}

@@ -1,0 +1,47 @@
+{
+  "id": "T003_ICE_ARCHIVE_PARTIAL_20261030_V1",
+  "links_read_from_official_UI": 215,
+  "date_scope_download_links": 178,
+  "HTTP200_valid_csv": 42,
+  "HTTP429_retained": 136,
+  "SB_tier_rows": 462,
+  "SB_tier_rate_range_usd": [
+    414.46272,
+    1556.8
+  ],
+  "complete2019_2025": false,
+  "pagination_failure": "After215officiallinks through20220225, officialICEtable rendered Error! An unexpectederrorhasoccurred. Not evidence filesolderthan2022do notexist.",
+  "download_failure": "3concurrent unpacedworkers were tooaggressive; preserveall429bodies. Acquisitioncode mustpace1request/2seconds andstoponfirst429/5xx. No immediatebulk retry orratelimitbypass.",
+  "free_primary_evidence": [
+    {
+      "snapshot": "2024-09-18",
+      "rows": [
+        {
+          "contract": "SBV24",
+          "clearing_applied": 1400
+        },
+        {
+          "contract": "SBH25",
+          "clearing_applied": 1398.18
+        },
+        {
+          "contract": "SBK25",
+          "clearing_applied": 992.46
+        }
+      ],
+      "rounded_notice": [
+        1400,
+        1398,
+        992
+      ],
+      "notice": "sources/ICE_24_054_Margins.pdf"
+    }
+  ],
+  "limitations": [
+    "Scanning appliedclearingmargin is not an independentlyverified personalinitial/maintenance brokerpair.",
+    "ICE guide warns indicativeexpiryranges maybestale; maprelative tiers againstcompleteactualtheneligiblechain, notexpiredlabel alone.",
+    "Fileshaveeffective dates but no independentlyverified publicintradayreceipt timestamp; donotbackdatemarginchangebeforeknowledge.",
+    "42validsnapshots plus1individual2024fileand2019riskarray donotcomplete2019–2025."
+  ],
+  "full_test_status": "needs_data_and_adapter_not_rejected"
+}

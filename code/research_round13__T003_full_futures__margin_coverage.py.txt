@@ -1,0 +1,33 @@
+"""Dated margin input checks. Never extrapolate a stale fixture as verified data."""
+import csv
+from datetime import datetime,date
+from pathlib import Path
+from account_engine import D,DataGate
+
+class MarginSeries:
+    def __init__(self,path,coverage_verified_through=None):
+        self.path=Path(path);self.coverage=coverage_verified_through
+        self.rows=[]
+        with self.path.open() as f:
+            reader=csv.DictReader(line for line in f if line.strip() and not line.startswith('#'))
+            for r in reader:
+                d=datetime.strptime(r['date'],'%Y%m%d').date();initial=D(r['initial']);maintenance=D(r['maintenance'])
+                if initial<=0 or not 0<maintenance<=initial:raise DataGate('Invalid initial/maintenance margin')
+                self.rows.append((d,initial,maintenance))
+        if not self.rows or any(a[0]>=b[0] for a,b in zip(self.rows,self.rows[1:])):raise DataGate('Empty/unordered/duplicate margin change dates')
+    def lookup(self,day):
+        if self.coverage is None or day>self.coverage:raise DataGate('Historical completeness/coverage not independently qualified')
+        eligible=[r for r in self.rows if r[0]<=day]
+        if not eligible:raise DataGate('No known margin at this date; do not use the first future row')
+        return eligible[-1]
+
+def inspect_directory(directory):
+    out=[]
+    for p in sorted(Path(directory).glob('*.csv')):
+        if p.name=='symbol-properties-database.csv':continue
+        s=MarginSeries(p)
+        out.append({'root':p.stem,'rows':len(s.rows),'first_effective_date':str(s.rows[0][0]),
+            'last_change_in_file':str(s.rows[-1][0]),'last_initial':str(s.rows[-1][1]),
+            'last_maintenance':str(s.rows[-1][2]),'full2019_2025coverage_verified':False,
+            'last_row_is_not_coverage_end_proof':True})
+    return out

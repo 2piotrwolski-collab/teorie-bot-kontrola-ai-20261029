@@ -1,0 +1,34 @@
+{
+  "id": "T003_ACCOUNT_COMPONENTS_20261030_V2",
+  "frozen_at_utc": "2026-10-30T15:42:38.240255+00:00",
+  "files_sha256": {
+    "account_engine.py": "6144d6ce619d896ede25dbe1bf49e8bcf7d62a9a60f26a5d0f60b8e4ee4f6c96",
+    "system2.py": "140580f423095ebc906426cf06e948c07e7932d9e8175d0ff84e046963fac6ac",
+    "shadow_system2.py": "2e8110361afd58a8567638a2b24ad5e35193abd1519e4d9a51e2b73508d67982",
+    "margin_coverage.py": "7526aafd35f0cd6bcdc36f462dec45ada638067f5d0eed92a351390d22a91ac3",
+    "test_account_engine.py": "8fdefb42570180e936039d52d01ca3bff9db6203e6f70e20feb4cbd234e045f8",
+    "test_system2.py": "9564c832264abb0a0c7a462f5716b2ecd0856e0ddddccee43b563e8389b489ba",
+    "test_shadow_and_selection.py": "2930419fb79077158fc9527d0d5604fe93fc57e3f790db40eeeee77e39ae6783",
+    "test_margin_coverage.py": "f03d137260f994b52755be2725908a6aa893916a9c07b17938d305ff8739ff74",
+    "test_deadlines_and_year.py": "25ce868c72367df7c3f4e0e8189fb89bd8c4d2f8dc19b61501f06c3c8275dc0f"
+  },
+  "checks": {
+    "synthetic_checks_passed": 90,
+    "last_log": "full_checks_v6.log",
+    "failed_log_retained": "full_checks_v5.log",
+    "failed_cause": "Two new test fixtures scheduled secondcontractinitialization behind firstcontractfill; chronologyfixed, modelnotweakened."
+  },
+  "status": "COMPONENTS_VERIFIED_NOT_FULL_HISTORICAL_STRATEGY",
+  "performance_plan_frozen": false,
+  "market_PnL_computed": false,
+  "remaining_adapter": [
+    "Completeindividualcontractsource-sessioncalendars",
+    "Fullprior55sessionwarmup andanchoredNfromhistoricalrawtrades",
+    "Complete tick-trade/quote replay andtiming/size",
+    "Actualcontractmontheligibleuniverse andownshadow replay withcoverageproof",
+    "As-ofOIpublication/liquidity, criticaldates androllschedule",
+    "Percontractdatedinitial/maintenanceclassification andsafe margins",
+    "Settlement/fees/overnightcalendar andmatchedSPY",
+    "Endtoendlegacy/syntheticcontrols andseparateperformancefreeze"
+  ]
+}

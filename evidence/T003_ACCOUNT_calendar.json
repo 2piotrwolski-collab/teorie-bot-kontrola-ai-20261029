@@ -1,0 +1,49 @@
+{
+  "package": "pandas_market_calendars",
+  "version": "5.5.0",
+  "official_metals_Sep4_close_UTC": "2023-09-04 18:30:00+00:00",
+  "library_rows": {
+    "CMEGlobex_GC": {
+      "2023-09-04 00:00:00": {
+        "market_open": "2023-09-03 22:00:00+00:00",
+        "market_close": "2023-09-04 17:00:00+00:00"
+      },
+      "2023-09-05 00:00:00": {
+        "market_open": "2023-09-04 22:00:00+00:00",
+        "market_close": "2023-09-05 21:00:00+00:00"
+      }
+    },
+    "CMEGlobex_EnergyAndMetals": {
+      "2023-09-04 00:00:00": {
+        "market_open": "2023-09-03 22:00:00+00:00",
+        "market_close": "2023-09-04 17:00:00+00:00"
+      },
+      "2023-09-05 00:00:00": {
+        "market_open": "2023-09-04 22:00:00+00:00",
+        "market_close": "2023-09-05 21:00:00+00:00"
+      }
+    },
+    "CMEGlobex_FX": {
+      "2023-09-04 00:00:00": {
+        "market_open": "2023-09-03 22:00:00+00:00",
+        "market_close": "2023-09-04 21:00:00+00:00"
+      },
+      "2023-09-05 00:00:00": {
+        "market_open": "2023-09-04 22:00:00+00:00",
+        "market_close": "2023-09-05 21:00:00+00:00"
+      }
+    },
+    "CBOT_Bond": {
+      "2023-09-04 00:00:00": {
+        "market_open": "2023-09-03 22:00:00+00:00",
+        "market_close": "2023-09-04 17:00:00+00:00"
+      },
+      "2023-09-05 00:00:00": {
+        "market_open": "2023-09-04 22:00:00+00:00",
+        "market_close": "2023-09-05 21:00:00+00:00"
+      }
+    }
+  },
+  "full_period_calendar_qualified": false,
+  "cause": "Metals90minute discrepancy and product-specificholidaytradeDate aggregation; native library civil dates do not establish source CMEtrade dates."
+}

@@ -1,0 +1,86 @@
+"""Independent per-contract System2 position for source roll eligibility.
+
+No portfolio caps, dollar sizing, PnL or inherited old-month signal. One symbolic
+contract per source unit; only its own trades and later quotes create positions.
+The adapter must prove source sessions, inception/warmup and complete event
+coverage. This class cannot establish completeness merely from timestamps.
+"""
+from account_engine import D,aware,DataGate,QuoteUnavailable
+
+class ShadowSystem2:
+    def __init__(self,contract,tick,slippage_ticks=1):
+        self.contract=contract;self.tick=D(tick);self.slip=D(slippage_ticks)
+        if self.tick<=0 or self.slip<0:raise DataGate('Invalid shadow contract specification')
+        self.levels=None;self.units=[];self.pending=None;self.last_at=None
+        self.direction=0;self.n=None;self.last_purchase=None;self.coverage_at=None;self.coverage_source=None
+        self.events=[]
+    def _time(self,at):
+        aware(at)
+        if self.last_at is not None and at<self.last_at:raise DataGate('Shadow events out of order')
+        if self.coverage_at is not None and at<=self.coverage_at:raise DataGate('Cannot insert events behind a certified coverage watermark')
+        self.last_at=at
+    def set_levels(self,levels):
+        at=levels['available_at'];aware(at)
+        if levels['contract']!=self.contract:raise DataGate('Shadow levels from another contract')
+        if self.levels is not None and at<=self.levels['available_at']:raise DataGate('Shadow levels must advance')
+        if self.last_at is not None and at<=self.last_at:raise DataGate('Future replay must not revise past levels')
+        self.levels={**levels,**{k:D(levels[k]) for k in ['buy','short','exit_long','exit_short','n']}}
+        if self.levels['n']<=0:raise DataGate('Positive source N required')
+    def on_trade(self,price,at):
+        self._time(at);p=D(price)
+        if self.levels is None or self.levels['available_at']>at:raise DataGate('Shadow missing/unavailable source levels')
+        lev=self.levels
+        if self.units:
+            channel=p<=lev['exit_long'] if self.direction>0 else p>=lev['exit_short']
+            stopped=[i for i,u in enumerate(self.units) if p<=u['stop']] if self.direction>0 else [i for i,u in enumerate(self.units) if p>=u['stop']]
+            if channel or stopped:
+                indices=list(range(len(self.units))) if channel else stopped
+                if self.pending and self.pending['kind']=='exit':indices=sorted(set(indices)|set(self.pending['indices']))
+                self.pending={'kind':'exit','at':at,'indices':indices};return
+        if self.pending:return
+        if self.units:
+            if len(self.units)>=4:return
+            if p*self.direction<(self.last_purchase+self.direction*D('.5')*self.n)*self.direction:return
+            direction=self.direction;n=self.n
+        else:
+            direction=1 if p>=lev['buy'] else (-1 if p<=lev['short'] else 0)
+            if not direction:return
+            n=lev['n']
+        self.pending={'kind':'entry','at':at,'direction':direction,'n':n}
+    def on_quote(self,quote):
+        self._time(quote.at)
+        if quote.contract!=self.contract:raise DataGate('Shadow quote from another contract')
+        request=self.pending
+        if request is None or quote.at<=request['at']:return False
+        side=request['direction'] if request['kind']=='entry' else -self.direction
+        try:quote.check(request['at'],side,1)
+        except QuoteUnavailable:return False
+        size=quote.ask_size if side>0 else quote.bid_size
+        price=D(quote.ask if side>0 else quote.bid)+side*self.slip*self.tick
+        if request['kind']=='entry':
+            self.direction=request['direction'];self.n=request['n'];self.last_purchase=price
+            for u in self.units:u['stop']+=self.direction*D('.5')*self.n
+            self.units.append({'entry':price,'stop':price-self.direction*2*self.n})
+            self.events.append({'kind':'entry','at':quote.at.isoformat(),'price':str(price),'direction':self.direction})
+            self.pending=None
+        else:
+            # At most the displayed contracts, consumed once in this event.
+            closed=request['indices'][:size]
+            self.units=[u for i,u in enumerate(self.units) if i not in closed]
+            left=[i-sum(j<i for j in closed) for i in request['indices'] if i not in closed]
+            self.pending={'kind':'exit','at':request['at'],'indices':left} if left else None
+            self.events.append({'kind':'exit','at':quote.at.isoformat(),'price':str(price),'units':len(closed)})
+            if not self.units:self.direction=0;self.n=None
+        return True
+    def certify_coverage(self,through,provenance):
+        aware(through)
+        if not provenance or self.last_at is None or through<self.last_at:raise DataGate('Explicit complete replay coverage evidence required')
+        if self.coverage_at is not None and through<=self.coverage_at:raise DataGate('Coverage must advance')
+        self.coverage_at=through;self.coverage_source=provenance
+    def roll_eligibility(self,decision_at):
+        aware(decision_at)
+        if self.coverage_at!=decision_at:raise DataGate('Shadow replay must be complete through the actual roll decision')
+        # An outstanding exit is not safe evidence of an active successor.
+        direction=0 if self.pending and self.pending['kind']=='exit' else self.direction
+        return {'contract':self.contract,'direction':direction,'known_at':decision_at,
+            'coverage_provenance':self.coverage_source,'units':len(self.units)}

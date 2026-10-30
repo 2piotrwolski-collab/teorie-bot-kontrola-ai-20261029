@@ -1,0 +1,31 @@
+import tempfile,unittest
+from pathlib import Path
+from datetime import date
+from account_engine import D,DataGate
+from margin_coverage import MarginSeries
+
+class MarginCoverageTests(unittest.TestCase):
+    def series(self,text,through=None):
+        folder=tempfile.TemporaryDirectory();self.addCleanup(folder.cleanup);p=Path(folder.name)/'TEST.csv';p.write_text(text)
+        return MarginSeries(p,through)
+    def test_last_row_is_not_proof_of_unlimited_future_coverage(self):
+        s=self.series('date,initial,maintenance\n20220101,6600,6000\n')
+        with self.assertRaises(DataGate):s.lookup(date(2024,1,2))
+    def test_explicit_coverage_limit_enforced(self):
+        s=self.series('date,initial,maintenance\n20220101,6600,6000\n',date(2022,12,31))
+        with self.assertRaises(DataGate):s.lookup(date(2023,1,1))
+    def test_first_future_rate_cannot_fill_missing_history(self):
+        s=self.series('date,initial,maintenance\n20240103,8800,8000\n',date(2024,1,5))
+        with self.assertRaises(DataGate):s.lookup(date(2024,1,2))
+    def test_effective_date_lookup_does_not_use_later_row(self):
+        s=self.series('date,initial,maintenance\n20240102,6600,6000\n20240105,8800,8000\n',date(2024,1,5))
+        self.assertEqual(s.lookup(date(2024,1,4))[1],D(6600))
+        self.assertEqual(s.lookup(date(2024,1,5))[1],D(8800))
+    def test_zero_or_negative_margin_rejected(self):
+        with self.assertRaises(DataGate):self.series('date,initial,maintenance\n20240102,0,0\n')
+    def test_maintenance_cannot_exceed_initial(self):
+        with self.assertRaises(DataGate):self.series('date,initial,maintenance\n20240102,100,200\n')
+    def test_unordered_or_duplicate_effective_dates_rejected(self):
+        with self.assertRaises(DataGate):self.series('date,initial,maintenance\n20240102,100,90\n20240102,120,100\n')
+
+if __name__=='__main__':unittest.main()

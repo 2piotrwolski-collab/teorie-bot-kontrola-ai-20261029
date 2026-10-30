@@ -1,0 +1,101 @@
+{
+  "id": "T003_CURRENT_IBKR_COMPONENTS_20261030_V1",
+  "scope": "Current visible USD nonmember fee components as a declared retrospective cost scenario; not historical2019tariff or personal fee assurance. No quantitytierdiscounts/giveup, assumed sameprime/executingbroker.",
+  "fees": {
+    "GC": {
+      "broker": "0.85",
+      "regulatory": "0.01",
+      "exchange": "1.65",
+      "per_contract_per_side_usd": "2.51",
+      "exchange_source": "ibkr_COMEX_previous_round"
+    },
+    "SI": {
+      "broker": "0.85",
+      "regulatory": "0.01",
+      "exchange": "1.65",
+      "per_contract_per_side_usd": "2.51",
+      "exchange_source": "ibkr_COMEX_previous_round"
+    },
+    "HG": {
+      "broker": "0.85",
+      "regulatory": "0.01",
+      "exchange": "1.65",
+      "per_contract_per_side_usd": "2.51",
+      "exchange_source": "ibkr_COMEX_previous_round"
+    },
+    "CL": {
+      "broker": "0.85",
+      "regulatory": "0.01",
+      "exchange": "1.50",
+      "per_contract_per_side_usd": "2.36",
+      "exchange_source": "ibkr_NYMEX.html"
+    },
+    "HO": {
+      "broker": "0.85",
+      "regulatory": "0.01",
+      "exchange": "1.50",
+      "per_contract_per_side_usd": "2.36",
+      "exchange_source": "ibkr_NYMEX.html"
+    },
+    "ZB": {
+      "broker": "0.85",
+      "regulatory": "0.01",
+      "exchange": "0.87",
+      "per_contract_per_side_usd": "1.73",
+      "exchange_source": "ibkr_CBOT.html"
+    },
+    "ZN": {
+      "broker": "0.85",
+      "regulatory": "0.01",
+      "exchange": "0.80",
+      "per_contract_per_side_usd": "1.66",
+      "exchange_source": "ibkr_CBOT.html"
+    },
+    "6B": {
+      "broker": "0.85",
+      "regulatory": "0.01",
+      "exchange": "1.60",
+      "per_contract_per_side_usd": "2.46",
+      "exchange_source": "ibkr_CME.html"
+    },
+    "6C": {
+      "broker": "0.85",
+      "regulatory": "0.01",
+      "exchange": "1.60",
+      "per_contract_per_side_usd": "2.46",
+      "exchange_source": "ibkr_CME.html"
+    },
+    "6J": {
+      "broker": "0.85",
+      "regulatory": "0.01",
+      "exchange": "1.60",
+      "per_contract_per_side_usd": "2.46",
+      "exchange_source": "ibkr_CME.html"
+    },
+    "6S": {
+      "broker": "0.85",
+      "regulatory": "0.01",
+      "exchange": "1.60",
+      "per_contract_per_side_usd": "2.46",
+      "exchange_source": "ibkr_CME.html"
+    },
+    "SB": {
+      "broker": "0.85",
+      "regulatory": "0.01",
+      "exchange": "2.10",
+      "per_contract_per_side_usd": "2.96",
+      "exchange_source": "ibkr_NYBOT.html"
+    }
+  },
+  "slippage": "ONE adverse actualcontract tick perleg baseline model; observed bidask spread separate, not realfillproof.",
+  "overnight": "Archived applicable-if-profile USD table: ratioEquityToRequiredMargin1=0.10USD/contract,2=0.05,3+=0; linear interpolation, businessovernights only. PersonalFixed/Tiered applicability not established.",
+  "funding": "USD fullyfunded model; no notional stockpurchase/borrow. Idlecashinterest0 baseline, not complete net; tax/FX/housemargin/realdepth unknown.",
+  "status": "PREPARED_NO_MARKET_PNL",
+  "source_hashes": {
+    "ibkr_NYBOT.html": "76d9e407dcd329893031621def3693d69899db0587b5513fad4e9e77f1b4565c",
+    "ibkr_CBOT.html": "4a7c89a4af5c81c13da1bd3c25558210fb52c2f8f5d0cff5191b2ff6884eda41",
+    "ibkr_NYMEX.html": "5e6e00c5a26bfe1f4b6eca998253a459375ada3d97b4be76bb9bd98dcec60f93",
+    "ibkr_overnight.html": "9250e1b640ce0237350f2fe150773fe9b2ad259ce47dbfd042f46146ba8f0ce6",
+    "ibkr_CME.html": "e0153423e07dd77668985988282f240dbcc67e47ea2a12b0a7fe74cd3f4d5118"
+  }
+}

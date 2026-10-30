@@ -1,0 +1,74 @@
+"""FREE read-only historical chain/margin check, no orders or strategy PnL.
+
+The local public LEAN fixture files stop in2021/22. Determine whether the cloud
+model supplies distinct historical requirements; do not silently trust defaults.
+"""
+from AlgorithmImports import *
+from datetime import datetime,timedelta
+import json,hashlib
+
+class TurtleMarginCoverageProbe(QCAlgorithm):
+    def initialize(self):
+        if self.live_mode:raise ValueError('Historical research only')
+        self.set_start_date(2026,1,5);self.set_end_date(2026,1,5)
+        self.set_time_zone(TimeZones.NEW_YORK);self.set_cash(1000000)
+        self.report={'protocol':'T003_MARGIN_CLOUD_COVERAGE_20261030_V3',
+            'orders_allowed':False,'strategy_return_calculated':False,'rows':[],'errors':[],
+            'note':'Model rates are a data qualification step, not proof of CME initial/house margin completeness.'}
+        definitions=[('GC',Market.COMEX),('SI',Market.COMEX),('HG',Market.COMEX),
+            ('CL',Market.NYMEX),('HO',Market.NYMEX),('ZB',Market.CBOT),('ZN',Market.CBOT),
+            ('6B',Market.CME),('6C',Market.CME),('6J',Market.CME),('6S',Market.CME),('SB',Market.ICE)]
+        dates=[datetime(2019,1,2),datetime(2021,1,4),datetime(2024,1,2),datetime(2025,12,31)]
+        for root,market in definitions:
+            try:
+                canonical=self.add_future(root,Resolution.DAILY,fill_forward=False,extended_market_hours=True)
+            except Exception as e:
+                self.report['errors'].append({'root':root,'stage':'canonical','type':type(e).__name__,'message':str(e)});continue
+            for day in dates:
+                row={'root':root,'asof_date_NY':str(day.date())}
+                try:
+                    chain=list(self.future_chain_provider.get_future_contract_list(canonical.symbol,day))
+                    eligible=sorted([s for s in chain if day+timedelta(days=45)<=s.id.date<=day+timedelta(days=180)],key=lambda s:s.id.date)
+                    row['chain_contracts']=len(chain)
+                    if not eligible:raise ValueError('No historical eligible chain contracts; no paid fallback')
+                    symbol=eligible[0];security=self.add_future_contract(symbol,Resolution.DAILY,fill_forward=False,extended_market_hours=True)
+                    bars=list(self.history[TradeBar](symbol,day,day+timedelta(days=1),Resolution.MINUTE,fill_forward=False,extended_market_hours=True))
+                    valid=[b for b in bars if b.end_time<=day+timedelta(days=1)]
+                    if not valid:raise ValueError('No historical bar for model timestamp; do not seed fabricated prices')
+                    security.set_market_price(valid[-1])
+                    model=FutureMarginModel(0,security)
+                    initial=float(model.initial_overnight_margin_requirement)
+                    maintenance=float(model.maintenance_overnight_margin_requirement)
+                    row.update(sid=str(symbol.id),expiry=str(symbol.id.date),history_bars=len(valid),
+                        last_data_time=str(valid[-1].time),last_data_end=str(valid[-1].end_time),
+                        multiplier=float(security.symbol_properties.contract_multiplier),tick=float(security.symbol_properties.minimum_price_variation),
+                        model_type=str(type(model)),initial=initial,maintenance=maintenance,
+                        positive_pair=initial>0 and 0<maintenance<=initial,
+                        source_CME_or_house_crosscheck_passed=False)
+                except Exception as e:row['error']={'type':type(e).__name__,'message':str(e)}
+                self.report['rows'].append(row)
+
+    def on_data(self,data):pass
+
+    def on_end_of_algorithm(self):
+        self.report['runtime_status']='COVERAGE_PROBE_COMPLETED_NOT_STRATEGY_RESULT'
+        raw=json.dumps(self.report,sort_keys=True,separators=(',',':'))
+        self.set_runtime_statistic('Audit type','HISTORICAL MARGIN DATA; NOT STRATEGY PNL')
+        self.set_runtime_statistic('Case dates','2019-01-02; 2021-01-04; 2024-01-02; 2025-12-31')
+        self.set_runtime_statistic('Case count',str(len(self.report['rows'])))
+        self.set_runtime_statistic('Positive margin pairs',str(sum(bool(r.get('positive_pair')) for r in self.report['rows'])))
+        self.set_runtime_statistic('Case errors',str(sum('error' in r for r in self.report['rows'])+len(self.report['errors'])))
+        roots=['GC','SI','HG','CL','HO','ZB','ZN','6B','6C','6J','6S','SB']
+        for root in roots:
+            rs=[r for r in self.report['rows'] if r['root']==root]
+            rates=[];properties=[]
+            for r in rs:
+                year=r['asof_date_NY'][:4]
+                if 'error' in r:
+                    rates.append(year+' ERROR');continue
+                rates.append('%s I%g M%g'%(year,r['initial'],r['maintenance']))
+                properties.append('%s P%g T%g'%(year,r['multiplier'],r['tick']))
+            self.set_runtime_statistic('Margin '+root+' USD',' | '.join(rates))
+            self.set_runtime_statistic('Contract '+root,' | '.join(properties))
+        self.set_runtime_statistic('Meaning','I=initial; M=maintenance; P=USD per pricepoint; T=tick')
+        self.set_runtime_statistic('Qualification','QC model values; CME/house margin crosscheck still required')

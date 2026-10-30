@@ -1,0 +1,35 @@
+import unittest
+from datetime import datetime,timedelta,timezone
+from account_engine import Account,Contract,Margin,Quote,DataGate,D
+
+T=datetime(2024,1,2,15,tzinfo=timezone.utc)
+
+class DeadlineTests(unittest.TestCase):
+    def book(self,deadline=T+timedelta(days=2),known=T):
+        c=Contract('GC1','GC',100,'.1',exit_before=deadline,critical_dates_known_at=known,critical_dates_source='synthetic verified deadline fixture')
+        a=Account(100000,[c],{'GC':'2.51'},[],[],synthetic=True)
+        a.set_margin('GC1',Margin(1000,900,T,T+timedelta(days=90),'fixture','synthetic_fixture'),T);a.mark('GC1',100,T)
+        return a
+    def test_real_study_missing_delivery_deadline_is_blocked(self):
+        with self.assertRaises(DataGate):Account(100000,[Contract('GC1','GC',100,'.1')],{'GC':'2.51'},[],[])
+    def test_no_entry_after_safety_deadline(self):
+        a=self.book(deadline=T+timedelta(seconds=1))
+        with self.assertRaises(DataGate):a.reserve_unit('u','GC1',1,1,1,T+timedelta(seconds=2))
+    def test_later_published_critical_dates_cannot_be_backdated(self):
+        a=self.book(known=T+timedelta(days=1))
+        with self.assertRaises(DataGate):a.reserve_unit('u','GC1',1,1,1,T+timedelta(seconds=1))
+    def test_no_fabricated_exit_when_quote_arrives_after_deadline(self):
+        a=self.book(deadline=T+timedelta(seconds=3));a.reserve_unit('u','GC1',1,1,1,T)
+        at=T+timedelta(seconds=1);a.fill_unit('u',Quote('GC1',at,100,100.1,at,at,1,1));at=T+timedelta(seconds=4)
+        with self.assertRaises(DataGate):a.close_unit('u',Quote('GC1',at,100,100.1,at,at,1,1),T+timedelta(seconds=2),'deadline')
+        self.assertEqual(a.units['u'].quantity,1)
+    def test_year_must_be_explicitly_rebased(self):
+        a=self.book(deadline=T+timedelta(days=900));new=datetime(2025,1,2,15,tzinfo=timezone.utc)
+        with self.assertRaises(DataGate):a.mark('GC1',100,new)
+        a.begin_year(2025,110000,datetime(2024,12,31,22,tzinfo=timezone.utc),new)
+        self.assertEqual(a.notional.amount,D(110000));a.mark('GC1',100,new)
+    def test_annual_reset_cannot_use_future_nav(self):
+        a=self.book();new=datetime(2025,1,2,15,tzinfo=timezone.utc)
+        with self.assertRaises(DataGate):a.begin_year(2025,110000,new+timedelta(seconds=1),new)
+
+if __name__=='__main__':unittest.main()

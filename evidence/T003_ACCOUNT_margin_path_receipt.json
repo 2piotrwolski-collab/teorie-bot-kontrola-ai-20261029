@@ -1,0 +1,13 @@
+{
+  "at_utc": "2026-10-30T15:32:37.450848+00:00",
+  "project_id": 38666177,
+  "backtest_id": "ee7f658ae76cf53da2f75eb657fd778a",
+  "name": "Well Dressed Yellow Snake",
+  "engine": "2.5.0.0.18217",
+  "download_sha256": "eb90548fd3536b474504ed36cce0d1047ddfe697e8686eac5c04131aea35fb60",
+  "full_normal_report_saved": true,
+  "no_paid_services": true,
+  "no_ObjectStore": true,
+  "runtime_seconds_reported": 37.24,
+  "strategy_PnL": false
+}

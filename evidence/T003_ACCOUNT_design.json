@@ -1,0 +1,97 @@
+{
+  "id": "T003_FULL_ACCOUNT_DESIGN_20261030_V1",
+  "created_at_utc": "2026-10-30T13:57:07.676559+00:00",
+  "question": "Source-constrained mechanical System2, complete futures account and multi-market risk/roll/cost engine. Not an exact1983account reproduction.",
+  "source": {
+    "path": "sources/turtle.pdf",
+    "sha256": "54910d0f55398a1974839473cc6d59f9fd2b1db7a34627ad3987e256d0a72fee",
+    "pages": {
+      "position_sizing": "18-22",
+      "entries_adds": "23-25",
+      "standard_stops": "27-28",
+      "exits": "31",
+      "ranking_roll": "34-35"
+    }
+  },
+  "source_parameters": {
+    "entry_sessions": 55,
+    "exit_sessions": 20,
+    "N_smoothing_TR": 20,
+    "unit_risk_fraction": 0.01,
+    "add_N": 0.5,
+    "stop_N": 2,
+    "market_units": 4,
+    "close_group_units_direction": 6,
+    "loose_group_units_direction": 10,
+    "total_units_direction": 12
+  },
+  "proposed_fixed_source_markets": [
+    "GC",
+    "SI",
+    "HG",
+    "CL",
+    "HO",
+    "ZB",
+    "ZN",
+    "6B",
+    "6C",
+    "6J",
+    "6S",
+    "SB"
+  ],
+  "scope_qualification": "A fixed12-original-market subset; no winner-based selection. Full21market1980s replication not available. Any missing/unvalidated market data blocks this declared study, not silently drops the market.",
+  "excluded_source_markets": {
+    "KC/CC/CT": "Free complete price coverage not established (marginCSV alone is not price availability).",
+    "Deutschmark/FrenchFranc": "Original contracts discontinued; no silentEuro substitute.",
+    "90dayTBill/Eurodollar": "Discontinued historical source contracts; no silentSOFR substitute.",
+    "SP500": "No silentEmini orETF substitution.",
+    "unleadedgasoline": "No silentmodernRBOB substitution."
+  },
+  "conventions_before_PnL": {
+    "weekly_N": "Monday uses prior complete source sessions; anchored20TRseed. CampaignN fixed for addspacing/stops; newunitquantity uses current reducednotional/campaignN. Explicit reconstruction, not source exact cutoff.",
+    "annual_notional": "At year boundary rebase to preceding completed year accountNAV. Downside ladder20% reductions at cumulative10% of current reducednotional, reset only when yearlybaseline recovered. No midyear increase on profits.",
+    "close_groups": [
+      [
+        "GC",
+        "SI"
+      ],
+      [
+        "CL",
+        "HO"
+      ],
+      [
+        "ZB",
+        "ZN"
+      ]
+    ],
+    "loose_groups": [
+      [
+        "GC",
+        "SI",
+        "HG"
+      ],
+      [
+        "6B",
+        "6C",
+        "6J",
+        "6S"
+      ]
+    ],
+    "group_map_scope": "GC/SI,CL/HO andmetalsloose are source examples; completegroups include explicit reconstructedbond/FX grouping, not claimed verbatimauthor map.",
+    "ranking": "At simultaneous timestamp choose strongestlong/weakestshort by prior3calendar-monthpricechange/N; deterministiclexicaltie only.",
+    "roll": "Own successor shadow-System2 must be active in same direction; laggedvolume/OIknown-at-time and safe deadline required. Closeoldbeforeopeningnew, preserve units/quantity/campaignN and stopdistance using actualtwolegfills; resetneither stops to2N nor PnL by continuouspricejump. Rolltimetable/stoptransfer is declared reconstruction.",
+    "margin": "Initial andmaintenance datedcoverage required, positive known-at-time; no zero/default/missing fallback. Sum outrightrequirements, no undocumentedSPANoffset or daymargin discount. Futures notional purchaseprice is not cashoutflow.",
+    "fees": "ArchivecurrentIBKRnonmemberfees percontractside; chargebothrolllegs, actualquotedspread, separatelydeclaredslippage. Overnightfee documented interpolation scenario ifapplicable; no assumption historicaltariffs=current.",
+    "settlement": "Variationmargin changescashbasis but not NAV; require settlementprovenance. No interest oncash inbaseline; no borrowednotionalinterest charged asstockloan.",
+    "execution": "Observe trade then require later fresh fillsidequote, track bothsidetimes/sizes, partialfills and gaps. No fills at skippedthreshold or priorquote; same-time ambiguity remains flagged. Futures prices may be zero/negative.",
+    "benchmark": "MatchedUSDSPY with sameperiod/capital, fees andexplicitdividendpolicy, separate source-objective trendcapture/risk from SPYprojectgoal.",
+    "unavailable": "DataGate failure =>needsdata/invalidtest; never utopiona or globalhypothesisrejection."
+  },
+  "study_intent": [
+    "2019-01-02",
+    "2025-12-31"
+  ],
+  "historical_sample_status": "Retrospective; not untouchedOOS, period already visible in project. No PnL examined for thisversion.",
+  "implementation_phase": "Verify account engine first; freeze a separate performance plan only after marketdata/margins/calendar/rollinputs pass. No buying data or brokerage APIs.",
+  "need_from_user": "No newaccount/payment/data now. Chrome reports extensionUIblocking access; asyncrequest to closepopup pending. Continue local work."
+}

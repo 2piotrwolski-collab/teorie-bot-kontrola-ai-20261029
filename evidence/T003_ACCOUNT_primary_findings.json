@@ -1,0 +1,22 @@
+{
+  "id": "T003_ADDITIONAL_PRIMARY_FINDINGS_20261030_V1",
+  "at_utc": "2026-10-30T15:31:41.403167+00:00",
+  "sources": [
+    {
+      "url": "https://www.quantconnect.com/docs/v2/cloud-platform/object-store",
+      "verified_via": "web read on2026-10-30",
+      "finding": "Current v2 docs: ObjectStore writes require paid organization; download additionally restricted. Not used. Normal human-readable RuntimeStatistics/DownloadResults used within free tier."
+    },
+    {
+      "url": "https://investor.cmegroup.com/news-releases/news-release-details/cme-group-announces-trading-hours-us-national-day-mourning-honor",
+      "published": "2024-12-30",
+      "verified_via": "web read on2026-10-30",
+      "finding": "Jan9 2025 rates close12:15CT; energy/FX/metals normalhours. NYSE closure is not a universal futures holiday. Reopen Jan9 for Jan10tradedate."
+    },
+    {
+      "url": "https://www.cmegroup.com/trading-hours/files/labor-day-2023.pdf",
+      "finding": "CME metals Sep4 2023 halt13:30CT; tradeDateSep5. Installed pandas_market_calendars5.5.0 GC/EnergyAndMetals schedule gives close17UTC,90minutes earlier than official18:30UTC. Library unqualified as unmodified full-history source calendar."
+    }
+  ],
+  "implication": "Do not use equity holidays or library calendars silently for futures channels, source N, deadline businessdays or overnight business dates. Official per-product dated schedules required."
+}

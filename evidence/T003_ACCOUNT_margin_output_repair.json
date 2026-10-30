@@ -1,0 +1,11 @@
+{
+  "id": "T003_MARGIN_OUTPUT_REPAIR_20261030_V1",
+  "frozen_at_utc": "2026-10-30T14:38:45.244175+00:00",
+  "parent_plan_sha256": "c37ed94de668a4a8ca75fde0986d992d88de1f42c503e7efc8582b4e452aeb23",
+  "technical_repair_number": 1,
+  "same48cases_unchanged": true,
+  "reason": "Free10KB log cap truncated6chunk output; retain original and use normal freeRuntimeStatistics fields, one compact complete row perfield. No paidstorage, subscriptions or enlargedquota.",
+  "code_sha256": "7ee9f3131a52af7065ab8650421120913ebe682f0082b1775c30a93f1cdeab04",
+  "max_further_runs": 1,
+  "strategy_PnL": false
+}

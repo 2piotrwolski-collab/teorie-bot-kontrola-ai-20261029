@@ -1,0 +1,114 @@
+import unittest,copy
+from datetime import datetime,timedelta,timezone
+from account_engine import Account,Contract,Margin,Quote,D,DataGate
+from system2 import System2,DailyState,SessionBar
+
+T=datetime(2024,1,2,15,tzinfo=timezone.utc)
+
+class SignalTests(unittest.TestCase):
+    def setUp(self):
+        cs=[Contract('GC1','GC',100,'.1'),Contract('GC2','GC',100,'.1'),Contract('SI','SI',100,'.1')]
+        self.a=Account(100000,cs,{'GC':'2.51','SI':'2.51'},[['GC','SI']],[['GC','SI']],synthetic=True)
+        for c in cs:self.a.set_margin(c.symbol,Margin(1000,900,T,T+timedelta(days=90),'test','synthetic_fixture'),T)
+        self.s=System2(self.a);self.t=T
+        for c in cs:
+            self.s.set_levels(self.levels(c.symbol,T))
+        self.s.select('GC','GC1',T,100,T-timedelta(days=90))
+    def levels(self,c='GC1',at=T,**overrides):
+        return {'contract':c,'available_at':at,'buy':105,'short':95,'exit_long':90,'exit_short':110,'n':2,**overrides}
+    def step(self):self.t+=timedelta(seconds=1);return self.t
+    def trade(self,p,c='GC1'):self.s.on_trades(self.step(),{c:D(p)})
+    def quote(self,bid,ask,c='GC1',size=100):
+        t=self.step();q=Quote(c,t,D(bid),D(ask),t,t,size,size);self.s.on_quote(q)
+    def opened(self):return [u for u in self.a.units.values() if u.quantity]
+    def test_trade_signal_requires_later_quote(self):
+        self.trade(106);self.assertFalse(self.opened());self.quote(107,107.1)
+        self.assertEqual(self.opened()[0].entry_vwap,D('107.2'))
+    def test_gap_not_filled_at_breakout_threshold(self):
+        self.trade(120);self.quote(121,121.1)
+        self.assertEqual(self.opened()[0].entry_vwap,D('121.2'))
+        self.assertNotEqual(self.opened()[0].entry_vwap,D(105))
+    def test_add_halfN_from_actual_fill_not_skipped_trigger(self):
+        self.trade(106);self.quote(107,107.1);self.trade(107.9)
+        self.assertFalse(self.s.pending)
+        self.trade(108.2);self.assertEqual(len(self.s.pending),1)
+    def test_exit_uses_new_daily_channel_in_existing_campaign(self):
+        self.trade(106);self.quote(107,107.1)
+        self.s.set_levels(self.levels(at=self.step(),exit_long=108.5,n=3))
+        self.trade(108);self.assertEqual(next(iter(self.s.pending.values()))['reason'],'channel20')
+        self.quote(107.9,108);self.assertFalse(self.opened())
+    def test_campaignN_remains_declared_fixed_even_dailyN_changes(self):
+        self.trade(106);self.quote(107,107.1);self.s.set_levels(self.levels(at=self.step(),n=20));self.trade(108.2)
+        u=[u for u in self.a.units.values() if not u.complete][0];self.assertEqual(u.n,D(2))
+    def test_last_actual_purchase_anchor_survives_partial_campaign_stop(self):
+        self.trade(106);self.quote(107,107.1);self.trade(108.2);self.quote(109,109.1)
+        self.trade(105);self.quote(104.9,105)
+        self.assertEqual(len(self.opened()),1)
+        self.assertEqual(self.s.campaigns['GC']['last_purchase'],D('109.2'))
+        self.trade(109);self.assertFalse(self.s.pending)
+    def test_partial_fill_never_pretends_full_unit(self):
+        self.trade(106);self.quote(106,106.1,size=1)
+        self.assertEqual(self.opened()[0].quantity,1);self.assertFalse(self.opened()[0].complete)
+        self.trade(115);self.assertEqual(len(self.a.units),1)
+    def test_stop_cancels_pending_entry_remainder(self):
+        self.trade(106);self.quote(106,106.1,size=1);self.trade(100)
+        u=self.opened()[0];self.assertTrue(u.cancelled)
+        self.quote(99.9,100);self.assertFalse(self.opened())
+        self.assertEqual(sum(x.get('q',0) for x in self.a.ledger if x['kind']=='entry'),1)
+    def test_quotes_before_signal_cannot_change_past_fills(self):
+        self.trade(106);u=next(iter(self.a.units.values()));q=Quote('GC1',u.signal_at,105,105.1,u.signal_at,u.signal_at,100,100)
+        self.s.on_quote(q);self.assertFalse(self.opened())
+    def test_expired_margin_is_critical_not_silently_skipped_quote(self):
+        self.trade(106)
+        self.a.margins['GC1']=Margin(1000,900,T,T,'expired fixture','synthetic_fixture')
+        with self.assertRaises(DataGate):self.quote(107,107.1)
+    def test_switching_held_month_without_roll_rejected(self):
+        self.trade(106);self.quote(106,106.1)
+        with self.assertRaises(DataGate):self.s.select('GC','GC2',self.t,100,T)
+    def test_selection_or_levels_from_future_rejected(self):
+        self.s.select('GC','GC1',T+timedelta(days=1),100,T)
+        with self.assertRaises(DataGate):self.trade(106)
+    def test_same_time_market_events_require_one_batch(self):
+        self.trade(106)
+        with self.assertRaises(DataGate):self.s.on_trades(self.t,{'GC1':106})
+    def test_forward_extension_does_not_rewrite_prefix_ledger(self):
+        self.trade(106);self.quote(106,106.1);prefix=copy.deepcopy(self.a.ledger)
+        self.trade(200);self.quote(201,201.1)
+        self.assertEqual(self.a.ledger[:len(prefix)],prefix)
+    def test_margin_liquidation_queues_exit_instead_of_new_units(self):
+        self.trade(106);self.quote(106,106.1)
+        self.a.set_margin('GC1',Margin(1000000,900000,T,T+timedelta(days=90),'test','synthetic_fixture'),self.step())
+        self.trade(107);self.assertEqual(next(iter(self.s.pending.values()))['reason'],'maintenance_margin')
+    def test_every_system2_breakout_no_previous_winner_skip(self):
+        self.trade(106);self.quote(106,106.1)
+        self.s.set_levels(self.levels(at=self.step(),exit_long=108));self.trade(107.9);self.quote(108,108.1)
+        self.assertFalse(self.opened());self.s.set_levels(self.levels(at=self.step(),buy=110,exit_long=90));self.trade(111)
+        self.assertTrue(any(p['kind']=='entry' for p in self.s.pending.values()))
+
+class DailyTests(unittest.TestCase):
+    def setUp(self):
+        self.ts=[T+timedelta(days=i) for i in range(90)]
+        self.bars=[SessionBar('CL',t,t+timedelta(seconds=1),-100+i,-99+i,-101+i,-100+i) for i,t in enumerate(self.ts)]
+    def state(self,count):
+        s=DailyState('CL',self.ts,self.ts[0])
+        for b in self.bars[:count]:s.add(b)
+        return s
+    def test_negative_prices_have_valid_TR_N_and_channels(self):
+        s=self.state(55);l=s.levels(self.ts[54]+timedelta(seconds=2),'.1')
+        self.assertEqual(l['n'],D(2));self.assertEqual(l['buy'],D('-44.9'));self.assertEqual(l['exit_long'],D('-66.1'))
+    def test_anchoredN_not_reseeded_in_rolling55(self):
+        b=self.bars[25];self.bars[25]=SessionBar('CL',b.close_at,b.available_at,-75,0,-100,-75)
+        a=self.state(80);b=self.state(55)
+        for row in self.bars[55:80]:b.add(row)
+        self.assertEqual(a.n,b.n);self.assertGreater(a.n,D(2))
+    def test_missing_session_does_not_get_skipped(self):
+        s=self.state(50)
+        with self.assertRaises(DataGate):s.add(self.bars[51])
+    def test_future_session_cannot_enter_levels(self):
+        s=self.state(55)
+        with self.assertRaises(DataGate):s.levels(self.bars[54].available_at,'.1')
+    def test_daily_update_moves20day_exit(self):
+        s=self.state(55);old=s.levels(self.ts[54]+timedelta(seconds=2),'.1');s.add(self.bars[55]);new=s.levels(self.ts[55]+timedelta(seconds=2),'.1')
+        self.assertEqual(new['exit_long']-old['exit_long'],D(1))
+
+if __name__=='__main__':unittest.main()

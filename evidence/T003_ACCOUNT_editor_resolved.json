@@ -1,0 +1,9 @@
+{
+  "at_utc": "2026-10-30T15:31:41.402762+00:00",
+  "user_confirmed_popup_closed": true,
+  "own_project": 38666177,
+  "editor_access": "working",
+  "completed_margin_probe": "dc89e08525c1f69d2956f1d892e216c5",
+  "no_other_session_cancelled": true,
+  "cause_of_prior_loading": "Not conclusively established; popup resolved and own editor reload succeeded. Pusher warning alone does not prove causation."
+}

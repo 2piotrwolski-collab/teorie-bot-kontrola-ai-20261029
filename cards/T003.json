@@ -1,5 +1,5 @@
 {
-  "snapshot_at_utc": "2026-10-30T13:07:02.515822+00:00",
+  "snapshot_at_utc": "2026-10-30T15:47:05.739625+00:00",
   "scope": "Research snapshot. No full original-theory verification; no live orders.",
   "card": {
     "id": "T003",
@@ -33,16 +33,21 @@
       "Turtle na kontraktach 30.10: 1.09.2023–12.01.2024: oba kontrakty mają transakcje w92/92 oczekiwanych dniach giełdowych, łącznie100920 świec minutowych, bez duplikatów i wad OHLCV. Wszystkie184 porównania OHLC natywny dzień vs pełna sesja z minut różnią się; natywnych dni tej próby nie używać bez naprawy do N/kanałów.",
       "Turtle na kontraktach 30.10: oficjalne CME kalendarze łączą LaborDay i Thanksgiving z następną datą giełdową. Zastosowano segmenty sesji i właściwe skrócenie24.11.2023. Pozorne braki25.12/1.01 wynikały z kalendarza, nie z obalenia strategii.",
       "Turtle na kontraktach 30.10: styczniowy GC z dawnej próby miał firstintent28.12.2023 i firstnotice29.12.2023, przy LTD29.01.2024. Filtr dni do wygaśnięcia był niewystarczający. Dodano kontrolę firstintent z datą publikacji metadanych; daty lutego/kwietnia potwierdzono retrospektywnie.",
-      "Turtle na kontraktach 30.10: w sesji2.01.2024 pozyskano1413039 ticków obu kontraktów i dodatnie OI po18aktualizacji. Po korekcie jednostronnych aktualizacji bid/ask świeżość obu stron≤1s wystąpiła przy89,38% transakcji GC lutowego i39,14% kwietniowego; to diagnostyka danych, nie obietnica fillu.",
-      "Turtle na kontraktach 30.10: 19 nowych testów komponentów PASS, w tym rolling20 podczas pozycji, stała kotwica WilderN, święta/DST i quote-age każdej strony. Pełny adapter portfela, rollu, depozytów i kosztów nadal niegotowy. Błąd pierwszego dekodera zachowano i jawnie wycofano jego interpretację „wszystkie kwotowania wadliwe”."
+      "Turtle na kontraktach 30.10: w sesji2.01.2024 pozyskano1413039 ticków obu kontraktów i dodatnie OI po18 aktualizacji. Po korekcie jednostronnych aktualizacji bid/ask świeżość obu stron≤1 s wystąpiła przy89,38% transakcji GC lutowego i39,14% kwietniowego; to diagnostyka danych, nie obietnica fillu.",
+      "Turtle na kontraktach 30.10: 19 nowych testów komponentów PASS, w tym rolling20 podczas pozycji, stała kotwica WilderN, święta/DST i quote-age każdej strony. Pełny adapter portfela, rollu, depozytów i kosztów nadal niegotowy. Błąd pierwszego dekodera zachowano i jawnie wycofano jego interpretację „wszystkie kwotowania wadliwe”.",
+      "Turtle rachunek30.10: zaimplementowano rolowanie tylko na kolejny miesiąc z własnym aktywnym System2, obie nogi i ich koszty, depozyty per kontrakt, częściowe wykonanie, redukcję notional oraz limity4/6/10/12.90 testów syntetycznych PASS; nie są wynikiem rynkowym.",
+      "Turtle rachunek30.10: darmowyQC potwierdził56974 obserwacje dzienne kontraktów12 rynków2019–2025,0 błędów depozytów;11 rynków ma zmienne stawki, SBstały1900/1500 wymaga zastąpienia zweryfikowaną historią. NativeDaily wykorzystano tylko do datowanego modelu depozytu, nigdy do kanałów Turtle.",
+      "Turtle rachunek30.10: znaleziono i zachowano darmowe źródłoweICE:42CSV,462 wiersze tierów SB, osobnyCSV18.09.2024 i riskarray02.01.2019.136HTTP429 zachowanych; pobieranie ograniczono i ma przerywać przy pierwszym ograniczeniu. Pełna historia jeszcze nieuzgodniona.",
+      "Turtle rachunek30.10: naprawiono potencjalną sztuczną redukcję notional przy kolejnej wycenie równoczesnych rynków. Kalendarz biblioteki dla GC był za krótki o90 min wLaborDay2023; NYSE nie zastępuje kalendarza futures. Starych wyników nie zmieniono.",
+      "Turtle rachunek30.10: zakres przyszłego testu to stały12 rynkowy współczesny podzbiór źródłowych rynków, nie dokładny portfel21 rynków1983. Pełny adapter, kalendarze, asofOI/criticaldates/ICE i matchedSPY nadal do domknięcia; brak nowego PnL, brak obalenia Turtle."
     ],
-    "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+    "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
     "overall_status": "source_gap_still_blocks_original_test",
     "gap_updates": [
       {
         "gap_id": "T003-R1",
         "status": "partial",
-        "status_reason": "Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.",
+        "status_reason": "Moduły rachunku i źródłowe reguły przygotowane; dane12 rynków częściowo zweryfikowane. Pełny adapter wykonania i historyczne dane nadal wymagają uzupełnienia.",
         "criteria_met": [
           "FullSystem2 source core is specified, includingN formula,integerUnits,pyramiding,2N stops,20day exits,limits and account sizing.",
           "Independent source review found eight mechanical choices not fixed by text.",
@@ -56,7 +61,12 @@
           "30.10: oba wybrane kontraktyGC:92source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
           "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100oz/tick0.1 zweryfikowane w określonym zakresie.",
           "30.10: nowe komponenty rollingchannels/anchoredN/firstintent/kalendarium i dekoder jednostronnych quoteTick:19 testów PASS; nie pełny adapter strategii.",
-          "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona."
+          "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona.",
+          "30.10: oba wybrane kontraktyGC:92 source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
+          "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100 oz/tick0.1 zweryfikowane w określonym zakresie.",
+          "Account engine for source4/6/10/12/2N/.5N/1%/lossladder/roll/margin/costs implemented;90 syntheticcontrols pass.",
+          "ActualQC historicalmarginpath12 roots2019–2025:56974 contractdailyobservations,0 invalidpairs.",
+          "FreeICE downloaded42 validscanningCSV,462SBtiers, one2019 riskarray and2024 primarynotice; partialhistory disclosed."
         ],
         "criteria_unmet": [
           "Exact weekly N cutoff,resizing,annual discretionary equity,complete correlation map and simultaneous ordering remain unspecified.",
@@ -81,7 +91,14 @@
           "To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.",
           "Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.",
           "Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.",
-          "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi."
+          "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.",
+          "Pełny adapter4/6/10/12 units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980 s replication.",
+          "Dokończyć adapter danych i wykonania: pełne sesje poszczególnych kontraktów, 55 wcześniejszych sesji i kotwica N, rzeczywista kolejność trade→późniejsze quote, rozmiary i częściowe wykonanie. Gotowe moduły i ich testy syntetyczne nie są pełnym backtestem.",
+          "Kalendarze i dostawa: zweryfikować osobno każdy rynek i lata2019–2025, daty firstintent/notice/lasttrade oraz czas dostępności metadanych. Nie stosować NYSE jako uniwersalnego kalendarza ani niepoprawionej biblioteki GC.",
+          "Rolowanie na rzeczywistych danych: przeprowadzić własny System2 dla każdego kwalifikującego się miesiąca, wykazać pełne pokrycie replay, opóźnienie publikacji OI/volume i możliwość zamknięcia starej oraz otwarcia nowej nogi przed bezpiecznym terminem.",
+          "Depozyty: QC daje dodatni historyczny model w całym obserwowanym okresie, lecz cukierSB1900/1500 jest stałym defaultem. Uzupełnić starsze ICE2019–2021 i brakujące pliki2022–2024, mapowanie względnych tierów do ówczesnych miesięcy oraz klasyfikację initial/maintenance i narzutów brokera.42CSV z kolejnych dat nie są kompletną historią.",
+          "Koszty: obecne widoczne składniki IBKR są scenariuszem retrospektywnym. Zmierzyć spready i wielkości w każdym wykonaniu; jawnie doliczać tick poślizgu i obie nogi rolla. Obowiązywanie opłaty overnight, historyczne taryfy, realne fille, podatki i FX niepotwierdzone.",
+          "Portfel: stały zakres12 współczesnych rynków źródłowych, nie dokładny21 rynkowy portfel1983. Pełne historyczne mapowanie korelacji, weeklyN/annualreset/ranking/roll są częściowo jawnie zmechanizowanymi konwencjami. Oddzielny plan i freeze wyników po kontroli danych; brak wyniku PnL i nowego matchedSPY."
         ],
         "evidence": [
           {
@@ -124,15 +141,22 @@
             "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html",
             "locator": "Source/session/tick control, no strategy return",
             "what_verified": "Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma."
+          },
+          {
+            "evidence_path": "research_round13/T003_full_futures/findings.json",
+            "sha256": "45e97d45fa5bf074eeb9628b64464a0c17fa6cba04a90dd1aab1b12a6c366dd6",
+            "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_ACCOUNT_REPORT.html",
+            "locator": "Account component controls + actual historical margin-data qualification; no strategy PnL",
+            "what_verified": "Gotowe moduły rolowania, depozytów, kosztów i portfela przeszły90 kontroli syntetycznych. Darmowy QC:56974 dziennych obserwacji kontraktów,12 rynków,2019–2025,0 błędów depozytu. ICE:42 poprawneCSV, starsze pliki i mapowanie nadal niekompletne. Pełny test zyskowności jeszcze NIEURUCHOMIONY; Turtle nieodrzucony."
           }
         ],
-        "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+        "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
         "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
       },
       {
         "gap_id": "T003-D1",
         "status": "partial",
-        "status_reason": "Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.",
+        "status_reason": "Moduły rachunku i źródłowe reguły przygotowane; dane12 rynków częściowo zweryfikowane. Pełny adapter wykonania i historyczne dane nadal wymagają uzupełnienia.",
         "criteria_met": [
           "Original permitted market list,liquidity restrictions,contract-month selection and roll constraints are extracted with page locators.",
           "Round5: Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps.",
@@ -151,7 +175,12 @@
           "30.10: oba wybrane kontraktyGC:92source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
           "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100oz/tick0.1 zweryfikowane w określonym zakresie.",
           "30.10: nowe komponenty rollingchannels/anchoredN/firstintent/kalendarium i dekoder jednostronnych quoteTick:19 testów PASS; nie pełny adapter strategii.",
-          "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona."
+          "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona.",
+          "30.10: oba wybrane kontraktyGC:92 source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
+          "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100 oz/tick0.1 zweryfikowane w określonym zakresie.",
+          "Account engine for source4/6/10/12/2N/.5N/1%/lossladder/roll/margin/costs implemented;90 syntheticcontrols pass.",
+          "ActualQC historicalmarginpath12 roots2019–2025:56974 contractdailyobservations,0 invalidpairs.",
+          "FreeICE downloaded42 validscanningCSV,462SBtiers, one2019 riskarray and2024 primarynotice; partialhistory disclosed."
         ],
         "criteria_unmet": [
           "Historical individual-contract prices,open interest,volume,ticks,multipliers and expiry histories have not been acquired.",
@@ -183,7 +212,14 @@
           "To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.",
           "Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.",
           "Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.",
-          "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi."
+          "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.",
+          "Pełny adapter4/6/10/12 units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980 s replication.",
+          "Dokończyć adapter danych i wykonania: pełne sesje poszczególnych kontraktów, 55 wcześniejszych sesji i kotwica N, rzeczywista kolejność trade→późniejsze quote, rozmiary i częściowe wykonanie. Gotowe moduły i ich testy syntetyczne nie są pełnym backtestem.",
+          "Kalendarze i dostawa: zweryfikować osobno każdy rynek i lata2019–2025, daty firstintent/notice/lasttrade oraz czas dostępności metadanych. Nie stosować NYSE jako uniwersalnego kalendarza ani niepoprawionej biblioteki GC.",
+          "Rolowanie na rzeczywistych danych: przeprowadzić własny System2 dla każdego kwalifikującego się miesiąca, wykazać pełne pokrycie replay, opóźnienie publikacji OI/volume i możliwość zamknięcia starej oraz otwarcia nowej nogi przed bezpiecznym terminem.",
+          "Depozyty: QC daje dodatni historyczny model w całym obserwowanym okresie, lecz cukierSB1900/1500 jest stałym defaultem. Uzupełnić starsze ICE2019–2021 i brakujące pliki2022–2024, mapowanie względnych tierów do ówczesnych miesięcy oraz klasyfikację initial/maintenance i narzutów brokera.42CSV z kolejnych dat nie są kompletną historią.",
+          "Koszty: obecne widoczne składniki IBKR są scenariuszem retrospektywnym. Zmierzyć spready i wielkości w każdym wykonaniu; jawnie doliczać tick poślizgu i obie nogi rolla. Obowiązywanie opłaty overnight, historyczne taryfy, realne fille, podatki i FX niepotwierdzone.",
+          "Portfel: stały zakres12 współczesnych rynków źródłowych, nie dokładny21 rynkowy portfel1983. Pełne historyczne mapowanie korelacji, weeklyN/annualreset/ranking/roll są częściowo jawnie zmechanizowanymi konwencjami. Oddzielny plan i freeze wyników po kontroli danych; brak wyniku PnL i nowego matchedSPY."
         ],
         "evidence": [
           {
@@ -266,15 +302,22 @@
             "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html",
             "locator": "Source/session/tick control, no strategy return",
             "what_verified": "Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma."
+          },
+          {
+            "evidence_path": "research_round13/T003_full_futures/findings.json",
+            "sha256": "45e97d45fa5bf074eeb9628b64464a0c17fa6cba04a90dd1aab1b12a6c366dd6",
+            "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_ACCOUNT_REPORT.html",
+            "locator": "Account component controls + actual historical margin-data qualification; no strategy PnL",
+            "what_verified": "Gotowe moduły rolowania, depozytów, kosztów i portfela przeszły90 kontroli syntetycznych. Darmowy QC:56974 dziennych obserwacji kontraktów,12 rynków,2019–2025,0 błędów depozytu. ICE:42 poprawneCSV, starsze pliki i mapowanie nadal niekompletne. Pełny test zyskowności jeszcze NIEURUCHOMIONY; Turtle nieodrzucony."
           }
         ],
-        "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+        "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
         "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
       },
       {
         "gap_id": "T003-E1",
         "status": "partial",
-        "status_reason": "Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.",
+        "status_reason": "Moduły rachunku i źródłowe reguły przygotowane; dane12 rynków częściowo zweryfikowane. Pełny adapter wykonania i historyczne dane nadal wymagają uzupełnienia.",
         "criteria_met": [
           "Intraday breakouts,gap-open entries,per-unit stops and discretionary limit-order tactics are source documented.",
           "Unknown daily OHLC ordering and fast-market execution are explicit blockers,not favorable assumed fills.",
@@ -292,7 +335,12 @@
           "30.10: oba wybrane kontraktyGC:92source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
           "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100oz/tick0.1 zweryfikowane w określonym zakresie.",
           "30.10: nowe komponenty rollingchannels/anchoredN/firstintent/kalendarium i dekoder jednostronnych quoteTick:19 testów PASS; nie pełny adapter strategii.",
-          "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona."
+          "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona.",
+          "30.10: oba wybrane kontraktyGC:92 source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
+          "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100 oz/tick0.1 zweryfikowane w określonym zakresie.",
+          "Account engine for source4/6/10/12/2N/.5N/1%/lossladder/roll/margin/costs implemented;90 syntheticcontrols pass.",
+          "ActualQC historicalmarginpath12 roots2019–2025:56974 contractdailyobservations,0 invalidpairs.",
+          "FreeICE downloaded42 validscanningCSV,462SBtiers, one2019 riskarray and2024 primarynotice; partialhistory disclosed."
         ],
         "criteria_unmet": [
           "Intraday event order,quotes and executable fills are absent.",
@@ -322,7 +370,14 @@
           "To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.",
           "Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.",
           "Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.",
-          "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi."
+          "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.",
+          "Pełny adapter4/6/10/12 units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980 s replication.",
+          "Dokończyć adapter danych i wykonania: pełne sesje poszczególnych kontraktów, 55 wcześniejszych sesji i kotwica N, rzeczywista kolejność trade→późniejsze quote, rozmiary i częściowe wykonanie. Gotowe moduły i ich testy syntetyczne nie są pełnym backtestem.",
+          "Kalendarze i dostawa: zweryfikować osobno każdy rynek i lata2019–2025, daty firstintent/notice/lasttrade oraz czas dostępności metadanych. Nie stosować NYSE jako uniwersalnego kalendarza ani niepoprawionej biblioteki GC.",
+          "Rolowanie na rzeczywistych danych: przeprowadzić własny System2 dla każdego kwalifikującego się miesiąca, wykazać pełne pokrycie replay, opóźnienie publikacji OI/volume i możliwość zamknięcia starej oraz otwarcia nowej nogi przed bezpiecznym terminem.",
+          "Depozyty: QC daje dodatni historyczny model w całym obserwowanym okresie, lecz cukierSB1900/1500 jest stałym defaultem. Uzupełnić starsze ICE2019–2021 i brakujące pliki2022–2024, mapowanie względnych tierów do ówczesnych miesięcy oraz klasyfikację initial/maintenance i narzutów brokera.42CSV z kolejnych dat nie są kompletną historią.",
+          "Koszty: obecne widoczne składniki IBKR są scenariuszem retrospektywnym. Zmierzyć spready i wielkości w każdym wykonaniu; jawnie doliczać tick poślizgu i obie nogi rolla. Obowiązywanie opłaty overnight, historyczne taryfy, realne fille, podatki i FX niepotwierdzone.",
+          "Portfel: stały zakres12 współczesnych rynków źródłowych, nie dokładny21 rynkowy portfel1983. Pełne historyczne mapowanie korelacji, weeklyN/annualreset/ranking/roll są częściowo jawnie zmechanizowanymi konwencjami. Oddzielny plan i freeze wyników po kontroli danych; brak wyniku PnL i nowego matchedSPY."
         ],
         "evidence": [
           {
@@ -395,15 +450,22 @@
             "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html",
             "locator": "Source/session/tick control, no strategy return",
             "what_verified": "Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma."
+          },
+          {
+            "evidence_path": "research_round13/T003_full_futures/findings.json",
+            "sha256": "45e97d45fa5bf074eeb9628b64464a0c17fa6cba04a90dd1aab1b12a6c366dd6",
+            "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_ACCOUNT_REPORT.html",
+            "locator": "Account component controls + actual historical margin-data qualification; no strategy PnL",
+            "what_verified": "Gotowe moduły rolowania, depozytów, kosztów i portfela przeszły90 kontroli syntetycznych. Darmowy QC:56974 dziennych obserwacji kontraktów,12 rynków,2019–2025,0 błędów depozytu. ICE:42 poprawneCSV, starsze pliki i mapowanie nadal niekompletne. Pełny test zyskowności jeszcze NIEURUCHOMIONY; Turtle nieodrzucony."
           }
         ],
-        "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+        "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
         "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
       },
       {
         "gap_id": "T003-E2",
         "status": "partial",
-        "status_reason": "Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.",
+        "status_reason": "Moduły rachunku i źródłowe reguły przygotowane; dane12 rynków częściowo zweryfikowane. Pełny adapter wykonania i historyczne dane nadal wymagają uzupełnienia.",
         "criteria_met": [
           "Dollar-per-point risk,integer contracts,unit/group/directional limits and notional drawdown adjustment are recovered.",
           "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
@@ -416,7 +478,12 @@
           "30.10: oba wybrane kontraktyGC:92source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
           "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100oz/tick0.1 zweryfikowane w określonym zakresie.",
           "30.10: nowe komponenty rollingchannels/anchoredN/firstintent/kalendarium i dekoder jednostronnych quoteTick:19 testów PASS; nie pełny adapter strategii.",
-          "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona."
+          "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona.",
+          "30.10: oba wybrane kontraktyGC:92 source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
+          "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100 oz/tick0.1 zweryfikowane w określonym zakresie.",
+          "Account engine for source4/6/10/12/2N/.5N/1%/lossladder/roll/margin/costs implemented;90 syntheticcontrols pass.",
+          "ActualQC historicalmarginpath12 roots2019–2025:56974 contractdailyobservations,0 invalidpairs.",
+          "FreeICE downloaded42 validscanningCSV,462SBtiers, one2019 riskarray and2024 primarynotice; partialhistory disclosed."
         ],
         "criteria_unmet": [
           "Historical fees,margin,cash collateral funding and full account reset decisions are missing.",
@@ -441,7 +508,14 @@
           "To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.",
           "Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.",
           "Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.",
-          "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi."
+          "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.",
+          "Pełny adapter4/6/10/12 units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980 s replication.",
+          "Dokończyć adapter danych i wykonania: pełne sesje poszczególnych kontraktów, 55 wcześniejszych sesji i kotwica N, rzeczywista kolejność trade→późniejsze quote, rozmiary i częściowe wykonanie. Gotowe moduły i ich testy syntetyczne nie są pełnym backtestem.",
+          "Kalendarze i dostawa: zweryfikować osobno każdy rynek i lata2019–2025, daty firstintent/notice/lasttrade oraz czas dostępności metadanych. Nie stosować NYSE jako uniwersalnego kalendarza ani niepoprawionej biblioteki GC.",
+          "Rolowanie na rzeczywistych danych: przeprowadzić własny System2 dla każdego kwalifikującego się miesiąca, wykazać pełne pokrycie replay, opóźnienie publikacji OI/volume i możliwość zamknięcia starej oraz otwarcia nowej nogi przed bezpiecznym terminem.",
+          "Depozyty: QC daje dodatni historyczny model w całym obserwowanym okresie, lecz cukierSB1900/1500 jest stałym defaultem. Uzupełnić starsze ICE2019–2021 i brakujące pliki2022–2024, mapowanie względnych tierów do ówczesnych miesięcy oraz klasyfikację initial/maintenance i narzutów brokera.42CSV z kolejnych dat nie są kompletną historią.",
+          "Koszty: obecne widoczne składniki IBKR są scenariuszem retrospektywnym. Zmierzyć spready i wielkości w każdym wykonaniu; jawnie doliczać tick poślizgu i obie nogi rolla. Obowiązywanie opłaty overnight, historyczne taryfy, realne fille, podatki i FX niepotwierdzone.",
+          "Portfel: stały zakres12 współczesnych rynków źródłowych, nie dokładny21 rynkowy portfel1983. Pełne historyczne mapowanie korelacji, weeklyN/annualreset/ranking/roll są częściowo jawnie zmechanizowanymi konwencjami. Oddzielny plan i freeze wyników po kontroli danych; brak wyniku PnL i nowego matchedSPY."
         ],
         "evidence": [
           {
@@ -490,9 +564,16 @@
             "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html",
             "locator": "Source/session/tick control, no strategy return",
             "what_verified": "Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma."
+          },
+          {
+            "evidence_path": "research_round13/T003_full_futures/findings.json",
+            "sha256": "45e97d45fa5bf074eeb9628b64464a0c17fa6cba04a90dd1aab1b12a6c366dd6",
+            "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_ACCOUNT_REPORT.html",
+            "locator": "Account component controls + actual historical margin-data qualification; no strategy PnL",
+            "what_verified": "Gotowe moduły rolowania, depozytów, kosztów i portfela przeszły90 kontroli syntetycznych. Darmowy QC:56974 dziennych obserwacji kontraktów,12 rynków,2019–2025,0 błędów depozytu. ICE:42 poprawneCSV, starsze pliki i mapowanie nadal niekompletne. Pełny test zyskowności jeszcze NIEURUCHOMIONY; Turtle nieodrzucony."
           }
         ],
-        "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+        "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
         "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
       }
     ],
@@ -501,21 +582,49 @@
     ],
     "observations": [
       {
-        "id": "T003_FUTURES_20261030_V1",
-        "title": "Turtle: rzeczywiste kontrakty i sesje CME · 30.10.2026",
-        "summary": "Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma.",
+        "id": "T003_FUTURES_ACCOUNT_20261030_V2",
+        "title": "Turtle: rachunek, rolowanie i depozyty2019–2025 · 30.10.2026",
+        "summary": "Gotowe moduły rolowania, depozytów, kosztów i portfela przeszły90 kontroli syntetycznych. Darmowy QC:56974 dziennych obserwacji kontraktów,12 rynków,2019–2025,0 błędów depozytu. ICE:42 poprawneCSV, starsze pliki i mapowanie nadal niekompletne. Pełny test zyskowności jeszcze NIEURUCHOMIONY; Turtle nieodrzucony.",
         "columns": [
           "Kontrola",
           "Wynik / ograniczenie"
         ],
         "rows": [
           [
+            "Rolowanie",
+            "Własny sygnał kolejnego kontraktu; zamknięcie starego przed nowym; dwie prowizje, bez sztucznego zysku na skoku ceny. Kod sprawdzony; pełny replay danych jeszcze do połączenia."
+          ],
+          [
+            "Depozyty2019–2025",
+            "56974 obserwacje kontraktów,12 rynków,0 błędów dodatnich par. To modelQC, nie potwierdzenie wszystkich historycznych narzutów brokera."
+          ],
+          [
+            "CukierSB",
+            "QCstały1900/1500; ICEzmienne stawki miesięcy.42CSV i462 tiery pobrane;136HTTP429 zachowane, historia niekompletna."
+          ],
+          [
+            "Koszty/kontrakt/stronę",
+            "GC/SI/HG2,51USD;CL/HO2,36;ZB1,73;ZN1,66;FX2,46;SB2,96. Obecny scenariusz widocznych opłat +spread+1 tick poślizgu."
+          ],
+          [
+            "Portfel i rachunek",
+            "1%ryzyka/N;4/6/10/12; redukcja notional, depozyt zamiast zakupu nominału, zmienny ujemny futuresprice, variationmargin.90 kontroli syntetycznych."
+          ],
+          [
+            "Wynik strategii",
+            "Jeszcze nie policzony. Brak danych/błąd testu =niezbadana, nie utopiona. Poprzednie wyniki i zamknięte dywidendy zachowane."
+          ],
+          [
+            "Co potrzebne odPiotra",
+            "Nic nowego teraz. DostępFree i edytor działają. Bez płatnychAPI."
+          ],
+          [
             "Zakres",
             "Jeden rynek: GC; luty i kwiecień2024;01.09.2023–12.01.2024"
           ],
           [
             "Sesje źródłowe",
-            "92dni/kontrakt z transakcjami;100920minut;0duplikatów/wadOHLCV"
+            "92 dni/kontrakt z transakcjami;100920 minut;0 duplikatów/wadOHLCV"
           ],
           [
             "Świece dzienne",
@@ -523,32 +632,38 @@
           ],
           [
             "Ticki jednej sesji",
-            "1413039; obie strony≤1s: GCFeb89,38%, GCApr39,14%; nie realne fille"
+            "1413039; obie strony≤1 s: GCFeb89,38%, GCApr39,14%; nie realne fille"
           ],
           [
             "OI",
-            "18dodatnich rekordów/kontrakt; publiczny moment dostępności niepotwierdzony"
+            "18 dodatnich rekordów/kontrakt; publiczny moment dostępności niepotwierdzony"
           ],
           [
             "Kontrole kodu",
-            "19nowych testów PASS; stary16testów PASS; pełny adapter niegotowy"
+            "19 nowych testów PASS; stary16 testów PASS; pełny adapter niegotowy"
           ],
           [
             "Wynik Turtle",
-            "NIE WYLICZONO zysku;0potwierdzonych; stare wyniki zachowane"
+            "NIE WYLICZONO zysku;0 potwierdzonych; stare wyniki zachowane"
           ]
         ],
         "limitations": [
           "Ticki i kwotowania pozyskano dla jednej sesji; wymagane pełny zakres, własny decoder obu stron, reguła fill po sygnale, rozmiar/poślizg i rozstrzygnięcie równych timestampów. Darmowe źródło: QuantConnect free historical Trade/Quote ticks for the same two individual GC contracts, separate bounded acquisition plan. Warunek: Dla pełnego zakresu zachować czasy obu stron, odrzucać stale/crossed/size0, nie używać kwotowania sprzed sygnału jako gwarantowanego późniejszego fillu.",
           "OI/wolumen dostępne w chwili wyboru oraz overlap stary/nowy kontrakt przed first intent. Darmowe źródło: QC historical individual chain and OpenInterest; dated CME delivery memos and rules. Warunek: Nonzero/stale observations distinguished; carry positions only when successor own source signal supports them; predeclared mechanical roll convention, not hindsight choice.",
           "Historyczne depozyty GC z przypisaniemGC-xx do terminu, initial/maintenance i brokerhouse; pełne opłaty i collateral/variation margin. Darmowe źródło: CME GC-2020-to-present.pdf (official, direct403 retained), IBKR archived current public fees. Warunek: Dated actual rows acquired and parsed; broker assumptions separated; current2.51USD visible fee components are not historical2024/fullnet proof.",
-          "Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.",
+          "Pełny adapter4/6/10/12 units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980 s replication.",
           "To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.",
           "Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.",
           "Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.",
-          "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi."
+          "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.",
+          "Dokończyć adapter danych i wykonania: pełne sesje poszczególnych kontraktów, 55 wcześniejszych sesji i kotwica N, rzeczywista kolejność trade→późniejsze quote, rozmiary i częściowe wykonanie. Gotowe moduły i ich testy syntetyczne nie są pełnym backtestem.",
+          "Kalendarze i dostawa: zweryfikować osobno każdy rynek i lata2019–2025, daty firstintent/notice/lasttrade oraz czas dostępności metadanych. Nie stosować NYSE jako uniwersalnego kalendarza ani niepoprawionej biblioteki GC.",
+          "Rolowanie na rzeczywistych danych: przeprowadzić własny System2 dla każdego kwalifikującego się miesiąca, wykazać pełne pokrycie replay, opóźnienie publikacji OI/volume i możliwość zamknięcia starej oraz otwarcia nowej nogi przed bezpiecznym terminem.",
+          "Depozyty: QC daje dodatni historyczny model w całym obserwowanym okresie, lecz cukierSB1900/1500 jest stałym defaultem. Uzupełnić starsze ICE2019–2021 i brakujące pliki2022–2024, mapowanie względnych tierów do ówczesnych miesięcy oraz klasyfikację initial/maintenance i narzutów brokera.42CSV z kolejnych dat nie są kompletną historią.",
+          "Koszty: obecne widoczne składniki IBKR są scenariuszem retrospektywnym. Zmierzyć spready i wielkości w każdym wykonaniu; jawnie doliczać tick poślizgu i obie nogi rolla. Obowiązywanie opłaty overnight, historyczne taryfy, realne fille, podatki i FX niepotwierdzone.",
+          "Portfel: stały zakres12 współczesnych rynków źródłowych, nie dokładny21 rynkowy portfel1983. Pełne historyczne mapowanie korelacji, weeklyN/annualreset/ranking/roll są częściowo jawnie zmechanizowanymi konwencjami. Oddzielny plan i freeze wyników po kontroli danych; brak wyniku PnL i nowego matchedSPY."
         ],
-        "evidence_report": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html"
+        "evidence_report": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_ACCOUNT_REPORT.html"
       },
       {
         "id": "T003_DIVIDEND_PACKAGE_2d2df8dc98eb",
@@ -915,7 +1030,7 @@
     "source_update_artifact": "research_round2/source_updates_T001_T004.json",
     "source_update_sha256": "2953f6d2229cc4cc35f01b17b0ed374572ae1805eabdeaa991755a222392c6e2",
     "observation_ids": [
-      "T003_FUTURES_20261030_V1",
+      "T003_FUTURES_ACCOUNT_20261030_V2",
       "T003_DIVIDEND_PACKAGE_2d2df8dc98eb",
       "T003_DIVIDEND_RECON_0384f6f6f127",
       "T003_AB_SENSITIVITY_34a3fe166aaf",
@@ -942,8 +1057,8 @@
     "dividend_audit_next_action": "Rozbieżność rachunkowa dywidend ZAMKNIĘTA: paczka, kod, oba wejścia i12dzienników zgodne. Zachować dowody; nie ponawiać uzgodnienia bez konkretnego nowego zarzutu. Utracone pochodzenie pierwotnego przebiegu jest udokumentowanym ograniczeniem. Badanie realnych wypłat/DRIP i pełnego Turtle wymaga osobnego planu.",
     "t003_dividend_package_sha256": "2d2df8dc98eb2f3cd427395936d4dacb221b8db8b63768561a3b34c72418235e",
     "dividend_reconciliation_status": "closed_numerical_reconstruction_discrepancy",
-    "t003_futures_review_id": "T003_FUTURES_20261030_V1",
-    "futures_original_test_status": "DATA_SESSION_CORRECTION_VERIFIED_FULL_STRATEGY_BLOCKED"
+    "t003_futures_review_id": "T003_FUTURES_ACCOUNT_20261030_V2",
+    "futures_original_test_status": "ACCOUNT_COMPONENTS_VERIFIED_DATA_PARTIAL_FULL_STRATEGY_NOT_RUN"
   },
   "source_qualification": {
     "id": "T003",
@@ -1001,12 +1116,12 @@
         ],
         "blocking_original_test": true,
         "fallback_if_unavailable": "Uproszczonykanał55/20 nadal może istnieć jako własnateza, bezTurtlereproduction.",
-        "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+        "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
         "initial_next_action": "Sporządzić pełnąkartęSystem2 i listęreguł doimplementacji.",
         "progress": {
           "gap_id": "T003-R1",
           "status": "partial",
-          "status_reason": "Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.",
+          "status_reason": "Moduły rachunku i źródłowe reguły przygotowane; dane12 rynków częściowo zweryfikowane. Pełny adapter wykonania i historyczne dane nadal wymagają uzupełnienia.",
           "criteria_met": [
             "FullSystem2 source core is specified, includingN formula,integerUnits,pyramiding,2N stops,20day exits,limits and account sizing.",
             "Independent source review found eight mechanical choices not fixed by text.",
@@ -1020,7 +1135,12 @@
             "30.10: oba wybrane kontraktyGC:92source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
             "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100oz/tick0.1 zweryfikowane w określonym zakresie.",
             "30.10: nowe komponenty rollingchannels/anchoredN/firstintent/kalendarium i dekoder jednostronnych quoteTick:19 testów PASS; nie pełny adapter strategii.",
-            "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona."
+            "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona.",
+            "30.10: oba wybrane kontraktyGC:92 source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
+            "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100 oz/tick0.1 zweryfikowane w określonym zakresie.",
+            "Account engine for source4/6/10/12/2N/.5N/1%/lossladder/roll/margin/costs implemented;90 syntheticcontrols pass.",
+            "ActualQC historicalmarginpath12 roots2019–2025:56974 contractdailyobservations,0 invalidpairs.",
+            "FreeICE downloaded42 validscanningCSV,462SBtiers, one2019 riskarray and2024 primarynotice; partialhistory disclosed."
           ],
           "criteria_unmet": [
             "Exact weekly N cutoff,resizing,annual discretionary equity,complete correlation map and simultaneous ordering remain unspecified.",
@@ -1045,7 +1165,14 @@
             "To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.",
             "Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.",
             "Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.",
-            "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi."
+            "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.",
+            "Pełny adapter4/6/10/12 units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980 s replication.",
+            "Dokończyć adapter danych i wykonania: pełne sesje poszczególnych kontraktów, 55 wcześniejszych sesji i kotwica N, rzeczywista kolejność trade→późniejsze quote, rozmiary i częściowe wykonanie. Gotowe moduły i ich testy syntetyczne nie są pełnym backtestem.",
+            "Kalendarze i dostawa: zweryfikować osobno każdy rynek i lata2019–2025, daty firstintent/notice/lasttrade oraz czas dostępności metadanych. Nie stosować NYSE jako uniwersalnego kalendarza ani niepoprawionej biblioteki GC.",
+            "Rolowanie na rzeczywistych danych: przeprowadzić własny System2 dla każdego kwalifikującego się miesiąca, wykazać pełne pokrycie replay, opóźnienie publikacji OI/volume i możliwość zamknięcia starej oraz otwarcia nowej nogi przed bezpiecznym terminem.",
+            "Depozyty: QC daje dodatni historyczny model w całym obserwowanym okresie, lecz cukierSB1900/1500 jest stałym defaultem. Uzupełnić starsze ICE2019–2021 i brakujące pliki2022–2024, mapowanie względnych tierów do ówczesnych miesięcy oraz klasyfikację initial/maintenance i narzutów brokera.42CSV z kolejnych dat nie są kompletną historią.",
+            "Koszty: obecne widoczne składniki IBKR są scenariuszem retrospektywnym. Zmierzyć spready i wielkości w każdym wykonaniu; jawnie doliczać tick poślizgu i obie nogi rolla. Obowiązywanie opłaty overnight, historyczne taryfy, realne fille, podatki i FX niepotwierdzone.",
+            "Portfel: stały zakres12 współczesnych rynków źródłowych, nie dokładny21 rynkowy portfel1983. Pełne historyczne mapowanie korelacji, weeklyN/annualreset/ranking/roll są częściowo jawnie zmechanizowanymi konwencjami. Oddzielny plan i freeze wyników po kontroli danych; brak wyniku PnL i nowego matchedSPY."
           ],
           "evidence": [
             {
@@ -1088,9 +1215,16 @@
               "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html",
               "locator": "Source/session/tick control, no strategy return",
               "what_verified": "Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma."
+            },
+            {
+              "evidence_path": "research_round13/T003_full_futures/findings.json",
+              "sha256": "45e97d45fa5bf074eeb9628b64464a0c17fa6cba04a90dd1aab1b12a6c366dd6",
+              "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_ACCOUNT_REPORT.html",
+              "locator": "Account component controls + actual historical margin-data qualification; no strategy PnL",
+              "what_verified": "Gotowe moduły rolowania, depozytów, kosztów i portfela przeszły90 kontroli syntetycznych. Darmowy QC:56974 dziennych obserwacji kontraktów,12 rynków,2019–2025,0 błędów depozytu. ICE:42 poprawneCSV, starsze pliki i mapowanie nadal niekompletne. Pełny test zyskowności jeszcze NIEURUCHOMIONY; Turtle nieodrzucony."
             }
           ],
-          "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+          "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
           "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
         }
       },
@@ -1299,12 +1433,12 @@
         ],
         "blocking_original_test": true,
         "fallback_if_unavailable": "Jawny source-incomplete subset lub własnokanałowyETFwariant; oryginał pozostaje requiresdata.",
-        "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+        "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
         "initial_next_action": "Zbudować inventorykontraktów i istniejącychplików, bez nowychzakupów.",
         "progress": {
           "gap_id": "T003-D1",
           "status": "partial",
-          "status_reason": "Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.",
+          "status_reason": "Moduły rachunku i źródłowe reguły przygotowane; dane12 rynków częściowo zweryfikowane. Pełny adapter wykonania i historyczne dane nadal wymagają uzupełnienia.",
           "criteria_met": [
             "Original permitted market list,liquidity restrictions,contract-month selection and roll constraints are extracted with page locators.",
             "Round5: Downloaded51,853timestamped PRICE/CARRY/FORWARD marks with contract month IDs,1975-04-01..2024-03-28; zero duplicate timestamps.",
@@ -1323,7 +1457,12 @@
             "30.10: oba wybrane kontraktyGC:92source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
             "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100oz/tick0.1 zweryfikowane w określonym zakresie.",
             "30.10: nowe komponenty rollingchannels/anchoredN/firstintent/kalendarium i dekoder jednostronnych quoteTick:19 testów PASS; nie pełny adapter strategii.",
-            "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona."
+            "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona.",
+            "30.10: oba wybrane kontraktyGC:92 source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
+            "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100 oz/tick0.1 zweryfikowane w określonym zakresie.",
+            "Account engine for source4/6/10/12/2N/.5N/1%/lossladder/roll/margin/costs implemented;90 syntheticcontrols pass.",
+            "ActualQC historicalmarginpath12 roots2019–2025:56974 contractdailyobservations,0 invalidpairs.",
+            "FreeICE downloaded42 validscanningCSV,462SBtiers, one2019 riskarray and2024 primarynotice; partialhistory disclosed."
           ],
           "criteria_unmet": [
             "Historical individual-contract prices,open interest,volume,ticks,multipliers and expiry histories have not been acquired.",
@@ -1355,7 +1494,14 @@
             "To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.",
             "Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.",
             "Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.",
-            "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi."
+            "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.",
+            "Pełny adapter4/6/10/12 units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980 s replication.",
+            "Dokończyć adapter danych i wykonania: pełne sesje poszczególnych kontraktów, 55 wcześniejszych sesji i kotwica N, rzeczywista kolejność trade→późniejsze quote, rozmiary i częściowe wykonanie. Gotowe moduły i ich testy syntetyczne nie są pełnym backtestem.",
+            "Kalendarze i dostawa: zweryfikować osobno każdy rynek i lata2019–2025, daty firstintent/notice/lasttrade oraz czas dostępności metadanych. Nie stosować NYSE jako uniwersalnego kalendarza ani niepoprawionej biblioteki GC.",
+            "Rolowanie na rzeczywistych danych: przeprowadzić własny System2 dla każdego kwalifikującego się miesiąca, wykazać pełne pokrycie replay, opóźnienie publikacji OI/volume i możliwość zamknięcia starej oraz otwarcia nowej nogi przed bezpiecznym terminem.",
+            "Depozyty: QC daje dodatni historyczny model w całym obserwowanym okresie, lecz cukierSB1900/1500 jest stałym defaultem. Uzupełnić starsze ICE2019–2021 i brakujące pliki2022–2024, mapowanie względnych tierów do ówczesnych miesięcy oraz klasyfikację initial/maintenance i narzutów brokera.42CSV z kolejnych dat nie są kompletną historią.",
+            "Koszty: obecne widoczne składniki IBKR są scenariuszem retrospektywnym. Zmierzyć spready i wielkości w każdym wykonaniu; jawnie doliczać tick poślizgu i obie nogi rolla. Obowiązywanie opłaty overnight, historyczne taryfy, realne fille, podatki i FX niepotwierdzone.",
+            "Portfel: stały zakres12 współczesnych rynków źródłowych, nie dokładny21 rynkowy portfel1983. Pełne historyczne mapowanie korelacji, weeklyN/annualreset/ranking/roll są częściowo jawnie zmechanizowanymi konwencjami. Oddzielny plan i freeze wyników po kontroli danych; brak wyniku PnL i nowego matchedSPY."
           ],
           "evidence": [
             {
@@ -1438,9 +1584,16 @@
               "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html",
               "locator": "Source/session/tick control, no strategy return",
               "what_verified": "Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma."
+            },
+            {
+              "evidence_path": "research_round13/T003_full_futures/findings.json",
+              "sha256": "45e97d45fa5bf074eeb9628b64464a0c17fa6cba04a90dd1aab1b12a6c366dd6",
+              "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_ACCOUNT_REPORT.html",
+              "locator": "Account component controls + actual historical margin-data qualification; no strategy PnL",
+              "what_verified": "Gotowe moduły rolowania, depozytów, kosztów i portfela przeszły90 kontroli syntetycznych. Darmowy QC:56974 dziennych obserwacji kontraktów,12 rynków,2019–2025,0 błędów depozytu. ICE:42 poprawneCSV, starsze pliki i mapowanie nadal niekompletne. Pełny test zyskowności jeszcze NIEURUCHOMIONY; Turtle nieodrzucony."
             }
           ],
-          "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+          "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
           "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
         }
       },
@@ -1601,12 +1754,12 @@
         ],
         "blocking_original_test": true,
         "fallback_if_unavailable": "Konserwatywny testzwidełkami możliwy po nowymplanie; brak rozstrzygnięciaoryginału przy nierozwiązanejkolejności.",
-        "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+        "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
         "initial_next_action": "Ustalićdostępnośćintraday oraz rozpisaćniejednoznacznebary.",
         "progress": {
           "gap_id": "T003-E1",
           "status": "partial",
-          "status_reason": "Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.",
+          "status_reason": "Moduły rachunku i źródłowe reguły przygotowane; dane12 rynków częściowo zweryfikowane. Pełny adapter wykonania i historyczne dane nadal wymagają uzupełnienia.",
           "criteria_met": [
             "Intraday breakouts,gap-open entries,per-unit stops and discretionary limit-order tactics are source documented.",
             "Unknown daily OHLC ordering and fast-market execution are explicit blockers,not favorable assumed fills.",
@@ -1624,7 +1777,12 @@
             "30.10: oba wybrane kontraktyGC:92source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
             "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100oz/tick0.1 zweryfikowane w określonym zakresie.",
             "30.10: nowe komponenty rollingchannels/anchoredN/firstintent/kalendarium i dekoder jednostronnych quoteTick:19 testów PASS; nie pełny adapter strategii.",
-            "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona."
+            "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona.",
+            "30.10: oba wybrane kontraktyGC:92 source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
+            "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100 oz/tick0.1 zweryfikowane w określonym zakresie.",
+            "Account engine for source4/6/10/12/2N/.5N/1%/lossladder/roll/margin/costs implemented;90 syntheticcontrols pass.",
+            "ActualQC historicalmarginpath12 roots2019–2025:56974 contractdailyobservations,0 invalidpairs.",
+            "FreeICE downloaded42 validscanningCSV,462SBtiers, one2019 riskarray and2024 primarynotice; partialhistory disclosed."
           ],
           "criteria_unmet": [
             "Intraday event order,quotes and executable fills are absent.",
@@ -1654,7 +1812,14 @@
             "To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.",
             "Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.",
             "Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.",
-            "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi."
+            "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.",
+            "Pełny adapter4/6/10/12 units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980 s replication.",
+            "Dokończyć adapter danych i wykonania: pełne sesje poszczególnych kontraktów, 55 wcześniejszych sesji i kotwica N, rzeczywista kolejność trade→późniejsze quote, rozmiary i częściowe wykonanie. Gotowe moduły i ich testy syntetyczne nie są pełnym backtestem.",
+            "Kalendarze i dostawa: zweryfikować osobno każdy rynek i lata2019–2025, daty firstintent/notice/lasttrade oraz czas dostępności metadanych. Nie stosować NYSE jako uniwersalnego kalendarza ani niepoprawionej biblioteki GC.",
+            "Rolowanie na rzeczywistych danych: przeprowadzić własny System2 dla każdego kwalifikującego się miesiąca, wykazać pełne pokrycie replay, opóźnienie publikacji OI/volume i możliwość zamknięcia starej oraz otwarcia nowej nogi przed bezpiecznym terminem.",
+            "Depozyty: QC daje dodatni historyczny model w całym obserwowanym okresie, lecz cukierSB1900/1500 jest stałym defaultem. Uzupełnić starsze ICE2019–2021 i brakujące pliki2022–2024, mapowanie względnych tierów do ówczesnych miesięcy oraz klasyfikację initial/maintenance i narzutów brokera.42CSV z kolejnych dat nie są kompletną historią.",
+            "Koszty: obecne widoczne składniki IBKR są scenariuszem retrospektywnym. Zmierzyć spready i wielkości w każdym wykonaniu; jawnie doliczać tick poślizgu i obie nogi rolla. Obowiązywanie opłaty overnight, historyczne taryfy, realne fille, podatki i FX niepotwierdzone.",
+            "Portfel: stały zakres12 współczesnych rynków źródłowych, nie dokładny21 rynkowy portfel1983. Pełne historyczne mapowanie korelacji, weeklyN/annualreset/ranking/roll są częściowo jawnie zmechanizowanymi konwencjami. Oddzielny plan i freeze wyników po kontroli danych; brak wyniku PnL i nowego matchedSPY."
           ],
           "evidence": [
             {
@@ -1727,9 +1892,16 @@
               "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html",
               "locator": "Source/session/tick control, no strategy return",
               "what_verified": "Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma."
+            },
+            {
+              "evidence_path": "research_round13/T003_full_futures/findings.json",
+              "sha256": "45e97d45fa5bf074eeb9628b64464a0c17fa6cba04a90dd1aab1b12a6c366dd6",
+              "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_ACCOUNT_REPORT.html",
+              "locator": "Account component controls + actual historical margin-data qualification; no strategy PnL",
+              "what_verified": "Gotowe moduły rolowania, depozytów, kosztów i portfela przeszły90 kontroli syntetycznych. Darmowy QC:56974 dziennych obserwacji kontraktów,12 rynków,2019–2025,0 błędów depozytu. ICE:42 poprawneCSV, starsze pliki i mapowanie nadal niekompletne. Pełny test zyskowności jeszcze NIEURUCHOMIONY; Turtle nieodrzucony."
             }
           ],
-          "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+          "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
           "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
         }
       },
@@ -1793,13 +1965,13 @@
         ],
         "blocking_original_test": false,
         "fallback_if_unavailable": "Wyłącznie statystykisygnału/grossscenario, beznetprofitclaim.",
-        "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+        "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
         "blocking_trading_validation": true,
         "initial_next_action": "Przygotować kontraktowątabelę jednostek ioznaczyćnieznane.",
         "progress": {
           "gap_id": "T003-E2",
           "status": "partial",
-          "status_reason": "Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.",
+          "status_reason": "Moduły rachunku i źródłowe reguły przygotowane; dane12 rynków częściowo zweryfikowane. Pełny adapter wykonania i historyczne dane nadal wymagają uzupełnienia.",
           "criteria_met": [
             "Dollar-per-point risk,integer contracts,unit/group/directional limits and notional drawdown adjustment are recovered.",
             "Round5: Provider describes contract prices,OHLCV,open interest and expiry from May2009 for157futures; free-plan pricing lists futures backtesting.",
@@ -1812,7 +1984,12 @@
             "30.10: oba wybrane kontraktyGC:92source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
             "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100oz/tick0.1 zweryfikowane w określonym zakresie.",
             "30.10: nowe komponenty rollingchannels/anchoredN/firstintent/kalendarium i dekoder jednostronnych quoteTick:19 testów PASS; nie pełny adapter strategii.",
-            "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona."
+            "30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona.",
+            "30.10: oba wybrane kontraktyGC:92 source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.",
+            "30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100 oz/tick0.1 zweryfikowane w określonym zakresie.",
+            "Account engine for source4/6/10/12/2N/.5N/1%/lossladder/roll/margin/costs implemented;90 syntheticcontrols pass.",
+            "ActualQC historicalmarginpath12 roots2019–2025:56974 contractdailyobservations,0 invalidpairs.",
+            "FreeICE downloaded42 validscanningCSV,462SBtiers, one2019 riskarray and2024 primarynotice; partialhistory disclosed."
           ],
           "criteria_unmet": [
             "Historical fees,margin,cash collateral funding and full account reset decisions are missing.",
@@ -1837,7 +2014,14 @@
             "To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.",
             "Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.",
             "Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.",
-            "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi."
+            "CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.",
+            "Pełny adapter4/6/10/12 units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980 s replication.",
+            "Dokończyć adapter danych i wykonania: pełne sesje poszczególnych kontraktów, 55 wcześniejszych sesji i kotwica N, rzeczywista kolejność trade→późniejsze quote, rozmiary i częściowe wykonanie. Gotowe moduły i ich testy syntetyczne nie są pełnym backtestem.",
+            "Kalendarze i dostawa: zweryfikować osobno każdy rynek i lata2019–2025, daty firstintent/notice/lasttrade oraz czas dostępności metadanych. Nie stosować NYSE jako uniwersalnego kalendarza ani niepoprawionej biblioteki GC.",
+            "Rolowanie na rzeczywistych danych: przeprowadzić własny System2 dla każdego kwalifikującego się miesiąca, wykazać pełne pokrycie replay, opóźnienie publikacji OI/volume i możliwość zamknięcia starej oraz otwarcia nowej nogi przed bezpiecznym terminem.",
+            "Depozyty: QC daje dodatni historyczny model w całym obserwowanym okresie, lecz cukierSB1900/1500 jest stałym defaultem. Uzupełnić starsze ICE2019–2021 i brakujące pliki2022–2024, mapowanie względnych tierów do ówczesnych miesięcy oraz klasyfikację initial/maintenance i narzutów brokera.42CSV z kolejnych dat nie są kompletną historią.",
+            "Koszty: obecne widoczne składniki IBKR są scenariuszem retrospektywnym. Zmierzyć spready i wielkości w każdym wykonaniu; jawnie doliczać tick poślizgu i obie nogi rolla. Obowiązywanie opłaty overnight, historyczne taryfy, realne fille, podatki i FX niepotwierdzone.",
+            "Portfel: stały zakres12 współczesnych rynków źródłowych, nie dokładny21 rynkowy portfel1983. Pełne historyczne mapowanie korelacji, weeklyN/annualreset/ranking/roll są częściowo jawnie zmechanizowanymi konwencjami. Oddzielny plan i freeze wyników po kontroli danych; brak wyniku PnL i nowego matchedSPY."
           ],
           "evidence": [
             {
@@ -1886,9 +2070,16 @@
               "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html",
               "locator": "Source/session/tick control, no strategy return",
               "what_verified": "Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma."
+            },
+            {
+              "evidence_path": "research_round13/T003_full_futures/findings.json",
+              "sha256": "45e97d45fa5bf074eeb9628b64464a0c17fa6cba04a90dd1aab1b12a6c366dd6",
+              "url": "https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_ACCOUNT_REPORT.html",
+              "locator": "Account component controls + actual historical margin-data qualification; no strategy PnL",
+              "what_verified": "Gotowe moduły rolowania, depozytów, kosztów i portfela przeszły90 kontroli syntetycznych. Darmowy QC:56974 dziennych obserwacji kontraktów,12 rynków,2019–2025,0 błędów depozytu. ICE:42 poprawneCSV, starsze pliki i mapowanie nadal niekompletne. Pełny test zyskowności jeszcze NIEURUCHOMIONY; Turtle nieodrzucony."
             }
           ],
-          "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+          "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12 rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
           "round3_context_next_action": "Zbudować minimalny kontrakt danych jednego rynku wraz z intraday, lukami i rolowaniem; nie redukować całego Turtle do arbitralnego kanału ETF."
         }
       }

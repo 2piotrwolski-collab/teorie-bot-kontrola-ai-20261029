@@ -1,0 +1,18 @@
+{
+  "id": "T003_MARGIN_SUMMARY_CONFIRMATION_20261030_V1",
+  "frozen_at_utc": "2026-10-30T14:48:35.002264+00:00",
+  "previous_attempts_preserved": [
+    "QC_margin_probe_logs.txt",
+    "QC_margin_probe_incomplete.json",
+    "QC_margin_probe_v2_results.json",
+    "QC_margin_probe_v2_incomplete.json"
+  ],
+  "reason": "Free reporting limits:10KBlogs and200characters/statistic. Output normal concise human-readableper-root tables rather than longJSON/hashes. No encoded/chunked statistic or paidfeature.",
+  "parent_scientific_question": "Same48root/date margin availability cases; zero PnL or parameter changes",
+  "new_scientific_questions": 0,
+  "output_schema": "12markets×4dates:initial/maintenance rates and multiplier/tick; allfitordinary200characterfield; case/error/positivecounts.",
+  "code_sha256": "8aa7b852217113d2fe80520b05aac7030e7393be5ab2a43fc32494bad0f1f8d7",
+  "additional_cloud_runs_max": 1,
+  "technical_retries": 0,
+  "paid_services": 0
+}

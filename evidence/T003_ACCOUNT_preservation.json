@@ -1,0 +1,33 @@
+{
+  "theories": {
+    "identical_rows_and_order": true,
+    "before": 10,
+    "after": 10
+  },
+  "versions": {
+    "identical_rows_and_order": true,
+    "before": 10,
+    "after": 10
+  },
+  "experiments": {
+    "identical_rows_and_order": true,
+    "before": 90,
+    "after": 90
+  },
+  "decisions": {
+    "identical_rows_and_order": true,
+    "before": 21,
+    "after": 21
+  },
+  "observations": {
+    "identical_rows_and_order": true,
+    "before": 4,
+    "after": 4
+  },
+  "strategy_trials": {
+    "identical_rows_and_order": true,
+    "before": 247,
+    "after": 247
+  },
+  "frozen_files_identical": true
+}

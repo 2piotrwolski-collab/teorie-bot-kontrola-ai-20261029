@@ -189,13 +189,13 @@
     "source_file": "t003_futures_review.py",
     "url": "code/t003_futures_review.py.txt",
     "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
-    "sha256": "05ae9f3287b883135ae9f44fa710cd33fda95c1eaf481dbef0d00121c998c015"
+    "sha256": "3da8f6e0015b6688b272e9b2c5e31be584fb4cce38ce04ffc79b1b3ee80e14d5"
   },
   {
     "source_file": "test_t003_futures_review.py",
     "url": "code/test_t003_futures_review.py.txt",
     "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
-    "sha256": "39e59f116d283eb8c02330e5a9e2fd8a9c5726266c2e9fe12c2ec1aaa62f2acb"
+    "sha256": "06305f6ed841b9c9b25ad68e3626e037823800b38334d0d6115555722dd5d9bf"
   },
   {
     "source_file": "research_round12/T003_futures/session_audit_qc_v1.py",
@@ -250,5 +250,89 @@
     "url": "code/research_round12__T003_futures__test_tick_decoder.py.txt",
     "stage": "COMPLETED_DATA_CONTROLS_AND_COMPONENTS_NOT_FULL_STRATEGY",
     "sha256": "19f6cb7788f17844466dfbc5a389a46e80d4e3527302e15fe2e24ad1e34942ec"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/account_engine.py",
+    "url": "code/research_round13__T003_full_futures__account_engine.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "6144d6ce619d896ede25dbe1bf49e8bcf7d62a9a60f26a5d0f60b8e4ee4f6c96"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/system2.py",
+    "url": "code/research_round13__T003_full_futures__system2.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "140580f423095ebc906426cf06e948c07e7932d9e8175d0ff84e046963fac6ac"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/shadow_system2.py",
+    "url": "code/research_round13__T003_full_futures__shadow_system2.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "2e8110361afd58a8567638a2b24ad5e35193abd1519e4d9a51e2b73508d67982"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/margin_coverage.py",
+    "url": "code/research_round13__T003_full_futures__margin_coverage.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "7526aafd35f0cd6bcdc36f462dec45ada638067f5d0eed92a351390d22a91ac3"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/test_account_engine.py",
+    "url": "code/research_round13__T003_full_futures__test_account_engine.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "8fdefb42570180e936039d52d01ca3bff9db6203e6f70e20feb4cbd234e045f8"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/test_system2.py",
+    "url": "code/research_round13__T003_full_futures__test_system2.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "9564c832264abb0a0c7a462f5716b2ecd0856e0ddddccee43b563e8389b489ba"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/test_shadow_and_selection.py",
+    "url": "code/research_round13__T003_full_futures__test_shadow_and_selection.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "2930419fb79077158fc9527d0d5604fe93fc57e3f790db40eeeee77e39ae6783"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/test_margin_coverage.py",
+    "url": "code/research_round13__T003_full_futures__test_margin_coverage.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "f03d137260f994b52755be2725908a6aa893916a9c07b17938d305ff8739ff74"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/test_deadlines_and_year.py",
+    "url": "code/research_round13__T003_full_futures__test_deadlines_and_year.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "25ce868c72367df7c3f4e0e8189fb89bd8c4d2f8dc19b61501f06c3c8275dc0f"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/qc_margin_coverage_probe.py",
+    "url": "code/research_round13__T003_full_futures__qc_margin_coverage_probe.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "b006e56522bb9834753da0b50f05fe075d152b75cb8087cb673c8aede29b4fb1"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/qc_margin_coverage_probe_v2.py",
+    "url": "code/research_round13__T003_full_futures__qc_margin_coverage_probe_v2.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "7ee9f3131a52af7065ab8650421120913ebe682f0082b1775c30a93f1cdeab04"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/qc_margin_coverage_probe_v3.py",
+    "url": "code/research_round13__T003_full_futures__qc_margin_coverage_probe_v3.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "8aa7b852217113d2fe80520b05aac7030e7393be5ab2a43fc32494bad0f1f8d7"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/qc_margin_path_probe.py",
+    "url": "code/research_round13__T003_full_futures__qc_margin_path_probe.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "23e609c6b9f8a539a4df5b94c307c28cbf4ea5fec4cef0809f89769f46a6d8c6"
+  },
+  {
+    "source_file": "research_round13/T003_full_futures/acquire_ice_scanning.py",
+    "url": "code/research_round13__T003_full_futures__acquire_ice_scanning.py.txt",
+    "stage": "ACCOUNT_COMPONENTS_AND_MARGIN_DATA_NOT_FULL_STRATEGY",
+    "sha256": "66c18cd364cf0f26277c6bebd69be8a5b2b2bb1f9bb4b99a8443e533d6c85525"
   }
 ]

@@ -1,0 +1,125 @@
+{
+  "id": "T003_FULL_FUTURES_ACCOUNT_DATA_20261030_V1",
+  "at_utc": "2026-10-30T15:44:59.650275+00:00",
+  "status": "ACCOUNT_COMPONENTS_VERIFIED_DATA_PARTIAL_FULL_STRATEGY_NOT_RUN",
+  "source_fidelity": "System2 sourcecore preserved; fixed12source-market modernsubset andexplicitmechanicalconventions, notexact1983reproduction.",
+  "market_PnL_computed": false,
+  "hypothesis_rejected": false,
+  "paid_services_used": false,
+  "orders_submitted": 0,
+  "partner_review": "provisional_no_partner_review",
+  "requested_components": {
+    "roll": {
+      "implemented": [
+        "Independent successor own-contract shadowSystem2",
+        "Strongest qualifying month selected from eligible months, no silent month switch",
+        "Closeold beforeopennew; bothlegsfees; preservequantity/campaignN/stopdistance; capreservationbetweenlegs",
+        "Safetydeadlines, currentpublishedmetadata, liquidityasof andparticipationchecks; no postdeadlineinventedexit"
+      ],
+      "tested": "Synthetic integration andaccounttests",
+      "real_full_period": "Pending complete data adapter andasofcriticaldates/OI"
+    },
+    "margin": {
+      "model_48_cases": "48/48positivepairs in12roots×4dates,0errors; properties also48/48",
+      "historical_path": {
+        "contract_daily_observations": 56974,
+        "roots": 12,
+        "years": [
+          2019,
+          2025
+        ],
+        "invalid_pairs": 0,
+        "data_errors": 0
+      },
+      "SB": "Unqualified default1900initial/1500maintenance; officialICEclearingparameters varybydateandcontractmonth. Cannot substituteoneforotherwithoutclassification.",
+      "free_ICE": {
+        "valid_csv": 42,
+        "http429_preserved": 136,
+        "valid_SB_tier_rows": 462,
+        "one2019actualriskarray": true,
+        "full2019_2025_history": false
+      },
+      "engine": [
+        "Initial/maintenanceperactualcontract andeffectivecoverage",
+        "Nozero/defaultfallback; futuresPnl/variationmargin, notcashpurchaseofnotional",
+        "Partialfillmargincheck, maintenancecall, complete annualnotionalreset"
+      ]
+    },
+    "cost": {
+      "profile": "COST_PROFILE.json",
+      "per_contract_per_side_USD": {
+        "GC/SI/HG": 2.51,
+        "CL/HO": 2.36,
+        "ZB": 1.73,
+        "ZN": 1.66,
+        "6B/6C/6J/6S": 2.46,
+        "SB": 2.96
+      },
+      "scope": "Current visible nonmember components; retrospective model,notpersonal/historicalallinnet",
+      "execution": "Observedspread +1adversetickperleg; bothrolllegs; partialactualsize. OvernightUSDtablescenarioseparate; cashinterest0."
+    },
+    "portfolio": {
+      "source_limits": [
+        4,
+        6,
+        10,
+        12
+      ],
+      "unit": "1%reducednotional/(N×actualpointvalue),integerfloor",
+      "risk": "20%notionalreductions atsource10%lossladder; explicitannualrebase/fullrecoveryconvention",
+      "source_stops": "Standard2N, .5N additions fromactualpurchase; preservegapexceptions andlastpurchaseanchor",
+      "calendar_time": "Atomic same-timestamp batchvaluation, no inventedintermediateloss",
+      "scope": "Declared reconstructedcorrelationmapping/ranking/reset conventions; notfull sourcehistoricalaccount"
+    }
+  },
+  "software_checks": {
+    "passed": 90,
+    "kind": "synthetic controls, notmarketperformance",
+    "log": "full_checks_v6.log",
+    "failed_attempt_retained": "full_checks_v5.log",
+    "failures": "Two newfixtures hadbackdatedsecondcontractinit, correctedchronology withoutweakeningmodel"
+  },
+  "material_corrections": [
+    {
+      "issue": "Sequential same-time marks can inventtemporaryloss andpermanentnotionalreduction",
+      "fix": "Atomic portfolio markbatch; regressioncase10000→9500 correctnotional10000",
+      "old_strategy_results_affected": false
+    },
+    {
+      "issue": "Incomplete settlementcouldmutatefirstcontractbeforemissingsecondcontractfailed",
+      "fix": "Validateallheldsettlementsbeforemutation; regressiontest",
+      "old_strategy_results_affected": false
+    },
+    {
+      "issue": "Missingfeeprofile wasnotblockeduntilfill",
+      "fix": "Requireexplicitnonnegativefeesforallroots ataccountcreation",
+      "old_strategy_results_affected": false
+    }
+  ],
+  "calendar_findings": "pandas_market_calendars5.5.0 GCwrong90min atLaborDay2023; Jan9 2025NYSEclosedbutCMEmetals/FX/energynormal andratesearlyclose. No unqualifiedfullperiodcalendar.",
+  "data_acquisition_failures": "Attempt1ICE3unpacedworkers produced42HTTP200 and136HTTP429; allbodiesretained. Repairedacquirer:1request/2seconds,15mincooldown,boundedbatch,stoponfirst429/5xx,fullresponseheaders. No massretryperformed. UIhistoricalpaginationrenderedErrorafter215links; notproofolderfilesabsent.",
+  "remaining": [
+    "Dokończyć adapter danych i wykonania: pełne sesje poszczególnych kontraktów, 55 wcześniejszych sesji i kotwica N, rzeczywista kolejność trade→późniejsze quote, rozmiary i częściowe wykonanie. Gotowe moduły i ich testy syntetyczne nie są pełnym backtestem.",
+    "Kalendarze i dostawa: zweryfikować osobno każdy rynek i lata2019–2025, daty firstintent/notice/lasttrade oraz czas dostępności metadanych. Nie stosować NYSE jako uniwersalnego kalendarza ani niepoprawionej biblioteki GC.",
+    "Rolowanie na rzeczywistych danych: przeprowadzić własny System2 dla każdego kwalifikującego się miesiąca, wykazać pełne pokrycie replay, opóźnienie publikacji OI/volume i możliwość zamknięcia starej oraz otwarcia nowej nogi przed bezpiecznym terminem.",
+    "Depozyty: QC daje dodatni historyczny model w całym obserwowanym okresie, lecz cukierSB1900/1500 jest stałym defaultem. Uzupełnić starsze ICE2019–2021 i brakujące pliki2022–2024, mapowanie względnych tierów do ówczesnych miesięcy oraz klasyfikację initial/maintenance i narzutów brokera.42CSV z kolejnych dat nie są kompletną historią.",
+    "Koszty: obecne widoczne składniki IBKR są scenariuszem retrospektywnym. Zmierzyć spready i wielkości w każdym wykonaniu; jawnie doliczać tick poślizgu i obie nogi rolla. Obowiązywanie opłaty overnight, historyczne taryfy, realne fille, podatki i FX niepotwierdzone.",
+    "Portfel: stały zakres12współczesnych rynków źródłowych, nie dokładny21rynkowy portfel1983. Pełne historyczne mapowanie korelacji, weeklyN/annualreset/ranking/roll są częściowo jawnie zmechanizowanymi konwencjami. Oddzielny plan i freeze wyników po kontroli danych; brak wyniku PnL i nowego matchedSPY."
+  ],
+  "next_action": "Dokończyć darmowe dane i adapter: najpierw kontrolowany replay jednego rzeczywistego rolowania GC z własnym sygnałem obu miesięcy, potem niezmieniony portfel12rynków; osobno ICEstarsze lata i pełne kalendarze przed wynikiem zyskowności.",
+  "need_from_user": "Nic nowego teraz: kontoFree i dostęp do edytora działają po zamknięciu okienka. Nie potrzeba płatnegoAPI, hasła ani nowego konta.",
+  "evidence": {
+    "SOURCE_FIT_AND_DESIGN.json": "981043ae1e4cade722fede865275d54204be2d1c7673e956a540c63ee8830999",
+    "ACCOUNT_COMPONENTS_FREEZE.json": "6dc33f72c04feeedf0390f32ac073ad88aa7739b17fe01f30d1c065cf22842e3",
+    "COST_PROFILE.json": "17a951e8a793c98c8f4f623a25aa8e77029a43a2283a13f42be90d9e3cb9bfc3",
+    "QC_margin_probe_v3_audit.json": "1aa25ebe0ae99f10351e9a4e7dc8dd026dde29efcd332a494c8d7e27cebdd4b1",
+    "QC_margin_probe_v3_receipt.json": "9f7c7392fe50dca28f0e70a8de8fb51cbc31df4750b404652f62616f2211f872",
+    "QC_margin_path_audit.json": "3cf235a37e063ff2a48a8997183557a34c6079ddded86134e4e2df1d63f2788b",
+    "QC_margin_path_receipt.json": "cd33a2aa647dbace0714573148cce9343422cf30e4ba136f7a6e150a1f75cc26",
+    "MARGIN_PATH_FREEZE.json": "78547a74e70d99e5a34166e3b373b9b78198083e23d4e7b799c06a28ce3a392b",
+    "ICE_acquisition_audit.json": "ce4ca7868f270c59292f790f0f47d243a513578144146bc1aa5f444c564f7daf",
+    "calendar_library_qualification.json": "695ba3b927c256374b5f788ea50e476f30c320a41abdb84b6831db2c0eb57150",
+    "additional_primary_findings.json": "6d6ca6fc48bfdc0fafe0a495ee6a3816f6802e5ffbbefa31df59cd8bf036c4a7",
+    "browser_access_resolved.json": "c84c38d66727ff1e9d6e0ebe09ef465b223c8da35e38ca2fc20fafa5fc7a39f0"
+  }
+}
