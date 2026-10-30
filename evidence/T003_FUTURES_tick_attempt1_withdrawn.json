@@ -1,0 +1,68 @@
+{
+  "contracts": [
+    {
+      "first_tick": "2024-01-01 18:00:00.115241",
+      "full_execution_gate_passed": false,
+      "historical_timestamp_is_not_real_receipt_time": true,
+      "invalid_two_sided_quotes": 1273966,
+      "last_tick": "2024-01-02 16:59:58.290393",
+      "open_interest": {
+        "count": 18,
+        "first_positive_history_timestamp": "2024-01-02 10:00:00",
+        "first_positive_value": 378360.0,
+        "last_history_timestamp": "2024-01-12 09:49:00",
+        "positive_count": 18,
+        "publication_latency_asof_verified": false
+      },
+      "quote_older_than_5s": 0,
+      "quote_ticks": 1273966,
+      "same_time_adjacent_ticks": 10808,
+      "sid": "GC YGCFVVNJRYXP",
+      "symbol": "GC27G24",
+      "ticks": 1348842,
+      "trade_ticks": 74876,
+      "trades_latest_quote_same_timestamp": 0,
+      "trades_strict_prior_quote_age_le_1s": 0,
+      "trades_strict_prior_quote_age_le_5s": 0,
+      "trades_without_valid_prior_quote": 74876,
+      "unordered_ticks": 0,
+      "zero_or_negative_quote_size": 1273966
+    },
+    {
+      "first_tick": "2024-01-01 18:00:00.179363",
+      "full_execution_gate_passed": false,
+      "historical_timestamp_is_not_real_receipt_time": true,
+      "invalid_two_sided_quotes": 61297,
+      "last_tick": "2024-01-02 16:59:58.059991",
+      "open_interest": {
+        "count": 18,
+        "first_positive_history_timestamp": "2024-01-02 10:00:00",
+        "first_positive_value": 64403.0,
+        "last_history_timestamp": "2024-01-12 09:49:00",
+        "positive_count": 18,
+        "publication_latency_asof_verified": false
+      },
+      "quote_older_than_5s": 0,
+      "quote_ticks": 61297,
+      "same_time_adjacent_ticks": 191,
+      "sid": "GC YHYJ9E8IAHEL",
+      "symbol": "GC26J24",
+      "ticks": 64197,
+      "trade_ticks": 2900,
+      "trades_latest_quote_same_timestamp": 0,
+      "trades_strict_prior_quote_age_le_1s": 0,
+      "trades_strict_prior_quote_age_le_5s": 0,
+      "trades_without_valid_prior_quote": 2900,
+      "unordered_ticks": 0,
+      "zero_or_negative_quote_size": 61297
+    }
+  ],
+  "errors": [],
+  "orders_allowed": false,
+  "protocol": "T003_GC_TICK_OI_AVAILABILITY_20261030_V1",
+  "request_end_NY": "2024-01-02 17:00:00",
+  "request_start_NY": "2024-01-01 18:00:00",
+  "scope": "Jan2 full source session only; not full study or execution validation",
+  "status": "AVAILABILITY_AUDIT_ONLY_NOT_STRATEGY_RESULT",
+  "strategy_return_calculated": false
+}

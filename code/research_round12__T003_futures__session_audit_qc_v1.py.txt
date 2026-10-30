@@ -1,0 +1,103 @@
+"""Read-only futures session audit. No orders, PnL, bulk price export or tuning."""
+from AlgorithmImports import *
+import json, hashlib, bisect
+from datetime import datetime, timedelta
+
+class TurtleSessionAudit(QCAlgorithm):
+    def initialize(self):
+        if self.live_mode: raise ValueError("Historical audit only")
+        self.set_time_zone(TimeZones.NEW_YORK)
+        self.set_start_date(2024,1,16)
+        self.set_end_date(2024,1,16)
+        self.set_cash(500000)
+        self.report={"protocol":"T003_GC_SESSION_AUDIT_20261030_V1",
+            "orders_allowed":False,"strategy_return_calculated":False,
+            "scope":"Two individual GC contracts, not a Turtle portfolio test",
+            "timestamp_zone":"America/New_York (COMEX dataset and algorithm)",
+            "calendar":"LEAN security.exchange.hours; independent CME holiday reconciliation still required",
+            "contracts":[],"errors":[]}
+        for expiry in [datetime(2024,2,27),datetime(2024,4,26)]:
+            try:
+                symbol=Symbol.create_future("GC",Market.COMEX,expiry)
+                security=self.add_future_contract(symbol,Resolution.MINUTE,
+                    fill_forward=False,extended_market_hours=True)
+                self.audit(symbol,security)
+            except Exception as exc:
+                self.report["errors"].append({"expiry":str(expiry),"type":type(exc).__name__,"message":str(exc)})
+
+    def audit(self,symbol,security):
+        start=datetime(2023,8,31,17)
+        end=datetime(2024,1,13)
+        minutes=list(self.history[TradeBar](symbol,start,end,Resolution.MINUTE,
+            fill_forward=False,extended_market_hours=True))
+        daily=list(self.history[TradeBar](symbol,start,end,Resolution.DAILY,
+            fill_forward=False,extended_market_hours=True))
+        row={"sid":str(symbol.id),"symbol":str(symbol),"expiry":str(symbol.id.date),
+            "multiplier":float(security.symbol_properties.contract_multiplier),
+            "tick":float(security.symbol_properties.minimum_price_variation),
+            "exchange_timezone":str(security.exchange.time_zone),
+            "minute_count":len(minutes),"daily_count":len(daily),
+            "first_minute":str(minutes[0].time) if minutes else None,
+            "last_minute_end":str(minutes[-1].end_time) if minutes else None,
+            "duplicate_minute_starts":len(minutes)-len({b.time for b in minutes}),
+            "unordered_minutes":sum(a.time>=b.time for a,b in zip(minutes,minutes[1:])),
+            "invalid_ohlcv":sum(not (0<float(b.low)<=min(float(b.open),float(b.close))<=max(float(b.open),float(b.close))<=float(b.high)) or b.volume<0 for b in minutes),
+            "native_daily_first_bounds":[[str(b.time),str(b.end_time)] for b in daily[:3]]}
+        times=[b.time for b in minutes]
+        sessions=[]; d=datetime(2023,9,1)
+        while d<=datetime(2024,1,12):
+            seek=d-timedelta(days=1)+timedelta(hours=17)
+            op=security.exchange.hours.get_next_market_open(seek,True)
+            cl=security.exchange.hours.get_next_market_close(op,True)
+            if cl.date()==d.date():
+                idx=bisect.bisect_left(times,op)
+                bars=[]
+                while idx<len(minutes) and minutes[idx].time<cl:
+                    b=minutes[idx]
+                    if b.end_time<=cl:bars.append(b)
+                    idx+=1
+                if not bars:
+                    sessions.append({"date":str(d.date()),"missing":True,"open":str(op),"close":str(cl)})
+                else:
+                    sessions.append({"date":str(d.date()),"missing":False,"open":str(op),"close":str(cl),
+                        "o":float(bars[0].open),"h":max(float(b.high) for b in bars),
+                        "l":min(float(b.low) for b in bars),"c":float(bars[-1].close),
+                        "v":sum(float(b.volume) for b in bars),"minutes":len(bars),
+                        "first":str(bars[0].time),"last":str(bars[-1].end_time)})
+            d+=timedelta(days=1)
+        valid=[s for s in sessions if not s["missing"]]
+        row["calendar_session_count"]=len(sessions)
+        row["missing_session_dates"]=[s["date"] for s in sessions if s["missing"]]
+        row["nonempty_sessions"]=len(valid)
+        row["short_session_dates"]=[s["date"] for s in sessions if s["close"][11:]!="17:00:00"]
+        row["first_last_trade_boundary_lags_minutes"]={"first_max":max([(datetime.fromisoformat(s["first"])-datetime.fromisoformat(s["open"])).total_seconds()/60 for s in valid],default=None),
+            "last_max":max([(datetime.fromisoformat(s["close"])-datetime.fromisoformat(s["last"])).total_seconds()/60 for s in valid],default=None)}
+        # Label comparison by end date; expose boundaries so midnight/pre-market labels cannot masquerade as a proof.
+        native={str(b.end_time.date()):b for b in daily}
+        mismatch=[]; compared=0; exact=0
+        for s in valid:
+            b=native.get(s["date"])
+            if b is None:continue
+            compared+=1
+            diffs={k:round(s[k]-float(getattr(b,attr)),8) for k,attr in [("o","open"),("h","high"),("l","low"),("c","close"),("v","volume")]}
+            if all(abs(diffs[k])<1e-7 for k in ["o","h","l","c"]):exact+=1
+            elif len(mismatch)<3:mismatch.append({"date":s["date"],"session_minus_daily":diffs,"native_bounds":[str(b.time),str(b.end_time)]})
+        row["end_date_comparison"]={"compared":compared,"exact_ohlc":exact,"different_ohlc":compared-exact,"first_examples":mismatch,
+            "not_proof_of_independent_calendar":True}
+        # Small aggregate only: no daily/minute price panel exported.
+        row["session_aggregate_sha256"]=hashlib.sha256(json.dumps(sessions,sort_keys=True,separators=(",",":")).encode()).hexdigest()
+        row["at_least_55_nonempty_sessions"]=len(valid)>=55
+        row["warmup_gate_passed"]=False
+        row["remaining"]=["independent CME calendar and data completeness", "full study coverage and roll overlap", "sequenced trades and fresh two-sided quotes", "historical fees/margin/portfolio/roll conventions"]
+        self.report["contracts"].append(row)
+
+    def on_data(self,data):
+        pass
+
+    def on_end_of_algorithm(self):
+        self.report["runtime_status"]="AUDIT_FINISHED_NOT_A_STRATEGY_RESULT"
+        raw=json.dumps(self.report,sort_keys=True,separators=(",",":"))
+        chunks=[raw[i:i+4500] for i in range(0,len(raw),4500)]
+        for i,chunk in enumerate(chunks):
+            self.debug("T003_SESSION_CHUNK "+json.dumps({"i":i,"n":len(chunks),"data":chunk},separators=(",",":")))
+        self.debug("T003_SESSION_COMPLETE "+json.dumps({"chunks":len(chunks),"bytes":len(raw.encode()),"sha256":hashlib.sha256(raw.encode()).hexdigest()}))

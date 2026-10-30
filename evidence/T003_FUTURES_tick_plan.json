@@ -1,0 +1,28 @@
+{
+  "id": "T003_GC_TICK_OI_AVAILABILITY_20261030_V1",
+  "frozen_at_utc": "2026-10-30T12:51:19.017591+00:00",
+  "separate_bounded_scientific_case": true,
+  "prior_session_plan_preserved": "PLAN.json",
+  "question": "Can the free dataset provide actual Trade/Quote tick sequences and nonzero historical OI for those same2GC contracts?",
+  "symbols": [
+    "GC27G24",
+    "GC26J24"
+  ],
+  "tick_window_NY": [
+    "2024-01-01T18:00:00",
+    "2024-01-02T17:00:00"
+  ],
+  "OI_window_NY": [
+    "2024-01-02",
+    "2024-01-13"
+  ],
+  "code_sha256": "4abfe5a27e1a90d5cb98348a717c9d5812f87b8c46228a11f4e9e3f4952fdcda",
+  "budget": {
+    "cloud_runs_max": 1,
+    "technical_retries": 0,
+    "paid_services": 0
+  },
+  "no_orders_no_PnL_no_tuning_no_bulk_export": true,
+  "acceptance": "Full integrity-checked log; tick/quote counts, invalidquotes/sizes, equal timestamp ambiguity, strict prior quote freshness and OI counts; partial/error is not disproven strategy",
+  "limits": "One session only, historical data timestamp not receipt/publication proof; mixed Tick stream may supply only a subset of supported tick types, record what is actually returned."
+}

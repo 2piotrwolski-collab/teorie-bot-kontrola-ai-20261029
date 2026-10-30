@@ -153,7 +153,7 @@
     "source_file": "t003_dividend_review.py",
     "url": "code/t003_dividend_review.py.txt",
     "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
-    "sha256": "379667ae9c0d8181163888b2ee1c90b10839710f230b5dd802915ca6a9f33a20"
+    "sha256": "a64b1e9c2e62b1b92e74f0c13c934285b94777e3dac12a261a57c37ccc51a911"
   },
   {
     "source_file": "audit_claude_package_20261030/package/t003_bexact_recon_lib.js",
@@ -184,5 +184,71 @@
     "url": "code/test_t003_dividend_package_review.py.txt",
     "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
     "sha256": "4aa76c01f58f8835fff2799badb86e878d6a91445a9d799e1d12ba82f4837bf6"
+  },
+  {
+    "source_file": "t003_futures_review.py",
+    "url": "code/t003_futures_review.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "05ae9f3287b883135ae9f44fa710cd33fda95c1eaf481dbef0d00121c998c015"
+  },
+  {
+    "source_file": "test_t003_futures_review.py",
+    "url": "code/test_t003_futures_review.py.txt",
+    "stage": "RESEARCH_IMPLEMENTATION_SEE_CARD_SCOPE",
+    "sha256": "39e59f116d283eb8c02330e5a9e2fd8a9c5726266c2e9fe12c2ec1aaa62f2acb"
+  },
+  {
+    "source_file": "research_round12/T003_futures/session_audit_qc_v1.py",
+    "url": "code/research_round12__T003_futures__session_audit_qc_v1.py.txt",
+    "stage": "COMPLETED_DATA_CONTROLS_AND_COMPONENTS_NOT_FULL_STRATEGY",
+    "sha256": "b3c12498aed9d19c1e6f4a5a0b34f9bbf3064ba1837f4df5ed846ee75f5e52d7"
+  },
+  {
+    "source_file": "research_round12/T003_futures/session_audit_qc_v2.py",
+    "url": "code/research_round12__T003_futures__session_audit_qc_v2.py.txt",
+    "stage": "COMPLETED_DATA_CONTROLS_AND_COMPONENTS_NOT_FULL_STRATEGY",
+    "sha256": "78ec8a550343de71a6df6581af78a770c2ad372d2aa8bc5069ca2edd733e5d50"
+  },
+  {
+    "source_file": "research_round12/T003_futures/tick_oi_audit_qc_v1.py",
+    "url": "code/research_round12__T003_futures__tick_oi_audit_qc_v1.py.txt",
+    "stage": "COMPLETED_DATA_CONTROLS_AND_COMPONENTS_NOT_FULL_STRATEGY",
+    "sha256": "4abfe5a27e1a90d5cb98348a717c9d5812f87b8c46228a11f4e9e3f4952fdcda"
+  },
+  {
+    "source_file": "research_round12/T003_futures/tick_oi_audit_qc_v2.py",
+    "url": "code/research_round12__T003_futures__tick_oi_audit_qc_v2.py.txt",
+    "stage": "COMPLETED_DATA_CONTROLS_AND_COMPONENTS_NOT_FULL_STRATEGY",
+    "sha256": "5ddac9a5777acf6e6ccbaf0c7a957480337afee6d8563f563a053eb81db88bd3"
+  },
+  {
+    "source_file": "research_round12/T003_futures/source_state.py",
+    "url": "code/research_round12__T003_futures__source_state.py.txt",
+    "stage": "COMPLETED_DATA_CONTROLS_AND_COMPONENTS_NOT_FULL_STRATEGY",
+    "sha256": "a1b7057624569b872441298fa99de115dff44cbb40a59bc087c78d4828216c39"
+  },
+  {
+    "source_file": "research_round12/T003_futures/gc_sample_calendar.py",
+    "url": "code/research_round12__T003_futures__gc_sample_calendar.py.txt",
+    "stage": "COMPLETED_DATA_CONTROLS_AND_COMPONENTS_NOT_FULL_STRATEGY",
+    "sha256": "2e877e16bbc69f322de619b9bfb7c2424ac68d337a7080309f6843f0b7026e2b"
+  },
+  {
+    "source_file": "research_round12/T003_futures/test_source_state.py",
+    "url": "code/research_round12__T003_futures__test_source_state.py.txt",
+    "stage": "COMPLETED_DATA_CONTROLS_AND_COMPONENTS_NOT_FULL_STRATEGY",
+    "sha256": "1995e99a0652068c9f43c1c14afbc10ed9d47fbaf4a8e88b5319800d3dd7ec7d"
+  },
+  {
+    "source_file": "research_round12/T003_futures/test_gc_calendar.py",
+    "url": "code/research_round12__T003_futures__test_gc_calendar.py.txt",
+    "stage": "COMPLETED_DATA_CONTROLS_AND_COMPONENTS_NOT_FULL_STRATEGY",
+    "sha256": "678098b756dc9f0d1ffbba3a9c670b0a4243a5ef31dcdbff4fee0581fcb1e561"
+  },
+  {
+    "source_file": "research_round12/T003_futures/test_tick_decoder.py",
+    "url": "code/research_round12__T003_futures__test_tick_decoder.py.txt",
+    "stage": "COMPLETED_DATA_CONTROLS_AND_COMPONENTS_NOT_FULL_STRATEGY",
+    "sha256": "19f6cb7788f17844466dfbc5a389a46e80d4e3527302e15fe2e24ad1e34942ec"
   }
 ]

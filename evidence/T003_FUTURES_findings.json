@@ -1,0 +1,194 @@
+{
+  "id": "T003_FUTURES_PROGRESS_20261030_V2",
+  "scope": "Two GC individual contracts, source-fit/data stage only. No new profitability result.",
+  "status": "DATA_SESSION_CORRECTION_VERIFIED_FULL_STRATEGY_BLOCKED",
+  "original_Turtle_confirmed": false,
+  "source_fit": "original System2 core retained; new full futures adapter incomplete",
+  "strategy_return_calculated": false,
+  "orders_submitted": 0,
+  "paid_API_spend": 0,
+  "period": {
+    "first_trade_date": "2023-09-01",
+    "last_trade_date": "2024-01-12"
+  },
+  "new_cloud_runs": {
+    "scientific_case_count": 2,
+    "completed_runs": 4,
+    "technical_calendar_repairs": 1,
+    "old_Turtle_run_duplicated": false,
+    "old_project_id": 38621926,
+    "new_project_id": 38666177,
+    "run_ids": [
+      "df6dbcdc5e71c2e70125cdb8f6f9d1a2",
+      "1df3b8e7ac62b26fb37247d3c0e60169",
+      "20ce3106ffcd1af26b47b573f29b6293",
+      "b7d42aaf543459326128948fe87e9243"
+    ],
+    "engine": "2.5.0.0.18217",
+    "technical_decoder_repairs": 1
+  },
+  "verified": {
+    "contracts": [
+      "GC27G24",
+      "GC26J24"
+    ],
+    "market_count": 1,
+    "trade_dates_per_contract": 92,
+    "minute_bars": [
+      74744,
+      26176
+    ],
+    "minute_bars_total": 100920,
+    "invalid_minute_OHLCV": 0,
+    "duplicate_minute_starts": 0,
+    "missing_entire_trade_dates": 0,
+    "daily_vs_full_session_OHLC_differences": 184,
+    "daily_comparisons": 184,
+    "component_tests_passed": 19,
+    "jan_GC_first_intent": "2023-12-28",
+    "jan_GC_first_notice": "2023-12-29",
+    "jan_GC_last_trade": "2024-01-29"
+  },
+  "limits": [
+    "92nonempty trade dates do not prove every trade/tick or all required55session extrema complete. Sparse trading in distant contracts must be separated from missing packets using quotes/ticks.",
+    "Native daily in THIS request disagrees with full-session minute aggregates, with09:30..17NY labels observed; current documentation midnight warning is not a proven sole root cause.",
+    "CME2023LaborDay andThanksgiving span civil days with one exchange trade date. General holiday tables used forMETALS; individual GC emergency/exception notices beyond those tables are not fully excluded.",
+    "First-intent/notice verified retrospectively forJan/Feb/Apr2024. Later-publishedFeb/Apr notices cannot be treated as Jan2 PIT evidence.",
+    "No full licensed minute/daily panel exported from freeQC, only small aggregate diagnostics and3examples/contract. Full rawmarketdata remain onQC.",
+    "Run2 code displayed in result confirms protocol/branches, but exactbyte readback was not acquired; frozen source SHA and full log/report hashes are recorded without pretending byte-levelcloudsource confirmation.",
+    "No independent partner review of the new futures code; prior Claude dividend check was onSPY.",
+    "Tick/OI first attempt marked every one-sided update invalid; interpretation was incorrect and withdrawn. Followup decoder verified side-onlyformat and retained first attempt. Ages are diagnostic, not pre-chosen tradablefill thresholds.",
+    "Both contracts have18 positive historical OI updates Jan2..Jan12; first timestampJan2 10NY. This proves availability, not exact public release/receipt latency or OI usable at00NY."
+  ],
+  "remaining_gates": [
+    {
+      "id": "QUOTE_SEQUENCE",
+      "missing": "Ticki i kwotowania pozyskano dla jednej sesji; wymagane pełny zakres, własny decoder obu stron, reguła fill po sygnale, rozmiar/poślizg i rozstrzygnięcie równych timestampów.",
+      "free_source": "QuantConnect free historical Trade/Quote ticks for the same two individual GC contracts, separate bounded acquisition plan.",
+      "acceptance": "Dla pełnego zakresu zachować czasy obu stron, odrzucać stale/crossed/size0, nie używać kwotowania sprzed sygnału jako gwarantowanego późniejszego fillu."
+    },
+    {
+      "id": "ROLL_OI",
+      "missing": "OI/wolumen dostępne w chwili wyboru oraz overlap stary/nowy kontrakt przed first intent.",
+      "free_source": "QC historical individual chain and OpenInterest; dated CME delivery memos and rules.",
+      "acceptance": "Nonzero/stale observations distinguished; carry positions only when successor own source signal supports them; predeclared mechanical roll convention, not hindsight choice."
+    },
+    {
+      "id": "COST_MARGIN",
+      "missing": "Historyczne depozyty GC z przypisaniemGC-xx do terminu, initial/maintenance i brokerhouse; pełne opłaty i collateral/variation margin.",
+      "free_source": "CME GC-2020-to-present.pdf (official, direct403 retained), IBKR archived current public fees.",
+      "acceptance": "Dated actual rows acquired and parsed; broker assumptions separated; current2.51USD visible fee components are not historical2024/fullnet proof."
+    },
+    {
+      "id": "PORTFOLIO_SOURCE",
+      "missing": "Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion.",
+      "free_source": "Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar.",
+      "acceptance": "Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication."
+    }
+  ],
+  "next_action": "Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.",
+  "files": {
+    "PLAN.json": "9ab26807cd967bece3d77e276b7221d88ebe24dc928e63b7999514e0f47f7f41",
+    "freeze.json": "bc7669867392b80eb14d2edab0c1e33a9c11c18a465681c08e063f244618c578",
+    "REPAIR1_FREEZE.json": "51501a2645de71bead069e265a6cc6a2c3ebd6c60d52c72be984e7b47f2aedb4",
+    "source_evidence.json": "ed2d4016b981168960ed500394da082e36f3407ada906e3258338f9f1007a951",
+    "calendar_evidence.json": "91729746ccef63b23306686f36c4b4d75ec2128d934aef5d7dbe6ddde6e57c53",
+    "cost_source_evidence.json": "3bb2e2c7bbde85aebc5620c9b133b2854c4e24b5068a65a306d9b0b9cadcfffb",
+    "QC_run1_audit.json": "8c52a3fefae7474071e7f242ba02422f4d20a6079c32a3839463b49b2a95c3d9",
+    "QC_run1_logs.txt": "65d87337d776e34a3aa2da35201aeab84b2bd5a6f13f3db6111f28526a565117",
+    "QC_run2_audit.json": "8b1fc87a0f1fe6f49ec5f076296588b932c177664996bb29b522285577df7158",
+    "QC_run2_logs.txt": "cb8b009397c96802b88ff482200e3b12229b544964ea32c0d9399abf299bbaf6",
+    "source_state.py": "a1b7057624569b872441298fa99de115dff44cbb40a59bc087c78d4828216c39",
+    "gc_sample_calendar.py": "2e877e16bbc69f322de619b9bfb7c2424ac68d337a7080309f6843f0b7026e2b",
+    "component_checks.log": "ba4cf9ab122326c31d7ff4691120852c9893183075a9f5a88529e0969bb84d1d",
+    "QC_tick_run_audit.json": "aecb94bcaec9ece0c5bf71a9030e031d56e0d2f2c5e464508627426e4358dd01",
+    "QC_tick_run_logs.txt": "5cd59a987247f6db8836463a717da308eccb276f9579dd885c26cccdb9858a1c",
+    "QC_tick_run2_audit.json": "e3fc469ba5795b51261854059c766dd14d04cfffe4ed4724fa8c8f541e029c50",
+    "QC_tick_run2_logs.txt": "ef7a242572f1484d9231b4269f080d2e1edaba543660f81569d4b1e037ff9a95",
+    "TICK_OI_FREEZE.json": "5ac7c9aafaa9367ce1a1edc88ba1837fcbd6c375886e120ef0e277fdd0335f61",
+    "TICK_DECODER_CORRECTION_FREEZE.json": "9d0f110051ffa7e352be0937118dc1ddfeb988f1116547cc094a584f6e5aaa8f",
+    "tick_oi_audit_qc_v1.py": "4abfe5a27e1a90d5cb98348a717c9d5812f87b8c46228a11f4e9e3f4952fdcda",
+    "tick_oi_audit_qc_v2.py": "5ddac9a5777acf6e6ccbaf0c7a957480337afee6d8563f563a053eb81db88bd3",
+    "component_checks_v2.log": "fa39d9d40949528bbf1245c42c06b9714b87e7d29daa1dabef8d71e3e97c3f10",
+    "old_component_regression.log": "01a7b4c51995c199eb2a3e146189467a5bec887bceee3d48ab6ef44fbe8f7121"
+  },
+  "tick_audit": {
+    "trade_date": "2024-01-02",
+    "tick_count": 1413039,
+    "original_invalid_quote_count_withdrawn": true,
+    "reason": "First decoder required both sides on eachtick. Official QC format updates one side at a time; zero absent side is normal, not badmarket. Old attempt preserved.",
+    "contracts": [
+      {
+        "first_tick": "2024-01-01 18:00:00.115241",
+        "full_execution_gate_passed": false,
+        "historical_timestamp_is_not_real_receipt_time": true,
+        "last_tick": "2024-01-02 16:59:58.290393",
+        "open_interest": {
+          "count": 18,
+          "first_positive_history_timestamp": "2024-01-02 10:00:00",
+          "first_positive_value": 378360.0,
+          "last_history_timestamp": "2024-01-12 09:49:00",
+          "positive_count": 18,
+          "publication_latency_asof_verified": false
+        },
+        "provided_side_zero_size": 0,
+        "quote_ask_only": 633656,
+        "quote_bid_only": 640310,
+        "quote_both_sides": 0,
+        "quote_neither_side": 0,
+        "quote_older_than_5s": 858,
+        "quote_ticks": 1273966,
+        "same_time_adjacent_ticks": 10808,
+        "sid": "GC YGCFVVNJRYXP",
+        "suspicious_quote_ticks": 0,
+        "suspicious_trade_ticks": 0,
+        "symbol": "GC27G24",
+        "ticks": 1348842,
+        "trade_ticks": 74876,
+        "trades_crossed_reconstructed_book": 0,
+        "trades_latest_quote_same_timestamp": 0,
+        "trades_strict_prior_quote_age_le_1s": 66924,
+        "trades_strict_prior_quote_age_le_5s": 74017,
+        "trades_without_valid_prior_quote": 1,
+        "unordered_ticks": 0,
+        "strict_prior_both_sides_le_1s_pct_of_trades": 89.37977456060688
+      },
+      {
+        "first_tick": "2024-01-01 18:00:00.179363",
+        "full_execution_gate_passed": false,
+        "historical_timestamp_is_not_real_receipt_time": true,
+        "last_tick": "2024-01-02 16:59:58.059991",
+        "open_interest": {
+          "count": 18,
+          "first_positive_history_timestamp": "2024-01-02 10:00:00",
+          "first_positive_value": 64403.0,
+          "last_history_timestamp": "2024-01-12 09:49:00",
+          "positive_count": 18,
+          "publication_latency_asof_verified": false
+        },
+        "provided_side_zero_size": 0,
+        "quote_ask_only": 32017,
+        "quote_bid_only": 29280,
+        "quote_both_sides": 0,
+        "quote_neither_side": 0,
+        "quote_older_than_5s": 1040,
+        "quote_ticks": 61297,
+        "same_time_adjacent_ticks": 191,
+        "sid": "GC YHYJ9E8IAHEL",
+        "suspicious_quote_ticks": 0,
+        "suspicious_trade_ticks": 0,
+        "symbol": "GC26J24",
+        "ticks": 64197,
+        "trade_ticks": 2900,
+        "trades_crossed_reconstructed_book": 0,
+        "trades_latest_quote_same_timestamp": 0,
+        "trades_strict_prior_quote_age_le_1s": 1135,
+        "trades_strict_prior_quote_age_le_5s": 1860,
+        "trades_without_valid_prior_quote": 0,
+        "unordered_ticks": 0,
+        "strict_prior_both_sides_le_1s_pct_of_trades": 39.13793103448276
+      }
+    ],
+    "scope": "Availability and freshness only, not fills or strategy PnL"
+  }
+}

@@ -1,0 +1,58 @@
+"""Project only scoped source-futures evidence onto T003, preserving other cards."""
+import copy,hashlib,json
+from pathlib import Path
+from data_io import atomic_json
+
+def merge(progress,review):
+    out=copy.deepcopy(progress)
+    card=next(x for x in out['items'] if x['id']=='T003')
+    card['t003_futures_review_id']=review['id']
+    card['futures_original_test_status']=review['status']
+    card['findings']=[s for s in card['findings'] if not s.startswith('Turtle na kontraktach 30.10:')]+review['findings']
+    card['next_action']=review['next_action']
+    card['overall_status']='source_gap_still_blocks_original_test'
+    for gap in card['gap_updates']:
+        gap['criteria_met']=list(dict.fromkeys(gap['criteria_met']+review['scoped_met']))
+        gap['criteria_unmet']=[s for s in gap['criteria_unmet'] if s not in review.get('superseded_unmet',[])]
+        gap['criteria_unmet']=list(dict.fromkeys(gap['criteria_unmet']+review['remaining']))
+        gap['next_action']=review['next_action']
+        # These are still partial: two selected contracts cannot close a whole-study gap.
+        gap['status']='partial'
+        gap['status_reason']='Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.'
+        evidence={'evidence_path':review['audit_file'],'sha256':review['audit_sha256'],
+            'url':review['public_report_url'],'locator':'Source/session/tick control, no strategy return',
+            'what_verified':review['summary']}
+        if evidence not in gap['evidence']:gap['evidence'].append(evidence)
+    card['observations']=[o for o in card['observations'] if not o['id'].startswith('T003_FUTURES_')]
+    card['observations'].insert(0,{'id':review['id'],'title':'Turtle: rzeczywiste kontrakty i sesje CME · 30.10.2026',
+        'summary':review['summary'],'columns':['Kontrola','Wynik / ograniczenie'],
+        'rows':review['rows'],'limitations':review['remaining'],
+        'evidence_report':review['public_report_url']})
+    card['observation_ids']=[o['id'] for o in card['observations']]
+    return out
+
+def load_review(root):
+    root=Path(root);pointer=root/'config/t003_futures_current.json'
+    if not pointer.exists():return None
+    p=json.loads(pointer.read_text());file=root/p['review_file']
+    if hashlib.sha256(file.read_bytes()).hexdigest()!=p['review_sha256']:raise ValueError('Futures review identity mismatch')
+    review=json.loads(file.read_text());audit=root/review['audit_file']
+    if hashlib.sha256(audit.read_bytes()).hexdigest()!=review['audit_sha256']:raise ValueError('Futures audit identity mismatch')
+    return review
+
+def refresh(root,db):
+    root=Path(root);review=load_review(root)
+    if review is None:return
+    p=json.loads((root/'config/t003_futures_current.json').read_text());audit=root/review['audit_file']
+    path=root/'results/research_progress_round4.json';old=json.loads(path.read_text());new=merge(old,review)
+    if new!=old:
+        atomic_json(path,new)
+        db.research_update('T003',next(c for c in new['items'] if c['id']=='T003'),p['review_file'])
+    acquisition_path=root/'config/acquisition_plan.json';acquisition=json.loads(acquisition_path.read_text())
+    card=next(c for c in new['items'] if c['id']=='T003');gaps={g['gap_id']:g for g in card['gap_updates']}
+    for item in acquisition['items']:
+        if item['id']!='T003':continue
+        for gap in item['gaps']:
+            gap['progress']=gaps[gap['gap_id']];gap['next_action']=review['next_action']
+    atomic_json(acquisition_path,acquisition)
+    atomic_json(root/'reports/TURTLE_KONTRAKTY_20261030.json',json.loads(audit.read_text()))

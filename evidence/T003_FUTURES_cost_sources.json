@@ -1,0 +1,34 @@
+{
+  "retrieval_date": "2026-10-30",
+  "mode": "current costs candidate only; no strategy run and not asserted historical2024 tariffs",
+  "sources": [
+    {
+      "url": "https://www.interactivebrokers.com/en/pricing/commissions-futures.php?re=amerx",
+      "archived": "sources/ibkr_futures.html",
+      "observed": "USD futures up to1000contracts/month broker commission0.85USD percontract/side, exchange/regulatory separate"
+    },
+    {
+      "url": "https://www.interactivebrokers.com/en/accounts/fees/COMEX.php",
+      "archived": "sources/ibkr_comex.html",
+      "observed": "GC/HG/SI nonmember exchange recovery1.65USD; regulatory0.01USD; give-up0.05 waived whenIBKRprime+executing. Table is current and not archived2024 fee proof."
+    },
+    {
+      "url": "https://www.cmegroup.com/clearing/risk-management/files/GC-2020-to-present.pdf",
+      "observed": "Official historical minimum performance bond dataset found and web-opened1009pages through2026Sep30. Direct download403 and webfindJan2024timeout preserved; Jan2024 numbers not acquired/validated."
+    }
+  ],
+  "illustrative_current_visible_components_usd_per_contract_side": {
+    "broker": 0.85,
+    "exchange_nonmember": 1.65,
+    "regulatory": 0.01,
+    "sum": 2.51,
+    "status": "candidate scenario; not full all-in cost, no personal account/tariff/overnight fee verification"
+  },
+  "missing": [
+    "historical fee applicability2024",
+    "overnight fees eligibility and broker house margins",
+    "margin initial/maintenance classifications and GC-xx maturity mapping",
+    "bidask/slippage/quote size/sequence",
+    "collateral interest variation margin FX tax"
+  ]
+}

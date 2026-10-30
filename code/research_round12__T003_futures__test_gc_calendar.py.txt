@@ -1,0 +1,33 @@
+import unittest,ast
+from datetime import date,datetime,timezone
+from pathlib import Path
+from gc_sample_calendar import gc_sessions
+
+class CalendarTests(unittest.TestCase):
+    def setUp(self):self.rows={r['trade_date']:r for r in gc_sessions()}
+    def test_source_holiday_trade_dates(self):
+        self.assertEqual(len(self.rows),92)
+        for d in [date(2023,9,4),date(2023,11,23),date(2023,12,25),date(2024,1,1)]:self.assertNotIn(d,self.rows)
+    def test_thanksgiving_halt_and_friday_close(self):
+        s=self.rows[date(2023,11,24)]
+        self.assertEqual(s['segments'][0][1].astimezone(timezone.utc),datetime(2023,11,23,19,30,tzinfo=timezone.utc))
+        self.assertEqual(s['close_at'].astimezone(timezone.utc),datetime(2023,11,24,18,45,tzinfo=timezone.utc))
+        self.assertLess(s['segments'][0][1],s['segments'][1][0])
+    def test_dst_change_preserves_local_hours(self):
+        self.assertEqual(self.rows[date(2023,11,3)]['close_at'].astimezone(timezone.utc).hour,21)
+        self.assertEqual(self.rows[date(2023,11,6)]['close_at'].astimezone(timezone.utc).hour,22)
+    def test_qc_audit_calendar_matches_source_calendar(self):
+        # Interpret only literal calendar assignments from our own frozen QC code.
+        tree=ast.parse((Path(__file__).parent/'session_audit_qc_v2.py').read_text())
+        values={}
+        for node in ast.walk(tree):
+            if isinstance(node,ast.Assign) and len(node.targets)==1 and isinstance(node.targets[0],ast.Name) and node.targets[0].id in {'excluded','overrides'}:
+                values[node.targets[0].id]=eval(compile(ast.Expression(node.value),'calendar_literals','eval'),{'__builtins__':{},'datetime':datetime})
+        self.assertEqual(values['excluded'],{'2023-09-04','2023-11-23','2023-12-25','2024-01-01'})
+        for key,segments in values['overrides'].items():
+            expected=self.rows[date.fromisoformat(key)]['segments']
+            self.assertEqual(segments,[(a.replace(tzinfo=None),b.replace(tzinfo=None)) for a,b in expected])
+    def test_outside_sourced_range_rejected(self):
+        with self.assertRaises(ValueError):gc_sessions(end=date(2024,2,1))
+
+if __name__=='__main__':unittest.main()

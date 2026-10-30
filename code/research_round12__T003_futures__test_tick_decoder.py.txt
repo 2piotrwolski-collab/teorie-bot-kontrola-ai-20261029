@@ -1,0 +1,61 @@
+"""Exercise the frozen QC decoder itself with tiny chronological quote/trade streams."""
+import sys,types,unittest
+from pathlib import Path
+from datetime import datetime,timedelta
+
+def run_case(ticks):
+    stub=types.ModuleType('AlgorithmImports')
+    class Algo:
+        live_mode=False
+        def set_time_zone(self,*a):pass
+        def set_start_date(self,*a):pass
+        def set_end_date(self,*a):pass
+        def set_cash(self,*a):pass
+        def add_future_contract(self,*a,**kw):pass
+    class Tick:pass
+    class OpenInterest:pass
+    class History:
+        def __getitem__(self,kind):return lambda *a,**kw: ticks if kind is Tick else []
+    class Symbol:
+        @staticmethod
+        def create_future(*a):return types.SimpleNamespace(id='GC_TEST')
+    for k,v in dict(QCAlgorithm=Algo,Tick=Tick,OpenInterest=OpenInterest,Symbol=Symbol,
+        TickType=types.SimpleNamespace(QUOTE='q',TRADE='t'),Market=types.SimpleNamespace(COMEX='COMEX'),
+        Resolution=types.SimpleNamespace(MINUTE='minute',TICK='tick'),TimeZones=types.SimpleNamespace(NEW_YORK='NY')).items():setattr(stub,k,v)
+    prior=sys.modules.get('AlgorithmImports');sys.modules['AlgorithmImports']=stub
+    try:
+        env={};exec(compile((Path(__file__).parent/'tick_oi_audit_qc_v2.py').read_text(),'frozen_decoder','exec'),env)
+        a=env['TurtleTickAvailability']();a.history=History();a.initialize()
+        return a.report['contracts'][0]
+    finally:
+        if prior is None:sys.modules.pop('AlgorithmImports')
+        else:sys.modules['AlgorithmImports']=prior
+
+def q(sec,bid=0,bs=0,ask=0,asz=0):
+    return types.SimpleNamespace(time=datetime(2024,1,2)+timedelta(seconds=sec),tick_type='q',bid_price=bid,bid_size=bs,ask_price=ask,ask_size=asz,suspicious=False)
+def t(sec):return types.SimpleNamespace(time=datetime(2024,1,2)+timedelta(seconds=sec),tick_type='t',suspicious=False)
+
+class DecoderTests(unittest.TestCase):
+    def test_two_one_sided_updates_form_book(self):
+        r=run_case([q(0,bid=100,bs=2),q(.1,ask=101,asz=3),t(.2)])
+        self.assertEqual(r['trades_strict_prior_quote_age_le_1s'],1)
+        self.assertEqual(r['trades_without_valid_prior_quote'],0)
+        self.assertEqual((r['quote_bid_only'],r['quote_ask_only']),(1,1))
+    def test_zero_size_provided_side_invalidates_book(self):
+        r=run_case([q(0,bid=100,bs=2),q(.1,ask=101,asz=3),q(.2,bid=100,bs=0),t(.3)])
+        self.assertEqual(r['provided_side_zero_size'],1)
+        self.assertEqual(r['trades_without_valid_prior_quote'],1)
+    def test_fresh_bid_does_not_refresh_old_ask(self):
+        r=run_case([q(0,ask=101,asz=3),q(9,bid=100,bs=2),t(9.1)])
+        self.assertEqual(r['quote_older_than_5s'],1)
+        self.assertEqual(r['trades_strict_prior_quote_age_le_5s'],0)
+    def test_equal_timestamp_does_not_claim_strict_prior(self):
+        r=run_case([q(0,bid=100,bs=2),q(.1,ask=101,asz=3),t(.1)])
+        self.assertEqual(r['trades_latest_quote_same_timestamp'],1)
+        self.assertEqual(r['trades_strict_prior_quote_age_le_1s'],0)
+    def test_crossed_book_not_accepted(self):
+        r=run_case([q(0,bid=102,bs=2),q(.1,ask=101,asz=3),t(.2)])
+        self.assertEqual(r['trades_crossed_reconstructed_book'],1)
+        self.assertEqual(r['trades_strict_prior_quote_age_le_1s'],0)
+
+if __name__=='__main__':unittest.main()

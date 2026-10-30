@@ -1,0 +1,60 @@
+import unittest
+from datetime import datetime,timedelta,date,timezone
+from source_state import SourceState,Session,DataGap,can_hold_before_delivery,refresh_campaign_channels
+
+class SourceTests(unittest.TestCase):
+    def setUp(self):
+        # Explicit synthetic calendar, not a claim about actual CME sessions.
+        self.closes=[datetime(2024,1,1,22,tzinfo=timezone.utc)+timedelta(days=i) for i in range(90)]
+        self.bars=[Session('GC',x,x+timedelta(seconds=1),100+i,102+i,99+i,101+i) for i,x in enumerate(self.closes)]
+    def state(self,count):
+        state=SourceState('GC',self.closes,self.closes[0])
+        for bar in self.bars[:count]:state.add(bar)
+        return state
+    def test_source_wilder_seed_and_recurrence(self):
+        state=self.state(21)
+        self.assertEqual(state.n,3)
+        b=self.bars[21]
+        state.add(Session('GC',b.close_at,b.available_at,121,130,120,125))
+        self.assertAlmostEqual(state.n,(19*3+10)/20)
+    def test_continuation_is_not_reseeded_from_moving_window(self):
+        b=self.bars[25];self.bars[25]=Session('GC',b.close_at,b.available_at,125,180,124,126)
+        a=self.state(80);b=self.state(55)
+        for bar in self.bars[55:80]:b.add(bar)
+        self.assertEqual(a.n,b.n)
+        self.assertGreater(a.n,3)
+    def test_rolling_exit_updates_in_open_campaign(self):
+        from types import SimpleNamespace
+        s=self.state(55);old=s.levels(self.closes[54]+timedelta(seconds=2),.1)
+        campaign=SimpleNamespace(levels=old,last_time=None)
+        s.add(self.bars[55]);new=s.levels(self.closes[55]+timedelta(seconds=2),.1)
+        refresh_campaign_channels(campaign,new)
+        self.assertEqual(campaign.levels['exit_long'],new['exit_long'])
+        self.assertEqual(new['exit_long']-old['exit_long'],1)
+        self.assertEqual(campaign.levels['n'],old['n'])
+    def test_missing_calendar_session_rejected(self):
+        s=self.state(10)
+        with self.assertRaises(DataGap):s.add(self.bars[11])
+    def test_duplicate_and_contract_change_rejected(self):
+        s=self.state(10)
+        with self.assertRaises(DataGap):s.add(self.bars[9])
+        b=self.bars[10]
+        with self.assertRaises(DataGap):s.add(Session('SI',b.close_at,b.available_at,1,2,1,1))
+    def test_available_after_decision_rejected(self):
+        s=self.state(55)
+        with self.assertRaises(DataGap):s.levels(s.previous.available_at,.1)
+    def test_calendar_handles_supplied_dst_and_short_session(self):
+        dates=[datetime(2024,3,8,22,tzinfo=timezone.utc),datetime(2024,3,11,21,tzinfo=timezone.utc),datetime(2024,3,12,17,tzinfo=timezone.utc)]
+        s=SourceState('GC',dates,dates[0])
+        for d in dates:s.add(Session('GC',d,d+timedelta(seconds=1),2,3,1,2))
+        self.assertEqual(s.index,3)
+    def test_first_intent_guard_and_publication_asof(self):
+        known=datetime(2024,1,19,tzinfo=timezone.utc)
+        self.assertTrue(can_hold_before_delivery(datetime(2024,1,29,22,tzinfo=timezone.utc),date(2024,1,30),known))
+        self.assertTrue(can_hold_before_delivery(datetime(2024,1,30,1,tzinfo=timezone.utc),date(2024,1,30),known)) # still Jan29 NY
+        self.assertFalse(can_hold_before_delivery(datetime(2024,1,30,12,tzinfo=timezone.utc),date(2024,1,30),known))
+        with self.assertRaises(DataGap):can_hold_before_delivery(datetime(2024,1,2,tzinfo=timezone.utc),date(2024,1,30),known)
+    def test_naive_time_rejected(self):
+        with self.assertRaises(DataGap):SourceState('GC',[datetime(2024,1,1)],datetime(2024,1,1))
+
+if __name__=='__main__':unittest.main()

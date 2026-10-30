@@ -1,4 +1,4 @@
-Snapshot: 2026-10-30T12:01:09.655468+00:00
+Snapshot: 2026-10-30T13:02:42.123149+00:00
 T003 · Archiwalny v1: Zmienione reguły / adaptacja
 
 Turtle System 2: kompletny system wybicia
@@ -90,8 +90,20 @@ Uzgodnienie dywidend 30.10: paczka JS/CSV Claude została odebrana i uruchomiona
 Uzgodnienie dywidend 30.10: reinwestycja bez kosztu na zamknięciu ex-date i natychmiastowy kredyt cash są założeniami audytu. Nie potwierdzono dat wypłat, realnego DRIP, podatków, FX ani filli; naliczanie prowizji od dywidendy odtworzono wyłącznie jako diagnostykę różnicy.
 
 Kontrola paczki Claude: rozbieżność rachunkowa dywidend ZAMKNIĘTA. Oba wejścia mają właściwe zamrożone SHA; wygenerowano 6 brakujących dziennych CSV i potwierdzono wszystkie 12 dzienników co do bajtu. Operacje, pełne dzienne księgi i rozbicie przyczyn zgadzają się z niezależnym Pythonem. Nie jest to potwierdzenie oryginalnego Turtle ani realnej egzekucji dywidend.
+
+Turtle na kontraktach 30.10: wróciliśmy do źródłowego System2 i pojedynczych surowych kontraktów GC27G24/GC26J24. Dwie kontrole danych i dwie korekty techniczne zakończone w darmowym QC; starej próby nie dublowano. Nie obliczono nowego zysku strategii.
+
+Turtle na kontraktach 30.10: 1.09.2023–12.01.2024: oba kontrakty mają transakcje w92/92 oczekiwanych dniach giełdowych, łącznie100920 świec minutowych, bez duplikatów i wad OHLCV. Wszystkie184 porównania OHLC natywny dzień vs pełna sesja z minut różnią się; natywnych dni tej próby nie używać bez naprawy do N/kanałów.
+
+Turtle na kontraktach 30.10: oficjalne CME kalendarze łączą LaborDay i Thanksgiving z następną datą giełdową. Zastosowano segmenty sesji i właściwe skrócenie24.11.2023. Pozorne braki25.12/1.01 wynikały z kalendarza, nie z obalenia strategii.
+
+Turtle na kontraktach 30.10: styczniowy GC z dawnej próby miał firstintent28.12.2023 i firstnotice29.12.2023, przy LTD29.01.2024. Filtr dni do wygaśnięcia był niewystarczający. Dodano kontrolę firstintent z datą publikacji metadanych; daty lutego/kwietnia potwierdzono retrospektywnie.
+
+Turtle na kontraktach 30.10: w sesji2.01.2024 pozyskano1413039 ticków obu kontraktów i dodatnie OI po18aktualizacji. Po korekcie jednostronnych aktualizacji bid/ask świeżość obu stron≤1s wystąpiła przy89,38% transakcji GC lutowego i39,14% kwietniowego; to diagnostyka danych, nie obietnica fillu.
+
+Turtle na kontraktach 30.10: 19 nowych testów komponentów PASS, w tym rolling20 podczas pozycji, stała kotwica WilderN, święta/DST i quote-age każdej strony. Pełny adapter portfela, rollu, depozytów i kosztów nadal niegotowy. Błąd pierwszego dekodera zachowano i jawnie wycofano jego interpretację „wszystkie kwotowania wadliwe”.
 T003-R1 · Częściowo uzupełniony
-Potwierdzone elementy i pozostałe warunki podano poniżej.
+Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.
 
 Potwierdzone:
 
@@ -112,6 +124,14 @@ Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i ha
 Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.
 
 Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu.
+
+30.10: oba wybrane kontraktyGC:92source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.
+
+30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100oz/tick0.1 zweryfikowane w określonym zakresie.
+
+30.10: nowe komponenty rollingchannels/anchoredN/firstintent/kalendarium i dekoder jednostronnych quoteTick:19 testów PASS; nie pełny adapter strategii.
+
+30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona.
 
 Pozostało:
 
@@ -145,6 +165,22 @@ Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie spra
 
 Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli.
 
+Ticki i kwotowania pozyskano dla jednej sesji; wymagane pełny zakres, własny decoder obu stron, reguła fill po sygnale, rozmiar/poślizg i rozstrzygnięcie równych timestampów. Darmowe źródło: QuantConnect free historical Trade/Quote ticks for the same two individual GC contracts, separate bounded acquisition plan. Warunek: Dla pełnego zakresu zachować czasy obu stron, odrzucać stale/crossed/size0, nie używać kwotowania sprzed sygnału jako gwarantowanego późniejszego fillu.
+
+OI/wolumen dostępne w chwili wyboru oraz overlap stary/nowy kontrakt przed first intent. Darmowe źródło: QC historical individual chain and OpenInterest; dated CME delivery memos and rules. Warunek: Nonzero/stale observations distinguished; carry positions only when successor own source signal supports them; predeclared mechanical roll convention, not hindsight choice.
+
+Historyczne depozyty GC z przypisaniemGC-xx do terminu, initial/maintenance i brokerhouse; pełne opłaty i collateral/variation margin. Darmowe źródło: CME GC-2020-to-present.pdf (official, direct403 retained), IBKR archived current public fees. Warunek: Dated actual rows acquired and parsed; broker assumptions separated; current2.51USD visible fee components are not historical2024/fullnet proof.
+
+Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
+
+To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.
+
+Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.
+
+Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.
+
+CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.
+
 PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
 
 Eight source-derived unresolved implementation choices; independently reviewed against PDF (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
@@ -155,9 +191,11 @@ Actual authenticated UI attempt; no verified data result (https://www.quantconne
 
 Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38621926) · Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte.
 
-Następny krok: Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.
+Source/session/tick control, no strategy return (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html) · Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma.
+
+Następny krok: Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.
 T003-D1 · Częściowo uzupełniony
-Potwierdzone elementy i pozostałe warunki podano poniżej.
+Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.
 
 Potwierdzone:
 
@@ -188,6 +226,14 @@ Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i ha
 Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.
 
 Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu.
+
+30.10: oba wybrane kontraktyGC:92source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.
+
+30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100oz/tick0.1 zweryfikowane w określonym zakresie.
+
+30.10: nowe komponenty rollingchannels/anchoredN/firstintent/kalendarium i dekoder jednostronnych quoteTick:19 testów PASS; nie pełny adapter strategii.
+
+30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona.
 
 Pozostało:
 
@@ -235,6 +281,22 @@ Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie spra
 
 Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli.
 
+Ticki i kwotowania pozyskano dla jednej sesji; wymagane pełny zakres, własny decoder obu stron, reguła fill po sygnale, rozmiar/poślizg i rozstrzygnięcie równych timestampów. Darmowe źródło: QuantConnect free historical Trade/Quote ticks for the same two individual GC contracts, separate bounded acquisition plan. Warunek: Dla pełnego zakresu zachować czasy obu stron, odrzucać stale/crossed/size0, nie używać kwotowania sprzed sygnału jako gwarantowanego późniejszego fillu.
+
+OI/wolumen dostępne w chwili wyboru oraz overlap stary/nowy kontrakt przed first intent. Darmowe źródło: QC historical individual chain and OpenInterest; dated CME delivery memos and rules. Warunek: Nonzero/stale observations distinguished; carry positions only when successor own source signal supports them; predeclared mechanical roll convention, not hindsight choice.
+
+Historyczne depozyty GC z przypisaniemGC-xx do terminu, initial/maintenance i brokerhouse; pełne opłaty i collateral/variation margin. Darmowe źródło: CME GC-2020-to-present.pdf (official, direct403 retained), IBKR archived current public fees. Warunek: Dated actual rows acquired and parsed; broker assumptions separated; current2.51USD visible fee components are not historical2024/fullnet proof.
+
+Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
+
+To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.
+
+Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.
+
+Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.
+
+CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.
+
 PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
 
 Round3boundedsourcecheck (https://www.cmegroup.com/trading/about-settlements.html) · Settlementdefinition is not intradaystop/fill data; no fulloriginalcontracthistory acquired.
@@ -259,9 +321,11 @@ Actual authenticated UI attempt; no verified data result (https://www.quantconne
 
 Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38621926) · Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte.
 
-Następny krok: Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.
+Source/session/tick control, no strategy return (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html) · Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma.
+
+Następny krok: Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.
 T003-E1 · Częściowo uzupełniony
-Potwierdzone elementy i pozostałe warunki podano poniżej.
+Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.
 
 Potwierdzone:
 
@@ -290,6 +354,14 @@ Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i ha
 Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.
 
 Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu.
+
+30.10: oba wybrane kontraktyGC:92source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.
+
+30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100oz/tick0.1 zweryfikowane w określonym zakresie.
+
+30.10: nowe komponenty rollingchannels/anchoredN/firstintent/kalendarium i dekoder jednostronnych quoteTick:19 testów PASS; nie pełny adapter strategii.
+
+30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona.
 
 Pozostało:
 
@@ -333,6 +405,22 @@ Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie spra
 
 Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli.
 
+Ticki i kwotowania pozyskano dla jednej sesji; wymagane pełny zakres, własny decoder obu stron, reguła fill po sygnale, rozmiar/poślizg i rozstrzygnięcie równych timestampów. Darmowe źródło: QuantConnect free historical Trade/Quote ticks for the same two individual GC contracts, separate bounded acquisition plan. Warunek: Dla pełnego zakresu zachować czasy obu stron, odrzucać stale/crossed/size0, nie używać kwotowania sprzed sygnału jako gwarantowanego późniejszego fillu.
+
+OI/wolumen dostępne w chwili wyboru oraz overlap stary/nowy kontrakt przed first intent. Darmowe źródło: QC historical individual chain and OpenInterest; dated CME delivery memos and rules. Warunek: Nonzero/stale observations distinguished; carry positions only when successor own source signal supports them; predeclared mechanical roll convention, not hindsight choice.
+
+Historyczne depozyty GC z przypisaniemGC-xx do terminu, initial/maintenance i brokerhouse; pełne opłaty i collateral/variation margin. Darmowe źródło: CME GC-2020-to-present.pdf (official, direct403 retained), IBKR archived current public fees. Warunek: Dated actual rows acquired and parsed; broker assumptions separated; current2.51USD visible fee components are not historical2024/fullnet proof.
+
+Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
+
+To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.
+
+Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.
+
+Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.
+
+CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.
+
 PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
 
 Eight source-derived unresolved implementation choices; independently reviewed against PDF (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
@@ -353,9 +441,11 @@ Actual authenticated UI attempt; no verified data result (https://www.quantconne
 
 Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38621926) · Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte.
 
-Następny krok: Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.
+Source/session/tick control, no strategy return (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html) · Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma.
+
+Następny krok: Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.
 T003-E2 · Częściowo uzupełniony
-Potwierdzone elementy i pozostałe warunki podano poniżej.
+Postęp source-fit na dwóch kontraktach GC; pełny test portfela nadal wymaga pozostałych danych i adaptera.
 
 Potwierdzone:
 
@@ -374,6 +464,14 @@ Kod Turtle w edytorze zgodny AST z zamrożonym projektem; rzeczywisty tekst i ha
 Własne konto FREE wykonało historyczny odczyt GC; pełny log, runID, wersja LEAN2.5.0.0.18215 i kod z wyniku zachowane.
 
 Potwierdzono mnożnik100 i tick0.1 w badanej próbce; 100 dziennych rekordów jednego kontraktu.
+
+30.10: oba wybrane kontraktyGC:92source-trade-dates z transakcjami, OHLCV/duplikaty/kolejność sprawdzone; nie pełna kompletność ticków całego portfela.
+
+30.10: datowane pierwotne CME komunikaty dla GCJan/Feb/Apr2024 i reguła100oz/tick0.1 zweryfikowane w określonym zakresie.
+
+30.10: nowe komponenty rollingchannels/anchoredN/firstintent/kalendarium i dekoder jednostronnych quoteTick:19 testów PASS; nie pełny adapter strategii.
+
+30.10: potwierdzono darmową historię Trade/QuoteTick dla2GC jednej sesji oraz18 dodatnich OI na kontrakt wJan2..Jan12; asoflatency nieudowodniona.
 
 Pozostało:
 
@@ -407,6 +505,22 @@ Wstępny licznik invalid_ohlc testuje wyłącznie 0<low≤close≤high. Nie spra
 
 Przed pełnym testem Turtle: jawna aktualizacja dziennych kanałów55/20, walidacja kompletnych sesjiCME i stała kotwica inicjalizacjiN. Zweryfikować testami, nie samą zgodą modeli.
 
+Ticki i kwotowania pozyskano dla jednej sesji; wymagane pełny zakres, własny decoder obu stron, reguła fill po sygnale, rozmiar/poślizg i rozstrzygnięcie równych timestampów. Darmowe źródło: QuantConnect free historical Trade/Quote ticks for the same two individual GC contracts, separate bounded acquisition plan. Warunek: Dla pełnego zakresu zachować czasy obu stron, odrzucać stale/crossed/size0, nie używać kwotowania sprzed sygnału jako gwarantowanego późniejszego fillu.
+
+OI/wolumen dostępne w chwili wyboru oraz overlap stary/nowy kontrakt przed first intent. Darmowe źródło: QC historical individual chain and OpenInterest; dated CME delivery memos and rules. Warunek: Nonzero/stale observations distinguished; carry positions only when successor own source signal supports them; predeclared mechanical roll convention, not hindsight choice.
+
+Historyczne depozyty GC z przypisaniemGC-xx do terminu, initial/maintenance i brokerhouse; pełne opłaty i collateral/variation margin. Darmowe źródło: CME GC-2020-to-present.pdf (official, direct403 retained), IBKR archived current public fees. Warunek: Dated actual rows acquired and parsed; broker assumptions separated; current2.51USD visible fee components are not historical2024/fullnet proof.
+
+Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
+
+To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.
+
+Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.
+
+Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.
+
+CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.
+
 PDF pages 15–35; printed pages 11–31 = PDF page minus 4; author-origin rules hosted by secondary mirror (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
 
 Eight source-derived unresolved implementation choices; independently reviewed against PDF (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · 
@@ -419,7 +533,47 @@ Actual authenticated UI attempt; no verified data result (https://www.quantconne
 
 Completed bounded QC data controls; no strategy return (https://www.quantconnect.com/project/38621926) · Istniejąca próba Turtle zakończyła się poprawnie. Odczytano pełny log i kod użyty w tej próbie, bez ponownego uruchomienia. Dostęp do wybranych danych GC potwierdzony; pełne bramki danych strategii nadal otwarte.
 
-Następny krok: Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.
+Source/session/tick control, no strategy return (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html) · Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma.
+
+Następny krok: Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.
+
+Turtle: rzeczywiste kontrakty i sesje CME · 30.10.2026
+
+Rzeczywiste GC: po korekcie sesji92dni/kontrakt,184/184 różne OHLC dzienne. Tick/OI dostępne za darmo; pełnego wyniku Turtle jeszcze nie ma.
+
+KontrolaWynik / ograniczenie
+
+ZakresJeden rynek: GC; luty i kwiecień2024;01.09.2023–12.01.2024
+
+Sesje źródłowe92dni/kontrakt z transakcjami;100920minut;0duplikatów/wadOHLCV
+
+Świece dzienne184/184 różne od pełnych sesji z minut; wymagają zastąpienia właściwymi agregatami
+
+Ticki jednej sesji1413039; obie strony≤1s: GCFeb89,38%, GCApr39,14%; nie realne fille
+
+OI18dodatnich rekordów/kontrakt; publiczny moment dostępności niepotwierdzony
+
+Kontrole kodu19nowych testów PASS; stary16testów PASS; pełny adapter niegotowy
+
+Wynik TurtleNIE WYLICZONO zysku;0potwierdzonych; stare wyniki zachowane
+
+Ticki i kwotowania pozyskano dla jednej sesji; wymagane pełny zakres, własny decoder obu stron, reguła fill po sygnale, rozmiar/poślizg i rozstrzygnięcie równych timestampów. Darmowe źródło: QuantConnect free historical Trade/Quote ticks for the same two individual GC contracts, separate bounded acquisition plan. Warunek: Dla pełnego zakresu zachować czasy obu stron, odrzucać stale/crossed/size0, nie używać kwotowania sprzed sygnału jako gwarantowanego późniejszego fillu.
+
+OI/wolumen dostępne w chwili wyboru oraz overlap stary/nowy kontrakt przed first intent. Darmowe źródło: QC historical individual chain and OpenInterest; dated CME delivery memos and rules. Warunek: Nonzero/stale observations distinguished; carry positions only when successor own source signal supports them; predeclared mechanical roll convention, not hindsight choice.
+
+Historyczne depozyty GC z przypisaniemGC-xx do terminu, initial/maintenance i brokerhouse; pełne opłaty i collateral/variation margin. Darmowe źródło: CME GC-2020-to-present.pdf (official, direct403 retained), IBKR archived current public fees. Warunek: Dated actual rows acquired and parsed; broker assumptions separated; current2.51USD visible fee components are not historical2024/fullnet proof.
+
+Pełny adapter4/6/10/12units, notional reset, source-universe coverage and declared source discretion. Darmowe źródło: Original Turtle PDF plus freeQC covered source-markets; coffee/cocoa/cotton not demonstrated because QC ICE onlysugar. Warunek: Freeze explicit faithful reconstruction; keep unavailable/defunct source markets visible, do not silently replace withSPY/MGC/ETF or advertise exact1980s replication.
+
+To wciąż jeden rynek i dwa terminy, bez wyniku zysku/straty, pełnego portfela ani potwierdzenia Turtle. 92 dni z transakcjami nie dowodzą kompletności każdego ticka.
+
+Źródłowe dyskrecje: tygodniowa aktualizacja N, roczny notional, pełne grupy korelacji i timing rollu wymagają jawnych konwencji rekonstrukcji i integracji; nie stroić pod wynik.
+
+Kawa/kakao/bawełna: pokrycie darmowego QC niepotwierdzone; dokumentacja ICE wymienia tylko cukier. Nie podstawiać ETF ani SPY.
+
+CME źródła odczytano przez web; lokalne pobrania binarnych PDF timeout/403 zachowane. Pełne surowe dane licencjonowane zostały w QC; lokalnie archiwizujemy kod, małe agregaty i pełne logi.
+
+Dane wyniku i ograniczenia (https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/evidence/T003_FUTURES_REPORT.html)
 
 Dywidendy: kontrola paczki zakończona · 30.10.2026
 
@@ -593,7 +747,7 @@ Nie wyliczano dzisiejszego RSI ze znanego dopiero po zamknięciu współczynnika
 
 Dane wyniku i ograniczenia
 
-Następne działanie dla karty: Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.
+Następne działanie dla karty: Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.
 
 Pełny zapis ustaleń, dowodów i braków tej rundy
 
@@ -627,7 +781,7 @@ Niezależna kontrola kompletnościzanimrun.
 
 Gdy nie uda się zdobyć: Uproszczonykanał55/20 nadal może istnieć jako własnateza, bezTurtlereproduction.
 
-Następne działanie: Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.
+Następne działanie: Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.
 T003-D1 · Historyczneseparatecontract futures i jawne źródłoweuniwersum.
 Dlaczego potrzebne: JednoseryjnySPY usuwaźródłowe rynki,short i dywersyfikację.
 
@@ -671,7 +825,7 @@ Wersja zpodzbiorem jest oznaczona osobno.
 
 Gdy nie uda się zdobyć: Jawny source-incomplete subset lub własnokanałowyETFwariant; oryginał pozostaje requiresdata.
 
-Następne działanie: Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.
+Następne działanie: Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.
 T003-E1 · Kolejność intradayprzebicia,stopu i gapów oraz realnośćfilla.
 Dlaczego potrzebne: Dailyclose→nextopen nie odtwarza źródłowego wejścia w trakcieprzebicia.
 
@@ -711,7 +865,7 @@ Sourceintraday i naszeclose są porównywane tylko w odrębnychwersjach.
 
 Gdy nie uda się zdobyć: Konserwatywny testzwidełkami możliwy po nowymplanie; brak rozstrzygnięciaoryginału przy nierozwiązanejkolejności.
 
-Następne działanie: Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.
+Następne działanie: Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.
 T003-E2 · Kosztyfutures, margin,borrow/finansowanie i limityportfela.
 Dlaczego potrzebne: Oryginalneriskunits nie przeliczająsięna100%kapitałuSPY.
 
@@ -743,7 +897,7 @@ Braktradeorders podczasreprodukcji.
 
 Gdy nie uda się zdobyć: Wyłącznie statystykisygnału/grossscenario, beznetprofitclaim.
 
-Następne działanie: Bez ponawiania starej próby: zweryfikować OI asof, wadliwe kwotowania, pełne OHLC i duplikaty, 55 sesji CME dla każdego używanego kontraktu, first notice oraz overlap rolowania. Potem pełny adapter kosztów, margin, finansowania i portfela.
+Następne działanie: Zintegrować nowe sesje, stałą kotwicę N i odczyt obu stron kwotowania z pełnym adapterem System2; sprawdzić OI asof, overlap rolowania i historyczne depozyty/koszty. Potem zamrozić pełny zakres portfela i uruchomić wynik strategii.
 
 Krótka karta dla AI · Źródło (https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf) · Pełna karta, audyt i stare wyniki
 

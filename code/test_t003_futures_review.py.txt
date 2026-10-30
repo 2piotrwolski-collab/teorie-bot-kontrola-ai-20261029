@@ -1,0 +1,22 @@
+import json,unittest,copy
+from pathlib import Path
+from t003_futures_review import merge
+ROOT=Path(__file__).parent
+
+class FuturesProjectionTests(unittest.TestCase):
+    def test_scoped_current_view_and_idempotence(self):
+        before=json.loads((ROOT/'results/research_progress_round4.json').read_text())
+        review=json.loads((ROOT/'results/t003_futures_review_20261030_v1.json').read_text())
+        original=copy.deepcopy(before);after=merge(before,review)
+        self.assertEqual(before,original)
+        self.assertEqual(merge(after,review),after)
+        for a,b in zip(before['items'],after['items']):
+            if a['id']!='T003':self.assertEqual(a,b)
+        a=next(c for c in before['items'] if c['id']=='T003');b=next(c for c in after['items'] if c['id']=='T003')
+        self.assertEqual(a['dividend_reconciliation_status'],b['dividend_reconciliation_status'])
+        self.assertEqual(a['execution_evidence_file'],b['execution_evidence_file'])
+        self.assertEqual([g['gap_id'] for g in a['gap_updates']],[g['gap_id'] for g in b['gap_updates']])
+        self.assertEqual(a['overall_status'],b['overall_status'])
+        self.assertTrue(all(g['status']=='partial' for g in b['gap_updates']))
+
+if __name__=='__main__':unittest.main()

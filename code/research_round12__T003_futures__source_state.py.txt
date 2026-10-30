@@ -1,0 +1,94 @@
+"""Source-session state and delivery guard. No broker or complete strategy engine.
+
+Supply an independently validated calendar; its provenance is outside this module.
+N is seeded once at a declared anchor, never re-seeded from a moving 55-day window.
+"""
+from collections import deque
+from dataclasses import dataclass
+from datetime import datetime, date
+from math import isfinite
+from zoneinfo import ZoneInfo
+
+class DataGap(ValueError):
+    pass
+
+def aware(value):
+    if value.tzinfo is None or value.utcoffset() is None:
+        raise DataGap('Timezone-aware actual availability required')
+
+@dataclass(frozen=True)
+class Session:
+    contract: str
+    close_at: datetime
+    available_at: datetime
+    open: float
+    high: float
+    low: float
+    close: float
+
+class SourceState:
+    def __init__(self, contract, expected_closes, seed_anchor):
+        self.contract=contract
+        self.expected=tuple(expected_closes)
+        if not self.expected or self.expected[0]!=seed_anchor:
+            raise DataGap('Explicit seed anchor must be first calendar session')
+        for value in self.expected:aware(value)
+        if any(a>=b for a,b in zip(self.expected,self.expected[1:])):
+            raise DataGap('Calendar must be strictly increasing')
+        self.index=0;self.window=deque(maxlen=55)
+        self.previous=None;self.tr_seed=[];self.n=None
+
+    def add(self,bar):
+        aware(bar.close_at);aware(bar.available_at)
+        if bar.contract!=self.contract:raise DataGap('Raw contract changed; explicit roll required')
+        if self.index>=len(self.expected) or bar.close_at!=self.expected[self.index]:
+            raise DataGap('Missing, duplicate or unexpected exchange session')
+        if bar.available_at<bar.close_at:raise DataGap('Bar available before session ended')
+        vals=[bar.open,bar.high,bar.low,bar.close]
+        if not all(isfinite(v) for v in vals) or not 0<bar.low<=min(bar.open,bar.close)<=max(bar.open,bar.close)<=bar.high:
+            raise DataGap('Invalid session OHLC')
+        if self.previous is not None and bar.available_at<=self.previous.available_at:
+            raise DataGap('Availability must increase')
+        if self.previous is not None:
+            tr=max(bar.high-bar.low,abs(bar.high-self.previous.close),abs(bar.low-self.previous.close))
+            if self.n is None:
+                self.tr_seed.append(tr)
+                if len(self.tr_seed)==20:self.n=sum(self.tr_seed)/20
+            else:self.n=(19*self.n+tr)/20
+        self.previous=bar;self.window.append(bar);self.index+=1
+
+    def levels(self,decision_at,tick):
+        aware(decision_at)
+        if len(self.window)<55 or self.n is None:raise DataGap('55 complete sessions plus anchored N required')
+        if self.previous.available_at>=decision_at:raise DataGap('Session not available before decision')
+        if not isfinite(tick) or tick<=0:raise DataGap('Positive tick required')
+        bars=list(self.window)
+        return {'contract':self.contract,'available_at':decision_at,
+            'buy':max(b.high for b in bars)+tick,
+            'sell_short':min(b.low for b in bars)-tick,
+            'exit_long':min(b.low for b in bars[-20:])-tick,
+            'exit_short':max(b.high for b in bars[-20:])+tick,'n':self.n}
+
+def refresh_campaign_channels(campaign,levels):
+    """Keep per-campaign N convention explicit, update rolling exits every session.
+
+    The campaign's existing N/sizing are fixed at entry by the earlier declared
+    reconstruction; source weekly N-sheet ambiguity is not resolved by this helper.
+    """
+    if campaign.levels['contract']!=levels['contract']:raise DataGap('Explicit roll required')
+    if levels['available_at']<=campaign.levels['available_at']:raise DataGap('Levels must advance')
+    if campaign.last_time and levels['available_at']<=campaign.last_time:
+        raise DataGap('Cannot revise levels behind processed events')
+    campaign.levels={**levels,'n':campaign.levels['n']}
+
+def can_hold_before_delivery(decision_at,first_intent,metadata_known_at):
+    """Conservative no-delivery guard; NOT the source's discretionary roll rule.
+
+    Exclude the entire first-intent NY date. A memo published later cannot be used
+    as if it were known at the earlier decision. Historical verification is separate.
+    """
+    aware(decision_at);aware(metadata_known_at)
+    if metadata_known_at>decision_at:raise DataGap('Delivery metadata not known at decision')
+    if not isinstance(first_intent,date) or isinstance(first_intent,datetime):
+        raise DataGap('First intent must be an exchange calendar date')
+    return decision_at.astimezone(ZoneInfo('America/New_York')).date()<first_intent

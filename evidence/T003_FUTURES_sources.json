@@ -1,0 +1,62 @@
+{
+  "status": "Primary documents read through web tool; CME direct binary downloads timed out (receipts preserved). Dates are independently verified retrospectively, not proven published in Jan2 trading information.",
+  "contracts": [
+    {
+      "contract": "GC202401",
+      "last_trade": "2024-01-29",
+      "first_intent": "2023-12-28",
+      "first_notice": "2023-12-29",
+      "first_delivery": "2024-01-02",
+      "published": "2023-12-20",
+      "url": "https://www.cmegroup.com/notices/clearing/2023/12/Chadv23-377.pdf",
+      "page_zero_based": 1
+    },
+    {
+      "contract": "GC202402",
+      "last_trade": "2024-02-27",
+      "first_intent": "2024-01-30",
+      "first_notice": "2024-01-31",
+      "first_delivery": "2024-02-01",
+      "published": "2024-01-19",
+      "url": "https://www.cmegroup.com/notices/clearing/2024/01/Chadv24-023.pdf",
+      "page_zero_based": 1
+    },
+    {
+      "contract": "GC202404",
+      "last_trade": "2024-04-26",
+      "first_intent": "2024-03-27",
+      "first_notice": "2024-03-28",
+      "first_delivery": "2024-04-01",
+      "published": "2024-03-21",
+      "url": "https://www.cmegroup.com/notices/clearing/2024/03/Chadv24-083.pdf",
+      "page_zero_based": 1
+    }
+  ],
+  "gc_contract": {
+    "multiplier": 100,
+    "price_tick": 0.1,
+    "tick_value_usd": 10,
+    "last_trade_rule": "Third last business day of delivery month",
+    "url": "https://www.cmegroup.com/rulebook/COMEX/1a/113.pdf",
+    "pages_zero_based": [
+      0,
+      1
+    ]
+  },
+  "qc_dataset": {
+    "url": "https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/algoseek/us-futures",
+    "archived_html": "sources/qc_us_futures.html",
+    "coverage_start": "2009-05",
+    "ICE_only_sugar": true,
+    "coffee_cocoa_cotton_coverage_not_demonstrated": true,
+    "daily_session_warning": "QC documentation describes midnight ET daily vs CME 17CT to16CT; native timestamp alone does not verify aggregate OHLC. Runtime comparison required.",
+    "daily_volume_warning": "Documentation says daily volume excludes pit trades."
+  },
+  "original_rules": {
+    "file": "sources/turtle.pdf",
+    "sha256": "54910d0f55398a1974839473cc6d59f9fd2b1db7a34627ad3987e256d0a72fee",
+    "pages": "14-35 (PDF page numbers read), original Curtis Faith rules; host is secondary",
+    "url": "https://therobusttrader.com/wp-content/uploads/OriginalTurtle-Trading-Rules.pdf"
+  },
+  "finding": "Old 20..120 expiry-day filter included January GC on Jan2 after first intent/notice. This is a data-selection defect, not evidence against Turtle."
+}

@@ -1,0 +1,24 @@
+test_dst_change_preserves_local_hours (test_gc_calendar.CalendarTests.test_dst_change_preserves_local_hours) ... ok
+test_outside_sourced_range_rejected (test_gc_calendar.CalendarTests.test_outside_sourced_range_rejected) ... ok
+test_qc_audit_calendar_matches_source_calendar (test_gc_calendar.CalendarTests.test_qc_audit_calendar_matches_source_calendar) ... ok
+test_source_holiday_trade_dates (test_gc_calendar.CalendarTests.test_source_holiday_trade_dates) ... ok
+test_thanksgiving_halt_and_friday_close (test_gc_calendar.CalendarTests.test_thanksgiving_halt_and_friday_close) ... ok
+test_available_after_decision_rejected (test_source_state.SourceTests.test_available_after_decision_rejected) ... ok
+test_calendar_handles_supplied_dst_and_short_session (test_source_state.SourceTests.test_calendar_handles_supplied_dst_and_short_session) ... ok
+test_continuation_is_not_reseeded_from_moving_window (test_source_state.SourceTests.test_continuation_is_not_reseeded_from_moving_window) ... ok
+test_duplicate_and_contract_change_rejected (test_source_state.SourceTests.test_duplicate_and_contract_change_rejected) ... ok
+test_first_intent_guard_and_publication_asof (test_source_state.SourceTests.test_first_intent_guard_and_publication_asof) ... ok
+test_missing_calendar_session_rejected (test_source_state.SourceTests.test_missing_calendar_session_rejected) ... ok
+test_naive_time_rejected (test_source_state.SourceTests.test_naive_time_rejected) ... ok
+test_rolling_exit_updates_in_open_campaign (test_source_state.SourceTests.test_rolling_exit_updates_in_open_campaign) ... ok
+test_source_wilder_seed_and_recurrence (test_source_state.SourceTests.test_source_wilder_seed_and_recurrence) ... ok
+test_crossed_book_not_accepted (test_tick_decoder.DecoderTests.test_crossed_book_not_accepted) ... ok
+test_equal_timestamp_does_not_claim_strict_prior (test_tick_decoder.DecoderTests.test_equal_timestamp_does_not_claim_strict_prior) ... ok
+test_fresh_bid_does_not_refresh_old_ask (test_tick_decoder.DecoderTests.test_fresh_bid_does_not_refresh_old_ask) ... ok
+test_two_one_sided_updates_form_book (test_tick_decoder.DecoderTests.test_two_one_sided_updates_form_book) ... ok
+test_zero_size_provided_side_invalidates_book (test_tick_decoder.DecoderTests.test_zero_size_provided_side_invalidates_book) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.015s
+
+OK

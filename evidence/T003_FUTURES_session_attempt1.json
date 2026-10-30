@@ -1,0 +1,218 @@
+{
+  "calendar": "LEAN security.exchange.hours; independent CME holiday reconciliation still required",
+  "contracts": [
+    {
+      "at_least_55_nonempty_sessions": true,
+      "calendar_session_count": 96,
+      "daily_count": 93,
+      "duplicate_minute_starts": 0,
+      "end_date_comparison": {
+        "compared": 93,
+        "different_ohlc": 93,
+        "exact_ohlc": 0,
+        "first_examples": [
+          {
+            "date": "2023-09-01",
+            "native_bounds": [
+              "2023-09-01 09:30:00",
+              "2023-09-01 17:00:00"
+            ],
+            "session_minus_daily": {
+              "c": 0.0,
+              "h": 2.1,
+              "l": 0.0,
+              "o": -9.7,
+              "v": 435.0
+            }
+          },
+          {
+            "date": "2023-09-04",
+            "native_bounds": [
+              "2023-09-04 09:30:00",
+              "2023-09-04 17:00:00"
+            ],
+            "session_minus_daily": {
+              "c": 0.0,
+              "h": 7.4,
+              "l": 0.0,
+              "o": 1.8,
+              "v": 191.0
+            }
+          },
+          {
+            "date": "2023-09-05",
+            "native_bounds": [
+              "2023-09-05 09:30:00",
+              "2023-09-05 17:00:00"
+            ],
+            "session_minus_daily": {
+              "c": 0.0,
+              "h": 5.8,
+              "l": 0.0,
+              "o": 5.8,
+              "v": 187.0
+            }
+          }
+        ],
+        "not_proof_of_independent_calendar": true
+      },
+      "exchange_timezone": "America/New_York",
+      "expiry": "2024-02-27 00:00:00",
+      "first_last_trade_boundary_lags_minutes": {
+        "first_max": 167.0,
+        "last_max": 284.0
+      },
+      "first_minute": "2023-08-31 20:16:00",
+      "invalid_ohlcv": 0,
+      "last_minute_end": "2024-01-12 17:00:00",
+      "minute_count": 74744,
+      "missing_session_dates": [
+        "2023-12-25",
+        "2024-01-01"
+      ],
+      "multiplier": 100.0,
+      "native_daily_first_bounds": [
+        [
+          "2023-09-01 09:30:00",
+          "2023-09-01 17:00:00"
+        ],
+        [
+          "2023-09-04 09:30:00",
+          "2023-09-04 17:00:00"
+        ],
+        [
+          "2023-09-05 09:30:00",
+          "2023-09-05 17:00:00"
+        ]
+      ],
+      "nonempty_sessions": 94,
+      "remaining": [
+        "independent CME calendar and data completeness",
+        "full study coverage and roll overlap",
+        "sequenced trades and fresh two-sided quotes",
+        "historical fees/margin/portfolio/roll conventions"
+      ],
+      "session_aggregate_sha256": "23377467119191b2408f8448d3197f95bf0e2260322133b0a1af192f1b4b598d",
+      "short_session_dates": [
+        "2023-11-23",
+        "2023-12-25",
+        "2024-01-01"
+      ],
+      "sid": "GC YGCFVVNJRYXP",
+      "symbol": "GC27G24",
+      "tick": 0.1,
+      "unordered_minutes": 0,
+      "warmup_gate_passed": false
+    },
+    {
+      "at_least_55_nonempty_sessions": true,
+      "calendar_session_count": 96,
+      "daily_count": 93,
+      "duplicate_minute_starts": 0,
+      "end_date_comparison": {
+        "compared": 93,
+        "different_ohlc": 93,
+        "exact_ohlc": 0,
+        "first_examples": [
+          {
+            "date": "2023-09-01",
+            "native_bounds": [
+              "2023-09-01 09:30:00",
+              "2023-09-01 17:00:00"
+            ],
+            "session_minus_daily": {
+              "c": 0.0,
+              "h": 1.3,
+              "l": 0.0,
+              "o": -7.8,
+              "v": 49.0
+            }
+          },
+          {
+            "date": "2023-09-04",
+            "native_bounds": [
+              "2023-09-04 09:30:00",
+              "2023-09-04 17:00:00"
+            ],
+            "session_minus_daily": {
+              "c": 0.0,
+              "h": 6.4,
+              "l": 0.0,
+              "o": 4.0,
+              "v": 44.0
+            }
+          },
+          {
+            "date": "2023-09-05",
+            "native_bounds": [
+              "2023-09-05 09:30:00",
+              "2023-09-05 17:00:00"
+            ],
+            "session_minus_daily": {
+              "c": 0.0,
+              "h": 9.9,
+              "l": 0.0,
+              "o": 8.9,
+              "v": 56.0
+            }
+          }
+        ],
+        "not_proof_of_independent_calendar": true
+      },
+      "exchange_timezone": "America/New_York",
+      "expiry": "2024-04-26 00:00:00",
+      "first_last_trade_boundary_lags_minutes": {
+        "first_max": 548.0,
+        "last_max": 315.0
+      },
+      "first_minute": "2023-09-01 03:07:00",
+      "invalid_ohlcv": 0,
+      "last_minute_end": "2024-01-12 17:00:00",
+      "minute_count": 26176,
+      "missing_session_dates": [
+        "2023-12-25",
+        "2024-01-01"
+      ],
+      "multiplier": 100.0,
+      "native_daily_first_bounds": [
+        [
+          "2023-09-01 09:30:00",
+          "2023-09-01 17:00:00"
+        ],
+        [
+          "2023-09-04 09:30:00",
+          "2023-09-04 17:00:00"
+        ],
+        [
+          "2023-09-05 09:30:00",
+          "2023-09-05 17:00:00"
+        ]
+      ],
+      "nonempty_sessions": 94,
+      "remaining": [
+        "independent CME calendar and data completeness",
+        "full study coverage and roll overlap",
+        "sequenced trades and fresh two-sided quotes",
+        "historical fees/margin/portfolio/roll conventions"
+      ],
+      "session_aggregate_sha256": "ba968bdf87f94f32b719bed204382c9d49c6a8b9aae5c2d7d8b2c52a02be0195",
+      "short_session_dates": [
+        "2023-11-23",
+        "2023-12-25",
+        "2024-01-01"
+      ],
+      "sid": "GC YHYJ9E8IAHEL",
+      "symbol": "GC26J24",
+      "tick": 0.1,
+      "unordered_minutes": 0,
+      "warmup_gate_passed": false
+    }
+  ],
+  "errors": [],
+  "orders_allowed": false,
+  "protocol": "T003_GC_SESSION_AUDIT_20261030_V1",
+  "runtime_status": "AUDIT_FINISHED_NOT_A_STRATEGY_RESULT",
+  "scope": "Two individual GC contracts, not a Turtle portfolio test",
+  "strategy_return_calculated": false,
+  "timestamp_zone": "America/New_York (COMEX dataset and algorithm)"
+}

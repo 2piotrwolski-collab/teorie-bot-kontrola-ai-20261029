@@ -1,0 +1,13 @@
+{
+  "id": "T003_GC_SESSION_AUDIT_20261030_V2",
+  "frozen_at_utc": "2026-10-30T12:43:07.744109+00:00",
+  "parent_plan_sha256": "9ab26807cd967bece3d77e276b7221d88ebe24dc928e63b7999514e0f47f7f41",
+  "technical_repair_number": 1,
+  "same_contracts_dates_and_no_PnL": true,
+  "cause": "CME actual trade dates span holiday civil days; LEAN calendar produced holiday missing sessions. Source META calendar now explicitly overrides. No threshold/data selection optimization.",
+  "code_sha256": "78ec8a550343de71a6df6581af78a770c2ad372d2aa8bc5069ca2edd733e5d50",
+  "calendar_sha256": "91729746ccef63b23306686f36c4b4d75ec2128d934aef5d7dbe6ddde6e57c53",
+  "previous_run_preserved": "QC_run1_audit.json",
+  "new_backtest_max": 1,
+  "remaining_gates_unchanged": true
+}

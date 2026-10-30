@@ -1,0 +1,62 @@
+{
+  "status": "Primary CME web-parsed PDF evidence, binary downloads not obtained. New source discovered after audit1; technical calendar repair, no PnL or parameter changes.",
+  "timezone": "America/New_York; CME sources times CT converted +1hour",
+  "labor_day": {
+    "url": "https://www.cmegroup.com/trading-hours/files/labor-day-2023.pdf",
+    "page": 0,
+    "metal_trade_date": "2023-09-05",
+    "segments": [
+      [
+        "2023-09-03T18:00:00",
+        "2023-09-04T14:30:00"
+      ],
+      [
+        "2023-09-04T18:00:00",
+        "2023-09-05T17:00:00"
+      ]
+    ],
+    "civil_date_not_separate_trading_day": "2023-09-04"
+  },
+  "thanksgiving": {
+    "url": "https://www.cmegroup.com/trading-hours/files/thanksgiving-day-2023.pdf",
+    "page": 0,
+    "metal_trade_date": "2023-11-24",
+    "segments": [
+      [
+        "2023-11-22T18:00:00",
+        "2023-11-23T14:30:00"
+      ],
+      [
+        "2023-11-23T18:00:00",
+        "2023-11-24T13:45:00"
+      ]
+    ],
+    "civil_date_not_separate_trading_day": "2023-11-23",
+    "TAS_hours_are_different": true
+  },
+  "christmas": {
+    "url": "https://www.cmegroup.com/trading-hours/files/christmas-day-2023.pdf",
+    "page": 0,
+    "metal_trade_date": "2023-12-26",
+    "segments": [
+      [
+        "2023-12-25T18:00:00",
+        "2023-12-26T17:00:00"
+      ]
+    ],
+    "no_trade_date": "2023-12-25"
+  },
+  "new_year": {
+    "url": "https://www.cmegroup.com/trading-hours/files/new-years-day-2024.pdf",
+    "page": 0,
+    "metal_trade_date": "2024-01-02",
+    "segments": [
+      [
+        "2024-01-01T18:00:00",
+        "2024-01-02T17:00:00"
+      ]
+    ],
+    "no_trade_date": "2024-01-01",
+    "source_quality_note": "PDF table is explicitly MONDAY1JAN2024/TUESDAY2JAN2024. Footer incorrectly references TuesdayDec31/ThursdayJan2; use dated product table, disclose inconsistency."
+  }
+}

@@ -1,0 +1,91 @@
+"""One fixed GC session: free-cloud tick/quote/OI availability, NO orders/PnL."""
+from AlgorithmImports import *
+from datetime import datetime
+import json,hashlib
+
+class TurtleTickAvailability(QCAlgorithm):
+    def initialize(self):
+        if self.live_mode:raise ValueError("Historical only")
+        self.set_time_zone(TimeZones.NEW_YORK)
+        self.set_start_date(2024,1,16);self.set_end_date(2024,1,16)
+        self.set_cash(500000)
+        self.report={"protocol":"T003_GC_TICK_OI_AVAILABILITY_20261030_V2",
+            "orders_allowed":False,"strategy_return_calculated":False,
+            "scope":"Jan2 full source session only; not full study or execution validation",
+            "request_start_NY":"2024-01-01 18:00:00","request_end_NY":"2024-01-02 17:00:00",
+            "contracts":[],"errors":[]}
+        for expiry in [datetime(2024,2,27),datetime(2024,4,26)]:
+            symbol=Symbol.create_future("GC",Market.COMEX,expiry)
+            self.add_future_contract(symbol,Resolution.MINUTE,fill_forward=False,extended_market_hours=True)
+            row={"sid":str(symbol.id),"symbol":str(symbol),"ticks":0,"trade_ticks":0,"quote_ticks":0,
+                
+                "unordered_ticks":0,"same_time_adjacent_ticks":0,"trades_without_valid_prior_quote":0,
+                "trades_strict_prior_quote_age_le_1s":0,"trades_strict_prior_quote_age_le_5s":0,
+                "trades_latest_quote_same_timestamp":0,"quote_older_than_5s":0}
+            row.update(quote_bid_only=0,quote_ask_only=0,quote_both_sides=0,quote_neither_side=0,
+                provided_side_zero_size=0,trades_crossed_reconstructed_book=0,
+                suspicious_trade_ticks=0,suspicious_quote_ticks=0)
+            previous=None;bid=None;ask=None
+            try:
+                ticks=self.history[Tick](symbol,datetime(2024,1,1,18),datetime(2024,1,2,17),Resolution.TICK,
+                    fill_forward=False,extended_market_hours=True)
+                for tick in ticks:
+                    row["ticks"]+=1
+                    if previous is not None:
+                        row["unordered_ticks"]+=int(tick.time<previous)
+                        row["same_time_adjacent_ticks"]+=int(tick.time==previous)
+                    previous=tick.time
+                    if row["ticks"]==1:row["first_tick"]=str(tick.time)
+                    row["last_tick"]=str(tick.time)
+                    if tick.tick_type==TickType.QUOTE:
+                        row["quote_ticks"]+=1
+                        has_bid=tick.bid_price>0;has_ask=tick.ask_price>0
+                        row["quote_bid_only"]+=int(has_bid and not has_ask)
+                        row["quote_ask_only"]+=int(has_ask and not has_bid)
+                        row["quote_both_sides"]+=int(has_bid and has_ask)
+                        row["quote_neither_side"]+=int(not has_bid and not has_ask)
+                        row["suspicious_quote_ticks"]+=int(tick.suspicious)
+                        if has_bid:
+                            bid=(tick.time,float(tick.bid_price),float(tick.bid_size),bool(tick.suspicious))
+                            row["provided_side_zero_size"]+=int(tick.bid_size<=0)
+                        if has_ask:
+                            ask=(tick.time,float(tick.ask_price),float(tick.ask_size),bool(tick.suspicious))
+                            row["provided_side_zero_size"]+=int(tick.ask_size<=0)
+                        # Zero on the absent side is not a cancellation of that side.
+                    elif tick.tick_type==TickType.TRADE:
+                        row["trade_ticks"]+=1
+                        row["suspicious_trade_ticks"]+=int(tick.suspicious)
+                        if bid is None or ask is None or bid[2]<=0 or ask[2]<=0 or bid[3] or ask[3]:
+                            row["trades_without_valid_prior_quote"]+=1
+                        elif ask[1]<bid[1]:row["trades_crossed_reconstructed_book"]+=1
+                        else:
+                            bid_age=(tick.time-bid[0]).total_seconds();ask_age=(tick.time-ask[0]).total_seconds()
+                            if min(bid_age,ask_age)==0:row["trades_latest_quote_same_timestamp"]+=1
+                            elif min(bid_age,ask_age)>0:
+                                age=max(bid_age,ask_age)
+                                row["trades_strict_prior_quote_age_le_1s"]+=int(age<=1)
+                                row["trades_strict_prior_quote_age_le_5s"]+=int(age<=5)
+                                row["quote_older_than_5s"]+=int(age>5)
+            except Exception as exc:row["tick_error"]={"type":type(exc).__name__,"message":str(exc)}
+            try:
+                oi=list(self.history[OpenInterest](symbol,datetime(2024,1,2),datetime(2024,1,13),Resolution.MINUTE,
+                    fill_forward=False,extended_market_hours=True))
+                positives=[b for b in oi if b.value>0]
+                row["open_interest"]={"count":len(oi),"positive_count":len(positives),
+                    "first_positive_history_timestamp":str(positives[0].end_time) if positives else None,
+                    "first_positive_value":float(positives[0].value) if positives else None,
+                    "last_history_timestamp":str(oi[-1].end_time) if oi else None,
+                    "publication_latency_asof_verified":False}
+            except Exception as exc:row["open_interest_error"]={"type":type(exc).__name__,"message":str(exc)}
+            row["historical_timestamp_is_not_real_receipt_time"]=True
+            row["full_execution_gate_passed"]=False
+            self.report["contracts"].append(row)
+
+    def on_data(self,data):pass
+
+    def on_end_of_algorithm(self):
+        self.report["status"]="AVAILABILITY_AUDIT_ONLY_NOT_STRATEGY_RESULT"
+        raw=json.dumps(self.report,sort_keys=True,separators=(",",":"))
+        chunks=[raw[i:i+4500] for i in range(0,len(raw),4500)]
+        for i,s in enumerate(chunks):self.debug("T003_TICK_CHUNK "+json.dumps({"i":i,"n":len(chunks),"data":s},separators=(",",":")))
+        self.debug("T003_TICK_COMPLETE "+json.dumps({"chunks":len(chunks),"bytes":len(raw.encode()),"sha256":hashlib.sha256(raw.encode()).hexdigest()}))

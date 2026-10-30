@@ -1,0 +1,17 @@
+{
+  "id": "T003_TICK_DECODER_CORRECTION_20261030_V1",
+  "frozen_at_utc": "2026-10-30T12:54:52.126751+00:00",
+  "parent_plan_sha256": "5ac7c9aafaa9367ce1a1edc88ba1837fcbd6c375886e120ef0e277fdd0335f61",
+  "original_plan_max1run_preserved_exhausted": true,
+  "explicit_new_followup_budget": {
+    "cloud_runs_max": 1,
+    "technical_retries": 0,
+    "paid_services": 0
+  },
+  "same_symbols_dates_no_PnL": true,
+  "reason": "Prior check wrongly required synchronous bid+ask within each quote Tick. Official QC says quote ticks contain onlybid orask. New decoder carries each provided side with separatetimestamp/size, flags stale/zero/crossed and equal-timestamp ambiguity; no strategy threshold tuning.",
+  "primary_source": "https://www.quantconnect.com/docs/v2/lean-engine/data-format/core-data-types",
+  "code_sha256": "5ddac9a5777acf6e6ccbaf0c7a957480337afee6d8563f563a053eb81db88bd3",
+  "previous_attempt_preserved": "QC_tick_run_audit.json",
+  "data_gate_still_false": true
+}

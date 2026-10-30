@@ -1,0 +1,24 @@
+"""GC calendar for this audit sample ONLY, based on dated CME METALS tables.
+
+This is not a perpetual holiday calendar or an assertion of tick completeness.
+All source URLs and the inconsistent 2024 New Year PDF footer are disclosed in
+calendar_evidence.json. Multi-segment holidays share one exchange trade date.
+"""
+from datetime import datetime,date,time,timedelta
+from zoneinfo import ZoneInfo
+
+NY=ZoneInfo('America/New_York')
+
+def gc_sessions(start=date(2023,9,1),end=date(2024,1,12)):
+    if start<date(2023,9,1) or end>date(2024,1,12):
+        raise ValueError('Only the independently sourced audit sample is supported')
+    excluded={date(2023,9,4),date(2023,11,23),date(2023,12,25),date(2024,1,1)}
+    overrides={date(2023,9,5):[(datetime(2023,9,3,18,tzinfo=NY),datetime(2023,9,4,14,30,tzinfo=NY)),(datetime(2023,9,4,18,tzinfo=NY),datetime(2023,9,5,17,tzinfo=NY))],
+        date(2023,11,24):[(datetime(2023,11,22,18,tzinfo=NY),datetime(2023,11,23,14,30,tzinfo=NY)),(datetime(2023,11,23,18,tzinfo=NY),datetime(2023,11,24,13,45,tzinfo=NY))]}
+    rows=[];d=start
+    while d<=end:
+        if d.weekday()<5 and d not in excluded:
+            segments=overrides.get(d,[(datetime.combine(d-timedelta(days=1),time(18),NY),datetime.combine(d,time(17),NY))])
+            rows.append({'trade_date':d,'segments':segments,'close_at':segments[-1][1]})
+        d+=timedelta(days=1)
+    return rows

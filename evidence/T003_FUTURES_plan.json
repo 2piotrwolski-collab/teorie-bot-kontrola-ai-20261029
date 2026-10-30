@@ -1,0 +1,43 @@
+{
+  "id": "T003_GC_SESSION_AUDIT_20261030_V1",
+  "frozen_at_utc": "2026-10-30T12:39:39.354994+00:00",
+  "stage": "source-constrained futures data audit; no strategy return",
+  "source_spec": "Original System2 intraday55 breakout/20 exit, WilderN,0.5N adds,4units,2N stops; full portfolio requires separate adapter and predeclared conventions",
+  "scope": "GC February2024 and April2024 individual raw contracts, sample fixed before new results; not the21-market original portfolio",
+  "history_start_NY": "2023-08-31T17:00:00",
+  "session_dates": [
+    "2023-09-01",
+    "2024-01-12"
+  ],
+  "algorithm_date": "2024-01-16",
+  "qc_project": 38666177,
+  "old_project_preserved": 38621926,
+  "budget": {
+    "new_scientific_cases": 1,
+    "technical_repairs_max": 2,
+    "paid_services": 0
+  },
+  "checks": [
+    "OHLCV validity/duplicates/order",
+    "LEAN exchange-hours sessions/early closes, explicitly not independent CME calendar",
+    "two-contract >=55 nonempty sessions counts (not sufficient completeness proof)",
+    "native daily vs minute session OHLC by disclosed end-date mapping",
+    "delivery guard before first intent, source publication asof required for PIT decisions"
+  ],
+  "never": [
+    "orders",
+    "strategy PnL",
+    "parameter optimization",
+    "continuous adjusted futures as rawcontracts",
+    "bulk licensed dataset export",
+    "history as live capture"
+  ],
+  "remaining_source_conventions": [
+    "Original roll timing is discretionary; numeric roll rule not specified",
+    "Source weekly N sheets and annual notional reset require explicit reconstruction",
+    "Historical correlation groups and original defunct markets require coverage or explicitly qualified subset",
+    "Execution/margin/fees/funding/real quotedepth and missing ticks remain required"
+  ],
+  "source_evidence_sha256": "ed2d4016b981168960ed500394da082e36f3407ada906e3258338f9f1007a951",
+  "run_code_sha256": "b3c12498aed9d19c1e6f4a5a0b34f9bbf3064ba1837f4df5ed846ee75f5e52d7"
+}

@@ -112,6 +112,12 @@ def refresh(root, db):
         current=merge_package_closure(current,package_review,package_audit)
         evidence_path=package_p['review_file']
         atomic_json(root/'reports/AUDYT_T003_DYWIDENDY_PACZKA.json',package_audit)
+    # Compose the later futures section before persisting, so rebuilding a report
+    # does not create an intermediate dividend-first research update on every cycle.
+    from t003_futures_review import load_review as load_futures,merge as merge_futures
+    futures=load_futures(root)
+    if futures is not None:
+        current=merge_futures(current,futures)
     if current!=old:
         atomic_json(path,current)
         db.research_update('T003',next(x for x in current['items'] if x['id']=='T003'),evidence_path)

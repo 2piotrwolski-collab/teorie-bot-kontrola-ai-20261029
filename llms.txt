@@ -1,5 +1,5 @@
 # Teorie bot — review snapshot
-Snapshot: 2026-10-30T12:01:09.655468+00:00
+Snapshot: 2026-10-30T13:02:42.123149+00:00
 Start: https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/cards/T003.txt and https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/cards/T003.json
 Other cards: https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/cards/T001.txt through https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/cards/T010.txt
 Code and hashes: https://2piotrwolski-collab.github.io/teorie-bot-kontrola-ai-20261029/code/index.json
